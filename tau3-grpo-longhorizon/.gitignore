@@ -1,0 +1,7 @@
+data/raw/
+data/processed/
+experiments/**/checkpoints/
+experiments/**/logs/
+experiments/**/trajectories/
+reports/figures/*.png
+

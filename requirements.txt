@@ -1,0 +1,4 @@
+# Root convenience requirements. Official runtime requirements live in the
+# vendored tau2-bench and verl directories.
+-e ./tau3-grpo-longhorizon
+

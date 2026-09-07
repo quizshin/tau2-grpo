@@ -1,0 +1,21 @@
+.DS_Store
+.venv*/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+wandb/
+outputs/
+checkpoints/
+*.log
+
+# Raw and generated data are reproducible and must not be committed.
+tau3-grpo-longhorizon/data/raw/
+tau3-grpo-longhorizon/data/processed/
+tau3-grpo-longhorizon/experiments/**/checkpoints/
+tau3-grpo-longhorizon/experiments/**/trajectories/
+tau3-grpo-longhorizon/experiments/**/logs/
+
