@@ -1,0 +1,15 @@
+# Python 3.12 / CUDA 12.8 training environment.
+# vLLM 0.10.2's official PyPI metadata pins this exact Torch family.
+torch==2.8.0
+torchaudio==2.8.0
+torchvision==0.23.0
+vllm==0.10.2
+transformers==4.56.1
+# Newer OpenCV wheels require NumPy 2, while veRL freezes NumPy below 2.
+opencv-python-headless==4.11.0.86
+# CuPy 14 follows NumPy 2; Ray/vLLM only needs a CUDA 12-compatible CuPy.
+cupy-cuda12x==13.6.0
+# Keep SciPy on a Python 3.12 wheel with the same NumPy 1.x ABI contract.
+scipy==1.14.1
+litellm==1.82.6
+openai==3.3.1
