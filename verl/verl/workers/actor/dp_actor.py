@@ -552,6 +552,10 @@ class DataParallelPPOActor(BasePPOActor):
         metrics = {
             "actor/pg_loss": 0.0,
             "actor/kl_loss": 0.0,
+            # Keep this distributed metric scalar on every rank.  Appending
+            # only on empty micro-batches produces variable-length lists per
+            # rank, which DataProto.concat cannot reduce with np.mean.
+            "actor/skipped_empty_policy_micro_batch": 0.0,
         }
         for _ in range(self.config.ppo_epochs):
             for batch_idx, mini_batch in enumerate(mini_batches):
@@ -590,6 +594,7 @@ class DataParallelPPOActor(BasePPOActor):
                     )
                     log_prob = outputs["log_probs"]
                     entropy = outputs["entropys"] if calculate_entropy else None
+                    has_policy_tokens = bool(response_mask.detach().sum().item() > 0)
 
                     # for fully_async_policy
                     if hasattr(self.config, "use_rollout_log_probs") and self.config.use_rollout_log_probs:
@@ -611,21 +616,34 @@ class DataParallelPPOActor(BasePPOActor):
                     # clip_cov -> verl.trainer.ppo.core_algos.compute_policy_loss_clip_cov
                     policy_loss_fn = get_policy_loss_fn(loss_mode)
 
-                    # Compute policy loss (any function is expected to return 2 values)
-                    pg_loss, pg_metrics = policy_loss_fn(
-                        old_log_prob=old_log_prob,
-                        log_prob=log_prob,
-                        advantages=advantages,
-                        response_mask=response_mask,
-                        loss_agg_mode=loss_agg_mode,
-                        config=self.config,
-                        rollout_is_weights=rollout_is_weights,
-                    )
+                    # Tau3-GRPO local patch: Dynamic Filtering can leave a
+                    # per-rank micro-batch with no policy tokens even when the
+                    # global update still has signal. Keep the forward/backward
+                    # schedule identical across FSDP ranks, but use a graph-
+                    # connected zero loss instead of allowing masked 0/0 means.
+                    if has_policy_tokens:
+                        pg_loss, pg_metrics = policy_loss_fn(
+                            old_log_prob=old_log_prob,
+                            log_prob=log_prob,
+                            advantages=advantages,
+                            response_mask=response_mask,
+                            loss_agg_mode=loss_agg_mode,
+                            config=self.config,
+                            rollout_is_weights=rollout_is_weights,
+                        )
+                    else:
+                        pg_loss = log_prob.sum() * 0.0
+                        pg_metrics = {
+                            "actor/pg_clipfrac": 0.0,
+                            "actor/ppo_kl": 0.0,
+                            "actor/pg_clipfrac_lower": 0.0,
+                        }
+                        metrics["actor/skipped_empty_policy_micro_batch"] += 1.0
                     micro_batch_metrics.update(pg_metrics)
 
                     # Skip if using bypass_mode loss (metrics already computed in pg_metrics)
                     rollout_log_prob = model_inputs.get("rollout_log_probs", None)
-                    if loss_mode != "bypass_mode" and rollout_log_prob is not None:
+                    if loss_mode != "bypass_mode" and rollout_log_prob is not None and has_policy_tokens:
                         # Compute metrics using CURRENT policy π_θ vs π_rollout
                         # Tracks evolving off-policy gap as π_θ updates during mini-batch training
                         from verl.trainer.ppo.rollout_corr_helper import compute_rollout_corr_metrics_from_logprobs
@@ -639,18 +657,25 @@ class DataParallelPPOActor(BasePPOActor):
 
                     policy_loss = pg_loss
                     if calculate_entropy and entropy is not None:
-                        entropy_agg = agg_loss(loss_mat=entropy, loss_mask=response_mask, loss_agg_mode=loss_agg_mode)
+                        entropy_agg = (
+                            agg_loss(loss_mat=entropy, loss_mask=response_mask, loss_agg_mode=loss_agg_mode)
+                            if has_policy_tokens
+                            else entropy.sum() * 0.0
+                        )
                         micro_batch_metrics["actor/entropy"] = entropy_agg.detach().item()
                         if entropy_coeff != 0:
                             policy_loss -= entropy_agg * entropy_coeff
 
                     if self.config.use_kl_loss:
                         ref_log_prob = model_inputs["ref_log_prob"]
-                        # compute kl loss
-                        kld = kl_penalty(
-                            logprob=log_prob, ref_logprob=ref_log_prob, kl_penalty=self.config.kl_loss_type
-                        )
-                        kl_loss = agg_loss(loss_mat=kld, loss_mask=response_mask, loss_agg_mode=loss_agg_mode)
+                        if has_policy_tokens:
+                            # compute kl loss
+                            kld = kl_penalty(
+                                logprob=log_prob, ref_logprob=ref_log_prob, kl_penalty=self.config.kl_loss_type
+                            )
+                            kl_loss = agg_loss(loss_mat=kld, loss_mask=response_mask, loss_agg_mode=loss_agg_mode)
+                        else:
+                            kl_loss = log_prob.sum() * 0.0
 
                         policy_loss = policy_loss + kl_loss * self.config.kl_loss_coef
                         metrics["actor/kl_loss"] += kl_loss.detach().item() * loss_scale_factor

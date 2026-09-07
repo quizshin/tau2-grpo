@@ -66,6 +66,14 @@ from verl.workers.config import FSDPEngineConfig
 from verl.workers.utils.padding import left_right_2_no_padding, no_padding_2_padding
 
 
+def _json_default(value: Any) -> Any:
+    """Normalize NumPy scalar metadata emitted by rollout integrations."""
+
+    if isinstance(value, np.generic):
+        return value.item()
+    raise TypeError(f"Object of type {value.__class__.__name__} is not JSON serializable")
+
+
 def apply_kl_penalty(data: DataProto, kl_ctrl: core_algos.AdaptiveKLController, kl_penalty="kl"):
     """Apply KL penalty to the token-level rewards.
 
@@ -124,6 +132,174 @@ def compute_response_mask(data: DataProto):
     response_length = responses.size(1)
     attention_mask = data.batch["attention_mask"]
     return attention_mask[:, -response_length:]
+
+
+_TAU3_PADDING_KEY = "tau3_is_padding"
+
+
+def tau3_pad_policy_batch(
+    data: DataProto,
+    *,
+    divisor: int,
+    group_size: int,
+) -> tuple[DataProto, int]:
+    """Tau3-GRPO local patch: add zero-loss rows for exact 6-way FSDP dispatch.
+
+    The frozen experiment has 16x8=128 *real* rollouts, while the agreed policy
+    topology has six data-parallel ranks. veRL requires equal chunks. Padding to
+    the next optimizer-mini-batch divisor keeps all 128 rollouts and gives every
+    rank the same number of forward/backward calls. Dummy rows retain valid token
+    inputs for FSDP collectives but have zero response masks, zero rewards, empty
+    anchors and isolated 8-row uids, so they contribute exactly zero loss and do
+    not alter GRPO/Tau-GiGPO groups.
+    """
+
+    if divisor <= 0 or group_size <= 0:
+        raise ValueError("Tau3 policy padding divisor and group_size must be positive")
+    real_size = len(data)
+    padded, padding_size = pad_dataproto_to_divisor(data, divisor)
+    marker = np.zeros(len(padded), dtype=bool)
+    if padding_size == 0:
+        padded.non_tensor_batch[_TAU3_PADDING_KEY] = marker
+        return padded, 0
+
+    marker[real_size:] = True
+    padded.non_tensor_batch[_TAU3_PADDING_KEY] = marker
+    for key in ("response_mask", "rm_scores", "reward_scores"):
+        if key in padded.batch:
+            padded.batch[key][real_size:] = 0
+
+    if "uid" in padded.non_tensor_batch:
+        uids = padded.non_tensor_batch["uid"]
+        for offset, index in enumerate(range(real_size, len(padded))):
+            uids.flat[index] = f"__tau3_padding_group_{offset // group_size}"
+    for key in ("anchor_ids", "anchor_spans"):
+        if key in padded.non_tensor_batch:
+            values = padded.non_tensor_batch[key]
+            for index in range(real_size, len(padded)):
+                values.flat[index] = []
+    return padded, padding_size
+
+
+def tau3_unpad_policy_batch(
+    data: DataProto,
+    reward_extra_infos: dict[str, list],
+) -> tuple[DataProto, dict[str, list]]:
+    """Remove zero-loss dispatch rows before rollout logs and scalar metrics."""
+
+    marker = data.non_tensor_batch.get(_TAU3_PADDING_KEY)
+    if marker is None:
+        return data, reward_extra_infos
+    keep = np.flatnonzero(~np.asarray(marker, dtype=bool))
+    original_size = len(data)
+    trimmed_infos: dict[str, list] = {}
+    for key, values in reward_extra_infos.items():
+        if len(values) == original_size:
+            trimmed_infos[key] = [values[index] for index in keep]
+        else:
+            trimmed_infos[key] = values
+    return data.select_idxs(keep), trimmed_infos
+
+
+def tau3_dynamic_filter(data: DataProto, config: Optional[AlgoConfig]) -> dict[str, Any]:
+    """Tau3-GRPO local patch: zero the response mask of degenerate uid groups.
+
+    Fixed-rollout Dynamic Filtering. A uid group whose rollouts all scored 0 or all
+    scored the maximum carries no gradient signal, so its response mask is zeroed
+    before advantages are computed. Rewards, advantages and the batch layout are
+    untouched, which keeps the token budget and the optimizer step count fixed and
+    comparable across arms.
+
+    Opt-in: returns immediately unless `algorithm.dynamic_filter.enable` is set, so
+    the vanilla GRPO path is unaffected. No state is carried between updates.
+    """
+
+    block = None
+    if config is not None:
+        block = getattr(config, "dynamic_filter", None)
+        if block is None and hasattr(config, "get"):
+            block = config.get("dynamic_filter", None)
+    if not block:
+        return {}
+
+    def pick(name, default):
+        if hasattr(block, name):
+            value = getattr(block, name)
+            return default if value is None else value
+        if hasattr(block, "get"):
+            value = block.get(name, None)
+            return default if value is None else value
+        return default
+
+    if not bool(pick("enable", False)):
+        return {}
+    mode = str(pick("mode", "fixed_rollout"))
+    if mode != "fixed_rollout":
+        raise ValueError(
+            "the in-trainer Tau3 Dynamic Filtering patch implements only "
+            f"fixed_rollout, got {mode!r}; fixed_informative requires candidate resampling"
+        )
+    if "uid" not in data.non_tensor_batch:
+        return {}
+
+    from tau3_grpo.algo.dynamic_filtering import apply_dynamic_filter
+
+    response_mask = data.batch["response_mask"]
+    rewards = data.batch["token_level_rewards"].sum(dim=1).detach().to("cpu").numpy()
+    padding = data.non_tensor_batch.get(_TAU3_PADDING_KEY)
+    real_indices = (
+        np.flatnonzero(~np.asarray(padding, dtype=bool))
+        if padding is not None
+        else np.arange(len(rewards))
+    )
+    filtered, stats = apply_dynamic_filter(
+        response_mask.detach().to("cpu").numpy()[real_indices],
+        rewards[real_indices],
+        data.non_tensor_batch["uid"][real_indices],
+        group_size=int(pick("group_size", 8)),
+        max_reward=float(pick("max_reward", 1.0)),
+    )
+    full_mask = response_mask.detach().to("cpu").numpy().copy()
+    full_mask[real_indices] = filtered
+    if padding is not None:
+        full_mask[np.asarray(padding, dtype=bool)] = 0
+    data.batch["response_mask"] = torch.as_tensor(
+        full_mask, dtype=response_mask.dtype, device=response_mask.device
+    )
+    return {f"dynamic_filter/{key}": value for key, value in stats.to_dict().items()}
+
+
+def tau3_has_effective_policy_tokens(data: DataProto) -> bool:
+    """Return whether an actor update has any unmasked response token.
+
+    Early E1/E3 updates can contain 16 all-zero groups. Dynamic Filtering then
+    masks every real response, and the policy token-mean denominator would be
+    zero. The trainer must skip that actor step instead of manufacturing a token
+    or allowing a NaN; the rollout/update is still recorded in telemetry.
+    """
+
+    response_mask = data.batch.get("response_mask")
+    if response_mask is None:
+        return False
+    return bool(response_mask.detach().sum().item() > 0)
+
+
+def tau3_restore_candidate_mask_for_metrics(data: DataProto, *, skipped: bool) -> bool:
+    """Restore the unfiltered response mask after an all-dropped DF update.
+
+    Fixed-rollout Dynamic Filtering keeps candidate trajectories in the batch
+    but masks every policy token when all groups are degenerate.  The actor step
+    is skipped in that case.  veRL's generic metric collector, however, assumes
+    at least one valid response token and reduces the masked advantage with
+    ``min``/``max``.  Restore the candidate response mask only after all policy
+    compute is complete so rollout/reward metrics remain defined without
+    reintroducing any filtered token into the optimizer.
+    """
+
+    if not skipped:
+        return False
+    data.batch["response_mask"] = compute_response_mask(data)
+    return True
 
 
 def compute_advantage(
@@ -189,6 +365,13 @@ def compute_advantage(
         data.batch["returns"] = returns
     else:
         # handle all other adv estimator type other than GAE and GRPO
+        # Tau3-GRPO local patch: `main_ppo` executes the trainer inside a Ray
+        # TaskRunner process, whose registry is distinct from the launcher. Do
+        # the idempotent registration here, in the process that consumes it.
+        if adv_estimator == "tau_gigpo":
+            from tau3_grpo.algo.verl_estimator import register as register_tau3_gigpo
+
+            register_tau3_gigpo()
         adv_estimator_fn = core_algos.get_adv_estimator_fn(adv_estimator)
         adv_kwargs = {
             "token_level_rewards": data.batch["token_level_rewards"],
@@ -201,6 +384,11 @@ def compute_advantage(
             adv_kwargs["reward_baselines"] = data.batch["reward_baselines"]
         # GDPO: pass raw data for per-dimension reward extraction
         if adv_estimator in (AdvantageEstimator.GDPO, "gdpo"):
+            adv_kwargs["non_tensor_batch"] = data.non_tensor_batch
+            adv_kwargs["batch"] = data.batch
+        # Tau3-GRPO local patch: tau_gigpo needs the per-segment anchor ids and token
+        # spans that ToolAgentLoop published through extra_fields.
+        if adv_estimator == "tau_gigpo":
             adv_kwargs["non_tensor_batch"] = data.non_tensor_batch
             adv_kwargs["batch"] = data.batch
         # Add sum_pi_squared for Optimal Token Baseline
@@ -412,7 +600,7 @@ class RayPPOTrainer:
         lines = []
         for i in range(n):
             entry = {k: v[i] for k, v in base_data.items()}
-            lines.append(json.dumps(entry, ensure_ascii=False))
+            lines.append(json.dumps(entry, ensure_ascii=False, default=_json_default))
 
         with open(filename, "w") as f:
             f.write("\n".join(lines) + "\n")
@@ -1360,6 +1548,21 @@ class RayPPOTrainer:
 
                     if "response_mask" not in batch.batch.keys():
                         batch.batch["response_mask"] = compute_response_mask(batch)
+                    # Tau3-GRPO local patch: preserve all 128 real rollouts while
+                    # satisfying six-way FSDP and PPO mini-batch divisibility.
+                    # Dummy rows are post-rollout only and carry zero loss.
+                    tau3_padding_divisor = int(
+                        os.getenv("TAU3_GRPO_POLICY_BATCH_DIVISOR", "0")
+                    )
+                    tau3_padding_size = 0
+                    if tau3_padding_divisor:
+                        batch, tau3_padding_size = tau3_pad_policy_batch(
+                            batch,
+                            divisor=tau3_padding_divisor,
+                            group_size=self.config.actor_rollout_ref.rollout.n,
+                        )
+                        metrics["padding/real_rollouts"] = len(batch) - tau3_padding_size
+                        metrics["padding/dummy_rows"] = tau3_padding_size
                     # Balance the number of valid tokens across DP ranks.
                     # NOTE: This usually changes the order of data in the `batch`,
                     # which won't affect the advantage calculation (since it's based on uid),
@@ -1483,6 +1686,21 @@ class RayPPOTrainer:
                             "norm_adv_by_std_in_grpo", True
                         )  # GRPO adv normalization factor
 
+                        # Tau3-GRPO local patch: Dynamic Filtering masks degenerate
+                        # uid groups before advantages are computed (E1/E3 only;
+                        # no-op unless algorithm.dynamic_filter.enable is set).
+                        dynamic_filter_metrics = tau3_dynamic_filter(
+                            batch, self.config.algorithm
+                        )
+                        metrics.update(dynamic_filter_metrics)
+                        tau3_skip_actor_update = bool(dynamic_filter_metrics) and not (
+                            tau3_has_effective_policy_tokens(batch)
+                        )
+                        if dynamic_filter_metrics:
+                            metrics["dynamic_filter/skipped_actor_update"] = int(
+                                tau3_skip_actor_update
+                            )
+
                         batch = compute_advantage(
                             batch,
                             adv_estimator=self.config.algorithm.adv_estimator,
@@ -1491,6 +1709,21 @@ class RayPPOTrainer:
                             num_repeat=self.config.actor_rollout_ref.rollout.n,
                             norm_adv_by_std_in_grpo=norm_adv_by_std_in_grpo,
                             config=self.config.algorithm,
+                        )
+
+                        # Tau3-GRPO local patch: aggregate process-local GiGPO
+                        # stats plus gathered anchor/verifier fields into scalar
+                        # metrics.  This runs after the estimator on the trainer
+                        # driver, so last_stats() refers to this exact update.
+                        from tau3_grpo.integration.trainer_telemetry import (
+                            collect_rollout_metrics,
+                        )
+
+                        metrics.update(
+                            collect_rollout_metrics(
+                                batch.non_tensor_batch,
+                                adv_estimator=self.config.algorithm.adv_estimator,
+                            )
                         )
 
                     # update critic
@@ -1502,9 +1735,13 @@ class RayPPOTrainer:
 
                     # implement critic warmup
                     if self.config.trainer.critic_warmup <= self.global_steps:
-                        # update actor
-                        with marked_timer("update_actor", timing_raw, color="red"):
-                            actor_output = self._update_actor(batch)
+                        actor_output = None
+                        if tau3_skip_actor_update:
+                            metrics["actor/skipped_no_effective_tokens"] = 1
+                        else:
+                            # update actor
+                            with marked_timer("update_actor", timing_raw, color="red"):
+                                actor_output = self._update_actor(batch)
 
                         # Check if the ESI (Elastic Server Instance)/training plan is close to expiration.
                         esi_close_to_expiration = should_save_ckpt_esi(
@@ -1532,8 +1769,21 @@ class RayPPOTrainer:
                         with marked_timer("update_weights", timing_raw, color="red"):
                             self.checkpoint_manager.update_weights(self.global_steps)
 
-                        actor_output_metrics = reduce_metrics(actor_output.meta_info["metrics"])
-                        metrics.update(actor_output_metrics)
+                        if actor_output is not None:
+                            actor_output_metrics = reduce_metrics(
+                                actor_output.meta_info["metrics"]
+                            )
+                            metrics.update(actor_output_metrics)
+
+                    # Tau3-GRPO local patch: all distributed compute is complete;
+                    # remove dummy rows before trajectory dumps and data metrics.
+                    batch, reward_extra_infos_dict = tau3_unpad_policy_batch(
+                        batch, reward_extra_infos_dict
+                    )
+                    if tau3_restore_candidate_mask_for_metrics(
+                        batch, skipped=tau3_skip_actor_update
+                    ):
+                        metrics["dynamic_filter/restored_candidate_mask_for_metrics"] = 1
 
                     # Log rollout generations if enabled
                     rollout_data_dir = self.config.trainer.get("rollout_data_dir", None)
@@ -1600,6 +1850,15 @@ class RayPPOTrainer:
                     self.train_dataloader.sampler.update(batch=batch)
 
                 # TODO: make a canonical logger that supports various backend
+                # Tau3-GRPO local patch: persist the same update-level values as
+                # JSONL for deterministic reports, independent of wandb access.
+                from tau3_grpo.integration.trainer_telemetry import write_training_update
+
+                write_training_update(
+                    batch=batch,
+                    metrics=metrics,
+                    update_index=self.global_steps,
+                )
                 logger.log(data=metrics, step=self.global_steps)
 
                 progress_bar.update(1)

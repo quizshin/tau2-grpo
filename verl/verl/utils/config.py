@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 from dataclasses import is_dataclass
 from typing import Any, Optional
 
@@ -71,6 +72,52 @@ def update_dict_with_config(dictionary: dict, config: DictConfig):
             dictionary[key] = getattr(config, key)
 
 
+def _validate_train_batch_size(
+    real_train_batch_size: int,
+    minimal_bsz: int,
+    rollout_group_size: int,
+) -> int:
+    """Validate policy-batch divisibility and return its effective padded size.
+
+    Vanilla veRL still requires the real rollout batch to divide evenly over
+    policy data-parallel ranks. Tau3-GRPO can opt into its post-rollout dummy
+    padding by explicitly exporting ``TAU3_GRPO_POLICY_BATCH_DIVISOR``. The
+    actual rows are added later in ``ray_trainer.py``; this helper only verifies
+    that the requested divisor is compatible with both policy DP and complete
+    rollout groups.
+    """
+    if real_train_batch_size % minimal_bsz == 0:
+        return real_train_batch_size
+
+    original_error = (
+        f"real_train_batch_size ({real_train_batch_size}) must be divisible by minimal possible batch size "
+        f"({minimal_bsz})"
+    )
+    raw_divisor = os.environ.get("TAU3_GRPO_POLICY_BATCH_DIVISOR")
+    assert raw_divisor is not None, original_error
+
+    try:
+        padding_divisor = int(raw_divisor)
+    except ValueError as exc:
+        raise AssertionError("TAU3_GRPO_POLICY_BATCH_DIVISOR must be a positive integer") from exc
+
+    assert padding_divisor > 0, "TAU3_GRPO_POLICY_BATCH_DIVISOR must be a positive integer"
+    assert padding_divisor % minimal_bsz == 0, (
+        f"TAU3_GRPO_POLICY_BATCH_DIVISOR ({padding_divisor}) must be divisible by minimal possible batch size "
+        f"({minimal_bsz})"
+    )
+    assert padding_divisor % rollout_group_size == 0, (
+        f"TAU3_GRPO_POLICY_BATCH_DIVISOR ({padding_divisor}) must be divisible by rollout group size "
+        f"({rollout_group_size})"
+    )
+
+    padded_train_batch_size = (
+        (real_train_batch_size + padding_divisor - 1) // padding_divisor
+    ) * padding_divisor
+    assert padded_train_batch_size % minimal_bsz == 0
+    return padded_train_batch_size
+
+
 def validate_config(
     config: DictConfig,
     use_reference_policy: bool,
@@ -107,9 +154,10 @@ def validate_config(
 
         # 1. Check total batch size for data correctness
         real_train_batch_size = config.data.train_batch_size * config.actor_rollout_ref.rollout.n
-        assert real_train_batch_size % minimal_bsz == 0, (
-            f"real_train_batch_size ({real_train_batch_size}) must be divisible by minimal possible batch size "
-            f"({minimal_bsz})"
+        _validate_train_batch_size(
+            real_train_batch_size=real_train_batch_size,
+            minimal_bsz=minimal_bsz,
+            rollout_group_size=config.actor_rollout_ref.rollout.n,
         )
 
     # A helper function to check "micro_batch_size" vs "micro_batch_size_per_gpu"

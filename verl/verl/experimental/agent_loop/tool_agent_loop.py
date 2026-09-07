@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import asyncio
+import importlib
 import json
 import logging
 import os
@@ -39,6 +40,75 @@ from verl.workers.rollout.replica import TokenOutput
 
 logger = logging.getLogger(__file__)
 logger.setLevel(os.getenv("VERL_LOGGING_LEVEL", "WARN"))
+
+
+# --- Tau3-GRPO local patch: anchor id / token span emission ------------------
+# The Tau-GiGPO estimator needs to know which response tokens belong to which
+# assistant generation, and which anchor (environment state) that generation was
+# conditioned on. veRL itself has no notion of an anchor, so the project registers
+# a callable here instead of veRL importing the project.
+#
+# The hook receives (agent_data, segment_kind) and returns an anchor id or None.
+# It is called once per appended token segment, so `anchor_ids` and `anchor_spans`
+# stay index-aligned with the token stream: real ids at assistant segments, None at
+# tool and user observation segments.
+_TAU3_ANCHOR_HOOK = None
+
+
+def _load_tau3_anchor_hook_from_env():
+    """Tau3-GRPO local patch: lazily load the hook inside each rollout worker."""
+
+    global _TAU3_ANCHOR_HOOK
+    if _TAU3_ANCHOR_HOOK is not None:
+        return _TAU3_ANCHOR_HOOK
+    spec = os.getenv("TAU3_GRPO_ANCHOR_HOOK", "")
+    if not spec:
+        return None
+    module_name, separator, object_name = spec.partition(":")
+    if not separator:
+        raise ValueError("TAU3_GRPO_ANCHOR_HOOK must use 'module:callable' syntax")
+    _TAU3_ANCHOR_HOOK = getattr(importlib.import_module(module_name), object_name)
+    return _TAU3_ANCHOR_HOOK
+
+
+def set_tau3_anchor_hook(hook):
+    """Tau3-GRPO local patch: register the anchor resolver (None disables it)."""
+
+    global _TAU3_ANCHOR_HOOK
+    _TAU3_ANCHOR_HOOK = hook
+
+
+def get_tau3_anchor_hook():
+    """Tau3-GRPO local patch: return the registered anchor resolver."""
+
+    return _TAU3_ANCHOR_HOOK
+
+
+def tau3_anchor_hook(agent_data, segment_kind, start, end):
+    """Tau3-GRPO local patch: record one token segment's anchor id and span.
+
+    `segment_kind` is "assistant", "tool" or "user". Observation segments always
+    record None so the per-trajectory lists line up with the token spans.
+    """
+
+    anchor_id = None
+    hook = _TAU3_ANCHOR_HOOK
+    if segment_kind == "assistant" and hook is None:
+        try:
+            hook = _load_tau3_anchor_hook_from_env()
+        except Exception as exc:  # pragma: no cover - fail closed to no step credit
+            logger.warning(f"tau3 anchor hook import failed: {exc}")
+    if segment_kind == "assistant" and hook is not None:
+        try:
+            anchor_id = hook(agent_data, segment_kind)
+        except Exception as exc:  # pragma: no cover - never break a rollout
+            logger.warning(f"tau3 anchor hook failed: {exc}")
+            anchor_id = None
+    agent_data.anchor_ids.append(anchor_id)
+    agent_data.anchor_spans.append((int(start), int(end)) if anchor_id is not None else None)
+
+
+# --- end Tau3-GRPO local patch ----------------------------------------------
 
 
 class AgentState(Enum):
@@ -80,11 +150,16 @@ class AgentData:
         self.response_logprobs: list[float] = []
         self.turn_scores: list[float] = []
         self.tool_rewards: list[float] = []
+        self.termination_reason: Optional[str] = None
         self.user_turns = 0
         self.assistant_turns = 0
 
         # Temporary state for tool calls
         self.tool_calls: list[FunctionCall] = []
+
+        # Tau3-GRPO local patch: per-segment anchor ids and token spans.
+        self.anchor_ids: list[Optional[str]] = []
+        self.anchor_spans: list[Optional[tuple[int, int]]] = []
 
         self.routed_experts = None
 
@@ -160,20 +235,72 @@ class ToolAgentLoop(AgentLoopBase):
             interaction_kwargs=interaction_kwargs,
         )
 
-        # State machine loop
+        # State machine loop. Tau3-GRPO local patch: release the private tau2
+        # session even when generation, a tool, or the simulator raises.
         state = AgentState.PENDING
-        while state != AgentState.TERMINATED:
-            if state == AgentState.PENDING:
-                state = await self._handle_pending_state(agent_data, sampling_params)
-            elif state == AgentState.GENERATING:
-                state = await self._handle_generating_state(agent_data, sampling_params)
-            elif state == AgentState.PROCESSING_TOOLS:
-                state = await self._handle_processing_tools_state(agent_data)
-            elif state == AgentState.INTERACTING:
-                state = await self._handle_interacting_state(agent_data)
+        try:
+            while state != AgentState.TERMINATED:
+                if state == AgentState.PENDING:
+                    state = await self._handle_pending_state(agent_data, sampling_params)
+                elif state == AgentState.GENERATING:
+                    state = await self._handle_generating_state(agent_data, sampling_params)
+                elif state == AgentState.PROCESSING_TOOLS:
+                    state = await self._handle_processing_tools_state(agent_data)
+                elif state == AgentState.INTERACTING:
+                    state = await self._handle_interacting_state(agent_data)
+                else:
+                    logger.error(f"Invalid state: {state}")
+                    agent_data.termination_reason = "unexpected_error"
+                    state = AgentState.TERMINATED
+        except BaseException:
+            if agent_data.interaction is not None:
+                try:
+                    await agent_data.interaction.finalize_interaction(agent_data.request_id)
+                except Exception as cleanup_exc:  # pragma: no cover - preserve original error
+                    logger.warning(f"interaction cleanup failed: {cleanup_exc}")
+            raise
+
+        # Tau3-GRPO local patch: terminal verifier reward is computed inside the
+        # rollout worker while its private tau2 session still exists. Publishing
+        # it as AgentLoopOutput.reward_score makes veRL create rm_scores directly.
+        terminal_reward_score = None
+        if agent_data.interaction is not None:
+            finalizer = getattr(agent_data.interaction, "finalize_rollout", None)
+            if callable(finalizer):
+                terminal_payload = await finalizer(
+                    agent_data.request_id,
+                    termination_reason=agent_data.termination_reason or "agent_stop",
+                    anchor_ids=agent_data.anchor_ids,
+                    anchor_spans=agent_data.anchor_spans,
+                )
+                terminal_reward_score = float(terminal_payload["reward"])
+                # `_postprocess` converts each reward-extra value with
+                # `np.array`. Keep nested verifier payloads JSON encoded so
+                # variable-length reward bases/trajectories cannot form ragged
+                # arrays and crash a mixed rollout batch.
+                scalar_keys = (
+                    "task_id",
+                    "termination_reason",
+                    "failure_category",
+                    "db_hash",
+                    "initial_db_hash",
+                    "scored",
+                )
+                reward_extra_info = {
+                    key: terminal_payload.get(key) for key in scalar_keys
+                }
+                for source_key, output_key in (
+                    ("reward_breakdown", "reward_breakdown_json"),
+                    ("reward_basis", "reward_basis_json"),
+                    ("info", "verifier_info_json"),
+                    ("trajectory", "trajectory_json"),
+                ):
+                    reward_extra_info[output_key] = json.dumps(
+                        terminal_payload.get(source_key), sort_keys=True
+                    )
+                agent_data.extra_fields["reward_extra_info"] = reward_extra_info
             else:
-                logger.error(f"Invalid state: {state}")
-                state = AgentState.TERMINATED
+                await agent_data.interaction.finalize_interaction(agent_data.request_id)
 
         # Finalize output
         response_ids = agent_data.prompt_ids[-len(agent_data.response_mask) :]
@@ -192,12 +319,19 @@ class ToolAgentLoop(AgentLoopBase):
             response_logprobs=agent_data.response_logprobs[: self.response_length]
             if agent_data.response_logprobs
             else None,
+            reward_score=terminal_reward_score,
             num_turns=agent_data.user_turns + agent_data.assistant_turns + 1,
             metrics=agent_data.metrics,
             routed_experts=agent_data.routed_experts,
             extra_fields=agent_data.extra_fields,
         )
         output.extra_fields.update({"turn_scores": agent_data.turn_scores, "tool_rewards": agent_data.tool_rewards})
+        # Tau3-GRPO local patch: publish the anchor trail. `_postprocess` turns every
+        # extra_fields key into a non_tensor_batch key, so the tau_gigpo estimator can
+        # read anchor_ids / anchor_spans without further plumbing.
+        output.extra_fields.update(
+            {"anchor_ids": agent_data.anchor_ids, "anchor_spans": agent_data.anchor_spans}
+        )
         return output
 
     async def _handle_pending_state(self, agent_data: AgentData, sampling_params: dict[str, Any]) -> AgentState:
@@ -217,11 +351,27 @@ class ToolAgentLoop(AgentLoopBase):
         """Handle the generating state: generate model response and check for tool calls."""
         add_messages: list[dict[str, Any]] = []
 
+        # Tau3-GRPO local patch: the v2-2 contract caps *each assistant turn* at
+        # 1,024 new tokens while keeping a much larger trajectory budget.  veRL's
+        # default async server otherwise gives every turn the whole remaining
+        # response budget, which can let one malformed turn consume the complete
+        # 24k context.  Copy because sampling_params is shared by concurrent loops
+        # and the vLLM adapter pops max_tokens.
+        remaining_tokens = self.response_length - len(agent_data.response_mask)
+        if remaining_tokens <= 0:
+            agent_data.termination_reason = "context_window_exceeded"
+            return AgentState.TERMINATED
+        max_tokens_per_turn = int(os.getenv("TAU3_GRPO_MAX_TOKENS_PER_TURN", "1024"))
+        if max_tokens_per_turn <= 0:
+            raise ValueError("TAU3_GRPO_MAX_TOKENS_PER_TURN must be positive")
+        turn_sampling_params = dict(sampling_params)
+        turn_sampling_params["max_tokens"] = min(max_tokens_per_turn, remaining_tokens)
+
         with simple_timer("generate_sequences", agent_data.metrics):
             output: TokenOutput = await self.server_manager.generate(
                 request_id=agent_data.request_id,
                 prompt_ids=agent_data.prompt_ids,
-                sampling_params=sampling_params,
+                sampling_params=turn_sampling_params,
                 image_data=agent_data.image_data,
                 video_data=agent_data.video_data,
             )
@@ -243,7 +393,10 @@ class ToolAgentLoop(AgentLoopBase):
         agent_data.assistant_turns += 1
         agent_data.response_ids = output.token_ids
         agent_data.prompt_ids += agent_data.response_ids
+        # Tau3-GRPO local patch: span of this assistant generation inside the response.
+        _tau3_span_start = len(agent_data.response_mask)
         agent_data.response_mask += [1] * len(agent_data.response_ids)
+        tau3_anchor_hook(agent_data, "assistant", _tau3_span_start, len(agent_data.response_mask))
         if output.log_probs:
             agent_data.response_logprobs += output.log_probs
 
@@ -252,10 +405,13 @@ class ToolAgentLoop(AgentLoopBase):
 
         # Check termination conditions
         if not ignore_termination and len(agent_data.response_mask) >= self.response_length:
+            agent_data.termination_reason = "context_window_exceeded"
             return AgentState.TERMINATED
         if self.max_assistant_turns and agent_data.assistant_turns >= self.max_assistant_turns:
+            agent_data.termination_reason = "max_steps"
             return AgentState.TERMINATED
         if self.max_user_turns and agent_data.user_turns >= self.max_user_turns:
+            agent_data.termination_reason = "max_steps"
             return AgentState.TERMINATED
 
         # Extract tool calls
@@ -276,6 +432,7 @@ class ToolAgentLoop(AgentLoopBase):
         elif self.interaction_config_file:
             return AgentState.INTERACTING
         else:
+            agent_data.termination_reason = "agent_stop"
             return AgentState.TERMINATED
 
     async def _handle_processing_tools_state(self, agent_data: AgentData) -> AgentState:
@@ -363,6 +520,7 @@ class ToolAgentLoop(AgentLoopBase):
             )
 
         if len(agent_data.response_mask) + len(response_ids) >= self.response_length:
+            agent_data.termination_reason = "context_window_exceeded"
             return AgentState.TERMINATED
         # Update prompt_ids and response_mask
 
@@ -375,7 +533,10 @@ class ToolAgentLoop(AgentLoopBase):
                 agent_data.image_data.append(img)
 
         agent_data.prompt_ids += response_ids
+        # Tau3-GRPO local patch: tool observation tokens carry no anchor.
+        _tau3_span_start = len(agent_data.response_mask)
         agent_data.response_mask += [0] * len(response_ids)
+        tau3_anchor_hook(agent_data, "tool", _tau3_span_start, len(agent_data.response_mask))
         if agent_data.response_logprobs:
             agent_data.response_logprobs += [0.0] * len(response_ids)
         agent_data.user_turns += 1
@@ -407,13 +568,17 @@ class ToolAgentLoop(AgentLoopBase):
 
         # Update prompt_ids and response_mask
         agent_data.prompt_ids += response_ids
+        # Tau3-GRPO local patch: user observation tokens carry no anchor.
+        _tau3_span_start = len(agent_data.response_mask)
         agent_data.response_mask += [0] * len(response_ids)
+        tau3_anchor_hook(agent_data, "user", _tau3_span_start, len(agent_data.response_mask))
         if agent_data.response_logprobs:
             agent_data.response_logprobs += [0.0] * len(response_ids)
 
         # double check prompt
         # Check termination condition
         if should_terminate_sequence:
+            agent_data.termination_reason = metrics.get("termination_reason", "user_stop")
             return AgentState.TERMINATED
         else:
             return AgentState.GENERATING
@@ -423,10 +588,14 @@ class ToolAgentLoop(AgentLoopBase):
     ) -> tuple[ToolResponse, float, dict]:
         """Call tool and return tool response."""
         tool, instance_id = None, None
+        tool_name = str(getattr(tool_call, "name", "unknown_tool"))
+        raw_arguments = getattr(tool_call, "arguments", "")
         try:
-            # TODO: append malformed tool_call to the prompt: invalid function name or arguments
-            tool_name = tool_call.name
-            tool_args = json.loads(tool_call.arguments)
+            tool_args = json.loads(raw_arguments)
+            if not isinstance(tool_args, dict):
+                raise TypeError(
+                    f"tool arguments must decode to an object, got {type(tool_args).__name__}"
+                )
             tool = self.tools[tool_name]
             kwargs = tools_kwargs.get(tool_name, {})
             instance_id, _ = await tool.create(create_kwargs=kwargs.get("create_kwargs", {}))
@@ -435,12 +604,29 @@ class ToolAgentLoop(AgentLoopBase):
             )
         except Exception as e:
             logger.warning(f"Error when executing tool: {e}")
+            error_text = f"Error when executing tool: {e}"
+            # Tau3-GRPO local patch: parser and dispatch errors happen before
+            # Tau3AirlineTool can write the AssistantMessage/ToolMessage pair.
+            # Let the interaction record the failed call through the live tau2
+            # Environment so the official verifier replays the same no-op.
+            if agent_data.interaction is not None:
+                recorder = getattr(agent_data.interaction, "record_tool_failure", None)
+                if callable(recorder):
+                    try:
+                        error_text = recorder(
+                            agent_data.request_id,
+                            tool_name=tool_name,
+                            raw_arguments=raw_arguments,
+                            error=str(e),
+                        )
+                    except Exception as record_exc:  # pragma: no cover - preserve rollout
+                        logger.warning(f"failed to record tool error for verifier replay: {record_exc}")
             return (
                 ToolResponse(
-                    text=f"Error when executing tool: {e}",
+                    text=error_text,
                 ),
                 0.0,
-                {},
+                {"tool": tool_name, "error": True, "dispatch_error": True},
             )
         finally:
             if tool and instance_id:

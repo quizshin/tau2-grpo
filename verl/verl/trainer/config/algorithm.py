@@ -618,3 +618,16 @@ class AlgoConfig(BaseConfig):
     # gdpo_reward_weights: per-dimension weights for aggregation (default: equal weights).
     gdpo_reward_keys: Optional[list[str]] = None
     gdpo_reward_weights: Optional[list[float]] = None
+    # Tau3-GRPO local patch: optional blocks for fixed-rollout Dynamic Filtering and
+    # the tau_gigpo advantage estimator. Both default to None, so every existing
+    # config and the vanilla GRPO path behave exactly as before.
+    #
+    # dynamic_filter: {enable: bool, group_size: int = 8, max_reward: float = 1.0}
+    #   When enabled, uid groups whose rollouts all scored 0 or all scored max have
+    #   their response mask zeroed before advantages are computed.
+    # gigpo: {omega: float, gamma: float = 0.95, fnorm: float = 1.0,
+    #         min_anchor_group_size: int = 2}
+    #   A = A_episode + omega * A_step. A_step is exactly 0 when no anchor group
+    #   reaches min_anchor_group_size.
+    dynamic_filter: Optional[dict[str, Any]] = None
+    gigpo: Optional[dict[str, Any]] = None
