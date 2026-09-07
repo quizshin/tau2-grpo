@@ -6,7 +6,6 @@ real 1,148-record Airline pool. Official τ³ tasks use a separate constructor.
 
 from __future__ import annotations
 
-import json
 from collections.abc import Iterable
 from pathlib import Path
 from typing import Any, Literal
@@ -162,4 +161,3 @@ def write_jsonl(entries: Iterable[ManifestEntry], path: str | Path) -> None:
 def read_manifest(path: str | Path) -> list[ManifestEntry]:
     with Path(path).open(encoding="utf-8") as handle:
         return [ManifestEntry.model_validate_json(line) for line in handle if line.strip()]
-

@@ -1,14 +1,93 @@
-"""Data contracts and deterministic manifest construction."""
+"""Data boundary: AReaL schema, deterministic splits, τ³ official isolation.
 
-from .manifest import ManifestEntry, SplitManifest, build_airline_splits, read_manifest
-from .schema import ArealTaskRecord, DataSource
+`parquet_builder` imports veRL (through the interaction module) so it is not
+re-exported here; import it directly where veRL is available.
+"""
+
+from tau3_grpo.data.dataset import (
+    AREAL_REPO_ID,
+    EXPECTED_AIRLINE_RECORDS,
+    EXPECTED_RESERVE,
+    EXPECTED_SELECTION,
+    EXPECTED_TOTAL_RECORDS,
+    EXPECTED_TRAIN,
+    DatasetStats,
+    assert_split_sizes,
+    build_manifests,
+    describe_records,
+    download_areal_dataset,
+    entries_by_id,
+    load_and_validate,
+    validate_db_paths,
+    write_split_manifests,
+)
+from tau3_grpo.data.leakage import LeakageFinding, audit_exact, normalized_intent
+from tau3_grpo.data.manifest import (
+    AREAL_REVISION,
+    TAU3_REVISION,
+    ManifestEntry,
+    SplitManifest,
+    build_airline_splits,
+    load_areal_records,
+    official_tau3_manifest,
+    read_manifest,
+    write_jsonl,
+)
+from tau3_grpo.data.official import (
+    FINAL_ONLY_SOURCES,
+    OFFICIAL_AIRLINE_SPLIT,
+    OFFICIAL_AIRLINE_TASK_COUNT,
+    TRAINABLE_SOURCES,
+    SourceIsolationError,
+    assert_trainable_entries,
+    assert_trainable_source,
+    build_official_manifest,
+    load_official_airline_tasks,
+    official_airline_task_ids,
+    official_revision,
+)
+from tau3_grpo.data.schema import ArealTaskRecord, DataSource, OfficialTau3TaskRef
 
 __all__ = [
+    "AREAL_REPO_ID",
+    "AREAL_REVISION",
+    "EXPECTED_AIRLINE_RECORDS",
+    "EXPECTED_RESERVE",
+    "EXPECTED_SELECTION",
+    "EXPECTED_TOTAL_RECORDS",
+    "EXPECTED_TRAIN",
+    "FINAL_ONLY_SOURCES",
+    "OFFICIAL_AIRLINE_SPLIT",
+    "OFFICIAL_AIRLINE_TASK_COUNT",
+    "TAU3_REVISION",
+    "TRAINABLE_SOURCES",
     "ArealTaskRecord",
     "DataSource",
+    "DatasetStats",
+    "LeakageFinding",
     "ManifestEntry",
+    "OfficialTau3TaskRef",
+    "SourceIsolationError",
     "SplitManifest",
+    "assert_split_sizes",
+    "assert_trainable_entries",
+    "assert_trainable_source",
+    "audit_exact",
     "build_airline_splits",
+    "build_manifests",
+    "build_official_manifest",
+    "describe_records",
+    "download_areal_dataset",
+    "entries_by_id",
+    "load_and_validate",
+    "load_areal_records",
+    "load_official_airline_tasks",
+    "normalized_intent",
+    "official_airline_task_ids",
+    "official_revision",
+    "official_tau3_manifest",
     "read_manifest",
+    "validate_db_paths",
+    "write_jsonl",
+    "write_split_manifests",
 ]
-

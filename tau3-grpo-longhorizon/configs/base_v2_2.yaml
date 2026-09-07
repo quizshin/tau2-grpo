@@ -1,0 +1,73 @@
+# v2-2 frozen configuration shared by every arm.
+#
+# Milestone D4: values here are the agreed v2-2 defaults and must not drift
+# between arms; only the algorithm block differs per arm.
+#
+# All paths are relative to the four-directory `code/` root.
+
+model:
+  path: Qwen/Qwen2.5-7B-Instruct
+  trust_remote_code: false
+
+rollout:
+  group_size: 8              # rollouts per uid; also the DF group size
+  groups_per_update: 16      # uids per optimizer update
+  temperature_train: 1.0
+  temperature_eval: 0.4
+  max_user_turns: 15
+  max_assistant_turns: 15
+  backend: vllm              # the only rollout backend used by this project
+  tensor_model_parallel_size: 2
+
+optim:
+  lr: 1.0e-6
+  kl_coef: 0.01
+  ppo_epochs: 1
+  # 6 pre-repeat uid groups -> 48 trajectory mini-batch. The real update stays
+  # 16x8=128 rollouts; 16 zero-loss rows pad post-rollout compute to 144 so the
+  # 6 policy ranks each receive 24 rows and 3 local mini-batches of 8.
+  ppo_mini_groups: 6
+  policy_batch_divisor: 48
+
+schedule:
+  screening_updates: 40      # screening phase
+  confirmatory_updates: 60   # confirmatory phase
+  seeds: [42, 43]
+
+resources:
+  policy_gpus: 6             # 6 GPU policy
+  simulator_gpus: 2          # 2 GPU user simulator
+  total_gpus: 8
+
+user_simulator:
+  # OpenAI-compatible endpoint served on the simulator GPUs.
+  model: Qwen/Qwen2.5-7B-Instruct
+  base_url: http://127.0.0.1:8100/v1
+  # Training simulator is deterministic; final-eval sampling is frozen
+  # separately by run_eval.sh.
+  temperature: 0.0
+  api_key_env: TAU3_USER_API_KEY
+
+data:
+  source: areal_tau2_airline
+  source_revision: 86971dc03da6e7c1a7933295e05b84aab8215386
+  split_seed: 42               # frozen once; not a training-randomness seed
+  train_size: 200
+  selection_size: 60
+  reserve_size: 888
+
+anchors:
+  mode: structured
+  similarity_threshold: 0.9
+
+gigpo:
+  omega: 1.0
+  gamma: 0.95
+  fnorm: 1.0
+  min_anchor_group_size: 2
+
+dynamic_filter:
+  enable: false
+  mode: fixed_rollout
+  group_size: 8
+  max_reward: 1.0

@@ -32,6 +32,11 @@ class ArealTaskRecord(BaseModel):
     description: dict[str, Any] | None = None
     user_scenario: dict[str, Any]
     evaluation_criteria: dict[str, Any] | str
+    # Non-Airline records in the pinned AReaL file carry these fields.  They
+    # remain part of the fingerprint even though the Airline adapter does not
+    # forward them to Sierra's Task model.
+    initial_state: dict[str, Any] | None = None
+    ticket: str | None = None
 
     @field_validator("evaluation_criteria")
     @classmethod
@@ -83,4 +88,3 @@ class OfficialTau3TaskRef(BaseModel):
     source_revision: str
     split: str = "base"
     source: DataSource = Field(default=DataSource.TAU3_OFFICIAL_AIRLINE)
-

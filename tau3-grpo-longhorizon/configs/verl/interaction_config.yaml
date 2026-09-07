@@ -1,0 +1,24 @@
+# veRL interaction config: the tau2 user simulator behind BaseInteraction.
+#
+# Milestone D3. veRL's `initialize_interactions_from_config` instantiates the
+# class with this dict. `name` must match the `interaction_kwargs.name` written
+# into the parquet by `tau3_grpo.data.parquet_builder`.
+
+interaction:
+  - name: tau3_airline
+    class_name: tau3_grpo.integration.interaction.Tau3AirlineInteraction
+    config:
+      max_user_turns: 15
+      max_assistant_turns: 15
+      # OpenAI-compatible endpoint served on the 2 simulator GPUs.
+      user_model: Qwen/Qwen2.5-7B-Instruct
+      user_base_url: http://127.0.0.1:8100/v1
+      user_api_key_env: TAU3_USER_API_KEY
+      # The v2-2 training simulator gate freezes deterministic decoding.
+      # Official evaluation has a separate configuration in run_eval.sh.
+      user_temperature: 0.0
+      anchor_mode: structured
+      anchor_similarity_threshold: 0.9
+      # Live scoring keeps tau2's strict replay; only trajectory re-grading
+      # relaxes it.
+      strict_replay: true
