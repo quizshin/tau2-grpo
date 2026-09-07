@@ -1,7 +1,24 @@
+# Immutable inputs and generated artifacts stay out of Git.
+# The AReaL JSONL and its per-record FlightDBs are pinned by revision, not committed.
 data/raw/
 data/processed/
+data/parquet/
+data/manifests/
+data/sft/
+
+# Run outputs: checkpoints, telemetry, reports, the winner lock.
+results/
 experiments/**/checkpoints/
 experiments/**/logs/
 experiments/**/trajectories/
 reports/figures/*.png
 
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+.venv/
