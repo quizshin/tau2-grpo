@@ -71,6 +71,23 @@ def get_init_weight_context_manager(use_meta_tensor=True, mesh: DeviceMesh = Non
     return init_context
 
 
+def resolve_fsdp_use_orig_params(module, requested: bool, is_lora: bool) -> bool:
+    """Avoid FSDP1's frozen shared-parameter restore bug for Qwen3.5 LoRA.
+
+    With use_orig_params=True, torch 2.11 leaves the frozen tied embedding as
+    a Tensor after backward, then fails on the second accumulated microbatch.
+    The LoRA auto-wrap policy separates trainable adapters from frozen base
+    parameters, so flattened parameters preserve both tying and gradients.
+    Full fine-tuning still uses original parameters for the frozen vision tower.
+    """
+    if is_lora and getattr(module.config, "model_type", None) == "qwen3_5":
+        embeddings = module.get_input_embeddings()
+        head = module.get_output_embeddings()
+        if head.weight is embeddings.weight and not embeddings.weight.requires_grad:
+            return False
+    return requested
+
+
 # Copyright 2020-present the HuggingFace Inc. team.
 # Adapted from https://github.com/huggingface/transformers/src/transformers/trainer.py
 def get_fsdp_wrap_policy(module, config=None, is_lora=False):

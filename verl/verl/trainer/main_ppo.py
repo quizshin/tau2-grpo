@@ -356,7 +356,19 @@ class TaskRunner:
         trainer.init_workers()
 
         # Start the training process.
-        trainer.fit()
+        try:
+            trainer.fit()
+        except BaseException:
+            # Ray catches this exception, so SwanLab's process excepthook cannot
+            # observe it. Finish explicitly before Tracking.__del__ runs.
+            if "swanlab" in config.trainer.logger:
+                import contextlib
+
+                import swanlab
+
+                with contextlib.suppress(Exception):
+                    swanlab.finish(exit_code=1)
+            raise
 
 
 def create_rl_dataset(data_paths, data_config, tokenizer, processor, is_train=True, max_samples: int = -1):

@@ -22,6 +22,10 @@ def get_environment(
         raise ValueError("Airline domain does not support solo mode")
     if db is None:
         db = FlightDB.load(AIRLINE_DB_PATH)
+    else:
+        # Tau3-GRPO local patch: the evaluator reuses env_kwargs for predicted
+        # and gold replay. Each environment must own an independent database.
+        db = db.model_copy(deep=True)
     tools = AirlineTools(db)
     with open(AIRLINE_POLICY_PATH, "r") as fp:
         policy = fp.read()

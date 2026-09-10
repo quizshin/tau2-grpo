@@ -1,0 +1,9 @@
+# RL-007: retry full after bounding no-grad BF16 log-softmax temporary memory.
+includes:
+- qwen35_full_rl006.yaml
+launch:
+  environment:
+    RESULTS_DIR: ${TAU3_RUN_ROOT}/rl007_full_chunklogp_20260909/e0_seed42
+    SWANLAB_LOG_DIR: ${TAU3_RUN_ROOT}/rl007_full_chunklogp_20260909/e0_seed42/swanlog
+    SWANLAB_EXPERIMENT_NAME: rl-validation-E0-Qwen3.5-0.8B-full-chunklogp-offload-obs64k-g2x4-u3-s42
+    TAU3_GRPO_DEBUG_BATCH_DIR: ${TAU3_RUN_ROOT}/rl007_full_chunklogp_20260909/update-batches

@@ -1,0 +1,4 @@
+launch:
+  environment:
+    TAU3_SWANLAB_PROJECT: tau3-grpo-pytrio
+    TRAINER_LOGGERS: '[console,swanlab]'

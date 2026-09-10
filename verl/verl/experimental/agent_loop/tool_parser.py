@@ -330,10 +330,9 @@ class Qwen3XMLToolParser(ToolParser):
                 self._parse_xml_function_call(function_call_str, tools) for function_call_str in function_calls
             ]
 
-            # Extract content before tool calls
-            content_index = text.find(self.tool_call_start_token)
-            content_index = content_index if content_index >= 0 else text.find(self.tool_call_prefix)
-            content = text[:content_index]  # .rstrip()
+            # Preserve prose before, between, and after tool calls for replay.
+            # An unfinished call consumes the remainder, including its args.
+            content = self.tool_call_regex.sub("", text)
 
             return content, tool_calls
         except Exception as e:

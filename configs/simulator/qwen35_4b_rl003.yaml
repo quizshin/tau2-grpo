@@ -1,0 +1,6 @@
+# Match RL-002's simulator allocation (the generic profile defaults to 0.65).
+includes:
+- qwen35_4b.yaml
+launch:
+  environment:
+    TAU3_USER_GPU_MEMORY_UTILIZATION: '0.60'

@@ -28,33 +28,33 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
-          cache-dependency-path: tau3-grpo-longhorizon/pyproject.toml
+          cache-dependency-path: pyproject.toml
 
       - name: Install project CPU dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install -e "./tau2-bench"
-          python -m pip install -e "./tau3-grpo-longhorizon[dev]"
+          python -m pip install -e ".[dev]"
 
       - name: Lint project-owned Python
         run: |
-          ruff check tau3-grpo-longhorizon/src tau3-grpo-longhorizon/tests
+          ruff check tau3_grpo tests
 
       - name: Validate shell syntax
         run: |
           bash -n setup.sh
-          find tau3-grpo-longhorizon/scripts -type f -name "*.sh" -print0 |
+          find scripts -type f -name "*.sh" -print0 |
             xargs -0 -n1 bash -n
 
       - name: Run deterministic CPU unit tests
         run: |
           pytest -q \
-            tau3-grpo-longhorizon/tests/test_anchors.py \
-            tau3-grpo-longhorizon/tests/test_dynamic_filtering.py \
-            tau3-grpo-longhorizon/tests/test_tau_gigpo.py \
-            tau3-grpo-longhorizon/tests/test_metrics.py \
-            tau3-grpo-longhorizon/tests/test_configs.py \
-            tau3-grpo-longhorizon/tests/test_experiment_manifest.py \
-            tau3-grpo-longhorizon/tests/test_leakage_audit.py \
-            tau3-grpo-longhorizon/tests/test_path_traversal.py \
-            tau3-grpo-longhorizon/tests/test_patch_contract.py
+            tests/test_anchors.py \
+            tests/test_dynamic_filtering.py \
+            tests/test_tau_gigpo.py \
+            tests/test_metrics.py \
+            tests/test_configs.py \
+            tests/test_experiment_manifest.py \
+            tests/test_leakage_audit.py \
+            tests/test_path_traversal.py \
+            tests/test_patch_contract.py

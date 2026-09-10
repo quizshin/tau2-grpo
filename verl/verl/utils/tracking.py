@@ -134,12 +134,19 @@ class Tracking:
 
             if config is None:
                 config = {}  # make sure config is not None, otherwise **config will raise error
+            swanlab_config = {"FRAMEWORK": "verl", **config}
+            swanlab_options = {}
+            if os.environ.get("TAU3_GRPO_ARM"):
+                from tau3_grpo.tracking.swanlab import rl_tracking_metadata
+
+                swanlab_config, swanlab_options = rl_tracking_metadata(swanlab_config)
             swanlab.init(
                 project=project_name,
                 experiment_name=experiment_name,
-                config={"FRAMEWORK": "verl", **config},
+                config=swanlab_config,
                 logdir=SWANLAB_LOG_DIR,
                 mode=SWANLAB_MODE,
+                **swanlab_options,
             )
             self.logger["swanlab"] = swanlab
 

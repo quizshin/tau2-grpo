@@ -13,6 +13,7 @@
 # limitations under the License.
 """Utils for tokenization."""
 
+import os
 import types
 import warnings
 
@@ -113,6 +114,14 @@ def hf_processor(name_or_path, **kwargs):
         tokenizer backends such as ``TokenizersBackend``).
     """
     from transformers import AutoConfig, AutoProcessor, PreTrainedTokenizerBase
+
+    # Tau3-GRPO local patch: an explicit text-only launcher retains the full
+    # conditional-generation checkpoint but does not construct a vision processor.
+    # This avoids image/video processing and unsupported multimodal rope handling.
+    if os.environ.get("TAU3_GRPO_TEXT_ONLY") == "1":
+        config = AutoConfig.from_pretrained(name_or_path, **kwargs)
+        if config.model_type == "qwen3_5":
+            return None
 
     try:
         processor = AutoProcessor.from_pretrained(name_or_path, **kwargs)

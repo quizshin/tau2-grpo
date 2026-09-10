@@ -1,0 +1,43 @@
+model:
+  name_or_path: Qwen/Qwen2.5-7B-Instruct
+  trust_remote_code: false
+  attn_implementation: flash_attention_2
+data:
+  train_jsonl: data/sft/airline_sft_train_seed42.jsonl
+  validation_jsonl: data/sft/airline_sft_validation_seed42.jsonl
+  tool_config: configs/envs/tool_config.yaml
+  max_length: 16384
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules:
+  - q_proj
+  - k_proj
+  - v_proj
+  - o_proj
+  - gate_proj
+  - up_proj
+  - down_proj
+train:
+  num_epochs: 5
+  per_device_batch_size: 1
+  gradient_accumulation_steps: 8
+  learning_rate: 2.0e-05
+  lr_scheduler_type: cosine
+  warmup_ratio: 0.05
+  weight_decay: 0.0
+  max_grad_norm: 1.0
+  logging_steps: 1
+  seed: 42
+  method: full
+output:
+  dir: results/qwen25_full_seed42
+includes:
+- ../../hardware/2xa800.yaml
+- ../../tracking/swanlab.yaml
+launch:
+  stage: sft
+  entrypoint: scripts/train/sft/run_base.sh
+  environment:
+    SFT_MODEL_NAME_OR_PATH: ${TAU3_MODEL_ROOT}/Qwen2.5-7B-Instruct

@@ -193,6 +193,21 @@ def logprobs_from_logits_v2(logits: torch.FloatTensor, labels: torch.Tensor) -> 
         # logsumexp approach is unstable with bfloat16, fall back to slightly less efficent approach
         logprobs_labels = []
         for row_logits, row_labels in zip(logits, labels, strict=True):  # loop to reduce peak mem consumption
+            if not torch.is_grad_enabled() and row_logits.ndim == 2:
+                # A single long-sequence row can have multi-GiB vocabulary logits.
+                # Keep the same per-token softmax and dtype, but bound temporary
+                # memory for actor/reference inference. The autograd path stays
+                # unchanged: chunking alone would still retain every softmax.
+                token_logprobs = []
+                for chunk_logits, chunk_labels in zip(
+                    row_logits.split(128, dim=0), row_labels.split(128, dim=0), strict=True
+                ):
+                    chunk_logprobs = F.log_softmax(chunk_logits, dim=-1)
+                    token_logprobs.append(
+                        chunk_logprobs.gather(dim=-1, index=chunk_labels.unsqueeze(-1)).squeeze(-1)
+                    )
+                logprobs_labels.append(torch.cat(token_logprobs))
+                continue
             row_logprobs = F.log_softmax(row_logits, dim=-1)
             row_logprobs_labels = row_logprobs.gather(dim=-1, index=row_labels.unsqueeze(-1)).squeeze(-1)
             logprobs_labels.append(row_logprobs_labels)
@@ -233,6 +248,10 @@ def entropy_from_logits(logits: torch.Tensor) -> torch.Tensor:
     Returns:
         torch.Tensor: Entropy values with shape (...,), one per distribution.
     """
+    if not torch.is_grad_enabled() and logits.ndim == 3 and logits.shape[1] > 128:
+        # Bound full-vocabulary temporaries during old-policy diagnostics. Keep
+        # the same reductions/autocast behavior and leave autograd unchanged.
+        return torch.cat([entropy_from_logits(part) for part in logits.split(128, dim=1)], dim=1)
     pd = torch.nn.functional.softmax(logits, dim=-1)
     entropy = torch.logsumexp(logits, dim=-1) - torch.sum(pd * logits, dim=-1)
     return entropy

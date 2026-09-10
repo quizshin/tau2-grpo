@@ -14,6 +14,9 @@ checkpoints/
 *.log
 .env
 .env.*
+.swanlab
+.netrc
+swanlog/
 !.env.example
 *.pem
 *.key
@@ -23,9 +26,14 @@ checkpoints/
 *.pth
 
 # Raw and generated data are reproducible and must not be committed.
-tau3-grpo-longhorizon/data/raw/
-tau3-grpo-longhorizon/data/processed/
-tau3-grpo-longhorizon/experiments/**/checkpoints/
-tau3-grpo-longhorizon/experiments/**/trajectories/
-tau3-grpo-longhorizon/experiments/**/logs/
-tau3-grpo-longhorizon/models/
+/data/raw/
+/data/processed/
+experiments/**/checkpoints/
+experiments/**/trajectories/
+experiments/**/logs/
+/models/
+# Runtime storage after the flat-layout migration.
+/data/
+/results/
+build/
+dist/

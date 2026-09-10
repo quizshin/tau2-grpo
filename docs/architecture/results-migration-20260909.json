@@ -1,0 +1,1458 @@
+{
+  "status": "complete",
+  "moves": [
+    {
+      "old": "validation/code_audit_20260909",
+      "new": "code/results/validation/code_audit_20260909",
+      "reason": "veRL code paths / run IDs / deployment manifests"
+    },
+    {
+      "old": "validation/disk_cleanup_20260909",
+      "new": "code/results/validation/disk_cleanup_20260909",
+      "reason": "veRL code paths / run IDs / deployment manifests"
+    },
+    {
+      "old": "validation/layout_refactor_20260909",
+      "new": "code/results/validation/layout_refactor_20260909",
+      "reason": "veRL code paths / run IDs / deployment manifests"
+    },
+    {
+      "old": "validation/rl_qwen35_20260908",
+      "new": "code/results/validation/rl_qwen35_20260908",
+      "reason": "veRL code paths / run IDs / deployment manifests"
+    },
+    {
+      "old": "validation/rl_qwen35_scenariofix_20260908",
+      "new": "code/results/validation/rl_qwen35_scenariofix_20260908",
+      "reason": "veRL code paths / run IDs / deployment manifests"
+    },
+    {
+      "old": "validation/rollout_fixes_20260909",
+      "new": "code/results/validation/rollout_fixes_20260909",
+      "reason": "veRL code paths / run IDs / deployment manifests"
+    },
+    {
+      "old": "validation/takeover_20260909",
+      "new": "code/results/validation/takeover_20260909",
+      "reason": "veRL code paths / run IDs / deployment manifests"
+    },
+    {
+      "old": "results/rl_qwen35_lora_20260908",
+      "new": "code/results/rl_qwen35_lora_20260908",
+      "reason": "veRL backend in saved actual run config"
+    },
+    {
+      "old": "results/qwen38_simulator_20260908/benchmark-noparser.json",
+      "new": "code/results/simulator/qwen38_simulator_20260908/benchmark-noparser.json",
+      "reason": "local quantized simulator deployment; not PyTRIO hosted inference"
+    },
+    {
+      "old": "results/qwen38_simulator_20260908/benchmark-noparser.jsonl",
+      "new": "code/results/simulator/qwen38_simulator_20260908/benchmark-noparser.jsonl",
+      "reason": "local quantized simulator deployment; not PyTRIO hosted inference"
+    },
+    {
+      "old": "results/qwen38_simulator_20260908/code-latest-20260908.tar.gz",
+      "new": "code/results/rl_qwen35_lora_20260908/supplemental/code-latest-20260908.tar.gz",
+      "reason": "veRL RL/logging source snapshot"
+    },
+    {
+      "old": "results/qwen38_simulator_20260908/code-latest-20260908.tar.json",
+      "new": "code/results/rl_qwen35_lora_20260908/supplemental/code-latest-20260908.tar.json",
+      "reason": "veRL RL/logging source snapshot"
+    },
+    {
+      "old": "results/qwen38_simulator_20260908/dialogue.json",
+      "new": "code/results/simulator/qwen38_simulator_20260908/dialogue.json",
+      "reason": "local quantized simulator deployment; not PyTRIO hosted inference"
+    },
+    {
+      "old": "results/qwen38_simulator_20260908/rl-rollouts-step1.jsonl",
+      "new": "code/results/rl_qwen35_lora_20260908/supplemental/rl-rollouts-step1.jsonl",
+      "reason": "veRL RL/logging source snapshot"
+    },
+    {
+      "old": "results/qwen38_simulator_20260908/server-validated.log",
+      "new": "code/results/simulator/qwen38_simulator_20260908/server-validated.log",
+      "reason": "local quantized simulator deployment; not PyTRIO hosted inference"
+    },
+    {
+      "old": "results/qwen38_simulator_20260908/swanlab-run-before-fix.json",
+      "new": "code/results/rl_qwen35_lora_20260908/supplemental/swanlab-run-before-fix.json",
+      "reason": "veRL RL/logging source snapshot"
+    },
+    {
+      "old": "results/qwen38_simulator_20260908/tau3_source_revision.json",
+      "new": "code/results/simulator/qwen38_simulator_20260908/tau3_source_revision.json",
+      "reason": "local quantized simulator deployment; not PyTRIO hosted inference"
+    },
+    {
+      "old": "results/qwen38_simulator_20260908/tensor-storage-gib.json",
+      "new": "code/results/simulator/qwen38_simulator_20260908/tensor-storage-gib.json",
+      "reason": "local quantized simulator deployment; not PyTRIO hosted inference"
+    },
+    {
+      "old": "results/qwen38_simulator_20260908/validate-cpu.log",
+      "new": "code/results/rl_qwen35_lora_20260908/supplemental/validate-cpu.log",
+      "reason": "veRL RL/logging source snapshot"
+    }
+  ],
+  "files": {
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/code_audit_20260909/shutdown-receipt.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/code_audit_20260909/shutdown-receipt.json",
+      "sha256": "5996a208da2a77fc27262988e5cdb49ebde30f1e64e302699c365953a7d07ba8",
+      "size": 394,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/code_audit_20260909/reproduce_rollout_boundaries.log": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/code_audit_20260909/reproduce_rollout_boundaries.log",
+      "sha256": "d7cf9c3b98cdff953e8ceab7ac298a83cd16746c8bafd9aafdd9fdb9ccee519c",
+      "size": 2342,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/code_audit_20260909/README.md": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/code_audit_20260909/README.md",
+      "sha256": "c3cb986b60810a9edc773254a013d2d1bdc5ebc95ab3a0b80e304208463c2f7a",
+      "size": 3424,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/code_audit_20260909/reproduce_rollout_boundaries.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/code_audit_20260909/reproduce_rollout_boundaries.json",
+      "sha256": "ebd27f2bbe5bf0083e1ebaa147b6f18beb567da3eb7ddad7ea25874031779c4f",
+      "size": 657,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/code_audit_20260909/reproduce_rollout_boundaries.py": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/code_audit_20260909/reproduce_rollout_boundaries.py",
+      "sha256": "c931d55bc294b23b61a2d13865d110f759f533157f7a9411fc22540a8461dde7",
+      "size": 4672,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/code_audit_20260909/existing-tests.log": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/code_audit_20260909/existing-tests.log",
+      "sha256": "fac3769e9232733bfe7ddea8cae78d8a7ac24ea46f76d8ee906ba0ac751c1c06",
+      "size": 954,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/disk_cleanup_20260909/best-model-verification.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/disk_cleanup_20260909/best-model-verification.json",
+      "sha256": "b42c92e9d41314aa9a0f5ed917b73f0f95fe5934af83aa07315471e42c3a881c",
+      "size": 419,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/disk_cleanup_20260909/cleanup.py": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/disk_cleanup_20260909/cleanup.py",
+      "sha256": "4530bafda3a9ad734c90e2ec4a9dbc223c2cc80be01004bd318960cd3aa4f975",
+      "size": 2419,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/disk_cleanup_20260909/README.md": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/disk_cleanup_20260909/README.md",
+      "sha256": "9051462fc739d14019efc11213b4d8ccd01026e4d4320802a976296fa2c80d8d",
+      "size": 1443,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/disk_cleanup_20260909/checkpoint-metadata.tar.gz": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/disk_cleanup_20260909/checkpoint-metadata.tar.gz",
+      "sha256": "3a125cb5c91a9bdb376d533332ad88f60fbd57a279866564419fbaa05356d258",
+      "size": 67651,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/disk_cleanup_20260909/retired-rl-latest_checkpointed_iteration.txt": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/disk_cleanup_20260909/retired-rl-latest_checkpointed_iteration.txt",
+      "sha256": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce",
+      "size": 1,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/disk_cleanup_20260909/cleanup-receipt.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/disk_cleanup_20260909/cleanup-receipt.json",
+      "sha256": "afc684512b8220d7b65ce5747b67af94bf1539d3f7deb62c8f5495d817dec961",
+      "size": 1945,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/disk_cleanup_20260909/cleanup-plan.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/disk_cleanup_20260909/cleanup-plan.json",
+      "sha256": "096c06db0ad138b0b6f294e20fdd103a0fee2bffb9ba1ec5f3106541747bd53f",
+      "size": 1774,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/layout_refactor_20260909/git-status-before.txt": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/layout_refactor_20260909/git-status-before.txt",
+      "sha256": "f57a031c6df91c9011d3f8d4a38c011e100e5287fc886f62a2ad5a10099b5077",
+      "size": 3374,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/layout_refactor_20260909/source-before.tar.gz": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/layout_refactor_20260909/source-before.tar.gz",
+      "sha256": "de12e7ecaa18071c2c2c5ac2c43108dbeab72221582a391fa648e1ebb02ed1af",
+      "size": 3474245,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/layout_refactor_20260909/source-manifest.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/layout_refactor_20260909/source-manifest.json",
+      "sha256": "abd58b76fc0bcdf6692cda545045436827187f3c590fd300a52916b1d211ff75",
+      "size": 171961,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/layout_refactor_20260909/local-tests-second.log": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/layout_refactor_20260909/local-tests-second.log",
+      "sha256": "516ec416a09229c225cde0c7a41969d1ff8718c0def179a4708e623a8eb0952a",
+      "size": 12344,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/layout_refactor_20260909/layout-deployment.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/layout_refactor_20260909/layout-deployment.json",
+      "sha256": "ce19071515577d906bafec95e187df7ee44ff89e30c422fb1db69352392792a3",
+      "size": 1430,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/layout_refactor_20260909/deploy.py": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/layout_refactor_20260909/deploy.py",
+      "sha256": "d0ece74be69b9b434b4cbfecab0e300fca60c4f7ef6ee703368fd97f241ab2f7",
+      "size": 3370,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/layout_refactor_20260909/layout-entrypoint-tests.log": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/layout_refactor_20260909/layout-entrypoint-tests.log",
+      "sha256": "4649310c3742dd93299b7c5829556ca2ae38e644856ee240b2bf810b7704bdac",
+      "size": 99,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/layout_refactor_20260909/local-install.log": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/layout_refactor_20260909/local-install.log",
+      "sha256": "31f5d1b2382c1c66b85e25c20dbc6fe158b47fc8b01a9597b4d09c7e27642d84",
+      "size": 1295,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/layout_refactor_20260909/ruff-first.log": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/layout_refactor_20260909/ruff-first.log",
+      "sha256": "bb3aa44b1c3ae619aa97c35c6b77e2d8b66f1cbae7bd077130ba95170d1052df",
+      "size": 1374,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/layout_refactor_20260909/file-mapping.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/layout_refactor_20260909/file-mapping.json",
+      "sha256": "a95a3b9efef77a23833e6d1127fad6bd676af5ee9ee0ba57cc5b6acce6ff8654",
+      "size": 34930,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/layout_refactor_20260909/local-tests-third.log": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/layout_refactor_20260909/local-tests-third.log",
+      "sha256": "b9dc1a667f937609698c1f36d9ba00ff527b84a8b6482bd7ba8cc35ba60d5a14",
+      "size": 18150,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/layout_refactor_20260909/layout-console-help.txt": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/layout_refactor_20260909/layout-console-help.txt",
+      "sha256": "991f20712d979f09e244d6c1565d3e20145db30bf8ec5833191d3ee49068c20c",
+      "size": 1167,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/layout_refactor_20260909/local-tests-fourth.log": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/layout_refactor_20260909/local-tests-fourth.log",
+      "sha256": "df1a3320756711a4bbf3e4681bf04ddc1c82992936578d955f02487e2ebe3e37",
+      "size": 2422,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/layout_refactor_20260909/launcher-tests.log": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/layout_refactor_20260909/launcher-tests.log",
+      "sha256": "404e022a0ded6f1f2f8e53a33fb817fae04a5b8d8cabd84da4a14363f7195e04",
+      "size": 1798,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/layout_refactor_20260909/local-tests-first.log": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/layout_refactor_20260909/local-tests-first.log",
+      "sha256": "8e56f9adde0fc5e6b0bfa2969ad1470b030b43c9967fb6f691d2d4b61360a46d",
+      "size": 1989,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/layout_refactor_20260909/README.md": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/layout_refactor_20260909/README.md",
+      "sha256": "e317a46e4232c544666b3477b98f2997a91e8ad6b0f25301f38941ad20d6f678",
+      "size": 2754,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/layout_refactor_20260909/local-tests-final.log": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/layout_refactor_20260909/local-tests-final.log",
+      "sha256": "1314d986546c0afc0d0d84406bf3c6ce896b6fa548ab3e9f66c63e770519feab",
+      "size": 1253,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/layout_refactor_20260909/retire_old_source.py": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/layout_refactor_20260909/retire_old_source.py",
+      "sha256": "feb4020ae0483e61d1f95327025643faa4e7efb9564bfe64cf45b726bc83e376",
+      "size": 1997,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/layout_refactor_20260909/code-flat.tar.gz": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/layout_refactor_20260909/code-flat.tar.gz",
+      "sha256": "a56fed55ade43b5a060011ae055d8ef3c226d341eef4cadec4e846a4d0c13b77",
+      "size": 3481558,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/layout_refactor_20260909/module-mapping.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/layout_refactor_20260909/module-mapping.json",
+      "sha256": "12fe91813074c747afde39288b95f4f504197c98643efdf0cc97332cad09f340",
+      "size": 1713,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/layout_refactor_20260909/layout-import-origins.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/layout_refactor_20260909/layout-import-origins.json",
+      "sha256": "10dffcf70b91e6e5b4df9d87b2dc403d5be8c06726e19c250eef28ad30892469",
+      "size": 227,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/layout_refactor_20260909/layout-remote-tests.log": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/layout_refactor_20260909/layout-remote-tests.log",
+      "sha256": "ae4beee159762a41499b40971820edc177aeb16d8fe82079c366a7ab59b5d950",
+      "size": 308,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/layout_refactor_20260909/layout-fs-launch.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/layout_refactor_20260909/layout-fs-launch.json",
+      "sha256": "64533eb45340cf74392dfaf7f426f7d47bb0c882856a2facd75752a49f9891c0",
+      "size": 3831,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/layout_refactor_20260909/layout-remote-tests-threads1.log": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/layout_refactor_20260909/layout-remote-tests-threads1.log",
+      "sha256": "a1625c4592c7ed48bee95509be8f4aa10b060786c79a6cacfef502e4561f8ad8",
+      "size": 2252,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/layout_refactor_20260909/migrate.py": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/layout_refactor_20260909/migrate.py",
+      "sha256": "8d9e0d13c64c35876def16dd0aed9b55de89d005f6ecfacaa50185000418c555",
+      "size": 7638,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/layout_refactor_20260909/layout-fs-install.log": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/layout_refactor_20260909/layout-fs-install.log",
+      "sha256": "a065d0d11cb96696043c97c9f6b0e888ab56905a32e56df571bba7930540b197",
+      "size": 1461,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/layout_refactor_20260909/completion.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/layout_refactor_20260909/completion.json",
+      "sha256": "aed65a63672fd6922c3cf885e6318bca8dd66d1df64c3c1f2d290eb1b71081ef",
+      "size": 917,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/layout_refactor_20260909/layout-runtime-install.log": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/layout_refactor_20260909/layout-runtime-install.log",
+      "sha256": "c80114faedfe52d64d5fc7add7fde517dce707149e068d1b2fcb822a61023b3b",
+      "size": 1447,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_20260908/collect-report.py": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_20260908/collect-report.py",
+      "sha256": "ca0cdf63b09676f8061f7fa715be108920cdb1ec4d4b33dc32b06b74541b029e",
+      "size": 5348,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_20260908/smoke-e0.log": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_20260908/smoke-e0.log",
+      "sha256": "364ced111fed017dfb355a2e88b997fb0d4d2bd1853250eda011aeecf56343d6",
+      "size": 930025,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_20260908/checkpoint-2-report.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_20260908/checkpoint-2-report.json",
+      "sha256": "74ee807bcb3f10d69ab9456c3c373eccd8104ef7383e929295829fd992947c7d",
+      "size": 282,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_20260908/experiment_manifest.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_20260908/experiment_manifest.json",
+      "sha256": "09d7bec14113d37ab9c364e56f4d8dd4c153eeb97e5f3e65a8fb871781c38921",
+      "size": 833,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_20260908/validation-report.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_20260908/validation-report.json",
+      "sha256": "4ceb80d1bd153664d3d78cba4cff81c1d8a30cf4f5d84e69d0b80b7ec9880ed3",
+      "size": 23634,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_20260908/checkpoint-1-report.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_20260908/checkpoint-1-report.json",
+      "sha256": "2b638648472d4b0e2346ad21aec969f5292a2232a23affc097fed48504b0bd50",
+      "size": 195,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_20260908/gpu-memory.csv": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_20260908/gpu-memory.csv",
+      "sha256": "8fb4f3964adc5a855b8f5af00fbf7406756f65c293ffba24cdb61c5f32b93252",
+      "size": 117287,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_20260908/README.md": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_20260908/README.md",
+      "sha256": "63b1d7ee02fe008d69ec125018b78be04e75c1c5a93afce4ed57aa6bb6863979",
+      "size": 3757,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_20260908/checkpoint-3-report.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_20260908/checkpoint-3-report.json",
+      "sha256": "f6e9a68524bfc32c17909c84f391c3dc843123e0379a8efeb5025868755f431d",
+      "size": 282,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_20260908/telemetry.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_20260908/telemetry.jsonl",
+      "sha256": "3394b51949962bd9a7c0fd86065191ecdece1da0d98df576381ce8416b160830",
+      "size": 1229,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_20260908/smoke-e0.exit": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_20260908/smoke-e0.exit",
+      "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+      "size": 1,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_20260908/weight-audits/worker-audit-30365-1788879071933170399.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_20260908/weight-audits/worker-audit-30365-1788879071933170399.json",
+      "sha256": "3635a27b46c43e492624738f68861356992492f5376a7067427fac322425fef4",
+      "size": 135559,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_20260908/weight-audits/worker-audit-30365-1788879553623859782.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_20260908/weight-audits/worker-audit-30365-1788879553623859782.json",
+      "sha256": "9f73aecedf5bff288e01a4291836c09542989afc73a9be6e79cfb24dd838fcc0",
+      "size": 135555,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_20260908/weight-audits/worker-audit-30365-1788879554158535703.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_20260908/weight-audits/worker-audit-30365-1788879554158535703.json",
+      "sha256": "27a84e7aa7a52f38662bfa086ecaeeb541a9d6be02bd05613c0453d2dfc0c411",
+      "size": 135558,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_20260908/weight-audits/worker-audit-30365-1788877987820297958.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_20260908/weight-audits/worker-audit-30365-1788877987820297958.json",
+      "sha256": "fbc663ae9d0d6321506f8da84cfd351f2de935d8592f2497849ef27d2af876cd",
+      "size": 134668,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_20260908/weight-audits/worker-audit-30365-1788878543415446232.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_20260908/weight-audits/worker-audit-30365-1788878543415446232.json",
+      "sha256": "ea95c27bd2f8a59cdf55e178eeb81a2b1d028a660db8dfb8c4028efad804521a",
+      "size": 135556,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_20260908/weight-audits/worker-audit-30365-1788879071355634005.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_20260908/weight-audits/worker-audit-30365-1788879071355634005.json",
+      "sha256": "0d3d87d9e621998f103217352db4f2acbb4c94a5f137715cbe2b028fd5627421",
+      "size": 135556,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_20260908/weight-audits/worker-audit-30365-1788877988351795801.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_20260908/weight-audits/worker-audit-30365-1788877988351795801.json",
+      "sha256": "0e50142aad4e7c26644799f391179e6ed290b1d9512aac5da3a443720ac189ab",
+      "size": 135559,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_20260908/weight-audits/worker-audit-30365-1788878543933053039.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_20260908/weight-audits/worker-audit-30365-1788878543933053039.json",
+      "sha256": "bbcb9fe6714b13c7f97b5e7b56f2ba26075b882297c13450f88c49e171ac0299",
+      "size": 135559,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_20260908/rollouts/2.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_20260908/rollouts/2.jsonl",
+      "sha256": "4c37644cda34fee127d453162acfb45d66749af93ef3cdd979532f3b08db0b39",
+      "size": 242978,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_20260908/rollouts/1.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_20260908/rollouts/1.jsonl",
+      "sha256": "1b733c3934e4e200f2ff0283bf4f91fcb77e422b49a7623c0b6be42b9be4c219",
+      "size": 228480,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_20260908/rollouts/3.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_20260908/rollouts/3.jsonl",
+      "sha256": "774fe1df494844cba1bac5481fc0fe03666ca2be001e6ea56f6468e67686a843",
+      "size": 222634,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/collect-report.py": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/collect-report.py",
+      "sha256": "01f7125988cc2c6b42d6bbd8db4983a6539395f754933e69ec7fc11fe7c5a6ad",
+      "size": 5085,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/cloud-content-step1.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/cloud-content-step1.json",
+      "sha256": "90058fa67d7e8be201ab583954d49877788f53fe286eb5f6eae703a4d4cc8fa3",
+      "size": 277,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/smoke-e0.log": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/smoke-e0.log",
+      "sha256": "4b4df7291045f941166290b0c99e233da9ac6a3224330fd0478e1b6031a64a76",
+      "size": 990102,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/controller.py": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/controller.py",
+      "sha256": "2dab61c7b123dd1d289227cf1767387e874234fb36a1ebc860b6642b6eac6f40",
+      "size": 5161,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/preflight.log": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/preflight.log",
+      "sha256": "08d7875f8f651f28916bc638c0e55de75ead63347b6fbe93eeb68f316b18b3c6",
+      "size": 580,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/verify-cloud.py": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/verify-cloud.py",
+      "sha256": "d483b541d4cf08a8993c2dbc006b6f2501b4c460405aca3db10aaf8a3a422dd1",
+      "size": 2151,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/cloud-start.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/cloud-start.json",
+      "sha256": "41fb9e74e38d0246d91a566462d4651b8a5c0487d4a277392ab6a9957ef1a16c",
+      "size": 171,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/validation-report.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/validation-report.json",
+      "sha256": "d06a90ea4602a7d5f372434f6e942a14904c2809d0c26c8a86baa5480eb3a4dc",
+      "size": 22192,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/cloud-preview2-step1.txt": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/cloud-preview2-step1.txt",
+      "sha256": "ffbcfe386ccfcd2916c2ab09e9d162ad87d3f1e2af451e737db25b5932124f78",
+      "size": 24053,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/rl-gradient-audit.py": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/rl-gradient-audit.py",
+      "sha256": "7939d1d2707825058d6bfa220369fde99b7ab639c470bef65151cf549f4863ba",
+      "size": 8042,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/README.md": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/README.md",
+      "sha256": "29e80ae459e545761506fec5913fcea5b7080f4264f58ada69e1b3c4b4f4dfbd",
+      "size": 2424,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/gradient-audit.log": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/gradient-audit.log",
+      "sha256": "1c2140a4187f538a0f9b8ac9a102c7362ec5d78bbacb1de452dc61e3831132bb",
+      "size": 2467,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/launch-config.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/launch-config.json",
+      "sha256": "a3965643360e78c8db1f5fbb4684aead130e5c835fcf3b0abdbb45e3567d84f5",
+      "size": 2728,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/swanlab-examples-step1.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/swanlab-examples-step1.jsonl",
+      "sha256": "448fd7909d349502a3bf45035b64695e240a8a2866ddb401041b035da375f62b",
+      "size": 115559,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/rollouts-1.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/rollouts-1.jsonl",
+      "sha256": "542b8d1bafa7b1497169f63a4da69ba976c13f3baeb74fb91d03e7c5ae2909c5",
+      "size": 253385,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/cloud-content-verification.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/cloud-content-verification.json",
+      "sha256": "d7b9b68ea05a194512ff84ba58114cc6bd4704e2c9cc1698edb3bd77cb5cc6e1",
+      "size": 1660,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/gradient-audit/README.md": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/gradient-audit/README.md",
+      "sha256": "1cd17c8cbaea3bba23e589d25eb98f64b786107ea3d495636eb56fbee56c5789",
+      "size": 3432,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/gradient-audit/gradient-audit.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/gradient-audit/gradient-audit.json",
+      "sha256": "8b340483fb9b01aeeb86e0778e4dc2651867f29647bf4fd9377517c908ea85e8",
+      "size": 1746,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/update-batches/update_000002.pkl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/update-batches/update_000002.pkl",
+      "sha256": "5a2a07d7fb428c9e3d6ac15899e6074e12fdc2723dd47b582407edbfc5951331",
+      "size": 11102783,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/update-batches/update_000003.pkl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/update-batches/update_000003.pkl",
+      "sha256": "cfffbb8ef99ae58b5183d6de3a884c35b05ac73b14385f7919c32e966c4da8c8",
+      "size": 11096938,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/update-batches/update_000001.pkl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/update-batches/update_000001.pkl",
+      "sha256": "99f24128565b08592fdd45fb4e50f0c1f6c4091b5e304faa13748191dfff8cba",
+      "size": 11097694,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/swanlab-artifacts/swanlab-source-run.txt": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/swanlab-artifacts/swanlab-source-run.txt",
+      "sha256": "527d9d5f65ba7bb76bf7abacaa600443b00ea6ccad1b33b82e53ab35c49b7b0d",
+      "size": 94,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/swanlab-artifacts/train-rollout_examples-step000002.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/swanlab-artifacts/train-rollout_examples-step000002.jsonl",
+      "sha256": "1ed5dd3d1f2e6ae67e271cac0dff23aee3b9266742cb4d8a9413675b435e6c60",
+      "size": 130138,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/swanlab-artifacts/train-rollout_examples-step000003.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/swanlab-artifacts/train-rollout_examples-step000003.jsonl",
+      "sha256": "e1fa52f6b1738e27cbeafc5028164430fdbf0be134dcfc1c5993284b8911a1a1",
+      "size": 115651,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/swanlab-artifacts/train-rollout_examples-step000001.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/swanlab-artifacts/train-rollout_examples-step000001.jsonl",
+      "sha256": "448fd7909d349502a3bf45035b64695e240a8a2866ddb401041b035da375f62b",
+      "size": 115559,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/swanlab-artifacts/source-snapshot.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/swanlab-artifacts/source-snapshot.json",
+      "sha256": "02f1b772bdf3328ee33036d338d4b939ba6516782e9b8b1f3b71df7ec8ae283a",
+      "size": 176,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/swanlab-artifacts/source-sft-rl.zip": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/swanlab-artifacts/source-sft-rl.zip",
+      "sha256": "a16c11ec439f7c4a5e0448856111b480a8c899133ce885cc68c079e12992de69",
+      "size": 2231532,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/weight-audits/worker-audit-45924-1788882606962305409.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/weight-audits/worker-audit-45924-1788882606962305409.json",
+      "sha256": "0927a64311cd9aafb2045252b06d23104e2401a4af664dd89b04bf9ae1f0da8f",
+      "size": 135556,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/weight-audits/worker-audit-45924-1788883678137607855.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/weight-audits/worker-audit-45924-1788883678137607855.json",
+      "sha256": "da11c681d799908b0676e233eddea0ce0eeb1cc3bdfb719236601b467d0de3e7",
+      "size": 135559,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/weight-audits/worker-audit-45924-1788883173654784104.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/weight-audits/worker-audit-45924-1788883173654784104.json",
+      "sha256": "b9a4553bbe26fb3378dedc42a1fd937eba3020afe38afdbe9daf560ed4862b25",
+      "size": 135559,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/weight-audits/worker-audit-45924-1788881906783360021.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/weight-audits/worker-audit-45924-1788881906783360021.json",
+      "sha256": "be5fad13d3fcbf91d4f60475c4cc070e0041a9db675284a993fbe67076700c52",
+      "size": 135559,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/weight-audits/worker-audit-45924-1788883173180897723.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/weight-audits/worker-audit-45924-1788883173180897723.json",
+      "sha256": "c2ac7eee33b043f9df101f06edd0ad662db5d20a851bef1796dbba076f4cda55",
+      "size": 135555,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/weight-audits/worker-audit-45924-1788883677627325001.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/weight-audits/worker-audit-45924-1788883677627325001.json",
+      "sha256": "1353ad598be9996d5ad7e7ad1fdf7d87140a81a028d898874e49e3124ae588ba",
+      "size": 135556,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/weight-audits/worker-audit-45924-1788882607478024807.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/weight-audits/worker-audit-45924-1788882607478024807.json",
+      "sha256": "31866d9bd3934a2c1e4af363dffb6dd7d7d84acd80e4a9d3a2328a55e35053f2",
+      "size": 135559,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/weight-audits/worker-audit-45924-1788881906274295781.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/weight-audits/worker-audit-45924-1788881906274295781.json",
+      "sha256": "766cff6ed7cedf46947a3d1877e329f1a16d1b53d7a5b409614a60974c4ced1b",
+      "size": 134667,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/rollouts/2.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/rollouts/2.jsonl",
+      "sha256": "46cd9ea42f86fdd9290bd5e746a2179868b4da4a592e75ced8c57d389cf37d85",
+      "size": 261548,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/rollouts/1.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/rollouts/1.jsonl",
+      "sha256": "542b8d1bafa7b1497169f63a4da69ba976c13f3baeb74fb91d03e7c5ae2909c5",
+      "size": 253385,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rl_qwen35_scenariofix_20260908/rollouts/3.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rl_qwen35_scenariofix_20260908/rollouts/3.jsonl",
+      "sha256": "44b2af79e30c2048c94f4d49d68f2eedb4c985a2fb0ecf7e0d6974109297dbc0",
+      "size": 237223,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rollout_fixes_20260909/remote-fix-applied.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rollout_fixes_20260909/remote-fix-applied.json",
+      "sha256": "466dc8ac57f2cb52a5f4f0b735a94df491ccdb767e91e94d2a2d80710ad478d2",
+      "size": 1877,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rollout_fixes_20260909/code-diff-before.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rollout_fixes_20260909/code-diff-before.json",
+      "sha256": "9a618d25d2a76c12d6a9edcfc0fd953e790e23cccede46e5ed13ff6c1733887a",
+      "size": 317,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rollout_fixes_20260909/final-boundary-tests.log": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rollout_fixes_20260909/final-boundary-tests.log",
+      "sha256": "0883d538f3de68b6dcada3e466ab21dc458a3867e664988e655b55291eb9e3f5",
+      "size": 100,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rollout_fixes_20260909/validation-tests.log": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rollout_fixes_20260909/validation-tests.log",
+      "sha256": "2ee1c649fe7695323713620555fe73abf3315d74fa2fadf6d4de97cdf5e19b17",
+      "size": 1023,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rollout_fixes_20260909/swanlab-inventory.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rollout_fixes_20260909/swanlab-inventory.json",
+      "sha256": "3300b4a55a3bd2b6be90981505737155ebd71475da5484c44a22c6d4086099d3",
+      "size": 938,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rollout_fixes_20260909/swanlab-deletion-receipt.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rollout_fixes_20260909/swanlab-deletion-receipt.json",
+      "sha256": "e2c1ec6a0224126c805e3230b5d45acafa16781d3fa332e773001836015b7421",
+      "size": 1164,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rollout_fixes_20260909/remote-fix-manifest.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rollout_fixes_20260909/remote-fix-manifest.json",
+      "sha256": "04409e783e2bb4963f58cce31e60dd45942ff7214c75e728d8b180eedaf0ef8a",
+      "size": 1828,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rollout_fixes_20260909/README.md": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rollout_fixes_20260909/README.md",
+      "sha256": "9af204519997032bddda3a1edc1864370a71bef987fd488b2db954f5aaab72be",
+      "size": 3710,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rollout_fixes_20260909/remote-fix-tests.log": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rollout_fixes_20260909/remote-fix-tests.log",
+      "sha256": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+      "size": 1,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rollout_fixes_20260909/regression-tests.log": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rollout_fixes_20260909/regression-tests.log",
+      "sha256": "00eeddde75db6d0132a6b7b3afc9d8961295bdebbdc94e696714092cf5e119c9",
+      "size": 942,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rollout_fixes_20260909/remote-fix.patch": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rollout_fixes_20260909/remote-fix.patch",
+      "sha256": "85ac0381caf2f008a7433f084ed63277bd908a839ef7b255ec739f65fa450bf4",
+      "size": 21047,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/rollout_fixes_20260909/completion.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/rollout_fixes_20260909/completion.json",
+      "sha256": "d936a22d1f2c436d50ec79e785ba551185bfb319ff375ec4d56bba7cf7c7baeb",
+      "size": 888,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/takeover_20260909/added-source-manifest.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/takeover_20260909/added-source-manifest.json",
+      "sha256": "d9dae453b83378177a5a056449d4c0170a00eaad77c8e453a49aa72f6e6f61a7",
+      "size": 695,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/takeover_20260909/remote-inventory.stderr": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/takeover_20260909/remote-inventory.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/takeover_20260909/local-preflight-tests.log": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/takeover_20260909/local-preflight-tests.log",
+      "sha256": "dadb9a1974cb64cd1b476e68b92f5774b1cfd1b1c2cfcd1b55f31a9b1f216faf",
+      "size": 180,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/takeover_20260909/sync-verification.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/takeover_20260909/sync-verification.json",
+      "sha256": "104d029e9580fc7a896a3301c74d017d61c3d5cb1c23737afc46912d944d7dd3",
+      "size": 639,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/takeover_20260909/preflight-tests.exit": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/takeover_20260909/preflight-tests.exit",
+      "sha256": "ca2ebdf97d7469496b1f4b78958f9dc8447efdcb623953fee7b6996b762f6fff",
+      "size": 4,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/takeover_20260909/simulator-dry-run.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/takeover_20260909/simulator-dry-run.json",
+      "sha256": "5ed9db662edd59b52bef10c02687ce3f66cb063091451d33751fc23d5d3dfda6",
+      "size": 1400,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/takeover_20260909/README.md": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/takeover_20260909/README.md",
+      "sha256": "c47477e6b906102a1089d611a3d23905a764729e3619d9ff0f160be04ff2fbc4",
+      "size": 694,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/takeover_20260909/remote-inventory.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/takeover_20260909/remote-inventory.json",
+      "sha256": "079ed1cd8caae601078bdba9ac99c4539cc7d2471785bb1294e1f32896130e7d",
+      "size": 2703,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/takeover_20260909/rl003-dry-run.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/takeover_20260909/rl003-dry-run.json",
+      "sha256": "51735fb699857fdd91c25046c9729d274ed5a4be52bf57a966ccf6d2ed8549f7",
+      "size": 5359,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/takeover_20260909/completion.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/takeover_20260909/completion.json",
+      "sha256": "bcd8e7b90b6833d2310771711f20294586b58c7b55ea4e7fb6dd6b7e12dcbb73",
+      "size": 657,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/validation/takeover_20260909/preflight-tests.log": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/validation/takeover_20260909/preflight-tests.log",
+      "sha256": "c75bbdfbbfd3ec4436b2111bf5804164f661e8a7de450c3eddfb4bd41eb57ed5",
+      "size": 23,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/original-run-config.yaml": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/original-run-config.yaml",
+      "sha256": "04ce622b4779d6ce137303103d4abb5b48deb402a9d02fc2f147d2109a3e859c",
+      "size": 22518,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/upload-complete.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/upload-complete.json",
+      "sha256": "d2b4f203ff716d6edd79bb593e1d3c42f9862ce598bc98109f5d0e0e6e0a3ff8",
+      "size": 668,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/metrics-after-recovery.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/metrics-after-recovery.json",
+      "sha256": "7afa87d3c9fb22d26cdfe1db285927a0405b4d2b9f99195203df2437445be421",
+      "size": 2785,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/upload-complete-before-config-preservation.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/upload-complete-before-config-preservation.json",
+      "sha256": "3bc92edaf02bedb41ad136176a5ed67b25ea55a26487b46b0a9ae19155d40c43",
+      "size": 631,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/cloud-content-verification.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/cloud-content-verification.json",
+      "sha256": "6d48d35d5d000c842237c769c0a1fbcd9f415687a02548face313f27140b11dd",
+      "size": 355,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/recovered-dialogues-source.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/recovered-dialogues-source.json",
+      "sha256": "6a109da67f755e585e8408815d12f25024d7b274220ad904c4e31d29412abfe1",
+      "size": 33505,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/.gitignore": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/.gitignore",
+      "sha256": "684888c0ebb17f374298b65ee2807526c066094c701bcc7ebbe1c1095f494fc1",
+      "size": 1,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/run-7tiyh63hjjz8d85k6sumd.swanlab": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/run-7tiyh63hjjz8d85k6sumd.swanlab",
+      "sha256": "58251a310389ad3310d9669629546ce801b8410606895cd395de55497cee04bb",
+      "size": 4702,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/files/cases-recovered_dialogues-step000003.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/files/cases-recovered_dialogues-step000003.jsonl",
+      "sha256": "8212bc0704bc1aa95947636ab4d7cf59f0a83b8a3659e5375f29302185c61912",
+      "size": 150,
+      "symlink": "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/examples/cases-recovered_dialogues-step000003.jsonl",
+      "symlink_after": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/examples/cases-recovered_dialogues-step000003.jsonl"
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/files/cases-recovered_dialogues-step000001.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/files/cases-recovered_dialogues-step000001.jsonl",
+      "sha256": "60ec5180884c8b9f485af2e192b74e1885d31dceec396c5408ca56a29f5c9263",
+      "size": 150,
+      "symlink": "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/examples/cases-recovered_dialogues-step000001.jsonl",
+      "symlink_after": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/examples/cases-recovered_dialogues-step000001.jsonl"
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/files/2.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/files/2.jsonl",
+      "sha256": "3407435b3ce3f58ee6871af864c0d5ca247b42f1560fbf716b12f2306552637f",
+      "size": 96,
+      "symlink": "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/rollouts/2.jsonl",
+      "symlink_after": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/rollouts/2.jsonl"
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/files/cases-recovered_dialogues-step000002.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/files/cases-recovered_dialogues-step000002.jsonl",
+      "sha256": "1571c05ab550cdf03c0f6761dd0d5de9314c5b88ac76dbf05612727bb3079c44",
+      "size": 150,
+      "symlink": "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/examples/cases-recovered_dialogues-step000002.jsonl",
+      "symlink_after": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/examples/cases-recovered_dialogues-step000002.jsonl"
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/files/1.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/files/1.jsonl",
+      "sha256": "37a59d9c64917237cdc20bd006ba93bcdfcfd55fb678754209d7a3a1f18cc91d",
+      "size": 96,
+      "symlink": "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/rollouts/1.jsonl",
+      "symlink_after": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/rollouts/1.jsonl"
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/files/config.yaml": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/files/config.yaml",
+      "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+      "size": 3,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/files/3.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/files/3.jsonl",
+      "sha256": "622a0ced64c545d2c1814ed4ec18717fb3855288287f36b67ddd982602e2811e",
+      "size": 96,
+      "symlink": "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/rollouts/3.jsonl",
+      "symlink_after": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/rollouts/3.jsonl"
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/files/swanlab-metadata.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/files/swanlab-metadata.json",
+      "sha256": "3a8112dafcf02072df40a526fe36cde7f330326c6f8ab14cf8fe7a9702133fad",
+      "size": 746,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/files/recovered-dialogues-source.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/files/recovered-dialogues-source.json",
+      "sha256": "a261d99877ab25c2ef2c200dc8d286743928a610bce92f43ac10a4a389c4f137",
+      "size": 130,
+      "symlink": "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/recovered-dialogues-source.json",
+      "symlink_after": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/recovered-dialogues-source.json"
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/files/logging-code/source-sft-rl.zip": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/files/logging-code/source-sft-rl.zip",
+      "sha256": "2e10d889924fc01ae4dbaf657adfa166291033aed817684b50c0ff34b9825261",
+      "size": 129,
+      "symlink": "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/logging-code/source-sft-rl.zip",
+      "symlink_after": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/logging-code/source-sft-rl.zip"
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/debug/debug.log": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/debug/debug.log",
+      "sha256": "28b4185e21ea51127e81a549c8904080c9fd4f9512a06aa7cdf26d708ea7a043",
+      "size": 850,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/media/text/002-4619df03.txt": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/media/text/002-4619df03.txt",
+      "sha256": "4619df032b0d86018b33004eac50d0738a4087d91047afef6a629c15ce422f4c",
+      "size": 270,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/media/text/001-4b4c601e.txt": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/media/text/001-4b4c601e.txt",
+      "sha256": "4b4c601ef8b01f0eb2ba6b404135725f363ecc7919b4b304b83e34227d0bbcf2",
+      "size": 274,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/media/text/001-ef1ab27d.txt": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/media/text/001-ef1ab27d.txt",
+      "sha256": "ef1ab27dbb5055f6ba455af57c715ec06c07f722db93552202a7a54fc6af5cf2",
+      "size": 24079,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/media/text/003-5a47ba9f.txt": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/media/text/003-5a47ba9f.txt",
+      "sha256": "5a47ba9f9d8528d4949edadf7cc97d9c22d8da86d4611086cf73c8383d5c6218",
+      "size": 270,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/media/text/002-a9054731.txt": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/media/text/002-a9054731.txt",
+      "sha256": "a905473104718502ee93d9afc977445f29e722256a644a04a7e81fa3def5d145",
+      "size": 24059,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/media/text/001-49391c8f.txt": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/media/text/001-49391c8f.txt",
+      "sha256": "49391c8fa4eb5066462c7d6b8383d6262ca17f9ed190e9d21779ab5ed937a835",
+      "size": 24059,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/media/text/003-151ee14b.txt": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/media/text/003-151ee14b.txt",
+      "sha256": "151ee14b527aec7746d6923831eb6400104a45bc61fc7f410ee7b3afc1f84677",
+      "size": 24058,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/media/text/002-1f12cca0.txt": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/media/text/002-1f12cca0.txt",
+      "sha256": "1f12cca0edbf5d871299954b588b5c09fdf1b9d4fe8953713f516a3f1a254b69",
+      "size": 24055,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/media/text/003-5f23ba2c.txt": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/media/text/003-5f23ba2c.txt",
+      "sha256": "5f23ba2c69beca8e22f206e24d92df856e9fcbffa88fdb651f52bc559825bd6b",
+      "size": 24052,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/media/echarts/003-684a6b75.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/media/echarts/003-684a6b75.json",
+      "sha256": "684a6b756b48a37c817257545c06ebb8b23e72594d9f8f6567835683687cc72d",
+      "size": 102104,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/media/echarts/002-ecec3f62.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/media/echarts/002-ecec3f62.json",
+      "sha256": "ecec3f620c3b8e1b4ce51fe38f2fe9db3e483c6267e13b4db8ad8b7d2ac88d29",
+      "size": 101906,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/media/echarts/001-c8085e39.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230347-7tiyh63hjjz8d85k6sumd/media/echarts/001-c8085e39.json",
+      "sha256": "c8085e398da708fbbc09283f28f2aca07f83c71f4021643d30588c2674302e63",
+      "size": 99688,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/run-7tiyh63hjjz8d85k6sumd.swanlab": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/run-7tiyh63hjjz8d85k6sumd.swanlab",
+      "sha256": "cd5958a0a8683efa4e6582c1dd4add0a4689c4ba53f8516521f30401db263dda",
+      "size": 7248,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/files/cases-recovered_dialogues-step000003.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/files/cases-recovered_dialogues-step000003.jsonl",
+      "sha256": "8212bc0704bc1aa95947636ab4d7cf59f0a83b8a3659e5375f29302185c61912",
+      "size": 150,
+      "symlink": "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/examples/cases-recovered_dialogues-step000003.jsonl",
+      "symlink_after": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/examples/cases-recovered_dialogues-step000003.jsonl"
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/files/cases-recovered_dialogues-step000001.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/files/cases-recovered_dialogues-step000001.jsonl",
+      "sha256": "60ec5180884c8b9f485af2e192b74e1885d31dceec396c5408ca56a29f5c9263",
+      "size": 150,
+      "symlink": "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/examples/cases-recovered_dialogues-step000001.jsonl",
+      "symlink_after": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/examples/cases-recovered_dialogues-step000001.jsonl"
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/files/2.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/files/2.jsonl",
+      "sha256": "3407435b3ce3f58ee6871af864c0d5ca247b42f1560fbf716b12f2306552637f",
+      "size": 96,
+      "symlink": "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/rollouts/2.jsonl",
+      "symlink_after": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/rollouts/2.jsonl"
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/files/cases-recovered_dialogues-step000002.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/files/cases-recovered_dialogues-step000002.jsonl",
+      "sha256": "1571c05ab550cdf03c0f6761dd0d5de9314c5b88ac76dbf05612727bb3079c44",
+      "size": 150,
+      "symlink": "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/examples/cases-recovered_dialogues-step000002.jsonl",
+      "symlink_after": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/examples/cases-recovered_dialogues-step000002.jsonl"
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/files/1.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/files/1.jsonl",
+      "sha256": "37a59d9c64917237cdc20bd006ba93bcdfcfd55fb678754209d7a3a1f18cc91d",
+      "size": 96,
+      "symlink": "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/rollouts/1.jsonl",
+      "symlink_after": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/rollouts/1.jsonl"
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/files/config.yaml": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/files/config.yaml",
+      "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+      "size": 3,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/files/3.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/files/3.jsonl",
+      "sha256": "622a0ced64c545d2c1814ed4ec18717fb3855288287f36b67ddd982602e2811e",
+      "size": 96,
+      "symlink": "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/rollouts/3.jsonl",
+      "symlink_after": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/rollouts/3.jsonl"
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/files/swanlab-metadata.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/files/swanlab-metadata.json",
+      "sha256": "dba76473a376ff398172019b33d2036fd7cf226a3bd2419292366f2690b08a1d",
+      "size": 746,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/files/recovered-dialogues-source.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/files/recovered-dialogues-source.json",
+      "sha256": "a261d99877ab25c2ef2c200dc8d286743928a610bce92f43ac10a4a389c4f137",
+      "size": 130,
+      "symlink": "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/recovered-dialogues-source.json",
+      "symlink_after": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/recovered-dialogues-source.json"
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/files/logging-code/source-sft-rl.zip": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/files/logging-code/source-sft-rl.zip",
+      "sha256": "2e10d889924fc01ae4dbaf657adfa166291033aed817684b50c0ff34b9825261",
+      "size": 129,
+      "symlink": "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/logging-code/source-sft-rl.zip",
+      "symlink_after": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/logging-code/source-sft-rl.zip"
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/debug/debug.log": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/debug/debug.log",
+      "sha256": "7f393e1b3cbed9755a725f49da45f2cd6c955868eaa3561cd661e4ed27c4143c",
+      "size": 150,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/media/text/002-4619df03.txt": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/media/text/002-4619df03.txt",
+      "sha256": "4619df032b0d86018b33004eac50d0738a4087d91047afef6a629c15ce422f4c",
+      "size": 270,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/media/text/001-4b4c601e.txt": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/media/text/001-4b4c601e.txt",
+      "sha256": "4b4c601ef8b01f0eb2ba6b404135725f363ecc7919b4b304b83e34227d0bbcf2",
+      "size": 274,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/media/text/001-ef1ab27d.txt": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/media/text/001-ef1ab27d.txt",
+      "sha256": "ef1ab27dbb5055f6ba455af57c715ec06c07f722db93552202a7a54fc6af5cf2",
+      "size": 24079,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/media/text/003-5a47ba9f.txt": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/media/text/003-5a47ba9f.txt",
+      "sha256": "5a47ba9f9d8528d4949edadf7cc97d9c22d8da86d4611086cf73c8383d5c6218",
+      "size": 270,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/media/text/002-a9054731.txt": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/media/text/002-a9054731.txt",
+      "sha256": "a905473104718502ee93d9afc977445f29e722256a644a04a7e81fa3def5d145",
+      "size": 24059,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/media/text/001-49391c8f.txt": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/media/text/001-49391c8f.txt",
+      "sha256": "49391c8fa4eb5066462c7d6b8383d6262ca17f9ed190e9d21779ab5ed937a835",
+      "size": 24059,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/media/text/003-151ee14b.txt": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/media/text/003-151ee14b.txt",
+      "sha256": "151ee14b527aec7746d6923831eb6400104a45bc61fc7f410ee7b3afc1f84677",
+      "size": 24058,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/media/text/002-1f12cca0.txt": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/media/text/002-1f12cca0.txt",
+      "sha256": "1f12cca0edbf5d871299954b588b5c09fdf1b9d4fe8953713f516a3f1a254b69",
+      "size": 24055,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/media/text/003-5f23ba2c.txt": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/media/text/003-5f23ba2c.txt",
+      "sha256": "5f23ba2c69beca8e22f206e24d92df856e9fcbffa88fdb651f52bc559825bd6b",
+      "size": 24052,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/media/echarts/003-684a6b75.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/media/echarts/003-684a6b75.json",
+      "sha256": "684a6b756b48a37c817257545c06ebb8b23e72594d9f8f6567835683687cc72d",
+      "size": 102104,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/media/echarts/002-ecec3f62.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/media/echarts/002-ecec3f62.json",
+      "sha256": "ecec3f620c3b8e1b4ce51fe38f2fe9db3e483c6267e13b4db8ad8b7d2ac88d29",
+      "size": 101906,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/media/echarts/001-c8085e39.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_230147-7tiyh63hjjz8d85k6sumd/media/echarts/001-c8085e39.json",
+      "sha256": "c8085e398da708fbbc09283f28f2aca07f83c71f4021643d30588c2674302e63",
+      "size": 99688,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/run-7tiyh63hjjz8d85k6sumd.swanlab": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/run-7tiyh63hjjz8d85k6sumd.swanlab",
+      "sha256": "693a344bd05975289ff64951b7777054b949d47f9d171646cd33c646c65d7be1",
+      "size": 4907,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/files/cases-recovered_dialogues-step000003.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/files/cases-recovered_dialogues-step000003.jsonl",
+      "sha256": "8212bc0704bc1aa95947636ab4d7cf59f0a83b8a3659e5375f29302185c61912",
+      "size": 150,
+      "symlink": "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/examples/cases-recovered_dialogues-step000003.jsonl",
+      "symlink_after": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/examples/cases-recovered_dialogues-step000003.jsonl"
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/files/cases-recovered_dialogues-step000001.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/files/cases-recovered_dialogues-step000001.jsonl",
+      "sha256": "60ec5180884c8b9f485af2e192b74e1885d31dceec396c5408ca56a29f5c9263",
+      "size": 150,
+      "symlink": "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/examples/cases-recovered_dialogues-step000001.jsonl",
+      "symlink_after": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/examples/cases-recovered_dialogues-step000001.jsonl"
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/files/2.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/files/2.jsonl",
+      "sha256": "3407435b3ce3f58ee6871af864c0d5ca247b42f1560fbf716b12f2306552637f",
+      "size": 96,
+      "symlink": "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/rollouts/2.jsonl",
+      "symlink_after": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/rollouts/2.jsonl"
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/files/cases-recovered_dialogues-step000002.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/files/cases-recovered_dialogues-step000002.jsonl",
+      "sha256": "1571c05ab550cdf03c0f6761dd0d5de9314c5b88ac76dbf05612727bb3079c44",
+      "size": 150,
+      "symlink": "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/examples/cases-recovered_dialogues-step000002.jsonl",
+      "symlink_after": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/examples/cases-recovered_dialogues-step000002.jsonl"
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/files/1.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/files/1.jsonl",
+      "sha256": "37a59d9c64917237cdc20bd006ba93bcdfcfd55fb678754209d7a3a1f18cc91d",
+      "size": 96,
+      "symlink": "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/rollouts/1.jsonl",
+      "symlink_after": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/rollouts/1.jsonl"
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/files/config.yaml": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/files/config.yaml",
+      "sha256": "230718da1b8b115911dd0a2325905a69d5d556c86823dcdebfa5b73c01a45646",
+      "size": 22470,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/files/3.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/files/3.jsonl",
+      "sha256": "622a0ced64c545d2c1814ed4ec18717fb3855288287f36b67ddd982602e2811e",
+      "size": 96,
+      "symlink": "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/rollouts/3.jsonl",
+      "symlink_after": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/rollouts/3.jsonl"
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/files/swanlab-metadata.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/files/swanlab-metadata.json",
+      "sha256": "46207d41512abd143df269b5993d59f9c4206c605f07b4cffe925aa0f540d122",
+      "size": 746,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/files/recovered-dialogues-source.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/files/recovered-dialogues-source.json",
+      "sha256": "a261d99877ab25c2ef2c200dc8d286743928a610bce92f43ac10a4a389c4f137",
+      "size": 130,
+      "symlink": "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/recovered-dialogues-source.json",
+      "symlink_after": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/recovered-dialogues-source.json"
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/files/logging-code/source-sft-rl.zip": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/files/logging-code/source-sft-rl.zip",
+      "sha256": "2e10d889924fc01ae4dbaf657adfa166291033aed817684b50c0ff34b9825261",
+      "size": 129,
+      "symlink": "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/logging-code/source-sft-rl.zip",
+      "symlink_after": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/logging-code/source-sft-rl.zip"
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/debug/debug.log": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/debug/debug.log",
+      "sha256": "3c9322429d21236254bd5bc3624e70c7d397eaa1c3e5f6a7d3487161a5f9358a",
+      "size": 850,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/media/text/002-4619df03.txt": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/media/text/002-4619df03.txt",
+      "sha256": "4619df032b0d86018b33004eac50d0738a4087d91047afef6a629c15ce422f4c",
+      "size": 270,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/media/text/001-4b4c601e.txt": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/media/text/001-4b4c601e.txt",
+      "sha256": "4b4c601ef8b01f0eb2ba6b404135725f363ecc7919b4b304b83e34227d0bbcf2",
+      "size": 274,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/media/text/001-ef1ab27d.txt": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/media/text/001-ef1ab27d.txt",
+      "sha256": "ef1ab27dbb5055f6ba455af57c715ec06c07f722db93552202a7a54fc6af5cf2",
+      "size": 24079,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/media/text/003-5a47ba9f.txt": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/media/text/003-5a47ba9f.txt",
+      "sha256": "5a47ba9f9d8528d4949edadf7cc97d9c22d8da86d4611086cf73c8383d5c6218",
+      "size": 270,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/media/text/002-a9054731.txt": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/media/text/002-a9054731.txt",
+      "sha256": "a905473104718502ee93d9afc977445f29e722256a644a04a7e81fa3def5d145",
+      "size": 24059,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/media/text/001-49391c8f.txt": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/media/text/001-49391c8f.txt",
+      "sha256": "49391c8fa4eb5066462c7d6b8383d6262ca17f9ed190e9d21779ab5ed937a835",
+      "size": 24059,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/media/text/003-151ee14b.txt": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/media/text/003-151ee14b.txt",
+      "sha256": "151ee14b527aec7746d6923831eb6400104a45bc61fc7f410ee7b3afc1f84677",
+      "size": 24058,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/media/text/002-1f12cca0.txt": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/media/text/002-1f12cca0.txt",
+      "sha256": "1f12cca0edbf5d871299954b588b5c09fdf1b9d4fe8953713f516a3f1a254b69",
+      "size": 24055,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/media/text/003-5f23ba2c.txt": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/media/text/003-5f23ba2c.txt",
+      "sha256": "5f23ba2c69beca8e22f206e24d92df856e9fcbffa88fdb651f52bc559825bd6b",
+      "size": 24052,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/media/echarts/003-684a6b75.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/media/echarts/003-684a6b75.json",
+      "sha256": "684a6b756b48a37c817257545c06ebb8b23e72594d9f8f6567835683687cc72d",
+      "size": 102104,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/media/echarts/002-ecec3f62.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/media/echarts/002-ecec3f62.json",
+      "sha256": "ecec3f620c3b8e1b4ce51fe38f2fe9db3e483c6267e13b4db8ad8b7d2ac88d29",
+      "size": 101906,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/media/echarts/001-c8085e39.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/swanlog/run-20260908_231129-7tiyh63hjjz8d85k6sumd/media/echarts/001-c8085e39.json",
+      "sha256": "c8085e398da708fbbc09283f28f2aca07f83c71f4021643d30588c2674302e63",
+      "size": 99688,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/examples/cases-recovered_dialogues-step000003.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/examples/cases-recovered_dialogues-step000003.jsonl",
+      "sha256": "c1576c6e443ee50c385b0fd7e9b83097d8bcdbad54cf3689b09660a2fd1d53c2",
+      "size": 116869,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/examples/cases-recovered_dialogues-step000001.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/examples/cases-recovered_dialogues-step000001.jsonl",
+      "sha256": "33e0e60eba3dacbfdc598f5fdf0f0cc66c38f8162d6409cb53c8acec9602366b",
+      "size": 110096,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/examples/cases-recovered_dialogues-step000002.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/examples/cases-recovered_dialogues-step000002.jsonl",
+      "sha256": "3cd305593b10eba76c5134584f0a2d004f7e0991e5ff08a73b35c620b28881c3",
+      "size": 126394,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/recovered-examples/logging-code/source-sft-rl.zip": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/recovered-examples/logging-code/source-sft-rl.zip",
+      "sha256": "6b4a9d9efdc35447b7cbad208430722802e8d55b7505dbe2e547010e7455974d",
+      "size": 2231475,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/rollouts/2.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/rollouts/2.jsonl",
+      "sha256": "4c37644cda34fee127d453162acfb45d66749af93ef3cdd979532f3b08db0b39",
+      "size": 242978,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/rollouts/1.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/rollouts/1.jsonl",
+      "sha256": "1b733c3934e4e200f2ff0283bf4f91fcb77e422b49a7623c0b6be42b9be4c219",
+      "size": 228480,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/rl_qwen35_lora_20260908/rollouts/3.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/rollouts/3.jsonl",
+      "sha256": "774fe1df494844cba1bac5481fc0fe03666ca2be001e6ea56f6468e67686a843",
+      "size": 222634,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/qwen38_simulator_20260908/benchmark-noparser.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/simulator/qwen38_simulator_20260908/benchmark-noparser.json",
+      "sha256": "5273b5b41980dbf76f532f49988adaf8e638e976a5c64d433679248d19294bb7",
+      "size": 1330,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/qwen38_simulator_20260908/benchmark-noparser.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/simulator/qwen38_simulator_20260908/benchmark-noparser.jsonl",
+      "sha256": "f8d5804384310dec2014e896d768e1d0ba2e925acd11e1f30b4b82cc25ba52e2",
+      "size": 22411,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/qwen38_simulator_20260908/code-latest-20260908.tar.gz": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/supplemental/code-latest-20260908.tar.gz",
+      "sha256": "82ac67edf8d31ce6a2e46ff56ec3b7a0bddb07806ad27f2c03f372ee6b66fe6a",
+      "size": 3464461,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/qwen38_simulator_20260908/code-latest-20260908.tar.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/supplemental/code-latest-20260908.tar.json",
+      "sha256": "1ba14ec9b145679fdc51cf89716ee15f579cea13b61406acc4f182f586a97bd3",
+      "size": 305,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/qwen38_simulator_20260908/dialogue.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/simulator/qwen38_simulator_20260908/dialogue.json",
+      "sha256": "239ec7f80ee6c38560e513a47f7b1d10ab7e910e44d8c70bf4af6527f8d91c2a",
+      "size": 1125,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/qwen38_simulator_20260908/rl-rollouts-step1.jsonl": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/supplemental/rl-rollouts-step1.jsonl",
+      "sha256": "1b733c3934e4e200f2ff0283bf4f91fcb77e422b49a7623c0b6be42b9be4c219",
+      "size": 228480,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/qwen38_simulator_20260908/server-validated.log": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/simulator/qwen38_simulator_20260908/server-validated.log",
+      "sha256": "f12f535d4b9bad6aa3f6aaa5eb1606c845c5dad944c6d3b5d0a449ed5036c26c",
+      "size": 21631,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/qwen38_simulator_20260908/swanlab-run-before-fix.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/supplemental/swanlab-run-before-fix.json",
+      "sha256": "0bae44da39e84056e974808935e1d2c81d1d23d1186584199e30f57328e15ac5",
+      "size": 38589,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/qwen38_simulator_20260908/tau3_source_revision.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/simulator/qwen38_simulator_20260908/tau3_source_revision.json",
+      "sha256": "24f8164ba11069dd82065b3777f1782c764b2595d9cc551a4b78977288ef2fa5",
+      "size": 1868,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/qwen38_simulator_20260908/tensor-storage-gib.json": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/simulator/qwen38_simulator_20260908/tensor-storage-gib.json",
+      "sha256": "65bbb3234fe762a51d68453379a9c1845ee0a2df7bcd627794b004ae1058879a",
+      "size": 102,
+      "symlink": null
+    },
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/results/qwen38_simulator_20260908/validate-cpu.log": {
+      "new": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/rl_qwen35_lora_20260908/supplemental/validate-cpu.log",
+      "sha256": "5d828055456d2655283f9e3b50457035ccb3760ab027c2c0f97cbdb779b81c14",
+      "size": 98,
+      "symlink": null
+    }
+  },
+  "rebased_markdown": [
+    "code/docs/training_handover_20260909.md",
+    "code/results/validation/rl_qwen35_20260908/README.md",
+    "code/EXPERIMENTS.md"
+  ],
+  "raw_evidence_unchanged": true
+}

@@ -1,0 +1,28 @@
+# RL-012: 4B LoRA after SFT-003; independent Qwen3.8-27B INT4 simulator.
+includes:
+- qwen35_lora.yaml
+launch:
+  environment:
+    QWEN35_SIZE: 4B
+    MODEL_PATH: /root/autodl-fs/tau3_grpo_fix/results/sft4b_lora_20260909/sft_merged_seed42
+    RESULTS_DIR: ${TAU3_RUN_ROOT}/rl012_4b_lora_e3_20260909/e3_seed42
+    SWANLAB_LOG_DIR: ${TAU3_RUN_ROOT}/rl012_4b_lora_e3_20260909/e3_seed42/swanlog
+    SWANLAB_EXPERIMENT_NAME: rl-validation-E3-Qwen3.5-4B-lora16-Qwen3.8-27B-INT4-obs64k-g2x4-u3-s42
+    TAU3_USER_MODEL: /root/autodl-fs/tau3_grpo_fix/model_store/Qwen3.8-27B-AWQ-INT4
+    TAU3_USER_SERVED_MODEL_NAME: Qwen/Qwen3.8-27B-AWQ-INT4
+    TAU3_USER_THINKING: 'off'
+    MAX_TOOL_RESPONSE_CHARS: '65536'
+    MAX_NUM_SEQS: '4'
+    VERL_QWEN35_WEIGHT_AUDIT_DIR: ${TAU3_RUN_ROOT}/rl012_4b_lora_e3_20260909/weight-audits
+    TAU3_GRPO_DEBUG_BATCH_DIR: ${TAU3_RUN_ROOT}/rl012_4b_lora_e3_20260909/update-batches
+    OMP_NUM_THREADS: '4'
+    OPENBLAS_NUM_THREADS: '4'
+    PYTHONUNBUFFERED: '1'
+    HF_HUB_OFFLINE: '1'
+    TRANSFORMERS_OFFLINE: '1'
+    PYTORCH_ALLOC_CONF: 'expandable_segments:True'
+  overrides:
+  - actor_rollout_ref.actor.fsdp_config.param_offload=true
+  - actor_rollout_ref.actor.fsdp_config.optimizer_offload=true
+  - trainer.default_local_dir=/root/autodl-fs/tau3_grpo_fix/results/rl012_4b_lora_e3_20260909/checkpoints
+  - trainer.max_actor_ckpt_to_keep=1

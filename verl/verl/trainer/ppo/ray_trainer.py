@@ -242,7 +242,7 @@ def tau3_dynamic_filter(data: DataProto, config: Optional[AlgoConfig]) -> dict[s
     if "uid" not in data.non_tensor_batch:
         return {}
 
-    from tau3_grpo.algo.dynamic_filtering import apply_dynamic_filter
+    from tau3_grpo.algorithms.dynamic_filtering import apply_dynamic_filter
 
     response_mask = data.batch["response_mask"]
     rewards = data.batch["token_level_rewards"].sum(dim=1).detach().to("cpu").numpy()
@@ -369,7 +369,7 @@ def compute_advantage(
         # TaskRunner process, whose registry is distinct from the launcher. Do
         # the idempotent registration here, in the process that consumes it.
         if adv_estimator == "tau_gigpo":
-            from tau3_grpo.algo.verl_estimator import register as register_tau3_gigpo
+            from tau3_grpo.algorithms.verl_estimator import register as register_tau3_gigpo
 
             register_tau3_gigpo()
         adv_estimator_fn = core_algos.get_adv_estimator_fn(adv_estimator)
@@ -474,9 +474,11 @@ class RayPPOTrainer:
         self.use_critic = need_critic(self.config)
         self.ray_worker_group_cls = ray_worker_group_cls
         self.device_name = device_name if device_name else self.config.trainer.device
+        from tau3_grpo.tracking.swanlab import rl_experiment_name
+
         self.validation_generations_logger = ValidationGenerationsLogger(
             project_name=self.config.trainer.project_name,
-            experiment_name=self.config.trainer.experiment_name,
+            experiment_name=rl_experiment_name(self.config),
         )
 
         # if ref_in_actor is True, the reference policy will be actor without lora applied
@@ -1353,6 +1355,12 @@ class RayPPOTrainer:
         batch.meta_info["multi_turn"] = rollout_config.multi_turn.enable
         # TODO: Make "temperature" single source of truth from generation.
         batch.meta_info["temperature"] = rollout_config.temperature
+        # Opt-in diagnostics preserve the real on-policy batch before an update
+        # can fail. These snapshots are never reused by the training loop.
+        debug_batch_dir = os.environ.get("TAU3_GRPO_DEBUG_BATCH_DIR")
+        if debug_batch_dir:
+            os.makedirs(debug_batch_dir, exist_ok=True)
+            batch.save_to_disk(os.path.join(debug_batch_dir, f"update_{self.global_steps:06d}.pkl"))
         # update actor
         if self.use_legacy_worker_impl == "disable":
             batch_td = batch.to_tensordict()
@@ -1426,12 +1434,17 @@ class RayPPOTrainer:
 
         from verl.utils.tracking import Tracking
 
+        # Tau3-GRPO local patch: use the resolved configuration for display names.
+        from tau3_grpo.tracking.swanlab import rl_experiment_name, setup_rl_charts
+
         logger = Tracking(
             project_name=self.config.trainer.project_name,
-            experiment_name=self.config.trainer.experiment_name,
+            experiment_name=rl_experiment_name(self.config),
             default_backend=self.config.trainer.logger,
             config=OmegaConf.to_container(self.config, resolve=True),
         )
+
+        setup_rl_charts(self.config.trainer.logger)
 
         self.global_steps = 0
 
@@ -1715,7 +1728,7 @@ class RayPPOTrainer:
                         # stats plus gathered anchor/verifier fields into scalar
                         # metrics.  This runs after the estimator on the trainer
                         # driver, so last_stats() refers to this exact update.
-                        from tau3_grpo.integration.trainer_telemetry import (
+                        from tau3_grpo.tracking.trainer_telemetry import (
                             collect_rollout_metrics,
                         )
 
@@ -1852,14 +1865,26 @@ class RayPPOTrainer:
                 # TODO: make a canonical logger that supports various backend
                 # Tau3-GRPO local patch: persist the same update-level values as
                 # JSONL for deterministic reports, independent of wandb access.
-                from tau3_grpo.integration.trainer_telemetry import write_training_update
+                from tau3_grpo.tracking.trainer_telemetry import write_training_update
 
                 write_training_update(
                     batch=batch,
                     metrics=metrics,
                     update_index=self.global_steps,
                 )
+                metrics["trainer/global_step"] = self.global_steps
                 logger.log(data=metrics, step=self.global_steps)
+                # Tau3-GRPO local patch: inspect real multi-turn training samples
+                # alongside scalars; full selected payloads are retained as artifacts.
+                from tau3_grpo.tracking.swanlab import log_rl_examples
+
+                log_rl_examples(
+                    batch=batch,
+                    tokenizer=self.tokenizer,
+                    update_index=self.global_steps,
+                    loggers=self.config.trainer.logger,
+                    output_dir=self.config.trainer.default_local_dir,
+                )
 
                 progress_bar.update(1)
                 self.global_steps += 1
@@ -1877,6 +1902,10 @@ class RayPPOTrainer:
                         self.actor_rollout_wg.async_calls_finalize_fn_exec(blocking=True)
                     pprint(f"Final validation metrics: {last_val_metrics}")
                     progress_bar.close()
+                    # Flush the final media before Ray tears down this worker.
+                    # Remove the backend so Tracking.__del__ cannot finish it twice.
+                    if "swanlab" in logger.logger:
+                        logger.logger.pop("swanlab").finish()
                     return
 
                 # this is experimental and may be changed/removed in the future

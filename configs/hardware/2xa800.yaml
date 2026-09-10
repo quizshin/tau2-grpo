@@ -1,0 +1,8 @@
+launch:
+  environment:
+    TAU3_POLICY_CUDA_DEVICES: '0'
+    POLICY_GPUS: '1'
+    ROLLOUT_TP: '1'
+    TAU3_USER_CUDA_DEVICES: '1'
+    TAU3_USER_TP: '1'
+    SFT_GPU: '0'

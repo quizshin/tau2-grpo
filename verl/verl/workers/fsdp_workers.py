@@ -75,6 +75,7 @@ from verl.utils.fsdp_utils import (
     offload_fsdp_model_to_cpu,
     offload_fsdp_optimizer,
     replace_lora_wrapper,
+    resolve_fsdp_use_orig_params,
 )
 from verl.utils.import_utils import import_external_libs
 from verl.utils.memory_utils import aggressive_empty_cache
@@ -599,6 +600,12 @@ class ActorRolloutRefWorker(Worker, DistProfilerExtension):
         cpu_offload = None if role == "actor" else CPUOffload(offload_params=True)
         fsdp_strategy = self.config.actor.strategy
         if fsdp_strategy == "fsdp":
+            requested_use_orig_params = self.use_orig_params
+            self.use_orig_params = resolve_fsdp_use_orig_params(
+                actor_module, self.use_orig_params, self._is_lora
+            )
+            if requested_use_orig_params != self.use_orig_params:
+                logger.info("Qwen3.5 LoRA: using FSDP flattened parameters for frozen tied embeddings")
             actor_module_fsdp = FSDP(
                 actor_module,
                 cpu_offload=cpu_offload,

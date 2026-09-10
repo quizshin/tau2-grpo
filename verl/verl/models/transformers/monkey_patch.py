@@ -309,6 +309,18 @@ def apply_monkey_patch(
         tiled_mlp_shards: Number of shards for TiledMLP (higher = lower memory, slightly slower).
     """
 
+    # Tau3-GRPO local patch: Gated DeltaNet carries recurrent state across tokens.
+    # Generic FA unpadding/packing does not reset that state at sample boundaries.
+    # The dense text-only Qwen3.5 profile uses the native padded forward instead.
+    if model.config.model_type == "qwen3_5":
+        if (use_remove_padding or ulysses_sp_size != 1 or use_fused_kernels
+                or use_prefix_grouper or use_tiled_mlp):
+            raise ValueError(
+                "Tau3 Qwen3.5 requires padded native forward: use_remove_padding=false, "
+                "ulysses_sp_size=1, use_fused_kernels=false, no prefix grouper/tiled MLP"
+            )
+        return
+
     # Apply TiledMLP monkey patch for memory-efficient MLP computation
     if use_tiled_mlp:
         from verl.models.transformers.tiled_mlp import apply_tiled_mlp_monkey_patch

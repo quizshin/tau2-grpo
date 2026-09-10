@@ -25,11 +25,14 @@ with open(os.path.join(version_folder, "verl/version/version")) as f:
 
 install_requires = [
     "accelerate",
+    # Tau3-GRPO local patch: AgentLoop imports this directly, including on CPU.
+    "cachetools",
     "codetiming",
     "datasets",
     "dill",
     "hydra-core",
-    "numpy<2.0.0",
+    # Tau3-GRPO local patch: the Qwen3.5 vLLM wheel requires NumPy 2 via OpenCV.
+    "numpy>=1.26,<3",
     "pandas",
     "peft",
     "pyarrow>=19.0.0",
@@ -49,7 +52,9 @@ PRIME_REQUIRES = ["pyext"]
 GEO_REQUIRES = ["mathruler", "torchvision", "qwen_vl_utils"]
 GPU_REQUIRES = ["liger-kernel", "flash-attn"]
 MATH_REQUIRES = ["math-verify"]  # Add math-verify as an optional dependency
-VLLM_REQUIRES = ["tensordict>=0.8.0,<=0.10.0,!=0.9.0", "vllm>=0.8.5,<=0.12.0"]
+VLLM_REQUIRES = ["numpy<2", "tensordict>=0.8.0,<=0.10.0,!=0.9.0", "vllm>=0.8.5,<=0.12.0"]
+# Tau3-GRPO local patch: opt-in Qwen3.5 stack; keep the legacy vllm extra unchanged.
+QWEN35_REQUIRES = ["tensordict==0.10.0", "vllm==0.20.0", "transformers==5.5.1"]
 TRTLLM_REQUIRES = ["tensorrt-llm>=1.2.0rc6"]
 SGLANG_REQUIRES = [
     "tensordict>=0.8.0,<=0.10.0,!=0.9.0",
@@ -66,6 +71,7 @@ extras_require = {
     "gpu": GPU_REQUIRES,
     "math": MATH_REQUIRES,
     "vllm": VLLM_REQUIRES,
+    "qwen35": QWEN35_REQUIRES,
     "sglang": SGLANG_REQUIRES,
     "trl": TRL_REQUIRES,
     "mcore": MCORE_REQUIRES,

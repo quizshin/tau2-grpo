@@ -205,6 +205,18 @@ class vLLMColocateWorkerExtension:
             model_config = self.model_runner.vllm_config.model_config
             process_weights_after_loading(model, model_config, self.device)
 
+        audit_dir = os.environ.get("VERL_QWEN35_WEIGHT_AUDIT_DIR")
+        if audit_dir:
+            from verl.utils.qwen35_weight_audit import audit_qwen35_rollout_weights
+
+            path = audit_qwen35_rollout_weights(
+                self.model_runner.model,
+                self.model_runner.vllm_config.model_config.model,
+                audit_dir,
+                "adapter" if peft_config and base_sync_done else "base",
+            )
+            logger.info("Qwen3.5 rollout weight audit: %s", path)
+
     def _update_weights(self, weights: list[tuple[str, torch.Tensor]], peft_config: dict, base_sync_done: bool):
         if peft_config and base_sync_done:
             weights = dict(weights)

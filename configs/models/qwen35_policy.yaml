@@ -1,0 +1,4 @@
+launch:
+  environment:
+    QWEN35_SIZE: 0.8B
+    QWEN35_MODEL_PATH: ${TAU3_MODEL_ROOT}/Qwen3.5-${QWEN35_SIZE}

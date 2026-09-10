@@ -1,0 +1,29 @@
+includes:
+- ../../hardware/2xa800.yaml
+- ../../tracking/swanlab.yaml
+- ../../models/qwen35_policy.yaml
+launch:
+  stage: rl
+  entrypoint: scripts/train/rl/run_qwen35.sh
+  seed: 42
+  environment:
+    GROUP_SIZE: '4'
+    GROUPS_PER_UPDATE: '2'
+    PPO_MINI_GROUPS: '2'
+    TOTAL_UPDATES: '3'
+    MAX_NUM_SEQS: '8'
+    LR: 1e-6
+    TAU3_USER_MODEL: ${TAU3_MODEL_ROOT}/Qwen3.5-4B
+    TAU3_USER_SERVED_MODEL_NAME: Qwen/Qwen3.5-4B
+    TAU3_USER_BASE_URL: http://127.0.0.1:8100/v1
+    QWEN35_RUN_ROOT: ${TAU3_RUN_ROOT}/rl_qwen35_lora
+    MODEL_PATH: ${TAU3_RUN_ROOT}/sft_compare_20260908/lora/sft_merged_seed42
+  overrides:
+  - trainer.resume_mode=disable
+  - trainer.max_actor_ckpt_to_keep=2
+  - actor_rollout_ref.rollout.gpu_memory_utilization=0.35
+  - actor_rollout_ref.rollout.agent.num_workers=4
+  - actor_rollout_ref.model.lora_rank=16
+  - actor_rollout_ref.model.lora_alpha=32
+  - actor_rollout_ref.actor.fsdp_config.model_dtype=bfloat16
+  - actor_rollout_ref.model.target_modules=["down_proj","gate_proj","in_proj_a","in_proj_b","in_proj_qkv","in_proj_z","k_proj","o_proj","out_proj","q_proj","up_proj","v_proj"]

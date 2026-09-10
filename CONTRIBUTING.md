@@ -20,17 +20,17 @@ Python 3.12 is required.
 ```bash
 bash setup.sh cpu-test
 source .venv-cpu/bin/activate
-ruff check tau3-grpo-longhorizon/src tau3-grpo-longhorizon/tests
+ruff check tau3_grpo tests
 pytest -q \
-  tau3-grpo-longhorizon/tests/test_anchors.py \
-  tau3-grpo-longhorizon/tests/test_dynamic_filtering.py \
-  tau3-grpo-longhorizon/tests/test_tau_gigpo.py \
-  tau3-grpo-longhorizon/tests/test_metrics.py \
-  tau3-grpo-longhorizon/tests/test_configs.py \
-  tau3-grpo-longhorizon/tests/test_experiment_manifest.py \
-  tau3-grpo-longhorizon/tests/test_leakage_audit.py \
-  tau3-grpo-longhorizon/tests/test_path_traversal.py \
-  tau3-grpo-longhorizon/tests/test_patch_contract.py
+  tests/test_anchors.py \
+  tests/test_dynamic_filtering.py \
+  tests/test_tau_gigpo.py \
+  tests/test_metrics.py \
+  tests/test_configs.py \
+  tests/test_experiment_manifest.py \
+  tests/test_leakage_audit.py \
+  tests/test_path_traversal.py \
+  tests/test_patch_contract.py
 ```
 
 GPU, vLLM, FlashAttention and full veRL integration checks run only on the
@@ -39,7 +39,7 @@ validation.
 
 ## Repository boundaries
 
-- Put project-owned code in `tau3-grpo-longhorizon/`.
+- Put project-owned code in ``.
 - Keep AReaL raw data, generated manifests/parquet, SFT artifacts, checkpoints,
   model weights, rollout outputs and logs out of Git.
 - `tau2-bench/` is the unmodified Sierra Tau3 Bench v1.0.1 snapshot.

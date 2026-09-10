@@ -1,0 +1,20 @@
+# RL-005: same three-step LoRA validation after correcting observation truncation.
+includes:
+- qwen35_lora.yaml
+launch:
+  environment:
+    RESULTS_DIR: ${TAU3_RUN_ROOT}/rl005_lora_obs64k_20260909/e0_seed42
+    SWANLAB_LOG_DIR: ${TAU3_RUN_ROOT}/rl005_lora_obs64k_20260909/e0_seed42/swanlog
+    SWANLAB_EXPERIMENT_NAME: rl-validation-E0-Qwen3.5-0.8B-lora16-obs64k-g2x4-u3-s42
+    MAX_TOOL_RESPONSE_CHARS: '65536'
+    VERL_QWEN35_WEIGHT_AUDIT_DIR: ${TAU3_RUN_ROOT}/rl005_lora_obs64k_20260909/weight-audits
+    TAU3_GRPO_DEBUG_BATCH_DIR: ${TAU3_RUN_ROOT}/rl005_lora_obs64k_20260909/update-batches
+    OMP_NUM_THREADS: '4'
+    OPENBLAS_NUM_THREADS: '4'
+    PYTHONUNBUFFERED: '1'
+    HF_HUB_OFFLINE: '1'
+    TRANSFORMERS_OFFLINE: '1'
+    PYTORCH_ALLOC_CONF: 'expandable_segments:True'
+  overrides:
+  - actor_rollout_ref.actor.fsdp_config.param_offload=false
+  - actor_rollout_ref.actor.fsdp_config.optimizer_offload=false

@@ -1,0 +1,16 @@
+# Candidate NVIDIA Qwen3.5 runtime, isolated from a800-constraints.txt.
+# vLLM 0.20.0 metadata admits Transformers 5.5.1 and pins Torch 2.11.0.
+# Local CPU validation is not a CUDA/vLLM validation; see qwen35.md.
+torch==2.11.0
+torchaudio==2.11.0
+torchvision==0.26.0
+vllm==0.20.0
+transformers==5.5.1
+peft==0.18.1
+accelerate==1.12.0
+tensordict==0.10.0
+numpy==2.2.6
+opencv-python-headless==4.13.0.92
+scipy==1.14.1
+litellm==1.82.6
+swanlab==0.10.0

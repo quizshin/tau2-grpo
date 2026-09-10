@@ -1,0 +1,20 @@
+# RL-004: full language-parameter counterpart with complete Airline tool observations.
+includes:
+- qwen35_full.yaml
+launch:
+  environment:
+    RESULTS_DIR: ${TAU3_RUN_ROOT}/rl004_full_20260909/e0_seed42
+    SWANLAB_LOG_DIR: ${TAU3_RUN_ROOT}/rl004_full_20260909/e0_seed42/swanlog
+    SWANLAB_EXPERIMENT_NAME: rl-validation-E0-Qwen3.5-0.8B-full-obs64k-g2x4-u3-s42
+    MAX_TOOL_RESPONSE_CHARS: '65536'
+    TAU3_GRPO_DEBUG_BATCH_DIR: ${TAU3_RUN_ROOT}/rl004_full_20260909/update-batches
+    OMP_NUM_THREADS: '4'
+    OPENBLAS_NUM_THREADS: '4'
+    PYTHONUNBUFFERED: '1'
+    HF_HUB_OFFLINE: '1'
+    TRANSFORMERS_OFFLINE: '1'
+    PYTORCH_ALLOC_CONF: 'expandable_segments:True'
+  overrides:
+  - actor_rollout_ref.actor.fsdp_config.param_offload=false
+  - actor_rollout_ref.actor.fsdp_config.optimizer_offload=false
+  - trainer.max_actor_ckpt_to_keep=1

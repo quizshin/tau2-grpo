@@ -156,6 +156,8 @@ class AgentData:
 
         # Temporary state for tool calls
         self.tool_calls: list[FunctionCall] = []
+        # Parser-separated prose for the official tool-call replay history.
+        self.assistant_content: Optional[str] = None
 
         # Tau3-GRPO local patch: per-segment anchor ids and token spans.
         self.anchor_ids: list[Optional[str]] = []
@@ -351,6 +353,16 @@ class ToolAgentLoop(AgentLoopBase):
         """Handle the generating state: generate model response and check for tool calls."""
         add_messages: list[dict[str, Any]] = []
 
+        # Tau3-GRPO local patch: cap the *next* generation, not the response
+        # just produced. The last allowed turn must reach its tool/interaction
+        # handler and be recorded before the trajectory can be finalized.
+        if self.max_assistant_turns and agent_data.assistant_turns >= self.max_assistant_turns:
+            agent_data.termination_reason = "max_steps"
+            return AgentState.TERMINATED
+        if self.max_user_turns and agent_data.user_turns >= self.max_user_turns:
+            agent_data.termination_reason = "max_steps"
+            return AgentState.TERMINATED
+
         # Tau3-GRPO local patch: the v2-2 contract caps *each assistant turn* at
         # 1,024 new tokens while keeping a much larger trajectory budget.  veRL's
         # default async server otherwise gives every turn the whole remaining
@@ -407,16 +419,11 @@ class ToolAgentLoop(AgentLoopBase):
         if not ignore_termination and len(agent_data.response_mask) >= self.response_length:
             agent_data.termination_reason = "context_window_exceeded"
             return AgentState.TERMINATED
-        if self.max_assistant_turns and agent_data.assistant_turns >= self.max_assistant_turns:
-            agent_data.termination_reason = "max_steps"
-            return AgentState.TERMINATED
-        if self.max_user_turns and agent_data.user_turns >= self.max_user_turns:
-            agent_data.termination_reason = "max_steps"
-            return AgentState.TERMINATED
-
         # Extract tool calls
         tools = [tool.tool_schema for tool in self.tools.values()]
-        _, agent_data.tool_calls = await self.tool_parser.extract_tool_calls(agent_data.response_ids, tools)
+        agent_data.assistant_content, agent_data.tool_calls = await self.tool_parser.extract_tool_calls(
+            agent_data.response_ids, tools
+        )
 
         # Handle interaction if needed
         if self.interaction_config_file:
@@ -618,6 +625,7 @@ class ToolAgentLoop(AgentLoopBase):
                             tool_name=tool_name,
                             raw_arguments=raw_arguments,
                             error=str(e),
+                            assistant_content=agent_data.assistant_content,
                         )
                     except Exception as record_exc:  # pragma: no cover - preserve rollout
                         logger.warning(f"failed to record tool error for verifier replay: {record_exc}")
