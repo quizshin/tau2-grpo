@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Any, Optional, Sequence
 
 from tau3_grpo.models.compat import chat_template_kwargs, is_qwen35_tokenizer
-from tau3_grpo.models.qwen35_template import build_qwen35_example, token_ids
+from tau3_grpo.models.qwen35_template import build_qwen35_example, token_ids, thinking_options
 
 IGNORE_INDEX = -100
 
@@ -42,6 +42,9 @@ def build_supervised_example(
     *,
     tools: Optional[list[dict[str, Any]]] = None,
     max_length: int = 16_384,
+    enable_thinking: bool = False,
+    supervise_reasoning: bool = False,
+    preserve_historical_reasoning: bool = False,
 ) -> dict[str, Any]:
     """Render one complete dialogue and label assistant output spans only."""
 
@@ -53,8 +56,13 @@ def build_supervised_example(
     if not assistant_indices:
         raise ValueError("dialogue has no assistant turn")
 
+    options = thinking_options(dict(enable_thinking=enable_thinking,
+        supervise_reasoning=supervise_reasoning,
+        preserve_historical_reasoning=preserve_historical_reasoning))
     if is_qwen35_tokenizer(tokenizer):
-        return build_qwen35_example(messages, tokenizer, tools=tools, max_length=max_length)
+        return build_qwen35_example(messages, tokenizer, tools=tools, max_length=max_length, **options)
+    if any(options.values()):
+        raise ValueError("Thinking SFT is supported only for Qwen3.5 tokenizers")
 
     full_ids = _render_ids(
         tokenizer,
@@ -119,6 +127,9 @@ class TrajectorySFTDataset:
         tools: Optional[list[dict[str, Any]]] = None,
         max_length: int = 16_384,
         expected_size: Optional[int] = None,
+        enable_thinking: bool = False,
+        supervise_reasoning: bool = False,
+        preserve_historical_reasoning: bool = False,
     ) -> None:
         self.examples: list[dict[str, Any]] = []
         path = Path(jsonl_path)
@@ -128,7 +139,9 @@ class TrajectorySFTDataset:
             raise ValueError(f"{path} contains {len(records)} dialogues, expected {expected_size}")
         for record in records:
             example = build_supervised_example(
-                record["messages"], tokenizer, tools=tools, max_length=max_length
+                record["messages"], tokenizer, tools=tools, max_length=max_length,
+                enable_thinking=enable_thinking, supervise_reasoning=supervise_reasoning,
+                preserve_historical_reasoning=preserve_historical_reasoning
             )
             example["metadata"] = record.get("metadata") or {}
             self.examples.append(example)

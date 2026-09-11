@@ -19,6 +19,7 @@ from tau3_grpo.models.compat import (
     require_training_runtime,
 )
 from tau3_grpo.paths import PROJECT_ROOT, resolve_project_path
+from tau3_grpo.models.qwen35_template import thinking_options
 from tau3_grpo.training.sft.dataset import TrajectorySFTDataset, collate_fn_padding
 
 
@@ -94,12 +95,16 @@ def main(argv: list[str] | None = None) -> int:
 
     tools = _load_tools(_resolve(config["data"]["tool_config"]))
     max_length = args.max_length or int(config["data"]["max_length"])
+    options = thinking_options(config["data"])
+    if any(options.values()) and family != "qwen35":
+        raise ValueError("Thinking SFT requires Qwen3.5")
     train_dataset = TrajectorySFTDataset(
         _resolve(config["data"]["train_jsonl"]),
         tokenizer,
         tools=tools,
         max_length=max_length,
         expected_size=45,
+        **options,
     )
     validation_dataset = TrajectorySFTDataset(
         _resolve(config["data"]["validation_jsonl"]),
@@ -107,6 +112,7 @@ def main(argv: list[str] | None = None) -> int:
         tools=tools,
         max_length=max_length,
         expected_size=5,
+        **options,
     )
 
     train_config = config["train"]
@@ -245,7 +251,7 @@ def main(argv: list[str] | None = None) -> int:
         "loss_projection": "supervised_positions" if family == "qwen35" else "native",
         "trainable_parameters": trainable_parameters,
         "total_parameters": total_parameters,
-        "enable_thinking": False if family == "qwen35" else None,
+        **options,
         "expected_optimizer_steps": expected_steps,
         "actual_optimizer_steps": trainer.state.global_step,
         "per_device_batch_size": per_device_batch,
