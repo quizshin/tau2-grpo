@@ -1,4 +1,4 @@
-"""pass@k and paired bootstrap.
+"""pass@k, pass^k and paired bootstrap.
 
 Milestone D14. Both estimators are deterministic given their inputs: pass@k uses
 the unbiased combinatorial estimator (no resampling at all), and the paired
@@ -20,12 +20,7 @@ DEFAULT_BOOTSTRAP_RESAMPLES = 10000
 DEFAULT_CONFIDENCE = 0.95
 
 
-def pass_at_k(num_samples: int, num_correct: int, k: int) -> float:
-    """Unbiased pass@k for one task.
-
-    ``1 - C(n-c, k) / C(n, k)``, evaluated in a numerically stable product form.
-    """
-
+def _validate_counts(num_samples: int, num_correct: int, k: int) -> None:
     if k <= 0:
         raise ValueError("k must be positive")
     if num_samples <= 0:
@@ -34,12 +29,40 @@ def pass_at_k(num_samples: int, num_correct: int, k: int) -> float:
         raise ValueError(f"num_correct {num_correct} outside [0, {num_samples}]")
     if k > num_samples:
         raise ValueError(f"k={k} exceeds num_samples={num_samples}")
+
+
+def pass_at_k(num_samples: int, num_correct: int, k: int) -> float:
+    """Unbiased pass@k: ``1 - C(n-c, k) / C(n, k)`` for one task."""
+
+    _validate_counts(num_samples, num_correct, k)
     if num_samples - num_correct < k:
         return 1.0
     product = 1.0
     for i in range(k):
         product *= (num_samples - num_correct - i) / (num_samples - i)
     return 1.0 - product
+
+
+def pass_hat_k(num_samples: int, num_correct: int, k: int) -> float:
+    """pass^k: ``C(c, k) / C(n, k)``, matching the pinned official benchmark."""
+
+    _validate_counts(num_samples, num_correct, k)
+    if num_correct < k:
+        return 0.0
+    product = 1.0
+    for i in range(k):
+        product *= (num_correct - i) / (num_samples - i)
+    return product
+
+
+def is_benchmark_success(reward: float) -> bool:
+    """Same full-success tolerance as tau2.metrics.agent_metrics.is_successful.
+
+    Legacy training telemetry helpers below intentionally retain their explicit
+    reward-threshold API; independent benchmark evaluation uses this predicate.
+    """
+
+    return (1 - 1e-6) <= reward <= (1 + 1e-6)
 
 
 def pass_at_k_from_rewards(rewards: Sequence[float], k: int, *, threshold: float = 0.0) -> float:

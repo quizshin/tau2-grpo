@@ -9,12 +9,13 @@ than a project-side reward reimplementation, scores every trajectory.
 from __future__ import annotations
 
 import json
+import math
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Sequence
 
-from tau3_grpo.data.manifest import ManifestEntry
+from tau3_grpo.data.manifest import TAU3_REVISION, ManifestEntry
 from tau3_grpo.data.schema import ArealTaskRecord
 from tau3_grpo.envs.adapter import (
     AIRLINE_DOMAIN,
@@ -23,6 +24,7 @@ from tau3_grpo.envs.adapter import (
     load_default_flight_db,
     load_flight_db,
 )
+from tau3_grpo.evaluation.scoring import resolve_ks, summarize_trials
 
 
 @dataclass(frozen=True)
@@ -54,6 +56,8 @@ class EvalSpec:
     max_steps: int = 30
     max_errors: int = 10
     max_concurrency: int = 16
+    ks: tuple[int, ...] | None = None
+    include_pass_hat: bool = False
 
 
 def _run_one(
@@ -149,11 +153,13 @@ def run_evaluation(
     user: Endpoint,
     output_dir: str | Path,
     selection_entries: Sequence[ManifestEntry] = (),
+    provenance: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Run all task/trial pairs, persist full trajectories, and return a summary."""
 
-    if spec.trials <= 0 or spec.max_concurrency <= 0:
-        raise ValueError("trials and max_concurrency must be positive")
+    if spec.max_steps <= 0 or spec.max_errors <= 0 or spec.max_concurrency <= 0:
+        raise ValueError("max_steps, max_errors and max_concurrency must be positive")
+    ks = resolve_ks(spec.trials, spec.ks)
     if spec.target == "selection":
         jobs = list(_selection_jobs(selection_entries, spec.trials, spec.seed))
     elif spec.target == "tau3-final":
@@ -161,9 +167,35 @@ def run_evaluation(
     else:
         raise ValueError(f"unknown evaluation target: {spec.target}")
 
+    planned = [{key: job[key] for key in ("task_id", "trial", "seed")} for job in jobs]
+    # Validate the full schedule before any paid endpoint calls.
+    summarize_trials(planned=planned, results=[], errors=[], trials=spec.trials, ks=ks)
+    metadata = {
+        "schema_version": 1,
+        "benchmark_revision": TAU3_REVISION,
+        "spec": {**asdict(spec), "ks": list(ks)},
+        "planned": planned,
+        "endpoints": {
+            name: {"model": endpoint.model, "temperature": endpoint.temperature}
+            for name, endpoint in (("policy", policy), ("user", user))
+        },
+        "provenance": provenance or {},
+    }
+    out = Path(output_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    for name in ("run.json", "trajectories.jsonl", "errors.jsonl", "summary.json"):
+        if (out / name).exists():
+            raise ValueError(f"evaluation output already exists: {out / name}; use a new directory")
+    with (out / "run.json").open("x", encoding="utf-8") as handle:
+        handle.write(json.dumps(metadata, indent=2, sort_keys=True) + "\n")
+
     results: list[dict[str, Any]] = []
     errors: list[dict[str, Any]] = []
-    with ThreadPoolExecutor(max_workers=spec.max_concurrency) as pool:
+    with (
+        (out / "trajectories.jsonl").open("x", encoding="utf-8") as trajectory_file,
+        (out / "errors.jsonl").open("x", encoding="utf-8") as error_file,
+        ThreadPoolExecutor(max_workers=spec.max_concurrency) as pool,
+    ):
         futures = {
             pool.submit(
                 _run_one,
@@ -179,53 +211,56 @@ def run_evaluation(
         }
         for future in as_completed(futures):
             job = futures[future]
+            identity = {key: job[key] for key in ("task_id", "trial", "seed")}
+            scored = False
             try:
                 simulation = future.result()
-                reward = float(simulation.reward_info.reward)
-                results.append(
-                    {
-                        "task_id": job["task_id"],
-                        "trial": job["trial"],
-                        "seed": job["seed"],
+                if simulation.termination_reason.value == "infrastructure_error":
+                    row = {
+                        **identity,
+                        "error_type": "InfrastructureError",
+                        "error": "official simulation reported infrastructure_error",
+                        "simulation": simulation.model_dump(mode="json"),
+                    }
+                else:
+                    reward = float(simulation.reward_info.reward)
+                    if not math.isfinite(reward):
+                        raise ValueError("simulation reward must be finite")
+                    row = {
+                        **identity,
                         "reward": reward,
                         "termination_reason": simulation.termination_reason.value,
                         "simulation": simulation.model_dump(mode="json"),
                     }
-                )
+                    scored = True
             except Exception as exc:  # retain failures without losing completed trials
-                errors.append(
-                    {
-                        "task_id": job["task_id"],
-                        "trial": job["trial"],
-                        "seed": job["seed"],
-                        "error_type": type(exc).__name__,
-                        "error": str(exc),
-                    }
-                )
+                row = {**identity, "error_type": type(exc).__name__, "error": str(exc)}
+            # Disk/serialization failures must propagate, not duplicate a trial
+            # into both success and error files.
+            handle = trajectory_file if scored else error_file
+            handle.write(json.dumps(row, sort_keys=True) + "\n")
+            handle.flush()
+            (results if scored else errors).append(row)
 
     results.sort(key=lambda item: (item["task_id"], item["trial"]))
     errors.sort(key=lambda item: (item["task_id"], item["trial"]))
-    out = Path(output_dir)
-    out.mkdir(parents=True, exist_ok=True)
-    with (out / "trajectories.jsonl").open("w", encoding="utf-8") as handle:
-        for result in results:
-            handle.write(json.dumps(result, sort_keys=True) + "\n")
-    with (out / "errors.jsonl").open("w", encoding="utf-8") as handle:
-        for error in errors:
-            handle.write(json.dumps(error, sort_keys=True) + "\n")
+    for name, rows in (("trajectories.jsonl", results), ("errors.jsonl", errors)):
+        temporary = out / f"{name}.tmp"
+        with temporary.open("w", encoding="utf-8") as handle:
+            for row in rows:
+                handle.write(json.dumps(row, sort_keys=True) + "\n")
+        temporary.replace(out / name)
 
-    rewards = [item["reward"] for item in results]
     summary = {
         "target": spec.target,
-        "tasks": len({job["task_id"] for job in jobs}),
-        "trials_per_task": spec.trials,
-        "planned_trajectories": len(jobs),
-        "completed_trajectories": len(results),
-        "failed_trajectories": len(errors),
-        "mean_reward": sum(rewards) / len(rewards) if rewards else 0.0,
-        "solve_rate": sum(value > 0.0 for value in rewards) / len(rewards) if rewards else 0.0,
+        **summarize_trials(
+            planned=planned, results=results, errors=errors, trials=spec.trials,
+            ks=ks, include_pass_hat=spec.include_pass_hat,
+        ),
         "policy_model": policy.model,
         "user_model": user.model,
+        "benchmark_revision": TAU3_REVISION,
+        "provenance": metadata["provenance"],
     }
     (out / "summary.json").write_text(
         json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8"

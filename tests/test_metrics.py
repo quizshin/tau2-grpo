@@ -11,6 +11,7 @@ from tau3_grpo.evaluation.metrics import (
     paired_bootstrap_by_task,
     pass_at_k,
     pass_at_k_from_rewards,
+    pass_hat_k,
     solve_rate,
 )
 
@@ -154,3 +155,20 @@ def test_paired_bootstrap_by_task_pairs_correctly():
     )
     assert result.num_tasks == 2
     assert result.difference == pytest.approx(1.0)
+
+
+def test_estimators_match_combinatorial_definition_exhaustively():
+    from math import comb
+
+    for n in range(1, 17):
+        for c in range(n + 1):
+            for k in range(1, n + 1):
+                assert pass_at_k(n, c, k) == pytest.approx(1 - comb(n - c, k) / comb(n, k))
+                assert pass_hat_k(n, c, k) == pytest.approx(comb(c, k) / comb(n, k))
+                assert pass_hat_k(n, c, k) <= pass_at_k(n, c, k) + 1e-12
+
+
+@pytest.mark.parametrize("n,c,k", [(4, 2, 0), (0, 0, 1), (4, 5, 2), (4, -1, 2), (4, 2, 5)])
+def test_pass_hat_k_rejects_bad_input(n, c, k):
+    with pytest.raises(ValueError):
+        pass_hat_k(n, c, k)

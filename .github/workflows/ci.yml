@@ -53,6 +53,10 @@ jobs:
             tests/test_dynamic_filtering.py \
             tests/test_tau_gigpo.py \
             tests/test_metrics.py \
+            tests/test_eval_scoring.py \
+            tests/test_eval_runtime.py \
+            tests/test_eval_cli.py \
+            tests/test_service_attestation.py \
             tests/test_configs.py \
             tests/test_experiment_manifest.py \
             tests/test_leakage_audit.py \

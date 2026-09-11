@@ -94,6 +94,9 @@ bash scripts/train/rl/run.sh --config configs/train/rl/qwen35_full.yaml --experi
 
 ## 数据与评估边界
 
+独立评测以 **pass@k** 为主，可追加 **pass^k**；冻结模型服务、结果文件和离线重算命令见
+[独立评测说明](docs/independent_evaluation.md)。
+
 训练和内部选型使用固定版本 AReaL Tau2 风格 Airline 数据。官方 Tau3 的 50 个任务只用于模型锁定后的最终评估，不能用于训练或选择 SFT/RL 方法。评分沿用官方逻辑；详见 [运行边界](docs/architecture/runtime-boundary.md)。
 
 开发检查：激活本机环境后运行 `pytest -q tests`。已有算法、模板、最后轮工具执行、评分和 SwanLab 回归均随本次目录重构迁移。上游版本与本地补丁见 [THIRD_PARTY_SOURCES.md](THIRD_PARTY_SOURCES.md)。

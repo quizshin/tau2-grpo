@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 import sys
 from pathlib import Path
@@ -27,6 +28,7 @@ from tau3_grpo.data.official import (
 )
 from tau3_grpo.envs.tau2_bridge import Tau2Unavailable
 from tau3_grpo.evaluation.runtime import Endpoint, EvalSpec, run_evaluation
+from tau3_grpo.evaluation.scoring import resolve_ks
 from tau3_grpo.evaluation.service_attestation import (
     ServiceAttestationError,
     assert_service_matches_checkpoint,
@@ -65,6 +67,16 @@ def build_parser() -> argparse.ArgumentParser:
         default=os.environ.get("TAU3_USER_MODEL", "Qwen/Qwen2.5-7B-Instruct"),
     )
     parser.add_argument("--trials", type=int, default=4)
+    parser.add_argument(
+        "--ks", type=int, nargs="+", default=None,
+        help="pass@k values; default: 1, 2, 4 up to --trials",
+    )
+    parser.add_argument(
+        "--include-pass-hat", action="store_true",
+        help="also report pass^k (all k attempts succeed) for the same k values",
+    )
+    parser.add_argument("--policy-temperature", type=float, default=0.4)
+    parser.add_argument("--user-temperature", type=float, default=1.0)
     parser.add_argument("--max-concurrency", type=int, default=16)
     parser.add_argument("--max-steps", type=int, default=30)
     parser.add_argument("--output-dir", type=Path, default=None)
@@ -96,6 +108,15 @@ def _selection_tasks(manifest_dir: Path, seed: int) -> list[str]:
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     verify_layout()
+    try:
+        ks = resolve_ks(args.trials, args.ks)
+        if args.max_steps <= 0 or args.max_concurrency <= 0:
+            raise ValueError("max_steps and max_concurrency must be positive")
+        if any(not math.isfinite(t) or t < 0 for t in (args.policy_temperature, args.user_temperature)):
+            raise ValueError("temperatures must be finite and nonnegative")
+    except ValueError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
 
     if args.target == "selection":
         try:
@@ -142,6 +163,14 @@ def main(argv: list[str] | None = None) -> int:
             "frozen_at": lock.frozen_at,
         }
 
+    payload.update({
+        "seed": args.seed,
+        "trials_per_task": args.trials,
+        "planned_trajectories": len(task_ids) * args.trials,
+        "metric_ks": list(ks),
+        "include_pass_hat": args.include_pass_hat,
+        "primary_metric_family": "pass@k",
+    })
     if args.dry_run:
         payload["dry_run"] = True
         print(json.dumps(payload, indent=2, sort_keys=True))
@@ -161,6 +190,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"error: {exc}", file=sys.stderr)
         return 1
     payload["policy_service_attestation_hash"] = attestation.attestation_hash
+    payload["checkpoint_hash"] = attestation.checkpoint_hash
 
     output_dir = args.output_dir or (
         args.results_dir
@@ -171,13 +201,13 @@ def main(argv: list[str] | None = None) -> int:
         model=args.policy_model,
         base_url=args.policy_base_url,
         api_key=os.environ.get("TAU3_POLICY_API_KEY", "EMPTY"),
-        temperature=0.4,
+        temperature=args.policy_temperature,
     )
     user = Endpoint(
         model=args.user_model,
         base_url=args.user_base_url,
         api_key=os.environ.get("TAU3_USER_API_KEY", "EMPTY"),
-        temperature=1.0,
+        temperature=args.user_temperature,
     )
     try:
         summary = run_evaluation(
@@ -187,20 +217,20 @@ def main(argv: list[str] | None = None) -> int:
                 seed=args.seed,
                 max_steps=args.max_steps,
                 max_concurrency=args.max_concurrency,
+                ks=ks,
+                include_pass_hat=args.include_pass_hat,
             ),
             policy=policy,
             user=user,
             output_dir=output_dir,
             selection_entries=selection_entries if args.target == "selection" else (),
+            provenance=payload,
         )
     except (FileNotFoundError, ValueError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 1
-    summary["checkpoint"] = args.checkpoint
-    summary["policy_service_attestation_hash"] = attestation.attestation_hash
-    summary["output_dir"] = str(output_dir)
     print(json.dumps(summary, indent=2, sort_keys=True))
-    return 1 if summary["failed_trajectories"] else 0
+    return 0 if summary["metrics_valid"] else 1
 
 
 if __name__ == "__main__":
