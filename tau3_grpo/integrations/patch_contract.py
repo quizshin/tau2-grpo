@@ -42,6 +42,16 @@ class PatchRequirement:
 
 REQUIREMENTS: tuple[PatchRequirement, ...] = (
     PatchRequirement(
+        relative_path=Path("verl/workers/config/rollout.py"),
+        required_tokens=(PATCH_MARKER, 'tool_execution_mode: str = "parallel"'),
+        description="Explicit opt-in configuration for sequential multi-call execution",
+    ),
+    PatchRequirement(
+        relative_path=Path("verl/trainer/config/rollout/rollout.yaml"),
+        required_tokens=(PATCH_MARKER, "tool_execution_mode: parallel"),
+        description="Hydra accepts the project's sequential execution override",
+    ),
+    PatchRequirement(
         relative_path=Path("setup.py"),
         required_tokens=(PATCH_MARKER, "QWEN35_REQUIRES", '"numpy<2"', '"vllm==0.20.0"'),
         description="Qwen3.5 dependencies are opt-in; the legacy vLLM extra retains NumPy 1",
@@ -67,6 +77,10 @@ REQUIREMENTS: tuple[PatchRequirement, ...] = (
             "TAU3_GRPO_ANCHOR_HOOK",
             "finalize_rollout",
             "reward_score=terminal_reward_score",
+            "tool_execution_mode",
+            "record_tool_batch",
+            "recorded_tool_call",
+            "prepare_agent_messages",
         ),
         description=(
             "ToolAgentLoop emits aligned anchors, loads the worker hook, and "

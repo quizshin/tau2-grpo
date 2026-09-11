@@ -178,6 +178,9 @@ class ToolAgentLoop(AgentLoopBase):
         self.max_user_turns = self.rollout_config.multi_turn.max_user_turns
         self.max_assistant_turns = self.rollout_config.multi_turn.max_assistant_turns
         self.max_parallel_calls = self.rollout_config.multi_turn.max_parallel_calls
+        self.tool_execution_mode = self.rollout_config.multi_turn.tool_execution_mode
+        if self.tool_execution_mode not in {"sequential", "parallel"}:
+            raise ValueError("tool_execution_mode must be sequential or parallel")
         self.max_tool_response_length = self.rollout_config.multi_turn.max_tool_response_length
         self.tool_response_truncate_side = self.rollout_config.multi_turn.tool_response_truncate_side
         tool_config_path = self.rollout_config.multi_turn.tool_config_path
@@ -287,6 +290,9 @@ class ToolAgentLoop(AgentLoopBase):
                     "db_hash",
                     "initial_db_hash",
                     "scored",
+                    "tool_protocol",
+                    "agent_system_prompt_sha256",
+                    "benchmark_policy_modified",
                 )
                 reward_extra_info = {
                     key: terminal_payload.get(key) for key in scalar_keys
@@ -338,6 +344,14 @@ class ToolAgentLoop(AgentLoopBase):
 
     async def _handle_pending_state(self, agent_data: AgentData, sampling_params: dict[str, Any]) -> AgentState:
         """Handle the pending state: prepare the prompt and start generation."""
+        # Tau3-GRPO local patch: old parquet files carry the old system prompt.
+        # Adapt it before tokenization, so the actor trains on the served prompt.
+        prepare_messages = getattr(agent_data.interaction, "prepare_agent_messages", None)
+        if callable(prepare_messages):
+            required_mode = getattr(agent_data.interaction, "required_tool_execution_mode", None)
+            if required_mode and self.tool_execution_mode != required_mode:
+                raise ValueError(f"this interaction requires tool_execution_mode={required_mode}")
+            agent_data.messages = prepare_messages(agent_data.messages)
         prompt_ids = await self.apply_chat_template(
             agent_data.messages,
             tools=self.tool_schemas,
@@ -345,6 +359,8 @@ class ToolAgentLoop(AgentLoopBase):
             videos=agent_data.video_data,
         )
         agent_data.prompt_ids = prompt_ids
+        if len(prompt_ids) > self.prompt_length:
+            raise ValueError("prepared agent prompt exceeds prompt_length")
         return AgentState.GENERATING
 
     async def _handle_generating_state(
@@ -447,18 +463,37 @@ class ToolAgentLoop(AgentLoopBase):
         add_messages: list[dict[str, Any]] = []
         new_images_this_turn: list[Any] = []  # Local variable instead of agent_data attribute
 
-        tasks = []
-        tool_call_names = []
-        for tool_call in agent_data.tool_calls[: self.max_parallel_calls]:
-            tasks.append(self._call_tool(tool_call, agent_data.tools_kwargs, agent_data))
-            tool_call_names.append(tool_call.name)
+        # Tau3-GRPO local patch: ordered full-list execution is opt-in. Keep the
+        # upstream mode available for unrelated veRL users of this vendored tree.
+        sequential = self.tool_execution_mode == "sequential"
+        calls = agent_data.tool_calls if sequential else agent_data.tool_calls[: self.max_parallel_calls]
+        recorded_calls = [None] * len(calls)
+        recorder = getattr(agent_data.interaction, "record_tool_batch", None)
+        if sequential and callable(recorder):
+            recorded_calls = recorder(
+                agent_data.request_id, tool_calls=calls,
+                assistant_content=agent_data.assistant_content,
+            )
+            if len(recorded_calls) != len(calls):
+                raise RuntimeError("tool batch recording changed the number of calls")
 
+        tool_call_names = [call.name for call in calls]
         with simple_timer("tool_calls", agent_data.metrics):
-            responses = await asyncio.gather(*tasks)
+            if sequential:
+                responses = []
+                for call, recorded_call in zip(calls, recorded_calls, strict=True):
+                    responses.append(await self._call_tool(
+                        call, agent_data.tools_kwargs, agent_data,
+                        recorded_tool_call=recorded_call,
+                    ))
+            else:
+                responses = await asyncio.gather(*[
+                    self._call_tool(call, agent_data.tools_kwargs, agent_data) for call in calls
+                ])
 
         # Process tool responses and update multi_modal_data
         # Removed: agent_data.new_images_this_turn = []
-        for tool_response, tool_reward, _ in responses:
+        for (tool_response, tool_reward, _), recorded_call in zip(responses, recorded_calls, strict=True):
             # Create message from tool response
             if tool_response.image or tool_response.video:
                 # Multi-modal content with structured format
@@ -480,6 +515,9 @@ class ToolAgentLoop(AgentLoopBase):
                 # Text-only content
                 message = {"role": "tool", "content": tool_response.text or ""}
 
+            if recorded_call is not None:
+                message["tool_call_id"] = recorded_call.id
+                message["name"] = recorded_call.name
             add_messages.append(message)
 
             # Handle image data
@@ -591,12 +629,14 @@ class ToolAgentLoop(AgentLoopBase):
             return AgentState.GENERATING
 
     async def _call_tool(
-        self, tool_call: FunctionCall, tools_kwargs: dict[str, Any], agent_data: AgentData
+        self, tool_call: FunctionCall, tools_kwargs: dict[str, Any], agent_data: AgentData,
+        *, recorded_tool_call: Any = None,
     ) -> tuple[ToolResponse, float, dict]:
         """Call tool and return tool response."""
         tool, instance_id = None, None
         tool_name = str(getattr(tool_call, "name", "unknown_tool"))
         raw_arguments = getattr(tool_call, "arguments", "")
+        dispatch_ready = False
         try:
             tool_args = json.loads(raw_arguments)
             if not isinstance(tool_args, dict):
@@ -604,12 +644,21 @@ class ToolAgentLoop(AgentLoopBase):
                     f"tool arguments must decode to an object, got {type(tool_args).__name__}"
                 )
             tool = self.tools[tool_name]
+            dispatch_ready = True
             kwargs = tools_kwargs.get(tool_name, {})
             instance_id, _ = await tool.create(create_kwargs=kwargs.get("create_kwargs", {}))
+            execution_kwargs = {"agent_data": agent_data}
+            if recorded_tool_call is not None:
+                execution_kwargs["recorded_tool_call"] = recorded_tool_call
             tool_execution_response, tool_reward, res = await tool.execute(
-                instance_id, tool_args, agent_data=agent_data
+                instance_id, tool_args, **execution_kwargs
             )
         except Exception as e:
+            # Official tools return ordinary errors as ToolMessages. An actual
+            # exception after dispatch begins is an infrastructure/wrapper
+            # failure with potentially applied writes: do not retry or score it.
+            if recorded_tool_call is not None and dispatch_ready:
+                raise
             logger.warning(f"Error when executing tool: {e}")
             error_text = f"Error when executing tool: {e}"
             # Tau3-GRPO local patch: parser and dispatch errors happen before
@@ -620,14 +669,20 @@ class ToolAgentLoop(AgentLoopBase):
                 recorder = getattr(agent_data.interaction, "record_tool_failure", None)
                 if callable(recorder):
                     try:
+                        recording_kwargs = {}
+                        if recorded_tool_call is not None:
+                            recording_kwargs["recorded_tool_call"] = recorded_tool_call
                         error_text = recorder(
                             agent_data.request_id,
                             tool_name=tool_name,
                             raw_arguments=raw_arguments,
                             error=str(e),
                             assistant_content=agent_data.assistant_content,
+                            **recording_kwargs,
                         )
                     except Exception as record_exc:  # pragma: no cover - preserve rollout
+                        if recorded_tool_call is not None:
+                            raise
                         logger.warning(f"failed to record tool error for verifier replay: {record_exc}")
             return (
                 ToolResponse(

@@ -411,6 +411,44 @@ def test_dispatch_failure_is_recorded_for_official_replay(
     assert entry.tool_error_count == 1
 
 
+def test_concurrent_batches_keep_their_calls_and_databases_isolated(interaction):
+    from types import SimpleNamespace
+
+    from tau3_grpo.envs.registry import SESSIONS
+
+    async def batch(request_id):
+        await interaction.start_interaction(request_id, task_id="airline_1")
+        calls = interaction.record_tool_batch(
+            request_id, tool_calls=[SimpleNamespace(name="book_reservation", arguments="{}")
+                                    for _ in range(2)],
+        )
+        tool = _tool("book_reservation")
+        instance_id, _ = await tool.create()
+        for call in calls:
+            await asyncio.sleep(0)  # interleave the two independent rollouts
+            await tool.execute(instance_id, {}, agent_data=_AgentData(request_id),
+                               recorded_tool_call=call)
+        await tool.release(instance_id)
+
+    async def run():
+        await asyncio.gather(batch("batch-a"), batch("batch-b"))
+
+    asyncio.run(run())
+    first = SESSIONS.require("batch-a").session
+    second = SESSIONS.require("batch-b").session
+    assert first.db is not second.db
+    all_ids = []
+    for session in (first, second):
+        assert session.db.payload["n"] == 2
+        assert session.assistant_turns == 1
+        assert session.tool_calls == 2
+        assert [m.role for m in session.messages] == ["assistant", "tool", "tool"]
+        ids = [call.id for call in session.messages[0].tool_calls]
+        assert ids == [m.id for m in session.messages[1:]]
+        all_ids.extend(ids)
+    assert len(set(all_ids)) == 4
+
+
 def test_tool_without_agent_data_raises(interaction):
     asyncio.run(interaction.start_interaction("req-1", task_id="airline_1"))
     tool = _tool("get_user_details")

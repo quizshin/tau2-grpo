@@ -33,6 +33,7 @@ from tau3_grpo.envs.session import (
     UserSimulatorConfig,
 )
 from tau3_grpo.evaluation.verifier import verify_trajectory
+from tau3_grpo.prompts import prepare_agent_messages, prompt_provenance
 
 logger = logging.getLogger(__name__)
 
@@ -47,6 +48,9 @@ assert INTERACTION_NAME == _PARQUET_INTERACTION_NAME, (
 
 class Tau3AirlineInteraction(BaseInteraction):
     """One rollout of the Airline task against a private tau2 environment."""
+
+    required_tool_execution_mode = "sequential"
+    prepare_agent_messages = staticmethod(prepare_agent_messages)
 
     def __init__(self, config: dict[str, Any]):
         super().__init__(config)
@@ -210,6 +214,21 @@ class Tau3AirlineInteraction(BaseInteraction):
 
         return 0.0
 
+    def record_tool_batch(
+        self, instance_id: str, *, tool_calls: list[Any],
+        assistant_content: Optional[str] = None,
+    ) -> list[Any]:
+        """Record one assistant turn with stable IDs before executing its calls."""
+
+        session = SESSIONS.require(str(instance_id)).session
+        recorded = [session.make_tool_call(
+            str(call.name), _replay_tool_arguments(call.arguments),
+            f"{instance_id}-turn-{session.assistant_turns}-call-{index}",
+        ) for index, call in enumerate(tool_calls)]
+        if recorded:
+            session.record_assistant_tool_calls(recorded, content=assistant_content)
+        return recorded
+
     def record_tool_failure(
         self,
         instance_id: str,
@@ -218,6 +237,7 @@ class Tau3AirlineInteraction(BaseInteraction):
         raw_arguments: Any,
         error: str,
         assistant_content: Optional[str] = None,
+        recorded_tool_call: Any = None,
     ) -> str:
         """Record parser/dispatch failures in the official tau2 trajectory.
 
@@ -232,18 +252,13 @@ class Tau3AirlineInteraction(BaseInteraction):
         entry = SESSIONS.require(str(instance_id))
         session = entry.session
 
-        arguments: Any = raw_arguments
-        if isinstance(raw_arguments, str):
-            try:
-                arguments = json.loads(raw_arguments)
-            except json.JSONDecodeError:
-                arguments = {"__malformed_json__": raw_arguments}
-        if not isinstance(arguments, dict):
-            arguments = {"__invalid_arguments__": arguments}
-
-        call_id = f"{instance_id}-failed-{session.tool_calls}"
-        tool_call = session.make_tool_call(str(tool_name), arguments, call_id)
-        session.record_assistant_tool_calls([tool_call], content=assistant_content)
+        tool_call = recorded_tool_call
+        if tool_call is None:
+            call_id = f"{instance_id}-failed-{session.tool_calls}"
+            tool_call = session.make_tool_call(
+                str(tool_name), _replay_tool_arguments(raw_arguments), call_id
+            )
+            session.record_assistant_tool_calls([tool_call], content=assistant_content)
         tool_message = session.execute_tool_call(tool_call)
         entry.tool_error_count += 1
 
@@ -316,11 +331,24 @@ class Tau3AirlineInteraction(BaseInteraction):
             tool_error_count=entry.tool_error_count,
         )
         payload = result.to_dict()
+        payload.update(prompt_provenance())
         payload["anchor_ids"] = list(anchor_ids if anchor_ids is not None else entry.anchor_ids)
         payload["anchor_spans"] = list(
             anchor_spans if anchor_spans is not None else entry.anchor_spans
         )
         return payload
+
+
+def _replay_tool_arguments(raw_arguments: Any) -> dict[str, Any]:
+    arguments = raw_arguments
+    if isinstance(arguments, str):
+        try:
+            arguments = json.loads(arguments)
+        except json.JSONDecodeError:
+            arguments = {"__malformed_json__": raw_arguments}
+    if not isinstance(arguments, dict):
+        arguments = {"__invalid_arguments__": arguments}
+    return arguments
 
 
 def _last_assistant_text(messages: list[dict[str, Any]]) -> str:

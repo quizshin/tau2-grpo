@@ -94,8 +94,10 @@ def make_loop(handler, text, parser="qwen3_coder"):
     loop = ToolAgentLoop.__new__(ToolAgentLoop)
     loop.tokenizer = TextTokenizer()
     loop.response_length = 100000
+    loop.prompt_length = 100000
     loop.max_assistant_turns = loop.max_user_turns = 15
     loop.max_parallel_calls = 1
+    loop.tool_execution_mode = "sequential"
     loop.max_tool_response_length = 100000
     loop.tool_response_truncate_side = "right"
     schema = next(s for s in airline_tool_schemas() if s["function"]["name"] == "calculate")
@@ -309,5 +311,164 @@ def test_dispatch_error_preserves_prose_in_replay(live_session):
         assert session.messages[-2].content.strip() == NEEDLE
         assert session.messages[-1].error is True
         assert SESSIONS.require("boundary").tool_error_count == 1
+
+    asyncio.run(run())
+
+
+@pytest.mark.parametrize("parser", ["hermes", "qwen3_coder"])
+@pytest.mark.parametrize("starting_turn", [0, 14])
+def test_full_batch_is_sequential_one_turn_and_token_aligned(live_session, parser, starting_turn):
+    """Yield inside each tool so a gather implementation would expose overlap."""
+    handler, session = live_session
+    session.assistant_turns = starting_turn
+
+    async def run():
+        text = "\n".join(tool_text(parser, expression=str(i)) for i in (1, 2, 3))
+        loop, data, generated = make_loop(handler, text, parser)
+        data.assistant_turns = starting_turn
+        tool = loop.tools["calculate"]
+        original_execute = tool.execute
+        events = []
+
+        async def execute(instance_id, parameters, **kwargs):
+            value = parameters["expression"]
+            events.append(("start", value))
+            await asyncio.sleep(0)
+            result = await original_execute(instance_id, parameters, **kwargs)
+            events.append(("end", value))
+            return result
+
+        tool.execute = execute
+        assert await loop._handle_generating_state(data, {}) == AgentState.PROCESSING_TOOLS
+        generated_ids = list(data.response_ids)
+        data.response_logprobs = [-0.25] * len(generated_ids)
+        assert await loop._handle_processing_tools_state(data) == AgentState.GENERATING
+        assert events == [(kind, str(i)) for i in (1, 2, 3) for kind in ("start", "end")]
+        assert len(generated) == 1
+        assert session.assistant_turns == starting_turn + 1
+        assert session.tool_calls == 3
+        messages = session.messages[1:]
+        assert [m.role for m in messages] == ["assistant", "tool", "tool", "tool"]
+        ids = [call.id for call in messages[0].tool_calls]
+        assert len(set(ids)) == 3
+        assert ids == [m.id for m in messages[1:]]
+        assert ids == [m["tool_call_id"] for m in data.messages[-3:]]
+        assert [m.content for m in messages[1:]] == ["1.0", "2.0", "3.0"]
+        assert data.prompt_ids[1:1 + len(generated_ids)] == generated_ids
+        n = len(generated_ids)
+        assert data.response_mask[:n] == [1] * n
+        assert set(data.response_mask[n:]) == {0}
+        assert data.response_logprobs[:n] == [-0.25] * n
+        assert set(data.response_logprobs[n:]) == {0.0}
+        assert len(data.response_mask) == len(data.response_logprobs) == len(data.prompt_ids) - 1
+        assert len(data.anchor_spans) == 2  # one assistant segment, one observation segment
+        if starting_turn == 14:
+            assert await loop._handle_generating_state(data, {}) == AgentState.TERMINATED
+            assert len(generated) == 1
+
+    asyncio.run(run())
+
+
+@pytest.mark.parametrize("failure", ["unknown", "bad_json", "bad_arguments", "tool_error"])
+def test_middle_error_has_own_result_and_does_not_drop_later_calls(live_session, failure):
+    from verl.experimental.agent_loop.tool_parser import FunctionCall
+
+    handler, session = live_session
+
+    async def run():
+        loop, data, _ = make_loop(handler, "")
+        middle = {
+            "unknown": FunctionCall(name="unknown_tool", arguments="{}"),
+            "bad_json": FunctionCall(name="calculate", arguments="{broken"),
+            "bad_arguments": FunctionCall(name="calculate", arguments="[]"),
+            "tool_error": FunctionCall(name="calculate", arguments='{"expression":"1/0"}'),
+        }[failure]
+        data.tool_calls = [
+            FunctionCall(name="calculate", arguments='{"expression":"1+1"}'),
+            middle,
+            FunctionCall(name="calculate", arguments='{"expression":"2+2"}'),
+        ]
+        await loop._handle_processing_tools_state(data)
+        assert session.assistant_turns == 1
+        assert session.tool_calls == 3
+        assistant, first, second, third = session.messages[1:]
+        assert [call.id for call in assistant.tool_calls] == [m.id for m in (first, second, third)]
+        assert first.content == "2.0"
+        assert second.error is True
+        assert third.content == "4.0"
+        assert SESSIONS.require("boundary").tool_error_count == 1
+
+    asyncio.run(run())
+
+
+def test_write_then_read_batch_matches_strict_official_replay(live_session):
+    from verl.experimental.agent_loop.tool_parser import FunctionCall
+
+    from tau3_grpo.envs.adapter import build_environment, load_flight_db
+
+    handler, session = live_session
+    reservation_id = next(iter(session.db.reservations))
+
+    async def run():
+        loop, data, _ = make_loop(handler, "")
+        names = ("cancel_reservation", "get_reservation_details")
+        for schema in airline_tool_schemas():
+            name = schema["function"]["name"]
+            if name in names:
+                loop.tools[name] = Tau3AirlineTool({}, OpenAIFunctionToolSchema.model_validate(schema))
+        data.tool_calls = [FunctionCall(name=name, arguments=json.dumps({
+            "reservation_id": reservation_id,
+        })) for name in names]
+        await loop._handle_processing_tools_state(data)
+        assert json.loads(session.messages[-1].content)["status"] == "cancelled"
+        replay = build_environment(load_flight_db(session.adapted.db_path))
+        replay.set_state(initialization_data=None, initialization_actions=None,
+                         message_history=session.messages, strict=True)
+        assert replay.get_db_hash() == session.db_hash()
+
+    asyncio.run(run())
+
+
+def test_unexpected_execution_exception_is_not_retried_as_tool_error(live_session):
+    from verl.experimental.agent_loop.tool_parser import FunctionCall
+
+    handler, session = live_session
+
+    async def run():
+        loop, data, _ = make_loop(handler, "")
+        tool = loop.tools["calculate"]
+        execute = tool.execute
+
+        async def fail_after_execution(*args, **kwargs):
+            await execute(*args, **kwargs)
+            raise RuntimeError("wrapper failed after execution")
+
+        tool.execute = fail_after_execution
+        data.tool_calls = [FunctionCall(name="calculate", arguments='{"expression":"1"}')]
+        with pytest.raises(RuntimeError, match="wrapper failed"):
+            await loop._handle_processing_tools_state(data)
+        assert session.tool_calls == 1
+        assert len(session.messages) == 3  # initial user + one assistant + one result
+
+    asyncio.run(run())
+
+
+def test_pending_updates_legacy_parquet_prompt_before_tokenization(live_session):
+    from tau3_grpo.prompts import build_system_prompt
+
+    handler, _ = live_session
+
+    async def run():
+        loop, data, generated = make_loop(handler, "")
+        data.messages.insert(0, {"role": "system", "content": "only ONE tool call"})
+        loop.tool_schemas = []
+        assert await loop._handle_pending_state(data, {}) == AgentState.GENERATING
+        assert data.messages[0]["content"] == build_system_prompt()
+        assert loop.tokenizer.decode(data.prompt_ids).startswith(build_system_prompt())
+        assert data.response_mask == []
+        assert generated == []
+        loop.tool_execution_mode = "parallel"
+        with pytest.raises(ValueError, match="requires tool_execution_mode=sequential"):
+            await loop._handle_pending_state(data, {})
 
     asyncio.run(run())

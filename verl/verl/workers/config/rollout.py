@@ -52,6 +52,8 @@ class MultiTurnConfig(BaseConfig):
     tool_config_path: Optional[str] = None
     max_user_turns: Optional[int] = None
     max_parallel_calls: int = 1
+    # Tau3-GRPO local patch: opt-in ordered execution of the complete call list.
+    tool_execution_mode: str = "parallel"
     max_tool_response_length: int = 256
     tool_response_truncate_side: str = "middle"
     interaction_config_path: Optional[str] = None

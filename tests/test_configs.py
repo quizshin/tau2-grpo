@@ -307,6 +307,7 @@ def test_train_consumes_wrapper_positionals_before_hydra_overrides():
     assert "e2" not in command and "43" not in command
     assert "algorithm.adv_estimator=tau_gigpo" in command
     assert "data.seed=43" in command
+    assert "actor_rollout_ref.rollout.multi_turn.tool_execution_mode=sequential" in command
     assert command[-1] == "trainer.save_freq=2"
 
 

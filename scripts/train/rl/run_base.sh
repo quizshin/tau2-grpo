@@ -198,6 +198,7 @@ TRAIN_COMMAND=(python -m tau3_grpo.training.rl.train \
   actor_rollout_ref.rollout.checkpoint_engine.update_weights_bucket_megabytes="${UPDATE_WEIGHTS_BUCKET_MEGABYTES}" \
   actor_rollout_ref.rollout.agent.default_agent_loop=tool_agent \
   actor_rollout_ref.rollout.multi_turn.enable=true \
+  actor_rollout_ref.rollout.multi_turn.tool_execution_mode=sequential \
   actor_rollout_ref.rollout.multi_turn.max_user_turns="${MAX_USER_TURNS}" \
   actor_rollout_ref.rollout.multi_turn.max_assistant_turns="${MAX_ASSISTANT_TURNS}" \
   actor_rollout_ref.rollout.multi_turn.max_tool_response_length="${MAX_TOOL_RESPONSE_CHARS}" \

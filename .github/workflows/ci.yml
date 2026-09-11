@@ -58,6 +58,7 @@ jobs:
             tests/test_eval_cli.py \
             tests/test_service_attestation.py \
             tests/test_configs.py \
+            tests/test_multicall_prompt.py \
             tests/test_experiment_manifest.py \
             tests/test_leakage_audit.py \
             tests/test_path_traversal.py \

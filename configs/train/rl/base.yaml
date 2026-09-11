@@ -16,6 +16,7 @@ rollout:
   temperature_eval: 0.4
   max_user_turns: 15
   max_assistant_turns: 15
+  tool_execution_mode: sequential  # one or more calls, all executed in list order
   backend: vllm              # the only rollout backend used by this project
   tensor_model_parallel_size: 2
 

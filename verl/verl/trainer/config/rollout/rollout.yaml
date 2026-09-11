@@ -177,6 +177,10 @@ multi_turn:
   # max parallel call for tools in single turn
   max_parallel_calls: 1
 
+  # Tau3-GRPO local patch: sequential executes ALL calls in list order.
+  # parallel preserves the upstream behavior for other projects/backends.
+  tool_execution_mode: parallel
+
   # max length of tool response
   max_tool_response_length: 256
 

@@ -18,6 +18,7 @@ from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
 
 from tau3_grpo.data.manifest import AREAL_REVISION
+from tau3_grpo.prompts import prepare_agent_messages, prompt_provenance
 from tau3_grpo.utils.hashing import sha256_text
 
 EXPECTED_SFT_ROWS = 33_531
@@ -52,6 +53,7 @@ class SFTDialogue:
         record = {
             "messages": list(self.messages),
             "metadata": {
+                **prompt_provenance(),
                 "source": "areal_tau2_airline_sft",
                 "source_revision": AREAL_REVISION,
                 "source_dialog_id": self.source_dialog_id,
@@ -179,7 +181,7 @@ def load_complete_airline_dialogues(
                 scenario_id=str(metadata.get("scenario_id") or ""),
                 turn_index=turn_index,
                 reason_for_call=str(metadata.get("reason_for_call") or ""),
-                messages=tuple(messages),
+                messages=tuple(prepare_agent_messages(messages)),
             )
         )
 

@@ -25,6 +25,7 @@ from tau3_grpo.envs.adapter import (
     load_flight_db,
 )
 from tau3_grpo.evaluation.scoring import resolve_ks, summarize_trials
+from tau3_grpo.prompts import prompt_provenance
 
 
 @dataclass(frozen=True)
@@ -72,8 +73,10 @@ def _run_one(
 ) -> Any:
     from tau2.evaluator.evaluator import EvaluationType
     from tau2.orchestrator.orchestrator import Orchestrator
-    from tau2.runner.build import build_agent, build_user
+    from tau2.runner.build import build_user
     from tau2.runner.simulation import run_simulation
+
+    from tau3_grpo.envs.agent import MultiCallAirlineAgent
 
     if db_path is None:
         environment = build_environment(load_default_flight_db())
@@ -82,12 +85,11 @@ def _run_one(
         environment = build_environment(load_flight_db(db_path))
         replay_db = load_flight_db(db_path)
 
-    agent = build_agent(
-        "llm_agent",
-        environment,
+    agent = MultiCallAirlineAgent(
+        tools=environment.get_tools(),
+        domain_policy=environment.get_policy(),
         llm=policy.litellm_model,
         llm_args=policy.llm_args(),
-        task=task,
     )
     simulated_user = build_user(
         "user_simulator",
@@ -179,7 +181,7 @@ def run_evaluation(
             name: {"model": endpoint.model, "temperature": endpoint.temperature}
             for name, endpoint in (("policy", policy), ("user", user))
         },
-        "provenance": provenance or {},
+        "provenance": {**(provenance or {}), **prompt_provenance()},
     }
     out = Path(output_dir)
     out.mkdir(parents=True, exist_ok=True)

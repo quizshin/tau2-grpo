@@ -18,8 +18,9 @@ from tau3_grpo.models.compat import (
     model_family,
     require_training_runtime,
 )
-from tau3_grpo.paths import PROJECT_ROOT, resolve_project_path
 from tau3_grpo.models.qwen35_template import thinking_options
+from tau3_grpo.paths import PROJECT_ROOT, resolve_project_path
+from tau3_grpo.prompts import prompt_provenance
 from tau3_grpo.training.sft.dataset import TrajectorySFTDataset, collate_fn_padding
 
 
@@ -168,6 +169,8 @@ def main(argv: list[str] | None = None) -> int:
 
     output_dir = _resolve(str(args.output_dir or config["output"]["dir"]))
     output_dir.mkdir(parents=True, exist_ok=True)
+    for split, dataset in (("train", train_dataset), ("validation", validation_dataset)):
+        dataset.write_effective_jsonl(output_dir / f"effective_{split}.jsonl")
     training_args = TrainingArguments(
         output_dir=str(output_dir),
         num_train_epochs=epochs,
@@ -222,14 +225,15 @@ def main(argv: list[str] | None = None) -> int:
                 lr=float(train_config["learning_rate"]), seed=int(train_config["seed"]),
                 rank=int(config.get("lora", {}).get("r", 16)), epochs=epochs),
             config={"stage": "sft", "method": method, "model": model_name,
+                    **prompt_provenance(),
                     "seed": int(train_config["seed"]),
                     "training": config, "trainable_parameters": trainable_parameters,
                     "effective_batch_size": effective_batch},
             output=output_dir,
         )
         trainer.add_callback(sft_callback(tracking_run))
-        for split, source in (("train", "train_jsonl"), ("validation", "validation_jsonl")):
-            log_sft_dataset(tracking_run, _resolve(config["data"][source]),
+        for split in ("train", "validation"):
+            log_sft_dataset(tracking_run, output_dir / f"effective_{split}.jsonl",
                             output_dir / "swanlab-artifacts", split)
     baseline_metrics = (
         trainer.evaluate() if train_config.get("evaluate_before_train", False) else None
@@ -245,6 +249,7 @@ def main(argv: list[str] | None = None) -> int:
     trainer.save_state()
     tokenizer.save_pretrained(str(output_dir))
     summary = {
+        **prompt_provenance(),
         "model_name_or_path": model_name,
         "model_family": family,
         "sft_method": method,

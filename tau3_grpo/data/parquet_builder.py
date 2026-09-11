@@ -2,7 +2,7 @@
 
 Milestone D8. One row per training task with the real `interaction_kwargs` the
 `Tau3AirlineInteraction` needs, and a system prompt that carries the official tau2
-Airline policy verbatim. The builder refuses τ³ official rows, so the training
+Airline business rules with the project multi-call protocol. The builder refuses τ³ official rows, so the training
 parquet cannot contain final-set tasks.
 """
 
@@ -15,30 +15,12 @@ from typing import Any, Optional, Sequence
 from tau3_grpo.data.manifest import ManifestEntry
 from tau3_grpo.data.official import assert_trainable_entries
 from tau3_grpo.paths import PARQUET_ROOT
+from tau3_grpo.prompts import build_system_prompt, prompt_provenance
 
 #: Must match `tau3_grpo.envs.interaction.INTERACTION_NAME`. Duplicated as a
 #: literal so building a parquet does not require veRL to be installed; the
 #: interaction module asserts the two agree.
 INTERACTION_NAME = "tau3_airline"
-
-AGENT_SYSTEM_PROMPT = """You are a customer service agent for an airline.
-
-You must follow the airline's policy exactly. Use the provided tools to read and
-modify reservations; never invent data you have not retrieved with a tool.
-
-<policy>
-{policy}
-</policy>
-""".strip()
-
-
-def build_system_prompt(policy: str) -> str:
-    """Embed the official Airline policy in the agent system prompt."""
-
-    if not policy or not policy.strip():
-        raise ValueError("Airline policy text is empty; refusing to build a prompt without it")
-    return AGENT_SYSTEM_PROMPT.format(policy=policy.strip())
-
 
 def build_row(
     entry: ManifestEntry,
@@ -82,6 +64,7 @@ def build_row(
         interaction_kwargs["seed"] = seed
 
     extra_info = {
+        **prompt_provenance(build_system_prompt(policy)),
         "index": entry.task_id,
         "task_id": entry.task_id,
         "split": split,

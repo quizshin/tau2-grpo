@@ -58,11 +58,15 @@ class Tau3AirlineTool(BaseTool):
         entry = session_for(agent_data)
         session = entry.session
 
-        call_id = f"{instance_id}-{session.tool_calls}"
-        tool_call = session.make_tool_call(self.name, dict(parameters), call_id)
-        session.record_assistant_tool_calls(
-            [tool_call], content=getattr(agent_data, "assistant_content", None)
-        )
+        tool_call = kwargs.get("recorded_tool_call")
+        if tool_call is None:
+            # Standalone calls record one turn. Batches are recorded once by
+            # the interaction before any member executes.
+            call_id = f"{instance_id}-{session.tool_calls}"
+            tool_call = session.make_tool_call(self.name, dict(parameters), call_id)
+            session.record_assistant_tool_calls(
+                [tool_call], content=getattr(agent_data, "assistant_content", None)
+            )
         tool_message = session.execute_tool_call(tool_call)
 
         if getattr(tool_message, "error", False):

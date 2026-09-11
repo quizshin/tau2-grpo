@@ -14,7 +14,9 @@ from pathlib import Path
 from typing import Any, Optional, Sequence
 
 from tau3_grpo.models.compat import chat_template_kwargs, is_qwen35_tokenizer
-from tau3_grpo.models.qwen35_template import build_qwen35_example, token_ids, thinking_options
+from tau3_grpo.models.qwen35_template import build_qwen35_example, thinking_options, token_ids
+from tau3_grpo.prompts import prepare_agent_messages, prompt_provenance
+from tau3_grpo.utils.hashing import sha256_text
 
 IGNORE_INDEX = -100
 
@@ -132,19 +134,40 @@ class TrajectorySFTDataset:
         preserve_historical_reasoning: bool = False,
     ) -> None:
         self.examples: list[dict[str, Any]] = []
+        self.records: list[dict[str, Any]] = []
         path = Path(jsonl_path)
         with path.open(encoding="utf-8") as handle:
             records = [json.loads(line) for line in handle if line.strip()]
         if expected_size is not None and len(records) != expected_size:
             raise ValueError(f"{path} contains {len(records)} dialogues, expected {expected_size}")
         for record in records:
+            effective = {
+                **record,
+                "messages": prepare_agent_messages(record["messages"]),
+                "metadata": {**(record.get("metadata") or {}), **prompt_provenance()},
+            }
             example = build_supervised_example(
-                record["messages"], tokenizer, tools=tools, max_length=max_length,
+                effective["messages"], tokenizer, tools=tools, max_length=max_length,
                 enable_thinking=enable_thinking, supervise_reasoning=supervise_reasoning,
                 preserve_historical_reasoning=preserve_historical_reasoning
             )
-            example["metadata"] = record.get("metadata") or {}
+            effective["metadata"].update({
+                "source_dialogue_hash": (record.get("metadata") or {}).get("dialogue_hash"),
+                "dialogue_hash": sha256_text(json.dumps(
+                    effective["messages"], sort_keys=True, separators=(",", ":")
+                )),
+                "rendered_tokens": example["n_total_tokens"],
+            })
+            example["metadata"] = effective["metadata"]
+            self.records.append(effective)
             self.examples.append(example)
+
+    def write_effective_jsonl(self, path: Path) -> None:
+        """Persist the actual prompt-bearing records used by this training run."""
+
+        with path.open("w", encoding="utf-8") as handle:
+            for record in self.records:
+                handle.write(json.dumps(record, ensure_ascii=False) + "\n")
 
     def __len__(self) -> int:
         return len(self.examples)
