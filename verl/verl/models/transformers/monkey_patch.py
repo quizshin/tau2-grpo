@@ -323,6 +323,9 @@ def apply_monkey_patch(
         if os.environ.get("VERL_QWEN35_FIX_PADDING", "0") == "1":
             from verl.utils.qwen35_padding import install_qwen35_padding_guard
             install_qwen35_padding_guard(model)
+        if os.environ.get("VERL_QWEN35_FLA_IEEE", "0") == "1":
+            from verl.utils.qwen35_fla_ieee import install_fla_ieee
+            install_fla_ieee(model)
         return
 
     # Apply TiledMLP monkey patch for memory-efficient MLP computation

@@ -35,6 +35,10 @@ def stage_config(arm, updates, started_at=None, resume_from=None):
     os.environ.setdefault('TAU3_ENV_FILE', str(R / 'code/.env'))
     load_tracking_env()
     command, env, snapshot = resolved(arm, total_updates=updates)
+    assert 'fa2-overlay' not in env.get('PYTHONPATH', ''), 'Only the validated FLA overlay is allowed'
+    assert env['VERL_QWEN35_FLA_IEEE'] == '1'
+    assert env['VERL_QWEN35_TRIM_PADDING'] == 'experimental_both'
+    assert env['TRITON_F32_DEFAULT'] == 'ieee'
     env.pop('RAY_ADDRESS', None)
     env.update(TRAINER_LOGGERS='[console,swanlab]', SWANLAB_MODE='online', GIT_CONFIG_COUNT='1',
                GIT_CONFIG_KEY_0='safe.directory', GIT_CONFIG_VALUE_0=str(CODE_ROOT))
@@ -165,6 +169,10 @@ def main(dry_run):
     (W / 'gpu-assignment.txt').write_text(subprocess.check_output(
         ['nvidia-smi', '--query-gpu=index,uuid,name', '--format=csv'], text=True)
         + '\npolicy=0,1,2,3; simulator=4\n')
+    # Whole-device samples complement allocator metrics for long trajectories.
+    # This observer belongs to this controller and exits with its other children.
+    launch(['nvidia-smi', '--query-gpu=timestamp,index,memory.used,memory.total,utilization.gpu',
+            '--format=csv,noheader,nounits', '--loop=15'], os.environ.copy(), 'gpu-memory')
     _, simenv, _ = stage_config('e0', 100, started)
     simenv.update(TAU3_USER_CUDA_DEVICES='4', TAU3_USER_MAX_NUM_SEQS='16',
                   TAU3_USER_MAX_MODEL_LEN='16384', TAU3_USER_GPU_MEMORY_UTILIZATION='.65',

@@ -41,6 +41,20 @@ def test_matched_profile_fixed_sampling_and_ray_budget(arm, tmp_path, monkeypatc
     assert settings['actor_rollout_ref.actor.checkpoint.save_contents'] == '[model,optimizer,extra]'
     assert settings['actor_rollout_ref.rollout.val_kwargs.n'] == '4'
     assert settings['actor_rollout_ref.actor.ppo_micro_batch_size_per_gpu'] == '1'
+    for role in ('actor', 'ref'):
+        assert settings[f'actor_rollout_ref.{role}.fsdp_config.dtype'] == 'float32'
+        assert settings[f'actor_rollout_ref.{role}.fsdp_config.model_dtype'] == 'float32'
+    assert settings['actor_rollout_ref.actor.fsdp_config.param_offload'] == 'false'
+    assert settings['actor_rollout_ref.actor.fsdp_config.optimizer_offload'] == 'false'
+    assert settings['actor_rollout_ref.ref.fsdp_config.param_offload'] == 'true'
+    assert settings['actor_rollout_ref.model.use_remove_padding'] == 'false'
+    assert settings['actor_rollout_ref.model.use_fused_kernels'] == 'false'
+    assert settings['algorithm.rollout_correction.bypass_mode'] == 'false'
+    for key, value in {'VERL_QWEN35_FLA_IEEE': '1',
+                       'VERL_QWEN35_TRIM_PADDING': 'experimental_both',
+                       'TRITON_F32_DEFAULT': 'ieee'}.items():
+        assert env[key] == value
+        assert settings[f'ray_kwargs.ray_init.runtime_env.env_vars.{key}'].strip("'") == value
     assert settings['actor_rollout_ref.rollout.multi_turn.tool_execution_mode'] == 'sequential'
     assert settings['data.apply_chat_template_kwargs.enable_thinking'] == 'false'
     assert settings['ray_kwargs.ray_init.runtime_env.env_vars.TAU3_GRPO_ARM'] == f"'{arm}'"

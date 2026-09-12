@@ -1,0 +1,19 @@
+{
+  "kind": "online_FSDP_model_hook_bridge_against_validated_replay",
+  "cases": [
+    {
+      "row": 16,
+      "tokens": 544,
+      "max_abs_logp": 0.0,
+      "mae_logp": 0.0
+    },
+    {
+      "row": 56,
+      "tokens": 5445,
+      "max_abs_logp": 0.0,
+      "mae_logp": 0.0
+    }
+  ],
+  "kernel_calls": 48,
+  "passed": true
+}

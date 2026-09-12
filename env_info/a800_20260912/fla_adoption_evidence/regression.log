@@ -1,0 +1,9 @@
+........................................................................ [ 69%]
+................................                                         [100%]
+=============================== warnings summary ===============================
+tests/test_rl_continuity.py::test_real_verl_checkpoint_control_restores_cpu_model_optimizer_rng_and_loader
+  /root/autodl-fs/tau3-core-20260912/environment/venvs/qwen35/lib/python3.12/site-packages/ray/util/state/util.py:55: DeprecationWarning: Ray state API is no longer experimental. Please import from `ray.util.state`. instead. Importing from `ray.experimental` will be deprecated in future releases.
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+104 passed, 1 warning in 67.59s (0:01:07)

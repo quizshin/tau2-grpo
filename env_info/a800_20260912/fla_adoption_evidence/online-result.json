@@ -1,0 +1,13 @@
+{
+  "kind": "one_online_step_64_trajectories_not_formal_pilot",
+  "train_process_wall_seconds": 2159.437028604094,
+  "trajectories": 64,
+  "nonzero_advantage_tokens": 112404,
+  "checkpoint_written": false,
+  "automatic_continuation": false,
+  "fla_ieee": true,
+  "fa2": false,
+  "fp32_compute": true,
+  "actor_param_optimizer_offload": false,
+  "reference_param_offload": true
+}
