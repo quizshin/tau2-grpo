@@ -40,6 +40,7 @@ def run(args):
     dist.init_process_group('nccl', device_id=torch.device('cuda', rank),
         timeout=datetime.timedelta(seconds=900))
     torch.manual_seed(42)
+    torch.set_float32_matmul_precision(args.fp32_matmul_precision)
     # Installing FLA would also replace RMSNorm automatically. Keep the native
     # norm so --kernel=fla changes only the Gated Delta Rule kernel.
     from transformers.models.qwen3_5 import modeling_qwen3_5
@@ -74,6 +75,8 @@ def run(args):
         assert len(data) == 8 and dist.get_world_size() == 4
         keys = ['input_ids', 'attention_mask', 'position_ids', 'responses', 'response_mask', 'advantages']
         micros = [{k:data[k][i:i+1].cuda() for k in keys} for i in (rank, rank+4)]
+    if args.micro_batch_size == 2:
+        micros = [{key: torch.cat([micro[key] for micro in micros], dim=0) for key in micros[0]}]
     mask_sum = sum(m['response_mask'].sum() for m in micros).float()
     dist.all_reduce(mask_sum)
     assert mask_sum > 0
@@ -83,6 +86,8 @@ def run(args):
         'trim_padding':os.environ.get('VERL_QWEN35_TRIM_PADDING','none'),
         'normalization':'native',
         'padding_guard':os.environ.get('VERL_QWEN35_FIX_PADDING','0')=='1',
+        'micro_batch_size':args.micro_batch_size,
+        'fp32_matmul_precision':torch.get_float32_matmul_precision(),
         'tiny':args.tiny, 'tied':args.tied, 'kind':'recorded_batch_replay_not_online_RL',
         'vllm_colocated':False, 'input_shapes':[list(m['input_ids'].shape) for m in micros],
         'policy_tokens':[int(m['response_mask'].sum()) for m in micros], 'timings':{}, 'peaks':{}}
@@ -169,4 +174,6 @@ if __name__ == '__main__':
     p.add_argument('--tiny',action='store_true')
     p.add_argument('--tied',action='store_true')
     p.add_argument('--chunk',type=int,default=256)
+    p.add_argument('--micro-batch-size',type=int,choices=[1,2],default=1)
+    p.add_argument('--fp32-matmul-precision',choices=['highest','high'],default='highest')
     run(p.parse_args())

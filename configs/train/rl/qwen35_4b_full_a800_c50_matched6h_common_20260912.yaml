@@ -1,0 +1,35 @@
+# Matched budget: E0 observes ~6 h, rounds up to 10 steps; E1/E2/E3 use E0 N.
+# Candidate configuration; prepare_formal50.py validates data without launching.
+includes:
+- qwen35_4b_full_a800_curriculum40_fast_pilot_20260912.yaml
+launch:
+  environment:
+    MODEL_PATH: ${TAU3_ROOT}/checkpoints/sft-merged/new-off
+    TRAIN_MANIFEST_DIR: ${CODE_ROOT}/results/analysis/rl_curriculum50_20260912/manifests
+    RESULTS_DIR: ${TAU3_RUN_ROOT}/rl-c50-matched6h-a800-20260912/e0_seed42
+    VAL_PARQUET: ${TAU3_RUN_ROOT}/formal50-preflight-20260912/selection60.parquet
+    GROUPS_PER_UPDATE: '8'
+    GROUP_SIZE: '8'
+    PPO_MINI_GROUPS: '4'
+    TOTAL_UPDATES: '50'
+    MAX_NUM_SEQS: '16'
+    TAU3_GRPO_DEBUG_BATCH_DIR: ''
+    VERL_QWEN35_WEIGHT_AUDIT_DIR: ${RESULTS_DIR}/weight-audits
+    SWANLAB_EXPERIMENT_NAME: E0-Qwen35-4B-full-c50-g8x8-matched6h-s42
+  overrides:
+  - trainer.resume_mode=disable
+  - trainer.save_freq=10
+  - trainer.max_actor_ckpt_to_keep=1
+  - actor_rollout_ref.actor.checkpoint.save_contents=[model,optimizer,extra]
+  - trainer.test_freq=10
+  - trainer.val_before_train=false
+  - trainer.validation_data_dir=${RESULTS_DIR}/validation
+  - actor_rollout_ref.rollout.val_kwargs.n=4
+  - actor_rollout_ref.rollout.val_kwargs.do_sample=true
+  - actor_rollout_ref.rollout.val_kwargs.temperature=0.4
+  - actor_rollout_ref.rollout.val_kwargs.top_p=1.0
+  - actor_rollout_ref.rollout.val_kwargs.top_k=-1
+  - data.validation_shuffle=false
+  - actor_rollout_ref.actor.ppo_micro_batch_size_per_gpu=1
+  - actor_rollout_ref.rollout.log_prob_micro_batch_size_per_gpu=1
+  - actor_rollout_ref.ref.log_prob_micro_batch_size_per_gpu=1

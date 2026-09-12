@@ -307,8 +307,108 @@
       "e2",
       "e3"
     ],
-    "formal_proposed_updates_per_arm": 100,
-    "formal_proposed_trajectories_per_arm": 6400,
+    "formal_proposed_updates_per_arm": "E0 about 6h rounded up to 10, then same N for E1/E2/E3",
+    "formal_proposed_trajectories_per_arm": "64*N",
     "not_started": true
+  },
+  "additional_acceleration_probes": {
+    "microbatch2": {
+      "comparison": {
+        "reference": "/root/autodl-fs/tau3-core-20260912/runs/curriculum-speed-20260912/corrected-padded",
+        "candidate": "/root/autodl-fs/tau3-core-20260912/runs/curriculum-speed-20260912/microbatch2",
+        "ranks": [
+          {
+            "rank": 0,
+            "gradient_sample_relative_l2": 0.38857129216194153,
+            "gradient_sample_cosine": 0.9223224520683289,
+            "log_prob_max_absolute": 0.21678757667541504,
+            "passed": false
+          },
+          {
+            "rank": 1,
+            "gradient_sample_relative_l2": 0.3235345482826233,
+            "gradient_sample_cosine": 0.947371244430542,
+            "log_prob_max_absolute": 0.30005931854248047,
+            "passed": false
+          },
+          {
+            "rank": 2,
+            "gradient_sample_relative_l2": 0.223826602101326,
+            "gradient_sample_cosine": 0.9749981164932251,
+            "log_prob_max_absolute": 0.2208249568939209,
+            "passed": false
+          },
+          {
+            "rank": 3,
+            "gradient_sample_relative_l2": 0.4512192904949188,
+            "gradient_sample_cosine": 0.8966279625892639,
+            "log_prob_max_absolute": 0.23942279815673828,
+            "passed": false
+          }
+        ],
+        "passed": false,
+        "scope": "Full gradients tested on tiny models; real-model comparisons sample up to 256 values per parameter shard."
+      },
+      "backward_seconds": 120.543,
+      "corrected_padded_reference_backward_seconds": 137.323,
+      "enabled_for_formal": false,
+      "reason": "Gradient/logprob gate failed"
+    },
+    "tf32": {
+      "comparison": {
+        "reference": "/root/autodl-fs/tau3-core-20260912/runs/curriculum-speed-20260912/corrected-padded",
+        "candidate": "/root/autodl-fs/tau3-core-20260912/runs/curriculum-speed-20260912/tf32",
+        "ranks": [
+          {
+            "rank": 0,
+            "gradient_sample_relative_l2": 0.012842348776757717,
+            "gradient_sample_cosine": 0.9999268651008606,
+            "log_prob_max_absolute": 0.0,
+            "passed": true
+          },
+          {
+            "rank": 1,
+            "gradient_sample_relative_l2": 0.013289244845509529,
+            "gradient_sample_cosine": 0.9999239444732666,
+            "log_prob_max_absolute": 0.0,
+            "passed": true
+          },
+          {
+            "rank": 2,
+            "gradient_sample_relative_l2": 0.008786114864051342,
+            "gradient_sample_cosine": 0.9999743700027466,
+            "log_prob_max_absolute": 0.0,
+            "passed": true
+          },
+          {
+            "rank": 3,
+            "gradient_sample_relative_l2": 0.01471127849072218,
+            "gradient_sample_cosine": 0.999896228313446,
+            "log_prob_max_absolute": 0.0,
+            "passed": true
+          }
+        ],
+        "passed": true,
+        "scope": "Full gradients tested on tiny models; real-model comparisons sample up to 256 values per parameter shard."
+      },
+      "backward_seconds": 138.994,
+      "corrected_padded_reference_backward_seconds": 137.323,
+      "enabled_for_formal": false,
+      "reason": "Numerical gate passed but no throughput improvement"
+    }
+  },
+  "matched_budget": {
+    "mode": "E0 soft6h then round up10; match other arms",
+    "tasks": 50,
+    "groups_per_step": 8,
+    "samples_per_group": 8,
+    "evaluation_interval": 10,
+    "selection_tasks": 60,
+    "selection_samples_per_task": 4,
+    "save_interval": 10,
+    "complete_checkpoints_to_keep_per_arm": 1,
+    "discovery_ceiling": 100,
+    "tests_passed": 22,
+    "gpu_runtime_boundary_tested": false
   }
 }

@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import ast
 import json
 import logging
 import os
@@ -196,7 +197,7 @@ class Qwen3XMLToolParser(ToolParser):
         self, function_call_str: str, tools: Optional[list[OpenAIFunctionToolSchema]]
     ) -> FunctionCall:
         def get_arguments_config(func_name: str) -> dict:
-            for config in tools:
+            for config in tools or []:
                 if config.type == "function" and config.function.name == func_name:
                     properties = config.function.parameters.properties
                     return {k: v.model_dump() for k, v in properties.items()}
@@ -258,21 +259,23 @@ class Qwen3XMLToolParser(ToolParser):
                     )
                 return param_value == "true"
             else:
-                if param_type == "object" or param_type.startswith("dict"):
-                    try:
-                        param_value = json.loads(param_value)
-                        return param_value
-                    except Exception:
-                        logger.warning(
-                            f"Parsed value '{param_value}' of parameter '{param_name}' is not a valid "
-                            f"JSON object in tool '{func_name}', will try other methods to parse it."
-                        )
                 try:
-                    param_value = eval(param_value)
-                except Exception:
+                    try:
+                        parsed = json.loads(param_value)
+                    except (ValueError, TypeError):
+                        parsed = ast.literal_eval(param_value)
+                    # A set/tuple is not a JSON array. Keep malformed input as
+                    # text so the tool returns a visible schema error instead
+                    # of losing every call in this assistant turn.
+                    expected = dict if param_type == "object" or param_type.startswith("dict") else list
+                    if not isinstance(parsed, expected):
+                        raise ValueError("Structured argument has the wrong type")
+                    json.dumps(parsed, allow_nan=False)
+                    return parsed
+                except (ValueError, TypeError, SyntaxError, RecursionError):
                     logger.warning(
-                        f"Parsed value '{param_value}' of parameter '{param_name}' cannot be converted "
-                        f"via Python `eval()` in tool '{func_name}', degenerating to string."
+                        f"Parameter '{param_name}' in tool '{func_name}' is not a valid "
+                        "structured literal; preserving the string for tool validation."
                     )
                 return param_value
 
