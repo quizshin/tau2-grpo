@@ -1,0 +1,23 @@
+# Scheme 2 candidate for a later online smoke test. NOT a validated formal run.
+# Preserves E0: 40 updates * 16 task groups * 8 rollouts = 5,120 trajectories.
+# Resolve the singleton GDN padding discrepancy before interpreting RL quality.
+includes:
+  - qwen35_4b_full_a800_formal_20260912.yaml
+launch:
+  environment:
+    RESULTS_DIR: ${TAU3_RUN_ROOT}/rl-perf-candidate-20260912
+    MAX_NUM_SEQS: '16'
+    VERL_QWEN35_COMPACT_HEAD: '1'
+    VERL_QWEN35_COMPACT_CHUNK: '256'
+    VERL_QWEN35_COMPACT_BACKEND: checkpoint
+    VERL_QWEN35_TRIM_PADDING: none
+    SWANLAB_EXPERIMENT_NAME: candidate-E0-full-newSFT-off-g16x8-u40-s42
+  overrides:
+  - algorithm.rollout_correction.bypass_mode=false
+  - trainer.save_freq=10
+  - actor_rollout_ref.actor.checkpoint.save_contents=[model]
+  # Explicitly carry the opt-in into Ray workers, including existing clusters.
+  - "++ray_kwargs.ray_init.runtime_env.env_vars.VERL_QWEN35_COMPACT_HEAD='1'"
+  - "++ray_kwargs.ray_init.runtime_env.env_vars.VERL_QWEN35_COMPACT_CHUNK='256'"
+  - ++ray_kwargs.ray_init.runtime_env.env_vars.VERL_QWEN35_COMPACT_BACKEND=checkpoint
+  - ++ray_kwargs.ray_init.runtime_env.env_vars.VERL_QWEN35_TRIM_PADDING=none

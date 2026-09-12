@@ -124,6 +124,11 @@ class DataParallelPPOActor(BasePPOActor):
         """
         calculate_sum_pi_squared = self.config.get("calculate_sum_pi_squared", False)
         sum_pi_squared_checkpointing = self.config.get("sum_pi_squared_checkpointing", False)
+        if os.environ.get("VERL_QWEN35_COMPACT_HEAD", "0") == "1":
+            from verl.utils.qwen35_compact_head import compact_forward
+
+            return compact_forward(self, micro_batch, temperature, calculate_entropy,
+                int(os.environ.get("VERL_QWEN35_COMPACT_CHUNK", "256")))
         # PrefixGrouper path for shared-prefix optimization
         if self.use_prefix_grouper:
             can_use_pg = (
@@ -455,6 +460,10 @@ class DataParallelPPOActor(BasePPOActor):
         has_multi_modal_inputs = "multi_modal_inputs" in data.non_tensor_batch.keys()
 
         select_keys = ["responses", "input_ids", "attention_mask", "position_ids"]
+        if os.environ.get("VERL_QWEN35_COMPACT_HEAD", "0") == "1":
+            # The compact vocabulary projection needs policy-token positions
+            # for both actor scoring and reference scoring.
+            select_keys.append("response_mask")
         non_tensor_select_keys = ["multi_modal_inputs"] if has_multi_modal_inputs else []
         if self.use_prefix_grouper:
             select_keys += [k for k in ["prompts", "response_mask"] if k in data.batch]
