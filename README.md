@@ -1,5 +1,7 @@
 # Tau3-GRPO：训练、评估与实验记录
 
+**接手项目请先读：[当前实验说明](docs/CURRENT_EXPERIMENT.md)**。其中明确研究问题、50 任务四组冻结方案、当前进度快照、代码版本、唯一推荐入口与仓库之外的运行资产。历史草案不代表当前正式预算。
+
 当前 `code` 已合并正式 A800 训练版本 `792d70d`，并保留本地 5090/Paratera 功能。50 任务 E0～E3 的现用配置和启动说明见 [正式执行方案](docs/formal50_fla_execution_20260912.md)；合并范围、测试和交接限制见 [本地合并记录](docs/local_training_merge_20260912.md)。下文历史短程配置不代表当前正式实验预算。
 
 > 当前本地环境需要通过 setup 重建。2026-09-10 核对时，历史 `.venv-qwen35-local` 不存在，不能直接使用旧激活命令。安装 Python 3.12 后，在本项目根目录执行 `bash setup.sh cpu-test`，创建的是 `.venv-cpu`，然后执行 `source .venv-cpu/bin/activate`。这是本地 CPU 开发环境；A800 Qwen3.5 训练环境使用 `bash setup.sh a800-qwen35`，见 env_info。 本次仅更新状态说明，未安装环境或重新运行训练。
