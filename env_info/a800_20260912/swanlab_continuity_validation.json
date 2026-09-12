@@ -1,0 +1,21 @@
+{
+  "kind": "CPU-only SwanLab cloud continuity check; no model/GPU/RL execution",
+  "run_id": "2ccc02ba0fad41a995597",
+  "url": "https://swanlab.cn/@quizshin/tau3-grpo-pytrio/runs/2ccc02ba0fad41a995597",
+  "same_run_id": true,
+  "original_30_points_unchanged": true,
+  "next_step_is_31": true,
+  "no_duplicate_or_offset_steps": true,
+  "code_regression_tests_passed": 46,
+  "additional_real_verl_cpu_checkpoint_test_passed": true,
+  "unique_tests_passed": 47,
+  "fresh_and_resume_hydra_verified": true,
+  "stop_request_29_to_30_tested": true,
+  "checkpoint_30_complete_before_20_pruned": true,
+  "model_optimizer_rng_dataloader_restored": true,
+  "full_gpu_resume_tested": false,
+  "formal_training_launched": false,
+  "formal_updates_completed": 0,
+  "launch_hold": "HOLD_UNTIL_USER_START",
+  "waiting_for_new_user_start_instruction": true
+}

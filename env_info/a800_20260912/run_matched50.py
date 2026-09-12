@@ -30,23 +30,41 @@ def write_state(**state):
     print(json.dumps(state), flush=True)
 
 
-def stage_config(arm, updates, started_at=None):
+def stage_config(arm, updates, started_at=None, resume_from=None):
+    from tau3_grpo.tracking.swanlab import load_tracking_env
+    os.environ.setdefault('TAU3_ENV_FILE', str(R / 'code/.env'))
+    load_tracking_env()
     command, env, snapshot = resolved(arm, total_updates=updates)
     env.pop('RAY_ADDRESS', None)
-    env.update(TRAINER_LOGGERS='[console]', GIT_CONFIG_COUNT='1',
+    env.update(TRAINER_LOGGERS='[console,swanlab]', SWANLAB_MODE='online', GIT_CONFIG_COUNT='1',
                GIT_CONFIG_KEY_0='safe.directory', GIT_CONFIG_VALUE_0=str(CODE_ROOT))
     # Explicit runtime propagation: TaskRunner must see the budget and arm.
-    runtime = {'TAU3_GRPO_ARM': arm}
-    if arm == 'e0':
+    runtime = {'TAU3_GRPO_ARM': arm, 'TAU3_SWANLAB_CONTINUITY': '1',
+               'TAU3_KEEP_COMPLETE_BOUNDARY': '1',
+               'TAU3_ENV_FILE': env['TAU3_ENV_FILE'], 'SWANLAB_MODE': 'online',
+               'SWANLAB_LOG_DIR': env['SWANLAB_LOG_DIR'],
+               'TAU3_STOP_REQUEST_PATH': str(W / 'STOP_AFTER_BOUNDARY'),
+               'TAU3_BUDGET_STATE_PATH': str(W / f'{arm}_seed42/budget.json'),
+               'TAU3_BUDGET_INTERVAL': '10'}
+    if arm == 'e0' and resume_from is None:
         runtime.update(TAU3_E0_DISCOVERY_SECONDS='21600',
                        TAU3_BUDGET_STARTED_AT=str(started_at if started_at is not None else time.time()),
                        TAU3_BUDGET_STATE_PATH=str(W / 'e0_seed42/budget.json'),
                        TAU3_BUDGET_INTERVAL='10')
+    if resume_from is not None:
+        resume_from = Path(resume_from).resolve()
+        restored = int(resume_from.name.removeprefix('global_step_'))
+        if restored % 10 or updates % 10 or restored >= updates:
+            raise ValueError('Resume from a completed ten-step boundary to a later ten-step target')
+        command += ['trainer.resume_mode=resume_path', f'trainer.resume_from_path={resume_from}']
+        # Resume from the exact existing schedule; its audited prefix may be
+        # longer than the new stopping target (E0 discovery prepared 100).
+        env['TRAIN_PARQUET'] = str(resume_from.parent / 'train_schedule.parquet')
     env.update(runtime)
     command += [f"++ray_kwargs.ray_init.runtime_env.env_vars.{key}='{value}'" for key, value in runtime.items()]
     command += ['++ray_kwargs.ray_init.address=local']
     snapshot.update(command=command, matched_budget_runtime=runtime,
-                    trainer_loggers=['console'], actual_updates_or_discovery_ceiling=updates)
+                    trainer_loggers=['console', 'swanlab'], actual_updates_or_discovery_ceiling=updates)
     return command, env, snapshot
 
 
@@ -93,11 +111,26 @@ def verify_result(arm, target):
                                  'mean_score': sum(row['score'] for row in rows) / len(rows)}
     summary = {'arm': arm, 'target_step': target, 'evaluations': evaluations,
                'latest_complete_checkpoint': str(actor), 'fresh_sft_start': True}
+    import swanlab
+    tracking = json.loads((result / 'swanlab-run.json').read_text())
+    for attempt in range(6):
+        remote = swanlab.Api().run(tracking['run_path'])
+        metrics = remote.metrics(keys=['trainer/global_step'], all=True)
+        points = [point for row in metrics.get('list', []) for point in row.get('metrics', [])]
+        if sorted((int(p['step']), int(p['value'])) for p in points) == [(s, s) for s in range(1, target + 1)]:
+            break
+        time.sleep(2)
+    else:
+        raise RuntimeError('Saved boundary exists but SwanLab step readback is incomplete; inspect before continuation')
+    summary['swanlab'] = {'run_id': tracking['run_id'], 'url': tracking['url'],
+                         'cloud_steps_verified': target}
     (result / 'completion.json').write_text(json.dumps(summary, indent=2))
     return summary
 
 
 def main(dry_run):
+    from tau3_grpo.tracking.swanlab import load_tracking_env
+    load_tracking_env()
     W.mkdir(parents=True, exist_ok=True)
     assert (PREFLIGHT / 'preflight.json').is_file(), 'Run prepare_formal50.py first'
     if dry_run:
@@ -116,6 +149,10 @@ def main(dry_run):
             (PREFLIGHT / f'{arm}.matched.launch.json').write_text(json.dumps(snapshot, indent=2))
         print('Four Hydra configurations resolved; no service or training started.', flush=True)
         return
+
+    if (W / 'HOLD_UNTIL_USER_START').exists():
+        write_state(status='waiting_for_user_start', no_training_launched=True)
+        return 0
 
     for arm in ('e0', 'e1', 'e2', 'e3'):
         assert not (W / f'{arm}_seed42').exists(), 'Existing run: inspect before any manual recovery'
@@ -159,6 +196,9 @@ def main(dry_run):
             return 2
         assert not active_pids('0,1,2,3'), 'Policy GPU occupied; refusing to launch next arm'
         updates = 100 if arm == 'e0' else target
+        if (W / 'STOP_AFTER_BOUNDARY').exists():
+            write_state(status='paused_at_boundary', next_arm=arm, target_step=target, completed=completed)
+            return 0
         command, env, snapshot = stage_config(arm, updates, started)
         result = Path(env['RESULTS_DIR'])
         # Fix a shared schedule before training, and compare actual prefixes.
@@ -178,8 +218,13 @@ def main(dry_run):
         (W / f'{arm}.exit').write_text(str(rc))
         if rc:
             raise RuntimeError(f'{arm} exited {rc}; later arms not started')
+        budget = json.loads((result / 'budget.json').read_text())
+        if budget.get('stop_requested'):
+            completed.append(verify_result(arm, budget['target_step']))
+            write_state(status='paused_at_boundary', active_arm=arm,
+                        completed_step=budget['target_step'], target_step=target, completed=completed)
+            return 0
         if arm == 'e0':
-            budget = json.loads((result / 'budget.json').read_text())
             target = budget['target_step']
             assert target and 0 < target <= 100 and target % 10 == 0
         completed.append(verify_result(arm, target))

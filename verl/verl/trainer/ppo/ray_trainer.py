@@ -1071,6 +1071,12 @@ class RayPPOTrainer:
             self.config.trainer.get("max_critic_ckpt_to_keep", None) if not remove_previous_ckpt_in_save else 1
         )
 
+        tau3_complete_boundary = os.environ.get("TAU3_KEEP_COMPLETE_BOUNDARY") == "1"
+        # Worker rotation must wait until the trainer's dataloader/RNG metadata
+        # is durable too. Final pruning happens after complete_boundary below.
+        if tau3_complete_boundary and max_actor_ckpt_to_keep == 1:
+            max_actor_ckpt_to_keep = 2
+
         self.actor_rollout_wg.save_checkpoint(
             actor_local_path, actor_remote_path, self.global_steps, max_ckpt_to_keep=max_actor_ckpt_to_keep
         )
@@ -1093,6 +1099,14 @@ class RayPPOTrainer:
         dataloader_local_path = os.path.join(local_global_step_folder, "data.pt")
         dataloader_state_dict = self.train_dataloader.state_dict()
         torch.save(dataloader_state_dict, dataloader_local_path)
+
+        if tau3_complete_boundary:
+            from tau3_grpo.integrations.boundary_checkpoint import complete_boundary
+
+            complete_boundary(self.config.trainer.default_local_dir, self.global_steps,
+                              self.config.trainer.n_gpus_per_node * self.config.trainer.nnodes,
+                              keep=self.config.trainer.max_actor_ckpt_to_keep)
+            return
 
         # latest checkpointed iteration tracker (for atomic usage)
         if (
@@ -1437,6 +1451,11 @@ class RayPPOTrainer:
         # Tau3-GRPO local patch: use the resolved configuration for display names.
         from tau3_grpo.tracking.swanlab import rl_experiment_name, setup_rl_charts
 
+        self.global_steps = 0
+        # Restore the real step before choosing the persisted SwanLab run.
+        self._load_checkpoint()
+        os.environ["TAU3_RESTORED_STEP"] = str(self.global_steps)
+
         logger = Tracking(
             project_name=self.config.trainer.project_name,
             experiment_name=rl_experiment_name(self.config),
@@ -1446,10 +1465,7 @@ class RayPPOTrainer:
 
         setup_rl_charts(self.config.trainer.logger)
 
-        self.global_steps = 0
-
-        # load checkpoint and update weights before doing anything
-        self._load_checkpoint()
+        # Synchronize restored actor weights before the next rollout.
         self.checkpoint_manager.update_weights(self.global_steps)
 
         current_epoch = self.global_steps // len(self.train_dataloader)

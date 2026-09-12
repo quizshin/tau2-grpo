@@ -42,6 +42,25 @@ def test_discovery_ceiling_still_selects_a_shared_target():
     assert budget.target_step == 100
 
 
+@pytest.mark.parametrize('observed,target', [(9, 10), (20, 20), (29, 30), (31, 40)])
+def test_user_stop_finishes_next_boundary_without_a_time_budget(observed, target, tmp_path):
+    request = tmp_path / 'STOP_AFTER_BOUNDARY'
+    budget = MatchedBudget(0, None, stop_request_path=request)
+    assert not budget.observe(observed, now=999999, ceiling=100)
+    request.touch()
+    assert budget.observe(observed, now=999999, ceiling=100) == (observed == target)
+    assert budget.target_step == target and budget.stop_requested
+    assert budget.observe(target, now=1000000, ceiling=100)
+
+
+def test_manual_stop_applies_to_non_e0(monkeypatch, tmp_path):
+    monkeypatch.delenv('TAU3_E0_DISCOVERY_SECONDS', raising=False)
+    monkeypatch.setenv('TAU3_GRPO_ARM', 'e3')
+    monkeypatch.setenv('TAU3_STOP_REQUEST_PATH', str(tmp_path / 'STOP_AFTER_BOUNDARY'))
+    monkeypatch.setenv('TAU3_BUDGET_STATE_PATH', str(tmp_path / 'budget.json'))
+    assert MatchedBudget.from_environment(save_freq=10, test_freq=10).budget_seconds is None
+
+
 @pytest.mark.parametrize('threshold_step,target', [(10, 10), (17, 20), (29, 30)])
 def test_real_trainer_control_blocks_save_validate_then_stop(threshold_step, target, monkeypatch):
     """Execute actual fit control blocks with compute/save/eval stubs (no GPU)."""

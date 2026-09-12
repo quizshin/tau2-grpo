@@ -34,6 +34,9 @@ def test_matched_profile_fixed_sampling_and_ray_budget(arm, tmp_path, monkeypatc
     assert snapshot['experiment']['dynamic_filter']['enable'] == (arm in ('e1', 'e3'))
     assert settings['trainer.save_freq'] == settings['trainer.test_freq'] == '10'
     assert settings['trainer.resume_mode'] == 'disable'
+    assert settings['trainer.logger'] == '[console,swanlab]'
+    assert settings['ray_kwargs.ray_init.runtime_env.env_vars.TAU3_SWANLAB_CONTINUITY'] == "'1'"
+    assert settings['ray_kwargs.ray_init.runtime_env.env_vars.TAU3_KEEP_COMPLETE_BOUNDARY'] == "'1'"
     assert settings['trainer.max_actor_ckpt_to_keep'] == '1'
     assert settings['actor_rollout_ref.actor.checkpoint.save_contents'] == '[model,optimizer,extra]'
     assert settings['actor_rollout_ref.rollout.val_kwargs.n'] == '4'
@@ -45,3 +48,14 @@ def test_matched_profile_fixed_sampling_and_ray_budget(arm, tmp_path, monkeypatc
     assert env['MODEL_PATH'] == str(tmp_path / 'checkpoints/sft-merged/new-off')
     assert env['RESULTS_DIR'].endswith(f'/{arm}_seed42')
     assert not (tmp_path / 'runs').exists()
+
+    checkpoint = Path(env['RESULTS_DIR']) / 'global_step_30'
+    command, resumed, _ = run.stage_config(arm, 50, resume_from=checkpoint)
+    output = subprocess.check_output(command, env=dict(resumed, TAU3_DRY_RUN='1'), text=True)
+    args = shlex.split(output.splitlines()[-1])
+    settings = dict(arg.lstrip('+').split('=', 1) for arg in args if '=' in arg)
+    assert settings['trainer.resume_mode'] == 'resume_path'
+    assert settings['trainer.resume_from_path'] == str(checkpoint)
+    assert settings['trainer.total_training_steps'] == '50'
+    assert 'TAU3_E0_DISCOVERY_SECONDS' not in resumed
+    assert resumed['TRAIN_PARQUET'].endswith('train_schedule.parquet')
