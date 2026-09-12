@@ -1,0 +1,25 @@
+# Reduced-budget candidate: ten 8x8 batches, 640 trajectories.
+# A separate correctness baseline because singleton GDN padding is repaired.
+includes:
+- qwen35_4b_full_a800_curriculum40_pilot_20260912.yaml
+launch:
+  environment:
+    MODEL_PATH: ${TAU3_ROOT}/checkpoints/sft-merged/new-off
+    RESULTS_DIR: ${TAU3_RUN_ROOT}/rl-curriculum40-fast-20260912/e0_seed42
+    MAX_NUM_SEQS: '16'
+    VERL_QWEN35_COMPACT_HEAD: '1'
+    VERL_QWEN35_COMPACT_CHUNK: '256'
+    VERL_QWEN35_COMPACT_BACKEND: checkpoint
+    VERL_QWEN35_FIX_PADDING: '1'
+    VERL_QWEN35_TRIM_PADDING: none
+    SWANLAB_EXPERIMENT_NAME: pilot-E0-Qwen35-4B-full-c40-fast-g8x8-u10-s42
+  overrides:
+  - algorithm.rollout_correction.bypass_mode=false
+  - trainer.save_freq=10
+  - trainer.max_actor_ckpt_to_keep=1
+  - actor_rollout_ref.actor.checkpoint.save_contents=[model,optimizer,extra]
+  - "++ray_kwargs.ray_init.runtime_env.env_vars.VERL_QWEN35_COMPACT_HEAD='1'"
+  - "++ray_kwargs.ray_init.runtime_env.env_vars.VERL_QWEN35_COMPACT_CHUNK='256'"
+  - ++ray_kwargs.ray_init.runtime_env.env_vars.VERL_QWEN35_COMPACT_BACKEND=checkpoint
+  - "++ray_kwargs.ray_init.runtime_env.env_vars.VERL_QWEN35_FIX_PADDING='1'"
+  - ++ray_kwargs.ray_init.runtime_env.env_vars.VERL_QWEN35_TRIM_PADDING=none

@@ -46,8 +46,14 @@ def run(args):
     modeling_qwen3_5.FusedRMSNormGated = None
     model = tiny_model(args.tied) if args.tiny else AutoModelForImageTextToText.from_pretrained(
         args.model, dtype=torch.float32, attn_implementation='sdpa', local_files_only=True)
-    if args.kernel == 'fla':
+    if os.environ.get('VERL_QWEN35_FIX_PADDING', '0') == '1':
+        from verl.utils.qwen35_padding import install_qwen35_padding_guard
+        install_qwen35_padding_guard(model)
+    if args.kernel in ('fla', 'fla_aligned'):
         from fla.ops.gated_delta_rule import chunk_gated_delta_rule
+        if args.kernel == 'fla_aligned':
+            from verl.utils.qwen35_padding import fla_with_native_qk_norm
+            chunk_gated_delta_rule = fla_with_native_qk_norm
         count = 0
         for module in model.modules():
             if hasattr(module, 'chunk_gated_delta_rule'):
@@ -76,6 +82,7 @@ def run(args):
     report = {'mode':args.mode, 'kernel':args.kernel, 'rank':rank, 'world_size':dist.get_world_size(),
         'trim_padding':os.environ.get('VERL_QWEN35_TRIM_PADDING','none'),
         'normalization':'native',
+        'padding_guard':os.environ.get('VERL_QWEN35_FIX_PADDING','0')=='1',
         'tiny':args.tiny, 'tied':args.tied, 'kind':'recorded_batch_replay_not_online_RL',
         'vllm_colocated':False, 'input_shapes':[list(m['input_ids'].shape) for m in micros],
         'policy_tokens':[int(m['response_mask'].sum()) for m in micros], 'timings':{}, 'peaks':{}}
@@ -155,7 +162,7 @@ def run(args):
 if __name__ == '__main__':
     p=argparse.ArgumentParser()
     p.add_argument('--mode',choices=['baseline','compact'],required=True)
-    p.add_argument('--kernel',choices=['native','fla'],default='native')
+    p.add_argument('--kernel',choices=['native','fla','fla_aligned'],default='native')
     p.add_argument('--model',default='/root/autodl-fs/tau3-core-20260912/checkpoints/sft-merged/new-off')
     p.add_argument('--batch',default='/root/autodl-fs/tau3-core-20260912/runs/rl-formal-full-20260912/acceptance/update-batches/update_000001.pkl')
     p.add_argument('--output',required=True)

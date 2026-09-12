@@ -319,6 +319,10 @@ def apply_monkey_patch(
                 "Tau3 Qwen3.5 requires padded native forward: use_remove_padding=false, "
                 "ulysses_sp_size=1, use_fused_kernels=false, no prefix grouper/tiled MLP"
             )
+        import os
+        if os.environ.get("VERL_QWEN35_FIX_PADDING", "0") == "1":
+            from verl.utils.qwen35_padding import install_qwen35_padding_guard
+            install_qwen35_padding_guard(model)
         return
 
     # Apply TiledMLP monkey patch for memory-efficient MLP computation

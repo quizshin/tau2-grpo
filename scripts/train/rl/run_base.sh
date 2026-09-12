@@ -27,6 +27,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 CODE_ROOT="${PROJECT_ROOT}"
 source "${CODE_ROOT}/scripts/lib/paths.sh"
+TRAIN_MANIFEST_DIR="${TRAIN_MANIFEST_DIR:-${TAU3_DATA_ROOT}/manifests}"
 
 TAU2_SRC="${CODE_ROOT}/tau2-bench/src"
 VERL_ROOT="${CODE_ROOT}/verl"
@@ -138,6 +139,7 @@ if [[ -z "${CUSTOM_TRAIN_PARQUET}" ]]; then
     --groups-per-update "${GROUPS_PER_UPDATE}" \
     --total-updates "${TOTAL_UPDATES}" \
     --anchor-mode "${ANCHOR_MODE}" \
+    --manifest-dir "${TRAIN_MANIFEST_DIR}" \
     --output-dir "${RESULTS_DIR}"
 elif [[ ! -f "${TRAIN_PARQUET}" ]]; then
   echo "error: custom training parquet missing: ${TRAIN_PARQUET}" >&2

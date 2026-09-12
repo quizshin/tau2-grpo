@@ -1,6 +1,7 @@
 """Audit rollout/HF token scores on identical generated tokens, without RL."""
 import argparse
 import json
+import os
 from pathlib import Path
 import sys
 
@@ -21,6 +22,9 @@ def main():
     samples = json.loads(args.samples.read_text())
     model = AutoModelForImageTextToText.from_pretrained(args.model,
         dtype=torch.float32, attn_implementation='sdpa', local_files_only=True).cuda().eval()
+    if os.environ.get('VERL_QWEN35_FIX_PADDING','0') == '1':
+        from verl.utils.qwen35_padding import install_qwen35_padding_guard
+        install_qwen35_padding_guard(model)
     a = actor(model)
     rows = []
     for i, sample in enumerate(samples):
@@ -53,6 +57,7 @@ def main():
                 'fraction_abs_delta_gt_0_1':float((difference.abs()>.1).float().mean())})
         print(json.dumps(rows[-2:]),flush=True)
     args.output.write_text(json.dumps({'kind':'token_score_audit_not_bypass_training',
+        'padding_guard':os.environ.get('VERL_QWEN35_FIX_PADDING','0')=='1',
         'samples':str(args.samples), 'results':rows,
         'scope':'Native HF SDPA and GDN, FP32 master/BF16 computation; same sampled tokens at temperature 1. '
                 'No update, off-policy correction, simulator, or success-rate validation.'},indent=2))
