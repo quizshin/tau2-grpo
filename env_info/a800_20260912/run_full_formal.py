@@ -119,9 +119,13 @@ def main(dry_run):
                 assert torch.isfinite(advantages).all(),'Nonfinite advantages'
                 advantage_checks.append(bool((advantages!=0).any()))
             assert any(advantage_checks),'No nonzero reward advantage; engineering gate needs further investigation'
+            audits=[json.loads(p.read_text()) for p in (W/'acceptance/weight-audits').glob('worker-audit-*.json')]
+            assert len(audits)>=8,'Missing four-rank weight sync audits across two updates'
+            assert all(a['all_conv_match'] and a['comparison_source']=='incoming actor weights' for a in audits)
             (W/'acceptance-gate.json').write_text(json.dumps({'two_updates_completed':True,
                 'model_and_optimizer_shards':4,'recorded_grad_norms':norms,
                 'nonzero_advantages_by_update':advantage_checks,
+                'rollout_convolution_sync_audits':len(audits),
                 'note':'Engineering gate, not proof of benchmark improvement; formal restarts from SFT.'},indent=2))
         print('Completed',stage,flush=True)
     (W/'rl-controller.exit').write_text('0')

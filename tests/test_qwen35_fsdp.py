@@ -110,3 +110,16 @@ def test_rollout_weight_audit_checks_actual_buffers_and_rejects_wrong_base(tmp_p
         layer.linear_attn.conv1d.base_layer.weight.add_(1)
     with pytest.raises(RuntimeError, match="differ from the base checkpoint"):
         audit_qwen35_rollout_weights(model, base, tmp_path / "audit", "base")
+    native = "model.language_model.layers.0.linear_attn.conv1d.weight"
+    incoming = {native: layer.linear_attn.conv1d.base_layer.weight.detach().clone()}
+    full = json.loads(Path(audit_qwen35_rollout_weights(
+        model, base, tmp_path / "audit", "full", expected_conv=incoming
+    )).read_text())
+    assert full["all_conv_match"]
+    assert full["comparison_source"] == "incoming actor weights"
+    with torch.no_grad():
+        layer.linear_attn.conv1d.base_layer.weight.add_(1)
+    with pytest.raises(RuntimeError, match="incoming actor weights"):
+        audit_qwen35_rollout_weights(model, base, tmp_path / "audit", "full", expected_conv=incoming)
+    with pytest.raises(RuntimeError, match="incoming actor weights"):
+        audit_qwen35_rollout_weights(model, base, tmp_path / "audit", "full", expected_conv={})

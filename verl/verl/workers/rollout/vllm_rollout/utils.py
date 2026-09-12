@@ -185,11 +185,22 @@ class vLLMColocateWorkerExtension:
             device=self.device,
             use_shm=use_shm,
         )
-        receiver.receive_weights(
-            on_bucket_received=lambda weights: self._update_weights(
-                weights, peft_config=peft_config, base_sync_done=base_sync_done
-            )
-        )
+        audit_dir = os.environ.get("VERL_QWEN35_WEIGHT_AUDIT_DIR")
+        expected_conv = {} if audit_dir and not peft_config else None
+
+        def receive_bucket(weights):
+            if expected_conv is not None:
+                # Copy before loading: bucket storage is reused, and full RL
+                # legitimately changes convolution weights from the SFT base.
+                for name, value in weights:
+                    if ".conv1d." in name and name.endswith(".weight"):
+                        import re
+
+                        native = "model.language_model." + re.search(r"layers\..*", name).group()
+                        expected_conv[native] = value.detach().cpu().clone()
+            self._update_weights(weights, peft_config=peft_config, base_sync_done=base_sync_done)
+
+        receiver.receive_weights(on_bucket_received=receive_bucket)
 
         if self._is_qat_model:
             # QAT: call process_weights_after_loading AFTER all buckets are received
@@ -205,7 +216,6 @@ class vLLMColocateWorkerExtension:
             model_config = self.model_runner.vllm_config.model_config
             process_weights_after_loading(model, model_config, self.device)
 
-        audit_dir = os.environ.get("VERL_QWEN35_WEIGHT_AUDIT_DIR")
         if audit_dir:
             from verl.utils.qwen35_weight_audit import audit_qwen35_rollout_weights
 
@@ -213,7 +223,8 @@ class vLLMColocateWorkerExtension:
                 self.model_runner.model,
                 self.model_runner.vllm_config.model_config.model,
                 audit_dir,
-                "adapter" if peft_config and base_sync_done else "base",
+                "full" if not peft_config else ("adapter" if base_sync_done else "base"),
+                expected_conv=expected_conv,
             )
             logger.info("Qwen3.5 rollout weight audit: %s", path)
 

@@ -11,7 +11,7 @@ import torch
 from safetensors import safe_open
 
 
-def audit_qwen35_rollout_weights(model, checkpoint, output_dir, phase):
+def audit_qwen35_rollout_weights(model, checkpoint, output_dir, phase, expected_conv=None):
     """Compare unsharded GDN conv weights and fingerprint actual GPU LoRA buffers.
 
     This is intended for short TP=1 integration checks, not routine training.
@@ -24,16 +24,26 @@ def audit_qwen35_rollout_weights(model, checkpoint, output_dir, phase):
         if ".conv1d." in key and key.endswith(".weight"):
             native = "model.language_model." + re.search(r"layers\..*", key).group().replace(".base_layer.", ".")
             conv[native] = (key, value.detach().cpu())
-    report = {"time": time.time(), "phase": phase, "conv": [], "lora_gpu": []}
-    for shard in sorted(Path(checkpoint).glob("*.safetensors")):
-        with safe_open(shard, framework="pt", device="cpu") as saved:
-            for native in set(saved.keys()) & conv.keys():
-                key, tensor = conv[native]
-                expected = saved.get_tensor(native).to(tensor.dtype)
-                if expected.numel() == tensor.numel():
-                    expected = expected.reshape(tensor.shape)
-                matched = torch.equal(tensor, expected)
-                report["conv"].append({"key": key, "shape": list(tensor.shape), "exact_match": matched})
+    source = "incoming actor weights" if expected_conv is not None else "base checkpoint"
+    report = {"time": time.time(), "phase": phase, "comparison_source": source, "conv": [], "lora_gpu": []}
+
+    def compare(native, expected):
+        key, tensor = conv[native]
+        expected = expected.to(tensor.dtype)
+        if expected.numel() == tensor.numel():
+            expected = expected.reshape(tensor.shape)
+        report["conv"].append({"key": key, "shape": list(tensor.shape),
+            "exact_match": torch.equal(tensor, expected),
+            "sha256": hashlib.sha256(tensor.contiguous().view(torch.uint8).numpy().tobytes()).hexdigest()})
+
+    if expected_conv is not None:
+        for native in expected_conv.keys() & conv.keys():
+            compare(native, expected_conv[native])
+    else:
+        for shard in sorted(Path(checkpoint).glob("*.safetensors")):
+            with safe_open(shard, framework="pt", device="cpu") as saved:
+                for native in set(saved.keys()) & conv.keys():
+                    compare(native, saved.get_tensor(native))
     for name, module in model.named_modules():
         for attr in ("lora_a_stacked", "lora_b_stacked"):
             stack = getattr(module, attr, None)
@@ -60,5 +70,5 @@ def audit_qwen35_rollout_weights(model, checkpoint, output_dir, phase):
     target = output / f"worker-audit-{os.getpid()}-{time.time_ns()}.json"
     target.write_text(json.dumps(report, indent=2) + "\n")
     if not report["all_conv_match"]:
-        raise RuntimeError(f"Qwen3.5 rollout convolution weights differ from the base checkpoint: {target}")
+        raise RuntimeError(f"Qwen3.5 rollout convolution weights differ from the {source}: {target}")
     return str(target)
