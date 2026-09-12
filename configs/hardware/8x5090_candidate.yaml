@@ -1,0 +1,9 @@
+# Candidate only. Validate memory and six-rank FSDP on the actual eight-card host.
+launch:
+  environment:
+    TAU3_POLICY_CUDA_DEVICES: '0,1,2,3,4,5'
+    POLICY_GPUS: '6'
+    ROLLOUT_TP: '2'
+    TAU3_USER_CUDA_DEVICES: '6,7'
+    TAU3_USER_TP: '2'
+    SFT_GPU: '0'

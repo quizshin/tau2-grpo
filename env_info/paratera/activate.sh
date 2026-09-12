@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# Source this file on the Paratera Linux container.
+export TAU3_ROOT="${TAU3_ROOT:-/root/shared-nvme/tau3}"
+export TAU3_DATA_ROOT="${TAU3_DATA_ROOT:-${TAU3_ROOT}/data}"
+export TAU3_MODEL_ROOT="${TAU3_MODEL_ROOT:-${TAU3_ROOT}/models}"
+export TAU3_RUN_ROOT="${TAU3_RUN_ROOT:-${TAU3_ROOT}/runs}"
+export TAU3_ARTIFACT_ROOT="${TAU3_ARTIFACT_ROOT:-${TAU3_ROOT}/artifacts}"
+export TAU3_CACHE_ROOT="${TAU3_CACHE_ROOT:-/root/tau3-cache}"
+export TMPDIR="${TAU3_CACHE_ROOT}/tmp"
+export PIP_CACHE_DIR="${TAU3_CACHE_ROOT}/pip"
+export PIP_NO_CACHE_DIR=1
+export UV_CACHE_DIR="${TAU3_CACHE_ROOT}/uv"
+export UV_LINK_MODE=copy
+export HF_HOME="${TAU3_CACHE_ROOT}/huggingface"
+export XDG_CACHE_HOME="${TAU3_CACHE_ROOT}/xdg"
+export VLLM_CACHE_ROOT="${TAU3_CACHE_ROOT}/vllm"
+export TRITON_CACHE_DIR="${TAU3_CACHE_ROOT}/triton"
+export TORCHINDUCTOR_CACHE_DIR="${TAU3_CACHE_ROOT}/inductor"
+export RAY_TMPDIR="${TAU3_CACHE_ROOT}/ray"
+export TOKENIZERS_PARALLELISM=false
+export PYTHONDONTWRITEBYTECODE=1
+export TAU3_BASE_VENV="${TAU3_ROOT}/envs/qwen35"
+export TAU3_SIM_VENV="${TAU3_ROOT}/envs/qwen38-sim"
+export TAU3_SIM_PYTHON="${TAU3_SIM_VENV}/bin/python"
+export TAU3_UV="${TAU3_BASE_VENV}/bin/uv"
+source "${TAU3_BASE_VENV}/bin/activate"
+export PYTHONPATH="${TAU3_ROOT}/code:${TAU3_ROOT}/code/verl:${TAU3_ROOT}/code/tau2-bench/src${PYTHONPATH:+:${PYTHONPATH}}"

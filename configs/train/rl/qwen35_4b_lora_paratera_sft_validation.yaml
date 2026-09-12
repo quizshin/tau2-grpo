@@ -1,0 +1,14 @@
+# Three real E0 updates after the complete frozen 30-update SFT schedule.
+includes:
+- qwen35_4b_lora_paratera_smoke.yaml
+launch:
+  environment:
+    MODEL_PATH: ${TAU3_ARTIFACT_ROOT}/sft4b_lora_5090/sft_merged_seed42
+    RESULTS_DIR: ${TAU3_RUN_ROOT}/paratera_4b_lora_sft_validation/e0_seed42
+    TOTAL_UPDATES: '3'
+    MAX_NUM_SEQS: '4'
+    VERL_QWEN35_WEIGHT_AUDIT_DIR: ${TAU3_RUN_ROOT}/paratera_4b_lora_sft_validation/weight-audits
+    TAU3_GRPO_DEBUG_BATCH_DIR: ${TAU3_RUN_ROOT}/paratera_4b_lora_sft_validation/update-batches
+  overrides:
+  - trainer.default_local_dir=${TAU3_ARTIFACT_ROOT}/rl_4b_lora_sft_validation
+  - trainer.max_actor_ckpt_to_keep=1

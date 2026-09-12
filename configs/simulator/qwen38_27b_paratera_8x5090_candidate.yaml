@@ -1,0 +1,8 @@
+# Candidate for the later eight-card host; not runnable on the current two cards.
+includes:
+- qwen38_27b_paratera_5090.yaml
+- ../hardware/8x5090_candidate.yaml
+launch:
+  environment:
+    TAU3_USER_MAX_NUM_SEQS: '8'
+    TAU3_USER_GPU_MEMORY_UTILIZATION: '0.75'

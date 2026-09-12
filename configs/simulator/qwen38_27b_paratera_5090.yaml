@@ -1,0 +1,14 @@
+includes:
+- ../hardware/2x5090.yaml
+launch:
+  stage: simulator
+  entrypoint: scripts/serve/simulator_qwen38.sh
+  environment:
+    TAU3_USER_MODEL: ${TAU3_MODEL_ROOT}/Qwen3.8-27B-AWQ-INT4
+    TAU3_USER_SERVED_MODEL_NAME: Qwen/Qwen3.8-27B-AWQ-INT4
+    TAU3_USER_MAX_NUM_SEQS: '2'
+    TAU3_USER_MAX_MODEL_LEN: '16384'
+    TAU3_USER_GPU_MEMORY_UTILIZATION: '0.85'
+    TAU3_USER_ENFORCE_EAGER: '1'
+    TAU3_USER_THINKING: 'off'
+    TAU3_SIM_CACHE_ROOT: ${TAU3_CACHE_ROOT}/qwen38-sim

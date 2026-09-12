@@ -1,0 +1,42 @@
+{
+  "airline_53": {
+    "status": "quarantine",
+    "reason": "详细任务要求取消两单并加一个付费行李；gold 只有取消，没有行李更新，communicate_info 为空。需核对任务与奖励是否漏项。"
+  },
+  "airline_54": {
+    "status": "quarantine",
+    "reason": "详细任务要求更新 SFO→SEA 行李并改另一单出发时间；gold 只有改签，没有行李更新。需核对任务与奖励是否漏项。"
+  },
+  "airline_382": {
+    "status": "quarantine",
+    "reason": "reason_for_call 写 Boston–Chicago，task_instructions 与 gold 写 CLT→LGA；用户模拟器接收的目标存在航线冲突。"
+  },
+  "airline_995": {
+    "status": "quarantine",
+    "reason": "详细任务称 ATL↔ORD 往返的 return ATL→ORD，gold 保留 ATL→ORD 出程、修改 ORD→ATL 回程；方向描述自相矛盾。"
+  },
+  "airline_739": {
+    "status": "keep_candidate",
+    "reason": "任务明确允许拒绝 basic economy 改时间，随后取消两单；gold 不含改签是合理的策略拒绝，不能据此排除。"
+  },
+  "airline_845": {
+    "status": "quarantine",
+    "reason": "详细任务要求取消并添加付费行李；gold 只有取消，缺少行李更新。"
+  },
+  "airline_781": {
+    "status": "quarantine",
+    "reason": "详细任务明确禁止 cancel_reservation 并要求改签；gold 却包含三次取消且没有改签，目标与奖励冲突。"
+  },
+  "airline_566": {
+    "status": "keep_candidate",
+    "reason": "减行李并退到旅行凭证违反策略，不含行李更新合理；需验证最终回答确实解释拒绝。"
+  },
+  "airline_656": {
+    "status": "keep_candidate",
+    "reason": "详细任务有意设置错误城市名称，允许通过澄清确认实际航线；与未解释的目标冲突分开标记。"
+  },
+  "airline_839": {
+    "status": "quarantine",
+    "reason": "用户脚本要求用旅行凭证支付改舱且预设接受，gold 却用信用卡；策略禁止旅行凭证用于改签，需先统一用户行为和评分目标。"
+  }
+}

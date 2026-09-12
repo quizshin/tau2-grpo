@@ -1,0 +1,7 @@
+# Extend the SAME 10-update run to 50 cumulative updates after its audit.
+# Retains identical task pool, seed, schedule prefix, optimizer and output path.
+includes:
+- qwen35_4b_full_a800_curriculum40_pilot_20260912.yaml
+launch:
+  environment:
+    TOTAL_UPDATES: '50'

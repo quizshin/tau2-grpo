@@ -19,6 +19,7 @@ Single Process Actor
 
 import logging
 import os
+from contextlib import nullcontext
 
 import torch
 from torch import nn
@@ -124,6 +125,16 @@ class DataParallelPPOActor(BasePPOActor):
         """
         calculate_sum_pi_squared = self.config.get("calculate_sum_pi_squared", False)
         sum_pi_squared_checkpointing = self.config.get("sum_pi_squared_checkpointing", False)
+        # Tau3-GRPO local patch: explicitly opt in for 32 GB Qwen3.5 profiles.
+        loss_projection = os.environ.get("VERL_QWEN35_LOSS_ONLY_LOGITS", "0") == "1"
+        head_chunk_size = int(os.environ.get("VERL_QWEN35_HEAD_CHUNK_SIZE", "128")) if loss_projection else 0
+        if head_chunk_size < 0:
+            raise ValueError("VERL_QWEN35_HEAD_CHUNK_SIZE must be nonnegative")
+        projected_columns = None
+        if loss_projection:
+            if (self.actor_module.config.model_type != "qwen3_5" or self.use_remove_padding
+                    or self.use_ulysses_sp or self.use_fused_kernels or self.use_prefix_grouper):
+                raise ValueError("Qwen3.5 loss projection requires the native padded text path")
         # PrefixGrouper path for shared-prefix optimization
         if self.use_prefix_grouper:
             can_use_pg = (
@@ -151,6 +162,8 @@ class DataParallelPPOActor(BasePPOActor):
             from verl.utils.model import extract_multi_modal_inputs
 
             multi_modal_inputs = extract_multi_modal_inputs(micro_batch["multi_modal_inputs"])
+        if loss_projection and multi_modal_inputs:
+            raise ValueError("Qwen3.5 loss projection supports text-only batches")
 
         with torch.autocast(device_type=self.device_name, dtype=self.param_dtype):
             input_ids = micro_batch["input_ids"]
@@ -345,20 +358,43 @@ class DataParallelPPOActor(BasePPOActor):
 
             else:  # not using rmpad and no ulysses sp
                 extra_args = {}
+                head_context = nullcontext()
+                if loss_projection:
+                    from verl.utils.qwen35_loss_projection import compact_lm_head, response_projection
+
+                    projected_columns, extra_args["logits_to_keep"] = response_projection(
+                        input_ids, micro_batch["responses"], micro_batch.get("response_mask")
+                    )
+                    if head_chunk_size:
+                        head_context = compact_lm_head(
+                            self.actor_module,
+                            micro_batch["responses"].index_select(1, projected_columns),
+                            temperature, head_chunk_size,
+                            entropy_fn=verl_F.entropy_from_logits if calculate_entropy else None,
+                            sum_pi_squared_fn=(self.calculate_sum_pi_squared_from_logits
+                                               if calculate_sum_pi_squared else None),
+                        )
                 if self.use_fused_kernels:
                     extra_args["temperature"] = temperature
                     extra_args["return_dict"] = True
 
-                output = self.actor_module(
-                    input_ids=input_ids,
-                    attention_mask=attention_mask,
-                    position_ids=position_ids,
-                    **multi_modal_inputs,
-                    use_cache=False,
-                    **extra_args,
-                )  # prevent model thinks we are generating
+                with head_context:
+                    output = self.actor_module(
+                        input_ids=input_ids,
+                        attention_mask=attention_mask,
+                        position_ids=position_ids,
+                        **multi_modal_inputs,
+                        use_cache=False,
+                        **extra_args,
+                    )  # prevent model thinks we are generating
 
-                if self.use_fused_kernels:
+                if head_chunk_size:
+                    log_probs = output.logits[..., 0]
+                    if calculate_entropy:
+                        entropy = output.logits[..., 1]
+                    if calculate_sum_pi_squared:
+                        sum_pi_squared = output.logits[..., 1 + int(calculate_entropy)]
+                elif self.use_fused_kernels:
                     log_probs = output.log_probs[:, -response_length - 1 : -1]
                     entropy = output.entropy[:, -response_length - 1 : -1]  # (bsz, response_length)
 
@@ -366,8 +402,12 @@ class DataParallelPPOActor(BasePPOActor):
                     logits = output.logits
 
                     logits.div_(temperature)
-                    logits = logits[:, -response_length - 1 : -1, :]  # (bsz, response_length, vocab_size)
-                    log_probs = logprobs_from_logits(logits, micro_batch["responses"])
+                    if projected_columns is None:
+                        logits = logits[:, -response_length - 1 : -1, :]
+                        labels = micro_batch["responses"]
+                    else:
+                        labels = micro_batch["responses"].index_select(1, projected_columns)
+                    log_probs = logprobs_from_logits(logits, labels)
                     if calculate_entropy:
                         if not self.config.entropy_checkpointing:
                             entropy = verl_F.entropy_from_logits(logits)  # (bsz, response_length)
@@ -381,6 +421,16 @@ class DataParallelPPOActor(BasePPOActor):
                             else torch.utils.checkpoint.checkpoint(self.calculate_sum_pi_squared_from_logits, logits)
                         )
 
+            if projected_columns is not None:
+                from verl.utils.qwen35_loss_projection import restore_response_columns
+
+                log_probs = restore_response_columns(log_probs, projected_columns, response_length)
+                if calculate_entropy:
+                    entropy = restore_response_columns(entropy, projected_columns, response_length)
+                if calculate_sum_pi_squared:
+                    sum_pi_squared = restore_response_columns(
+                        sum_pi_squared, projected_columns, response_length
+                    )
             outputs = {"log_probs": log_probs}
             if calculate_entropy:
                 outputs["entropys"] = entropy
@@ -455,6 +505,8 @@ class DataParallelPPOActor(BasePPOActor):
         has_multi_modal_inputs = "multi_modal_inputs" in data.non_tensor_batch.keys()
 
         select_keys = ["responses", "input_ids", "attention_mask", "position_ids"]
+        if os.environ.get("VERL_QWEN35_LOSS_ONLY_LOGITS", "0") == "1":
+            select_keys.append("response_mask")
         non_tensor_select_keys = ["multi_modal_inputs"] if has_multi_modal_inputs else []
         if self.use_prefix_grouper:
             select_keys += [k for k in ["prompts", "response_mask"] if k in data.batch]

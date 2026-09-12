@@ -21,7 +21,7 @@ fi
 ARGS=("${SIM_PYTHON}" -m vllm.entrypoints.cli.main serve "${MODEL}"
   --served-model-name "${TAU3_USER_SERVED_MODEL_NAME:-Qwen/Qwen3.8-27B-AWQ-INT4}"
   --host "${TAU3_USER_HOST:-127.0.0.1}" --port "${TAU3_USER_PORT:-8100}"
-  --tensor-parallel-size 1 --dtype bfloat16 --quantization compressed-tensors
+  --tensor-parallel-size "${TAU3_USER_TP:-1}" --dtype bfloat16 --quantization compressed-tensors
   --language-model-only
   --default-chat-template-kwargs '{"enable_thinking":false}'
   --enable-prefix-caching --max-model-len "${TAU3_USER_MAX_MODEL_LEN:-16384}"

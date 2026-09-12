@@ -1,0 +1,6 @@
+# Continue the same 50-task pilot to 100 cumulative updates = 6400 rollouts.
+includes:
+- qwen35_4b_full_a800_curriculum50_pilot_20260912.yaml
+launch:
+  environment:
+    TOTAL_UPDATES: '100'

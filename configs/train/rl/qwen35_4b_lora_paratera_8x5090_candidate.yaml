@@ -1,0 +1,22 @@
+# One capacity-validation update on the later eight-card host, after real SFT.
+# Preserve 16 x 8 real rollouts and pad post-rollout compute to 144 for six ranks.
+includes:
+- qwen35_4b_lora_paratera_smoke.yaml
+- ../../hardware/8x5090_candidate.yaml
+launch:
+  environment:
+    MODEL_PATH: ${TAU3_ARTIFACT_ROOT}/sft4b_lora_5090/sft_merged_seed42
+    RESULTS_DIR: ${TAU3_RUN_ROOT}/paratera_8x5090_candidate/e0_seed42
+    GROUP_SIZE: '8'
+    GROUPS_PER_UPDATE: '16'
+    PPO_MINI_GROUPS: '6'
+    POLICY_BATCH_DIVISOR: '48'
+    TOTAL_UPDATES: '1'
+    MAX_NUM_SEQS: '8'
+    # The exact base-weight audit currently supports unsharded TP=1 only.
+    VERL_QWEN35_WEIGHT_AUDIT_DIR: ''
+    TAU3_GRPO_DEBUG_BATCH_DIR: ${TAU3_RUN_ROOT}/paratera_8x5090_candidate/update-batches
+  overrides:
+  - actor_rollout_ref.rollout.gpu_memory_utilization=0.50
+  - actor_rollout_ref.rollout.agent.num_workers=8
+  - trainer.default_local_dir=${TAU3_ARTIFACT_ROOT}/rl_8x5090_candidate

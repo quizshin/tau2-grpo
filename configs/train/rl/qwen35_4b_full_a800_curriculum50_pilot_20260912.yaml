@@ -1,0 +1,9 @@
+# Separate 50-task run; never resume a checkpoint from a different task schedule.
+includes:
+- qwen35_4b_full_a800_curriculum40_pilot_20260912.yaml
+launch:
+  environment:
+    TRAIN_MANIFEST_DIR: ${CODE_ROOT}/results/analysis/rl_curriculum50_20260912/manifests
+    RESULTS_DIR: ${TAU3_RUN_ROOT}/rl-curriculum50-20260912/e0_seed42
+    TOTAL_UPDATES: '10'
+    SWANLAB_EXPERIMENT_NAME: E0-Qwen35-4B-full-c50-g8x8-s42

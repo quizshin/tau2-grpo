@@ -1,0 +1,49 @@
+# Paratera 5090: preserve the frozen SFT schedule; store adapters separately.
+# Reuse the frozen 45/5 dialogues. Audit native Qwen3.5 lengths before training.
+model:
+  name_or_path: Qwen/Qwen3.5-4B
+  trust_remote_code: false
+  attn_implementation: sdpa
+
+data:
+  train_jsonl: data/sft/airline_sft_train_seed42.jsonl
+  validation_jsonl: data/sft/airline_sft_validation_seed42.jsonl
+  tool_config: configs/envs/tool_config.yaml
+  # Preserve full dialogues and tool schemas; do not silently truncate/resample.
+  max_length: 24576
+
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  # Resolve all language-layer linear modules, including Gated DeltaNet.
+  # Excludes vision, embeddings and lm_head (tied in the smaller models).
+  target_modules: qwen35_language_linear
+
+train:
+  method: lora
+  evaluate_before_train: true
+  load_best_model_at_end: true
+  num_epochs: 5
+  per_device_batch_size: 1
+  gradient_accumulation_steps: 8
+  learning_rate: 1.0e-4
+  lr_scheduler_type: cosine
+  warmup_ratio: 0.05
+  weight_decay: 0.0
+  max_grad_norm: 1.0
+  logging_steps: 1
+  seed: 42
+
+output:
+  dir: /root/shared-nvme/tau3/artifacts/sft4b_lora_5090/adapter
+
+# Unified launcher metadata; native training settings are above.
+includes:
+- ../../hardware/2x5090.yaml
+launch:
+  stage: sft
+  entrypoint: scripts/train/sft/run_base.sh
+  environment:
+    TAU3_TRACKING_BACKEND: none
+    SFT_MODEL_NAME_OR_PATH: ${TAU3_MODEL_ROOT}/Qwen3.5-4B
