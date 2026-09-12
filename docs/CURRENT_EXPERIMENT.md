@@ -63,7 +63,7 @@ E0 从模拟器启动开始观察约六小时预算，包含初始化、保存�
 
 ## 接手运行前必须准备的资产
 
-Git 仓库提供源码、配置、测试与说明，**不包含模型权重、原始数据、完整 checkpoint、虚拟环境或凭据**。当前 manifest 位于被 Git 忽略的 `results/analysis/rl_curriculum50_20260912/manifests/`；需要单独取得 manifest 和 sidecar，按上面哈希核对，同时准备基础 train/selection 数据及对应 DB。不能仅 clone 仓库就期待立即开始训练。
+Git 仓库现在包含源码、配置、测试、原始 AReaL 数据、train/selection/reserve 划分、服务器实际 SFT 输入以及 40/50 任务课程 manifest 和 sidecar。见 [数据说明与 SHA256 校验](../data/README.md)。当前 50 任务 manifest 保留在 `results/analysis/rl_curriculum50_20260912/manifests/`，已通过精确例外规则纳入 Git；clone 后先校验哈希。**模型权重、完整 checkpoint、虚拟环境和凭据仍不包含在仓库中**，需要另行准备。
 
 正式服务器使用 Python 3.12、Torch 2.11/cu130、Transformers 5.5.1、vLLM 0.20.0 和 FLA 0.5.2；启动脚本依赖服务器激活脚本、FLA overlay 及模型路径。迁移到新机器需重建环境并配置路径，不能复制 Mac 虚拟环境到 Linux。凭据在目标机器单独设置。
 

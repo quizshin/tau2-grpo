@@ -1,0 +1,373 @@
+{
+  "blocked_reason_count": 110,
+  "intent_similarity_threshold": 0.88,
+  "leakage_audit": [
+    {
+      "closest_blocked_reason": "Customer wants to move their May 18 basic economy flight to a later evening option and is open to upgrading if necessary.",
+      "max_similarity": 0.547085201793722,
+      "source_dialog_id": "airline_dialog_745"
+    },
+    {
+      "closest_blocked_reason": "Customer wants to cancel their May 20 morning flights they believe they double-booked.",
+      "max_similarity": 0.579185520361991,
+      "source_dialog_id": "airline_dialog_544"
+    },
+    {
+      "closest_blocked_reason": "Amelia is calling to cancel all flights she booked in the last day or so for the May 18\u201319 weekend after a work trip was rescheduled.",
+      "max_similarity": 0.749034749034749,
+      "source_dialog_id": "airline_dialog_766"
+    },
+    {
+      "closest_blocked_reason": "You need to remove a passenger from one of your reservation.\n\nYou are also looking to book a flight form NY to go explore the West Coast.",
+      "max_similarity": 0.43346007604562736,
+      "source_dialog_id": "airline_dialog_837"
+    },
+    {
+      "closest_blocked_reason": "Customer wants to adjust who is traveling on their late-May Denver to Chicago (DEN\u2192ORD) family trip so that their brother goes instead of their wife while keeping the same total number of passengers.",
+      "max_similarity": 0.5548780487804879,
+      "source_dialog_id": "airline_dialog_600"
+    },
+    {
+      "closest_blocked_reason": "Customer wants to cancel their May 20 morning flights they believe they double-booked.",
+      "max_similarity": 0.5157894736842106,
+      "source_dialog_id": "airline_dialog_262"
+    },
+    {
+      "closest_blocked_reason": "George wants to push only the return leg of one of his May round trips to a slightly later date while keeping the outbound unchanged.",
+      "max_similarity": 0.7937743190661478,
+      "source_dialog_id": "airline_dialog_554"
+    },
+    {
+      "closest_blocked_reason": "You booked the flight  and you want to change the passenger name on the reservation.",
+      "max_similarity": 0.509090909090909,
+      "source_dialog_id": "airline_dialog_455"
+    },
+    {
+      "closest_blocked_reason": "George wants to push only the return leg of one of his May round trips to a slightly later date while keeping the outbound unchanged.",
+      "max_similarity": 0.4727272727272727,
+      "source_dialog_id": "airline_dialog_673"
+    },
+    {
+      "closest_blocked_reason": "Customer says the airline messed up their May 22 flights and wants all affected May 22 trips cancelled and refunded.",
+      "max_similarity": 0.48854961832061067,
+      "source_dialog_id": "airline_dialog_357"
+    },
+    {
+      "closest_blocked_reason": "George wants to push only the return leg of one of his May round trips to a slightly later date while keeping the outbound unchanged.",
+      "max_similarity": 0.7881040892193308,
+      "source_dialog_id": "airline_dialog_875"
+    },
+    {
+      "closest_blocked_reason": "Customer wants to cancel their May 20 morning flights they believe they double-booked.",
+      "max_similarity": 0.5445544554455446,
+      "source_dialog_id": "airline_dialog_800"
+    },
+    {
+      "closest_blocked_reason": "Ivan Carter is calling to cancel some recent May weekend trips, add checked bags to several IAH\u2013SFO flights, and swap a family member on a late-May trip.",
+      "max_similarity": 0.4581497797356828,
+      "source_dialog_id": "airline_dialog_174"
+    },
+    {
+      "closest_blocked_reason": "You want to book a one-way flight from ORD to PHL on May 26.",
+      "max_similarity": 0.5649717514124294,
+      "source_dialog_id": "airline_dialog_838"
+    },
+    {
+      "closest_blocked_reason": "Richard Perez is calling because he realized he accidentally booked three overlapping ORD to ATL flights on May 25 and wants to cancel the extras while keeping just one.",
+      "max_similarity": 0.5827814569536424,
+      "source_dialog_id": "airline_dialog_449"
+    },
+    {
+      "closest_blocked_reason": "You booked the flight  and you want to change the passenger name on the reservation.",
+      "max_similarity": 0.48132780082987553,
+      "source_dialog_id": "airline_dialog_279"
+    },
+    {
+      "closest_blocked_reason": "Customer wants to cancel their May 20 morning flights they believe they double-booked.",
+      "max_similarity": 0.6198830409356725,
+      "source_dialog_id": "airline_dialog_232"
+    },
+    {
+      "closest_blocked_reason": "Customer says the airline messed up their May 22 flights and wants all affected May 22 trips cancelled and refunded.",
+      "max_similarity": 0.47368421052631576,
+      "source_dialog_id": "airline_dialog_263"
+    },
+    {
+      "closest_blocked_reason": "Customer wants to move their May 18 basic economy flight to a later evening option and is open to upgrading if necessary.",
+      "max_similarity": 0.4413793103448276,
+      "source_dialog_id": "airline_dialog_831"
+    },
+    {
+      "closest_blocked_reason": "Richard Perez is calling because he realized he accidentally booked three overlapping ORD to ATL flights on May 25 and wants to cancel the extras while keeping just one.",
+      "max_similarity": 0.7428571428571429,
+      "source_dialog_id": "airline_dialog_896"
+    },
+    {
+      "closest_blocked_reason": "Ella Garcia is calling about adjusting which family members are on certain May 22 afternoon flights and then about cancelling what she believes is an insured Florida trip due to illness.",
+      "max_similarity": 0.4376899696048632,
+      "source_dialog_id": "airline_dialog_196"
+    },
+    {
+      "closest_blocked_reason": "Customer wants to move their May 18 basic economy flight to a later evening option and is open to upgrading if necessary.",
+      "max_similarity": 0.5019607843137255,
+      "source_dialog_id": "airline_dialog_397"
+    },
+    {
+      "closest_blocked_reason": "Your cat is really sick and you need to get back home sooner to take care of it. \nYou want to change your upcoming flight from JFK on May 17 to a nonstop flight.",
+      "max_similarity": 0.40425531914893614,
+      "source_dialog_id": "airline_dialog_648"
+    },
+    {
+      "closest_blocked_reason": "You want to change your upcoming one stop return flight from ATL to LAX to a nonstop flight from ATL to LAS (Las Vegas).",
+      "max_similarity": 0.42424242424242425,
+      "source_dialog_id": "airline_dialog_900"
+    },
+    {
+      "closest_blocked_reason": "You want to remove one passenger from reservation OR3ZU0 and get a full refund to the original payment method.",
+      "max_similarity": 0.4976958525345622,
+      "source_dialog_id": "airline_dialog_347"
+    },
+    {
+      "closest_blocked_reason": "You want to cancel your flights in reservation ID SI5UKW and get a refund.",
+      "max_similarity": 0.588957055214724,
+      "source_dialog_id": "airline_dialog_669"
+    },
+    {
+      "closest_blocked_reason": "You want to change the flight date on reservation HKEG34 and then add 2 checked bags.",
+      "max_similarity": 0.48148148148148145,
+      "source_dialog_id": "airline_dialog_6"
+    },
+    {
+      "closest_blocked_reason": "Customer wants to adjust who is traveling on their late-May Denver to Chicago (DEN\u2192ORD) family trip so that their brother goes instead of their wife while keeping the same total number of passengers.",
+      "max_similarity": 0.4556213017751479,
+      "source_dialog_id": "airline_dialog_956"
+    },
+    {
+      "closest_blocked_reason": "You want to cancel all of your upcoming flights that only have one passenger on the reservation.",
+      "max_similarity": 0.48847926267281105,
+      "source_dialog_id": "airline_dialog_100"
+    },
+    {
+      "closest_blocked_reason": "Your cat is really sick and you need to get back home sooner to take care of it. \nYou want to change your upcoming flight from JFK on May 17 to a nonstop flight.",
+      "max_similarity": 0.40955631399317405,
+      "source_dialog_id": "airline_dialog_256"
+    },
+    {
+      "closest_blocked_reason": "User wants to modify their basic economy flight reservation to have more scheduling flexibility, and add checked baggage for their trip",
+      "max_similarity": 0.5035971223021583,
+      "source_dialog_id": "airline_dialog_721"
+    },
+    {
+      "closest_blocked_reason": "Customer wants to cancel their May 20 morning flights they believe they double-booked.",
+      "max_similarity": 0.5301204819277109,
+      "source_dialog_id": "airline_dialog_376"
+    },
+    {
+      "closest_blocked_reason": "Richard Perez is calling because he realized he accidentally booked three overlapping ORD to ATL flights on May 25 and wants to cancel the extras while keeping just one.",
+      "max_similarity": 0.7313915857605178,
+      "source_dialog_id": "airline_dialog_412"
+    },
+    {
+      "closest_blocked_reason": "Customer wants to move their May 18 basic economy flight to a later evening option and is open to upgrading if necessary.",
+      "max_similarity": 0.44155844155844154,
+      "source_dialog_id": "airline_dialog_481"
+    },
+    {
+      "closest_blocked_reason": "User wants to modify their basic economy flight reservation to have more scheduling flexibility, and add checked baggage for their trip",
+      "max_similarity": 0.45229681978798586,
+      "source_dialog_id": "airline_dialog_346"
+    },
+    {
+      "closest_blocked_reason": "Customer wants to cancel their May 20 morning flights they believe they double-booked.",
+      "max_similarity": 0.49710982658959535,
+      "source_dialog_id": "airline_dialog_999"
+    },
+    {
+      "closest_blocked_reason": "Ivan Carter is calling to cancel some recent May weekend trips, add checked bags to several IAH\u2013SFO flights, and swap a family member on a late-May trip.",
+      "max_similarity": 0.4689655172413793,
+      "source_dialog_id": "airline_dialog_409"
+    },
+    {
+      "closest_blocked_reason": "Customer wants to move their May 18 basic economy flight to a later evening option and is open to upgrading if necessary.",
+      "max_similarity": 0.4789915966386555,
+      "source_dialog_id": "airline_dialog_803"
+    },
+    {
+      "closest_blocked_reason": "You need to remove a passenger from one of your reservation.\n\nYou are also looking to book a flight form NY to go explore the West Coast.",
+      "max_similarity": 0.518796992481203,
+      "source_dialog_id": "airline_dialog_326"
+    },
+    {
+      "closest_blocked_reason": "Ella Campbell is calling about overlapping May 25 flights and then about cancelling her May 20 morning BOS\u2013MCO trips.",
+      "max_similarity": 0.4608294930875576,
+      "source_dialog_id": "airline_dialog_589"
+    },
+    {
+      "closest_blocked_reason": "Customer wants to cancel their May 20 morning flights they believe they double-booked.",
+      "max_similarity": 0.5188679245283019,
+      "source_dialog_id": "airline_dialog_588"
+    },
+    {
+      "closest_blocked_reason": "You want to change your upcoming one stop return flight from ATL to LAX to a nonstop flight from ATL to LAS (Las Vegas).",
+      "max_similarity": 0.4921875,
+      "source_dialog_id": "airline_dialog_797"
+    },
+    {
+      "closest_blocked_reason": "Customer wants to move their May 18 basic economy flight to a later evening option and is open to upgrading if necessary.",
+      "max_similarity": 0.4777327935222672,
+      "source_dialog_id": "airline_dialog_172"
+    },
+    {
+      "closest_blocked_reason": "Ivan Carter is calling to cancel some recent May weekend trips, add checked bags to several IAH\u2013SFO flights, and swap a family member on a late-May trip.",
+      "max_similarity": 0.4891640866873065,
+      "source_dialog_id": "airline_dialog_629"
+    },
+    {
+      "closest_blocked_reason": "User wants to modify their basic economy flight reservation to have more scheduling flexibility, and add checked baggage for their trip",
+      "max_similarity": 0.47719298245614034,
+      "source_dialog_id": "airline_dialog_804"
+    },
+    {
+      "closest_blocked_reason": "Ivan Carter is calling to cancel some recent May weekend trips, add checked bags to several IAH\u2013SFO flights, and swap a family member on a late-May trip.",
+      "max_similarity": 0.505338078291815,
+      "source_dialog_id": "airline_dialog_658"
+    },
+    {
+      "closest_blocked_reason": "Customer wants to cancel their May 20 morning flights they believe they double-booked.",
+      "max_similarity": 0.5495495495495496,
+      "source_dialog_id": "airline_dialog_13"
+    },
+    {
+      "closest_blocked_reason": "Customer says the airline messed up their May 22 flights and wants all affected May 22 trips cancelled and refunded.",
+      "max_similarity": 0.4630541871921182,
+      "source_dialog_id": "airline_dialog_885"
+    },
+    {
+      "closest_blocked_reason": "Customer wants to move their May 18 basic economy flight to a later evening option and is open to upgrading if necessary.",
+      "max_similarity": 0.5836909871244635,
+      "source_dialog_id": "airline_dialog_907"
+    },
+    {
+      "closest_blocked_reason": "Customer wants to move their May 18 basic economy flight to a later evening option and is open to upgrading if necessary.",
+      "max_similarity": 0.4768211920529801,
+      "source_dialog_id": "airline_dialog_406"
+    }
+  ],
+  "max_dialogues_per_intent": 1,
+  "max_rendered_tokens": 16384,
+  "seed": 42,
+  "selected_rendered_tokens": {
+    "airline_dialog_100": 13984,
+    "airline_dialog_13": 13055,
+    "airline_dialog_172": 14091,
+    "airline_dialog_174": 7428,
+    "airline_dialog_196": 10614,
+    "airline_dialog_232": 10986,
+    "airline_dialog_256": 14992,
+    "airline_dialog_262": 8774,
+    "airline_dialog_263": 11237,
+    "airline_dialog_279": 9270,
+    "airline_dialog_326": 7540,
+    "airline_dialog_346": 13028,
+    "airline_dialog_347": 11948,
+    "airline_dialog_357": 13145,
+    "airline_dialog_376": 8934,
+    "airline_dialog_397": 7515,
+    "airline_dialog_406": 9671,
+    "airline_dialog_409": 9641,
+    "airline_dialog_412": 8316,
+    "airline_dialog_449": 8212,
+    "airline_dialog_455": 8755,
+    "airline_dialog_481": 14562,
+    "airline_dialog_544": 14485,
+    "airline_dialog_554": 10208,
+    "airline_dialog_588": 12901,
+    "airline_dialog_589": 13336,
+    "airline_dialog_6": 13209,
+    "airline_dialog_600": 8499,
+    "airline_dialog_629": 9349,
+    "airline_dialog_648": 16257,
+    "airline_dialog_658": 11174,
+    "airline_dialog_669": 10290,
+    "airline_dialog_673": 11556,
+    "airline_dialog_721": 5491,
+    "airline_dialog_745": 9678,
+    "airline_dialog_766": 9634,
+    "airline_dialog_797": 11714,
+    "airline_dialog_800": 7612,
+    "airline_dialog_803": 12229,
+    "airline_dialog_804": 13059,
+    "airline_dialog_831": 15942,
+    "airline_dialog_837": 13224,
+    "airline_dialog_838": 7585,
+    "airline_dialog_875": 7012,
+    "airline_dialog_885": 8010,
+    "airline_dialog_896": 11166,
+    "airline_dialog_900": 11594,
+    "airline_dialog_907": 8486,
+    "airline_dialog_956": 8464,
+    "airline_dialog_999": 7954
+  },
+  "selection_method": "seeded_hash_rank_with_greedy_semantic_intent_cap",
+  "similarity_threshold": 0.88,
+  "source": "inclusionAI/AReaL-tau2-data",
+  "source_file_hash": "24bc4d479799ef5d5efec7a5388ea2de6bf5dc5ab7c2c83e9b5ee26fa5813804",
+  "source_revision": "86971dc03da6e7c1a7933295e05b84aab8215386",
+  "split_hash": "5501de11f92802d3b878d0b2a1eec42c05a95c30b80276422adda7a4fe0175ea",
+  "train_dialogues": 45,
+  "train_ids": [
+    "airline_dialog_745",
+    "airline_dialog_544",
+    "airline_dialog_766",
+    "airline_dialog_837",
+    "airline_dialog_600",
+    "airline_dialog_262",
+    "airline_dialog_554",
+    "airline_dialog_455",
+    "airline_dialog_673",
+    "airline_dialog_357",
+    "airline_dialog_875",
+    "airline_dialog_800",
+    "airline_dialog_174",
+    "airline_dialog_838",
+    "airline_dialog_449",
+    "airline_dialog_279",
+    "airline_dialog_232",
+    "airline_dialog_263",
+    "airline_dialog_831",
+    "airline_dialog_896",
+    "airline_dialog_196",
+    "airline_dialog_397",
+    "airline_dialog_648",
+    "airline_dialog_900",
+    "airline_dialog_347",
+    "airline_dialog_669",
+    "airline_dialog_6",
+    "airline_dialog_956",
+    "airline_dialog_100",
+    "airline_dialog_256",
+    "airline_dialog_721",
+    "airline_dialog_376",
+    "airline_dialog_412",
+    "airline_dialog_481",
+    "airline_dialog_346",
+    "airline_dialog_999",
+    "airline_dialog_409",
+    "airline_dialog_803",
+    "airline_dialog_326",
+    "airline_dialog_589",
+    "airline_dialog_588",
+    "airline_dialog_797",
+    "airline_dialog_172",
+    "airline_dialog_629",
+    "airline_dialog_804"
+  ],
+  "validation_dialogues": 5,
+  "validation_ids": [
+    "airline_dialog_658",
+    "airline_dialog_13",
+    "airline_dialog_885",
+    "airline_dialog_907",
+    "airline_dialog_406"
+  ]
+}

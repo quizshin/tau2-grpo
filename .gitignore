@@ -25,15 +25,29 @@ swanlog/
 *.pt
 *.pth
 
-# Raw and generated data are reproducible and must not be committed.
-/data/raw/
+# Generated artifacts stay local; reviewed frozen inputs are versioned below.
 /data/processed/
 experiments/**/checkpoints/
 experiments/**/trajectories/
 experiments/**/logs/
 /models/
 # Runtime storage after the flat-layout migration.
-/data/
-/results/
+/data/*
+!/data/README.md
+!/data/SHA256SUMS.json
+!/data/raw/
+/data/raw/*
+!/data/raw/areal_tau2/
+!/data/manifests/
+!/data/sft/
+/results/*
+!/results/analysis/
+/results/analysis/*
+!/results/analysis/rl_curriculum_20260912/
+!/results/analysis/rl_curriculum50_20260912/
+/results/analysis/rl_curriculum_20260912/*
+/results/analysis/rl_curriculum50_20260912/*
+!/results/analysis/rl_curriculum_20260912/manifests/
+!/results/analysis/rl_curriculum50_20260912/manifests/
 build/
 dist/

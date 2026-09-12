@@ -1,0 +1,9 @@
+{
+  "seed": 42,
+  "split_hash": "e24d1e734a8a456bc193911b27b8d47a8dcb050eae49f69b3ceb8ffe0c26f853",
+  "parent_split_hash": "a9ab61d7dab06379384e58973f9e80300254ce85ec7e8f4ab1be4bbb72946d38",
+  "source_revision": "86971dc03da6e7c1a7933295e05b84aab8215386",
+  "train": 40,
+  "purpose": "screened_curriculum_candidate",
+  "selection_source": "unchanged original 60-task selection split"
+}

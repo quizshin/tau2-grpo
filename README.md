@@ -56,7 +56,7 @@ code/
 └── tau2-bench/                   官方 Tau3 环境；Python 包名仍为 tau2
 ```
 
-本机的 `data/`、`models/`、`results/`、`.venv*` 和缓存是被 Git 忽略的运行资产。它们也可以完全放在源码目录外。项目只安装 `tau3_grpo` 包，依赖源码各自安装，避免把数据目录当作 Python 包。
+已审核的原始数据、基础划分、实际 SFT 输入和 40/50 任务课程 manifest 已纳入 Git，见 [数据说明与校验](data/README.md)。`models/`、其余 `results/`、`.venv*`、生成数据和缓存仍是被 Git 忽略的运行资产。它们也可以完全放在源码目录外。项目只安装 `tau3_grpo` 包，依赖源码各自安装，避免把数据目录当作 Python 包。
 
 ## 环境与路径
 

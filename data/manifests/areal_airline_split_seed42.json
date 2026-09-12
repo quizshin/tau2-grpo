@@ -1,0 +1,9 @@
+{
+  "seed": 42,
+  "source_revision": "86971dc03da6e7c1a7933295e05b84aab8215386",
+  "source_file_hash": "f7cd4c53c279819cf7c96da3986295f94bd613c0ee078715e8ac6238ad1e5cfb",
+  "split_hash": "a9ab61d7dab06379384e58973f9e80300254ce85ec7e8f4ab1be4bbb72946d38",
+  "train": 200,
+  "selection": 60,
+  "reserve": 888
+}

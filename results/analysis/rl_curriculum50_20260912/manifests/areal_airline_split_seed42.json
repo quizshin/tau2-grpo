@@ -1,0 +1,7 @@
+{
+  "seed": 42,
+  "split_hash": "220e695328cd8ae883a68ed617cb70a3af1357c5d9c153b65cb59542f4111823",
+  "parent_split_hash": "a9ab61d7dab06379384e58973f9e80300254ce85ec7e8f4ab1be4bbb72946d38",
+  "source_revision": "86971dc03da6e7c1a7933295e05b84aab8215386",
+  "train": 50
+}

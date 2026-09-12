@@ -1,0 +1,86 @@
+{
+  "data/manifests/areal_airline_reserve_seed42.jsonl": {
+    "bytes": 3910091,
+    "sha256": "a886a287bc8d21188db4ea58492bd1751717e554e83f4e832cab23932799d2a9"
+  },
+  "data/manifests/areal_airline_selection_seed42.jsonl": {
+    "bytes": 275880,
+    "sha256": "020f58bac76c52bbbd3dea63e3a38935bec00833531c69d79a47fd4d34c4287f"
+  },
+  "data/manifests/areal_airline_split_seed42.json": {
+    "bytes": 309,
+    "sha256": "6a42caf8cdb7775ee522a2eb047623fc824f71d5356675978087a5535392ef50"
+  },
+  "data/manifests/areal_airline_train_seed42.jsonl": {
+    "bytes": 909905,
+    "sha256": "b142eb49e026f728c84cf1b100008d93d07c8c8fd711bf38e58f7062d4942abc"
+  },
+  "data/raw/areal_tau2/tau2_rl_database/tau2_airline_db.json": {
+    "bytes": 7042725,
+    "sha256": "1af9fea6e03ca7ca15a22bb3fcaf3e351393e3fc9070b6777947da8996f7531b"
+  },
+  "data/raw/areal_tau2/tau2_rl_database/tau2_airline_new_db_1.json": {
+    "bytes": 21412748,
+    "sha256": "b69dbaee93456de6a612bd2ea5174225afe746be4e109c075a9f4db15aaa56c3"
+  },
+  "data/raw/areal_tau2/tau2_rl_database/tau2_airline_new_db_2.json": {
+    "bytes": 20841499,
+    "sha256": "a8a5201ee4f4959bd38787089957029846f79760bf26a9756f996aab166cf1ad"
+  },
+  "data/raw/areal_tau2/tau2_rl_database/tau2_airline_new_db_3.json": {
+    "bytes": 7082202,
+    "sha256": "82255bf2b6c92de4328b401c1a7d8b844d4bdd15746fe00575ee36b2044732b1"
+  },
+  "data/raw/areal_tau2/tau2_rl_database/tau2_retail_new_db_1.json": {
+    "bytes": 7635287,
+    "sha256": "785b3fe40f8f9e9ac033bf3071c3f3bd27da4108ce68532fb4170be5d3a1c07e"
+  },
+  "data/raw/areal_tau2/tau2_rl_database/tau2_retail_new_db_2.json": {
+    "bytes": 10632839,
+    "sha256": "4cfa2f845239052f0e062328dbfb2b41477639079c123e957a473f9e192c0e4a"
+  },
+  "data/raw/areal_tau2/tau2_rl_database/tau2_retail_new_db_3.json": {
+    "bytes": 4069707,
+    "sha256": "2d872f166fa11da78df4dba12905e8dcf2e71d1873ec2a8f0c26c7d2a686e6e7"
+  },
+  "data/raw/areal_tau2/tau2_rl_database/tau2_retail_new_db_4.json": {
+    "bytes": 8622494,
+    "sha256": "00b2095d6351c958b546561f791663c413e83346b1becf59cd55a1c3a49b749b"
+  },
+  "data/raw/areal_tau2/tau2_rl_database/tau2_telecom_db.toml": {
+    "bytes": 9628,
+    "sha256": "562d647ef9d7df8df91eafd8ee76036e707c8f9e32aaedc4a7fde06975aea2c0"
+  },
+  "data/raw/areal_tau2/tau2_rl_train.jsonl": {
+    "bytes": 8692745,
+    "sha256": "f7cd4c53c279819cf7c96da3986295f94bd613c0ee078715e8ac6238ad1e5cfb"
+  },
+  "data/sft/airline_sft_split_seed42.json": {
+    "bytes": 16853,
+    "sha256": "b77d6360165e7d811423c5196e32e4f65c89d295145a5e310328bf7a519dd822"
+  },
+  "data/sft/airline_sft_train_seed42.jsonl": {
+    "bytes": 1633227,
+    "sha256": "e0aec9fb93c25f4f63e6580f6cdfcc0b95c1dfabe47bdf284745fa1759d1384b"
+  },
+  "data/sft/airline_sft_validation_seed42.jsonl": {
+    "bytes": 190194,
+    "sha256": "9de13c3f1ff3f1029e7fc4599abfed19de39aa1fa2f82574d6161a1854dd4ccb"
+  },
+  "results/analysis/rl_curriculum50_20260912/manifests/areal_airline_split_seed42.json": {
+    "bytes": 272,
+    "sha256": "97457389679a7c78d28c08034dd38217f01c20c607dc2cb67923a9ca5763d8b7"
+  },
+  "results/analysis/rl_curriculum50_20260912/manifests/areal_airline_train_seed42.jsonl": {
+    "bytes": 230913,
+    "sha256": "641bde73c1495c59b5c0a87cfc84b9e00c0b5ffd2f86d10fd2205aaf2143adae"
+  },
+  "results/analysis/rl_curriculum_20260912/manifests/areal_airline_split_seed42.json": {
+    "bytes": 386,
+    "sha256": "e67447171c385168a01618082bfc08652afdf571b8cf98b22f197a9512dd41db"
+  },
+  "results/analysis/rl_curriculum_20260912/manifests/areal_airline_train_seed42.jsonl": {
+    "bytes": 165405,
+    "sha256": "79e317a824e8b55f7ce338c9f30a5811d83f2dce17dd896397eaffb003f5efbb"
+  }
+}
