@@ -1,5 +1,7 @@
 # 50 任务的正式 RL 实验矩阵（计划，尚未启动）
 
+> 用户随后要求将 50 step 控制在 6–10 小时；对应的每步 2×8 / 1×8 限时预算见 `rl_50step_time_budget_plan_20260912.md`。本文件保留 8×8×100 的完整研究预算供对照。
+
 本轮 A800 性能测试使用原 40 任务快照，只执行其中 8 个任务 × 8 次采样的一步更新，已经结束。随后读取的主工作目录方案已更新为 50 任务：保留原 40 个，增加 10 个组合任务。后续正式实验按该 50 任务版本重新初始化；不将旧 40 任务测试算作 50 任务实验的第一步。
 
 最新 manifest：`/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/analysis/rl_curriculum50_20260912/manifests/areal_airline_train_seed42.jsonl`，SHA256 `641bde73c1495c59b5c0a87cfc84b9e00c0b5ffd2f86d10fd2205aaf2143adae`。已核对 50 个唯一 ID、原 40 条完整保留。新增 10 条的工具组合分类在实际 new-off 的 45 条 SFT 输入上重新计算后仍为 7 个未见完整工具集合、3 个未见精确业务动作序列；这只是签名关系，不是语义正确性证明。
