@@ -93,3 +93,12 @@ def test_projection_rejects_missing_mask_and_empty_prompt():
         response_projection(ids, responses, None)
     with pytest.raises(ValueError, match="nonempty prompt"):
         response_projection(responses, responses, torch.ones_like(responses))
+
+
+def test_projection_backends_cannot_be_enabled_together(monkeypatch):
+    monkeypatch.setenv("VERL_QWEN35_COMPACT_HEAD", "1")
+    monkeypatch.setenv("VERL_QWEN35_LOSS_ONLY_LOGITS", "1")
+    instance = object.__new__(DataParallelPPOActor)
+    instance.config = OmegaConf.create({})
+    with pytest.raises(ValueError, match="Enable only one Qwen3.5 projection backend"):
+        instance._forward_micro_batch({}, 1.0)

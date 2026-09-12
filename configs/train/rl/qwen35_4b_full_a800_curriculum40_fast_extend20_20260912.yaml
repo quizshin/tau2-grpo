@@ -1,0 +1,6 @@
+# Continue the same pilot to 20 cumulative steps: 1,280 trajectories, 32/task.
+includes:
+- qwen35_4b_full_a800_curriculum40_fast_pilot_20260912.yaml
+launch:
+  environment:
+    TOTAL_UPDATES: '20'

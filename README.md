@@ -1,5 +1,7 @@
 # Tau3-GRPO：训练、评估与实验记录
 
+当前 `code` 已合并正式 A800 训练版本 `792d70d`，并保留本地 5090/Paratera 功能。50 任务 E0～E3 的现用配置和启动说明见 [正式执行方案](docs/formal50_fla_execution_20260912.md)；合并范围、测试和交接限制见 [本地合并记录](docs/local_training_merge_20260912.md)。下文历史短程配置不代表当前正式实验预算。
+
 > 当前本地环境需要通过 setup 重建。2026-09-10 核对时，历史 `.venv-qwen35-local` 不存在，不能直接使用旧激活命令。安装 Python 3.12 后，在本项目根目录执行 `bash setup.sh cpu-test`，创建的是 `.venv-cpu`，然后执行 `source .venv-cpu/bin/activate`。这是本地 CPU 开发环境；A800 Qwen3.5 训练环境使用 `bash setup.sh a800-qwen35`，见 env_info。 本次仅更新状态说明，未安装环境或重新运行训练。
 
 在 veRL 上进行多轮工具智能体训练，支持 Qwen2.5、Qwen3.5 系列的文本策略与用户模拟器，以及全量语言参数 / LoRA SFT 和 RL。具体模型和硬件组合的验证状态见 [实验记录](EXPERIMENTS.md)，配置存在不代表该组合已经完成真实 GPU 训练。

@@ -1,0 +1,211 @@
+{
+  "kind": "one_online_step_64_trajectories_not_formal_pilot",
+  "train_process_wall_seconds": 2159.437028604094,
+  "trajectories": 64,
+  "nonzero_advantage_tokens": 112404,
+  "checkpoint_written": false,
+  "automatic_continuation": false,
+  "fla_ieee": true,
+  "fa2": false,
+  "fp32_compute": true,
+  "actor_param_optimizer_offload": false,
+  "reference_param_offload": true,
+  "timings_seconds": {
+    "gen": 533.2683827611618,
+    "old_log_prob": 87.79218730330467,
+    "ref": 97.76238018227741,
+    "update_actor": 404.6845150012523,
+    "update_weights": 5.8499802253209054,
+    "step": 1129.7649473231286
+  },
+  "startup_and_other_process_seconds": 1029.6720812809654,
+  "model": "new-off SFT, dense Qwen3.5-4B full language parameters, thinking disabled",
+  "grad_norm": 1.618857979774475,
+  "actor_reported_memory_gib": {
+    "allocated": 32.65121364593506,
+    "reserved": 74.65234375
+  },
+  "memory_scope": "Trainer-reduced actor allocator peaks; not total nvidia-smi use or a per-rank maximum guarantee.",
+  "scorer_successes": 29,
+  "scorer_success_rate": 0.453125,
+  "verifier_scored_trajectories": 59,
+  "zero_reward_without_verifier": 5,
+  "group_kinds": {
+    "mixed": 7,
+    "all_zero": 1
+  },
+  "groups": [
+    {
+      "task_id": "airline_61",
+      "successes": 2,
+      "samples": 8,
+      "kind": "mixed",
+      "active_advantage_tokens": 9720,
+      "failure_categories": {
+        "none": 2,
+        "wrong_outcome": 6
+      }
+    },
+    {
+      "task_id": "airline_574",
+      "successes": 2,
+      "samples": 8,
+      "kind": "mixed",
+      "active_advantage_tokens": 40716,
+      "failure_categories": {
+        "none": 2,
+        "turn_limit": 2,
+        "tool_errors": 4
+      }
+    },
+    {
+      "task_id": "airline_892",
+      "successes": 7,
+      "samples": 8,
+      "kind": "mixed",
+      "active_advantage_tokens": 11222,
+      "failure_categories": {
+        "none": 7,
+        "wrong_outcome": 1
+      }
+    },
+    {
+      "task_id": "airline_367",
+      "successes": 6,
+      "samples": 8,
+      "kind": "mixed",
+      "active_advantage_tokens": 7841,
+      "failure_categories": {
+        "wrong_outcome": 2,
+        "none": 6
+      }
+    },
+    {
+      "task_id": "airline_43",
+      "successes": 2,
+      "samples": 8,
+      "kind": "mixed",
+      "active_advantage_tokens": 9258,
+      "failure_categories": {
+        "wrong_outcome": 5,
+        "none": 2,
+        "tool_errors": 1
+      }
+    },
+    {
+      "task_id": "airline_209",
+      "successes": 0,
+      "samples": 8,
+      "kind": "all_zero",
+      "active_advantage_tokens": 0,
+      "failure_categories": {
+        "wrong_outcome": 8
+      }
+    },
+    {
+      "task_id": "airline_614",
+      "successes": 7,
+      "samples": 8,
+      "kind": "mixed",
+      "active_advantage_tokens": 8200,
+      "failure_categories": {
+        "wrong_outcome": 1,
+        "none": 7
+      }
+    },
+    {
+      "task_id": "airline_739",
+      "successes": 3,
+      "samples": 8,
+      "kind": "mixed",
+      "active_advantage_tokens": 25447,
+      "failure_categories": {
+        "turn_limit": 3,
+        "tool_errors": 1,
+        "wrong_outcome": 1,
+        "none": 3
+      }
+    }
+  ],
+  "policy_tokens": 122604,
+  "active_advantage_tokens": 112404,
+  "failure_categories": {
+    "none": 29,
+    "wrong_outcome": 24,
+    "turn_limit": 5,
+    "tool_errors": 6
+  },
+  "termination_reasons": {
+    "user_stop": 59,
+    "max_steps": 5
+  },
+  "tool_parser_set_serialization_error_observed": false,
+  "unique_session_ids": 64,
+  "worker_weight_sync_audits": [
+    {
+      "pid": "113329",
+      "exact_incoming_weight_matches": true,
+      "changed_conv_tensors": 24,
+      "audited_conv_tensors": 24
+    },
+    {
+      "pid": "113330",
+      "exact_incoming_weight_matches": true,
+      "changed_conv_tensors": 24,
+      "audited_conv_tensors": 24
+    },
+    {
+      "pid": "113331",
+      "exact_incoming_weight_matches": true,
+      "changed_conv_tensors": 24,
+      "audited_conv_tensors": 24
+    },
+    {
+      "pid": "113332",
+      "exact_incoming_weight_matches": true,
+      "changed_conv_tensors": 24,
+      "audited_conv_tensors": 24
+    }
+  ],
+  "budget_estimates": [
+    {
+      "steps": 10,
+      "trajectories": 640,
+      "trajectories_per_task": 16.0,
+      "training_hours_single_step_extrapolation": 3.1382359647864684,
+      "training_hours_if_steps_20_percent_slower": 3.7658831577437617
+    },
+    {
+      "steps": 15,
+      "trajectories": 960,
+      "trajectories_per_task": 24.0,
+      "training_hours_single_step_extrapolation": 4.707353947179702,
+      "training_hours_if_steps_20_percent_slower": 5.6488247366156425
+    },
+    {
+      "steps": 20,
+      "trajectories": 1280,
+      "trajectories_per_task": 32.0,
+      "training_hours_single_step_extrapolation": 6.276471929572937,
+      "training_hours_if_steps_20_percent_slower": 7.531766315487523
+    },
+    {
+      "steps": 50,
+      "trajectories": 3200,
+      "trajectories_per_task": 80.0,
+      "training_hours_single_step_extrapolation": 15.691179823932341,
+      "training_hours_if_steps_20_percent_slower": 18.82941578871881
+    }
+  ],
+  "limitations": [
+    "One initial-SFT batch, not a speed A/B or independent evaluation.",
+    "No next rollout after the updated weights and no resume/checkpoint exercised.",
+    "Scorer success is not independent semantic/policy correctness.",
+    "Budget estimates exclude startup, simulator startup, checkpointing and evaluation."
+  ],
+  "artifact_sha256": {
+    "online-smoke/update-batches/update_000001.pkl": "e4d3a0b034cc586173a9860e07056516c820876638476b05920772f30b298970",
+    "online.log": "dc3073416662e71a325e52629e9e3838725f03121528464a4d5751d920e7d47a",
+    "online-smoke/rollouts/1.jsonl": "71245cb024d755551288dc84f0745b099521692be359cbc15e35f8ab0e5cf2b1"
+  }
+}

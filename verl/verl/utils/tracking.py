@@ -126,6 +126,10 @@ class Tracking:
 
             import swanlab
 
+            if os.environ.get("TAU3_SWANLAB_CONTINUITY") == "1":
+                from tau3_grpo.tracking.swanlab import load_tracking_env
+
+                load_tracking_env()
             SWANLAB_API_KEY = os.environ.get("SWANLAB_API_KEY", None)
             SWANLAB_LOG_DIR = os.environ.get("SWANLAB_LOG_DIR", "swanlog")
             SWANLAB_MODE = os.environ.get("SWANLAB_MODE", "cloud")
@@ -140,15 +144,24 @@ class Tracking:
                 from tau3_grpo.tracking.swanlab import rl_tracking_metadata
 
                 swanlab_config, swanlab_options = rl_tracking_metadata(swanlab_config)
-            swanlab.init(
-                project=project_name,
-                experiment_name=experiment_name,
-                config=swanlab_config,
-                logdir=SWANLAB_LOG_DIR,
-                mode=SWANLAB_MODE,
-                **swanlab_options,
-            )
-            self.logger["swanlab"] = swanlab
+            if os.environ.get("TAU3_SWANLAB_CONTINUITY") == "1":
+                from tau3_grpo.tracking.rl_continuity import start_continuous_run
+
+                self.logger["swanlab"] = start_continuous_run(
+                    swanlab, project=project_name, name=experiment_name,
+                    config=swanlab_config, options=swanlab_options,
+                    log_dir=SWANLAB_LOG_DIR, mode=SWANLAB_MODE,
+                )
+            else:
+                swanlab.init(
+                    project=project_name,
+                    experiment_name=experiment_name,
+                    config=swanlab_config,
+                    logdir=SWANLAB_LOG_DIR,
+                    mode=SWANLAB_MODE,
+                    **swanlab_options,
+                )
+                self.logger["swanlab"] = swanlab
 
         if "vemlp_wandb" in default_backend:
             import os

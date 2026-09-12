@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from tau3_grpo.launch import prepare
+from tau3_grpo.launch import load_config, prepare
 from tau3_grpo.paths import CODE_ROOT
 
 
@@ -47,3 +47,23 @@ def test_curriculum_budget_and_resume_profile(size, phase, updates, tmp_path):
         "trainer.resume_mode=disable"
     )
     assert "actor_rollout_ref.model.lora_rank=0" in result.stdout
+
+
+@pytest.mark.parametrize('phase,updates', [('pilot', 10), ('extend15', 15), ('extend20', 20)])
+def test_fast_curriculum_keeps_resume_state_and_safe_kernels(phase, updates):
+    config = load_config(CODE_ROOT / f'configs/train/rl/qwen35_4b_full_a800_curriculum40_fast_{phase}_20260912.yaml')
+    env = config['launch']['environment']
+    assert int(env['TOTAL_UPDATES']) == updates
+    assert int(env['GROUPS_PER_UPDATE']) * int(env['GROUP_SIZE']) == 64
+    assert env['RESULTS_DIR'] == '${TAU3_RUN_ROOT}/rl-curriculum40-fast-20260912/e0_seed42'
+    assert env['MODEL_PATH'] == '${TAU3_ROOT}/checkpoints/sft-merged/new-off'
+    assert env['VERL_QWEN35_FIX_PADDING'] == '1'
+    assert env['VERL_QWEN35_COMPACT_HEAD'] == '1'
+    assert env['VERL_QWEN35_COMPACT_BACKEND'] == 'checkpoint'
+    assert env['VERL_QWEN35_TRIM_PADDING'] == 'none'
+    overrides = dict(value.split('=', 1) for value in config['launch']['overrides'])
+    assert overrides['trainer.resume_mode'] == 'auto'
+    assert overrides['trainer.save_freq'] == '10'
+    assert overrides['trainer.max_actor_ckpt_to_keep'] == '1'
+    assert overrides['actor_rollout_ref.actor.checkpoint.save_contents'] == '[model,optimizer,extra]'
+    assert overrides['algorithm.rollout_correction.bypass_mode'] == 'false'

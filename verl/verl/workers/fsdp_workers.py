@@ -396,6 +396,13 @@ class ActorRolloutRefWorker(Worker, DistProfilerExtension):
         actor_model_config = AutoConfig.from_pretrained(
             local_path, trust_remote_code=trust_remote_code, attn_implementation=attn_implementation
         )
+        # Tau3-GRPO local patch: opt-in validated FP32 FLA engineering path.
+        if os.environ.get("VERL_QWEN35_FLA_IEEE", "0") == "1":
+            assert actor_model_config.model_type == "qwen3_5"
+            assert torch_dtype == torch.float32 and fsdp_config.dtype == "float32"
+            assert fsdp_config.get("mixed_precision") is None
+            from verl.utils.qwen35_fla_ieee import prepare_fla_ieee_runtime
+            prepare_fla_ieee_runtime()
         # TODO: VL models use VisionAttention, which directly uses flash_attention in transformers>=4.53
         # which will be patched by _ulysses_flash_attention_forward, but errorly misses position_ids
         # Maybe support Ulysses in VisionAttention in the future and remove this patch

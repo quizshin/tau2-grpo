@@ -1,0 +1,7 @@
+# Launch with --experiment e1.
+includes:
+- qwen35_4b_full_a800_c50_matched6h_common_20260912.yaml
+launch:
+  environment:
+    RESULTS_DIR: ${TAU3_RUN_ROOT}/rl-c50-matched6h-a800-20260912/e1_seed42
+    SWANLAB_EXPERIMENT_NAME: E1-Qwen35-4B-full-c50-g8x8-matched6h-s42

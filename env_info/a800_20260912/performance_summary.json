@@ -1,0 +1,588 @@
+{
+  "kind": "scheme_2_short_validation_not_online_RL",
+  "budget_trajectories": 5120,
+  "measurements": {
+    "real-baseline": {
+      "timings": {
+        "old_log_prob": 14.669231414794922,
+        "ref_log_prob_same_initial_weights": 14.176926612854004,
+        "forward_backward": 144.13201904296875,
+        "optimizer": 0.19263988733291626
+      },
+      "max_allocated_backward_gib": 59.80693578720093,
+      "max_reserved_backward_gib": 78.501953125,
+      "all_ranks_updated": true
+    },
+    "real-compact": {
+      "timings": {
+        "old_log_prob": 14.12910270690918,
+        "ref_log_prob_same_initial_weights": 13.669007301330566,
+        "forward_backward": 139.4750213623047,
+        "optimizer": 0.07392095029354095
+      },
+      "max_allocated_backward_gib": 31.65665626525879,
+      "max_reserved_backward_gib": 41.822265625,
+      "all_ranks_updated": true
+    },
+    "real-compact-fla": {
+      "timings": {
+        "old_log_prob": 43.4591064453125,
+        "ref_log_prob_same_initial_weights": 5.824645519256592,
+        "forward_backward": 85.45650482177734,
+        "optimizer": 0.07709050923585892
+      },
+      "max_allocated_backward_gib": 22.402034759521484,
+      "max_reserved_backward_gib": 37.72265625,
+      "all_ranks_updated": true
+    },
+    "real-compact-trim": {
+      "timings": {
+        "old_log_prob": 4.621696949005127,
+        "ref_log_prob_same_initial_weights": 4.0850067138671875,
+        "forward_backward": 30.840787887573242,
+        "optimizer": 0.23407968878746033
+      },
+      "max_allocated_backward_gib": 17.27041721343994,
+      "max_reserved_backward_gib": 28.759765625,
+      "all_ranks_updated": true
+    },
+    "real-compact-right": {
+      "timings": {
+        "old_log_prob": 6.91570520401001,
+        "ref_log_prob_same_initial_weights": 6.34028959274292,
+        "forward_backward": 53.31906509399414,
+        "optimizer": 0.07407130300998688
+      },
+      "max_allocated_backward_gib": 20.690513610839844,
+      "max_reserved_backward_gib": 31.70703125,
+      "all_ranks_updated": true
+    },
+    "real-compact-fla-native-norm": {
+      "timings": {
+        "old_log_prob": 7.659489631652832,
+        "ref_log_prob_same_initial_weights": 5.998445987701416,
+        "forward_backward": 31.086692810058594,
+        "optimizer": 0.0739801824092865
+      },
+      "max_allocated_backward_gib": 22.402034759521484,
+      "max_reserved_backward_gib": 38.3671875,
+      "all_ranks_updated": true
+    }
+  },
+  "comparisons": {
+    "real-comparison": {
+      "reference": "/root/autodl-fs/tau3-core-20260912/runs/performance-20260912/real-baseline",
+      "candidate": "/root/autodl-fs/tau3-core-20260912/runs/performance-20260912/real-compact",
+      "ranks": [
+        {
+          "rank": 0,
+          "gradient_sample_relative_l2": 0.016227196902036667,
+          "gradient_sample_cosine": 0.9998783469200134,
+          "log_prob_max_absolute": 0.0
+        },
+        {
+          "rank": 1,
+          "gradient_sample_relative_l2": 0.015726540237665176,
+          "gradient_sample_cosine": 0.9998840093612671,
+          "log_prob_max_absolute": 0.0
+        },
+        {
+          "rank": 2,
+          "gradient_sample_relative_l2": 0.006770760286599398,
+          "gradient_sample_cosine": 0.9999813437461853,
+          "log_prob_max_absolute": 0.0
+        },
+        {
+          "rank": 3,
+          "gradient_sample_relative_l2": 0.017920779064297676,
+          "gradient_sample_cosine": 0.9998465776443481,
+          "log_prob_max_absolute": 0.0
+        }
+      ],
+      "passed": true,
+      "scope": "Full gradients tested on tiny models; real-model comparisons sample up to 256 values per parameter shard."
+    },
+    "fla-real-comparison": {
+      "reference": "/root/autodl-fs/tau3-core-20260912/runs/performance-20260912/real-baseline",
+      "candidate": "/root/autodl-fs/tau3-core-20260912/runs/performance-20260912/real-compact-fla",
+      "ranks": [
+        {
+          "rank": 0,
+          "gradient_sample_relative_l2": 1.0457603931427002,
+          "gradient_sample_cosine": 0.5783822536468506,
+          "log_prob_max_absolute": 0.25415492057800293,
+          "passed": false
+        },
+        {
+          "rank": 1,
+          "gradient_sample_relative_l2": 1.0508692264556885,
+          "gradient_sample_cosine": 0.5904449820518494,
+          "log_prob_max_absolute": 0.5609447956085205,
+          "passed": false
+        },
+        {
+          "rank": 2,
+          "gradient_sample_relative_l2": 0.5273399949073792,
+          "gradient_sample_cosine": 0.8551907539367676,
+          "log_prob_max_absolute": 0.2652941644191742,
+          "passed": false
+        },
+        {
+          "rank": 3,
+          "gradient_sample_relative_l2": 1.3817216157913208,
+          "gradient_sample_cosine": 0.39321979880332947,
+          "log_prob_max_absolute": 0.37146854400634766,
+          "passed": false
+        }
+      ],
+      "passed": false,
+      "scope": "Full gradients tested on tiny models; real-model comparisons sample up to 256 values per parameter shard."
+    },
+    "trim-real-comparison": {
+      "reference": "/root/autodl-fs/tau3-core-20260912/runs/performance-20260912/real-baseline",
+      "candidate": "/root/autodl-fs/tau3-core-20260912/runs/performance-20260912/real-compact-trim",
+      "ranks": [
+        {
+          "rank": 0,
+          "gradient_sample_relative_l2": 0.9088215827941895,
+          "gradient_sample_cosine": 0.6061857342720032,
+          "log_prob_max_absolute": 1.8803179264068604,
+          "passed": false
+        },
+        {
+          "rank": 1,
+          "gradient_sample_relative_l2": 1.0498287677764893,
+          "gradient_sample_cosine": 0.5222741365432739,
+          "log_prob_max_absolute": 4.278019905090332,
+          "passed": false
+        },
+        {
+          "rank": 2,
+          "gradient_sample_relative_l2": 0.3684966266155243,
+          "gradient_sample_cosine": 0.9300650358200073,
+          "log_prob_max_absolute": 2.291067600250244,
+          "passed": false
+        },
+        {
+          "rank": 3,
+          "gradient_sample_relative_l2": 1.125931739807129,
+          "gradient_sample_cosine": 0.41160449385643005,
+          "log_prob_max_absolute": 3.793031930923462,
+          "passed": false
+        }
+      ],
+      "passed": false,
+      "scope": "Full gradients tested on tiny models; real-model comparisons sample up to 256 values per parameter shard."
+    },
+    "right-real-comparison": {
+      "reference": "/root/autodl-fs/tau3-core-20260912/runs/performance-20260912/real-baseline",
+      "candidate": "/root/autodl-fs/tau3-core-20260912/runs/performance-20260912/real-compact-right",
+      "ranks": [
+        {
+          "rank": 0,
+          "gradient_sample_relative_l2": 0.020689893513917923,
+          "gradient_sample_cosine": 0.9998095631599426,
+          "log_prob_max_absolute": 0.0,
+          "passed": true
+        },
+        {
+          "rank": 1,
+          "gradient_sample_relative_l2": 0.018704164773225784,
+          "gradient_sample_cosine": 0.9998380541801453,
+          "log_prob_max_absolute": 0.12500464916229248,
+          "passed": false
+        },
+        {
+          "rank": 2,
+          "gradient_sample_relative_l2": 0.011880624108016491,
+          "gradient_sample_cosine": 0.9999687075614929,
+          "log_prob_max_absolute": 0.18877768516540527,
+          "passed": false
+        },
+        {
+          "rank": 3,
+          "gradient_sample_relative_l2": 0.01981312967836857,
+          "gradient_sample_cosine": 0.9998109340667725,
+          "log_prob_max_absolute": 0.12530755996704102,
+          "passed": false
+        }
+      ],
+      "passed": false,
+      "scope": "Full gradients tested on tiny models; real-model comparisons sample up to 256 values per parameter shard."
+    },
+    "fla-native-norm-comparison": {
+      "reference": "/root/autodl-fs/tau3-core-20260912/runs/performance-20260912/real-baseline",
+      "candidate": "/root/autodl-fs/tau3-core-20260912/runs/performance-20260912/real-compact-fla-native-norm",
+      "ranks": [
+        {
+          "rank": 0,
+          "gradient_sample_relative_l2": 0.7653343677520752,
+          "gradient_sample_cosine": 0.7481827735900879,
+          "log_prob_max_absolute": 0.30416107177734375,
+          "passed": false
+        },
+        {
+          "rank": 1,
+          "gradient_sample_relative_l2": 0.8321470618247986,
+          "gradient_sample_cosine": 0.713916003704071,
+          "log_prob_max_absolute": 0.26343584060668945,
+          "passed": false
+        },
+        {
+          "rank": 2,
+          "gradient_sample_relative_l2": 0.26387715339660645,
+          "gradient_sample_cosine": 0.9743731021881104,
+          "log_prob_max_absolute": 0.2809133529663086,
+          "passed": false
+        },
+        {
+          "rank": 3,
+          "gradient_sample_relative_l2": 0.9516071677207947,
+          "gradient_sample_cosine": 0.6163089871406555,
+          "log_prob_max_absolute": 0.24308085441589355,
+          "passed": false
+        }
+      ],
+      "passed": false,
+      "scope": "Full gradients tested on tiny models; real-model comparisons sample up to 256 values per parameter shard."
+    },
+    "tiny-comparison": {
+      "reference": "/root/autodl-fs/tau3-core-20260912/runs/performance-20260912/tiny-baseline",
+      "candidate": "/root/autodl-fs/tau3-core-20260912/runs/performance-20260912/tiny-compact",
+      "ranks": [
+        {
+          "rank": 0,
+          "gradient_sample_relative_l2": 0.0,
+          "gradient_sample_cosine": 0.9999998807907104,
+          "log_prob_max_absolute": 0.0
+        },
+        {
+          "rank": 1,
+          "gradient_sample_relative_l2": 0.0,
+          "gradient_sample_cosine": 0.9999999403953552,
+          "log_prob_max_absolute": 0.0
+        },
+        {
+          "rank": 2,
+          "gradient_sample_relative_l2": 0.0,
+          "gradient_sample_cosine": 1.0000001192092896,
+          "log_prob_max_absolute": 0.0
+        },
+        {
+          "rank": 3,
+          "gradient_sample_relative_l2": 0.0,
+          "gradient_sample_cosine": 1.0000003576278687,
+          "log_prob_max_absolute": 0.0
+        }
+      ],
+      "passed": true,
+      "scope": "Full gradients tested on tiny models; real-model comparisons sample up to 256 values per parameter shard."
+    }
+  },
+  "rollout": {
+    "4": {
+      "kind": "one_engine_generation_only",
+      "max_num_seqs": 4,
+      "prompt_sha256": "d5b4c90befd8af40e01e7a501b47e7f1ed2e6acc718c4107e44ed5b65ff6d343",
+      "requests": 32,
+      "prompt_lengths": [
+        4134,
+        4134,
+        4149,
+        4201,
+        4223,
+        4250,
+        4493,
+        4508,
+        4633,
+        4821,
+        4983,
+        5025,
+        5222,
+        5300,
+        5415,
+        5551,
+        5801,
+        5912,
+        5997,
+        6175,
+        6355,
+        6482,
+        6742,
+        7128,
+        7818,
+        9656,
+        10455,
+        11247,
+        11856,
+        12650,
+        13460,
+        14338
+      ],
+      "gpu_memory_utilization": 0.3,
+      "results": [
+        {
+          "logprobs": null,
+          "seconds": 70.42479500873014,
+          "generated_tokens": 6095,
+          "tokens_per_second": 86.54622280752736,
+          "requests_per_second": 0.454385419169955,
+          "length_stops": 0
+        },
+        {
+          "logprobs": 0,
+          "seconds": 106.4976548338309,
+          "generated_tokens": 6095,
+          "tokens_per_second": 57.23130720117805,
+          "requests_per_second": 0.300476100153847,
+          "length_stops": 0
+        }
+      ],
+      "scope": "No environment or simulator; throughput does not prove full RL wall time."
+    },
+    "8": {
+      "kind": "one_engine_generation_only",
+      "max_num_seqs": 8,
+      "prompt_sha256": "d5b4c90befd8af40e01e7a501b47e7f1ed2e6acc718c4107e44ed5b65ff6d343",
+      "requests": 32,
+      "prompt_lengths": [
+        4134,
+        4134,
+        4149,
+        4201,
+        4223,
+        4250,
+        4493,
+        4508,
+        4633,
+        4821,
+        4983,
+        5025,
+        5222,
+        5300,
+        5415,
+        5551,
+        5801,
+        5912,
+        5997,
+        6175,
+        6355,
+        6482,
+        6742,
+        7128,
+        7818,
+        9656,
+        10455,
+        11247,
+        11856,
+        12650,
+        13460,
+        14338
+      ],
+      "gpu_memory_utilization": 0.3,
+      "results": [
+        {
+          "logprobs": null,
+          "seconds": 56.15940277930349,
+          "generated_tokens": 6384,
+          "tokens_per_second": 113.67642254117249,
+          "requests_per_second": 0.5698066292790601,
+          "length_stops": 1
+        },
+        {
+          "logprobs": 0,
+          "seconds": 59.60369161097333,
+          "generated_tokens": 6384,
+          "tokens_per_second": 107.1074597470851,
+          "requests_per_second": 0.5368794974791233,
+          "length_stops": 1
+        }
+      ],
+      "scope": "No environment or simulator; throughput does not prove full RL wall time."
+    },
+    "16": {
+      "kind": "one_engine_generation_only",
+      "max_num_seqs": 16,
+      "prompt_sha256": "d5b4c90befd8af40e01e7a501b47e7f1ed2e6acc718c4107e44ed5b65ff6d343",
+      "requests": 32,
+      "prompt_lengths": [
+        4134,
+        4134,
+        4149,
+        4201,
+        4223,
+        4250,
+        4493,
+        4508,
+        4633,
+        4821,
+        4983,
+        5025,
+        5222,
+        5300,
+        5415,
+        5551,
+        5801,
+        5912,
+        5997,
+        6175,
+        6355,
+        6482,
+        6742,
+        7128,
+        7818,
+        9656,
+        10455,
+        11247,
+        11856,
+        12650,
+        13460,
+        14338
+      ],
+      "gpu_memory_utilization": 0.3,
+      "results": [
+        {
+          "logprobs": null,
+          "seconds": 35.32792696310207,
+          "generated_tokens": 5936,
+          "tokens_per_second": 168.02570969419747,
+          "requests_per_second": 0.9057989740927087,
+          "length_stops": 0
+        },
+        {
+          "logprobs": 0,
+          "seconds": 39.21867763297632,
+          "generated_tokens": 5969,
+          "tokens_per_second": 152.19789039957516,
+          "requests_per_second": 0.8159377605606307,
+          "length_stops": 0
+        }
+      ],
+      "scope": "No environment or simulator; throughput does not prove full RL wall time."
+    }
+  },
+  "gpu_tests": {
+    "compact-final-tests": "7 passed in 73.32s (0:01:13)",
+    "concurrency-stress": "3 passed, 1 warning in 79.67s (0:01:19)",
+    "candidate-check": "Candidate resolved; 5,120 trajectories; no service or RL job launched."
+  },
+  "rollout_score_audit": {
+    "unpadded": {
+      "tokens": 619,
+      "weighted_mae": 0.008179838126925873,
+      "max_absolute": 0.2107219696044922
+    },
+    "production_left_padding": {
+      "tokens": 619,
+      "weighted_mae": 0.09035716896804474,
+      "max_absolute": 1.5818099975585938
+    }
+  },
+  "artifact_sha256": {
+    "candidate-check.log": "e092dc8d5450e45b7f238c939863e717f2917d3ba207620f80ca52550a3e095a",
+    "candidate.command.txt": "553451810c1870b48985a7269e78dd14077dd80401fd3c516c2dbadc8b331c1d",
+    "candidate.hydra.yaml": "c30eb3cefd7638a4fb1223ea4460a8e4f93dd0bb494970af95bc5e699421e2e0",
+    "candidate.launch.json": "0e92f4d02710aa45f5df73b70a9b70567b3f756938eb3eb92aa5806ec42c019f",
+    "compact-final-tests.log": "3b5b4436ff26ca18d90c8c3a00b545f4388c00b0b555a0f3e191d6f66f3511b6",
+    "compact-public-scoring-tests.log": "fc198d2a27f8bb46773c337e8ba57f803995674eb00f38c9ee71e75d8c11f3ee",
+    "compact-right-tests.log": "99fd155bcf7aeae577d98bede710a7fd8eb5e84039e5f0baeafa7db08b44f7d9",
+    "compact-trim-tests.log": "7970a734b8073f6c5d21590faa89da959bc0ee43416944a5fc357522ac9a7ed0",
+    "concurrency-stress.log": "c39671e6d7c35407d8336abd15010df9a2f10ebac128cfc7554e4a5e9fc97184",
+    "fla-native-norm-comparison.json": "812451d1d814df18baad6f32e1c73f33d6ab122ea86630259773820e13265c1c",
+    "fla-native-norm-comparison.log": "168c6cbf2e847889a3f56a05212b3478cc32e11d8cf1ce3ed97046541de4e462",
+    "fla-numerics.json": "4108863d0446386cc582cbfa81acafb2ec7573a97744e56ba8c82aab79da9e7e",
+    "fla-numerics.log": "ee86e52af2302cbb7bdb61b50818ead1285dd66d13b1e810faa77d0ce8776452",
+    "fla-real-comparison.json": "15f9b9adf04c93271f425ac3d08ef0fd905b284833f95f868fa0861187f0ee68",
+    "fla-real-comparison.log": "e4cec1bcdf8a05b7c13210dd40f97bd6d1aad62213035837af6eb085c36d2e65",
+    "real-baseline/rank0.json": "dd1f906f61dab289396be15f839ae23078da0e0f0eb6872ec95d7492c946f949",
+    "real-baseline/rank0.pt": "8ff418fcfbf55f517159904d5d4adad40ce6e80477f57678763ed6aad850eca6",
+    "real-baseline/rank1.json": "1d81d3b2886bca59a70c69f13df8b133dd419022893f8b8b72abf7fd0f241d06",
+    "real-baseline/rank1.pt": "87de59d8c89dca4e033d6df550ed8bb292bb486d35c252b9a60379cb641b6506",
+    "real-baseline/rank2.json": "28dd64770f3f1fed8c97692888810d21e79c1fb06c0b21dca8d796d0947b7ca7",
+    "real-baseline/rank2.pt": "6a0626533fdcca5c6bf03153920fc5251e0d6167b9a63ad52de2247d9c06ee51",
+    "real-baseline/rank3.json": "1e760263ab626b2c5d35ac5b5d2881a4abfc4bc56bd3bf994cf66f3ecc96ba37",
+    "real-baseline/rank3.pt": "11c1e26055653d64de7aa5aa19fae39d9c5705eea1f426775ff7a2f760eeba9a",
+    "real-baseline.log": "1124481eafdbc9b94677b0af6361c613fc45de57be90d926180df6798c2934ff",
+    "real-compact/rank0.json": "1753dd22b62480f5358ef06657b173687090b082e8466467d504ad0c9956dd88",
+    "real-compact/rank0.pt": "b4cd5b0e2a064348f75ff4f70200a31b40ec8a8c9234cea9d6aacf4a7fc32c75",
+    "real-compact/rank1.json": "5fddab6871e10d292e40d5f9521256ee3e5b22b292be78732c122a6cd4e0f3e9",
+    "real-compact/rank1.pt": "c864a49f1f2c909a78bfe9e0ca33635897bc7b9809eaeedaa60145d6928b12ae",
+    "real-compact/rank2.json": "34bae6b31ba660b3c9806f352d81e081ceb45b804ebd8a0968358c48ad6adb16",
+    "real-compact/rank2.pt": "17cfe1bdf3a733ba4cb46d9f8c5060e552fa57b66a4c1ee80a3aee02a4139f00",
+    "real-compact/rank3.json": "3caa530325a2d3d14fc4833db7eb6c6b2378b18167282b337df2ce6851aceb8e",
+    "real-compact/rank3.pt": "71bd31d95fd41e7210148b103b3985ead680bedbf2902042d4c9a2fb848392ea",
+    "real-compact-fla/rank0.json": "38db275536c37767a6ec4f1b6445de25e970695aff12e55798b82f0c0daecabb",
+    "real-compact-fla/rank0.pt": "b0c1ec76adc4fbd2fd0123feab7d5ec98327cfac841ad428cd331b674f4b1271",
+    "real-compact-fla/rank1.json": "09ef9a643eaff095dc0509af8baa777424c984bf3b6cfa1b4168a23c09c326f3",
+    "real-compact-fla/rank1.pt": "490b51a57f57cdbe1cbb35cb2b245c289b7fa96014d908332a794edcf3826097",
+    "real-compact-fla/rank2.json": "8c96d3c0ab4ab5901ca8f9abd06170d27d1603303a2e6ed80e853b5962fee2f2",
+    "real-compact-fla/rank2.pt": "7c0413992dd4560312852f3b9a9d1ef4e7790a86e76f28904225733612049a2a",
+    "real-compact-fla/rank3.json": "220ae9f44b0259bc3b53083b1d419cc1d5a558ccaf4d5e413dc086598c7f0d7b",
+    "real-compact-fla/rank3.pt": "6882794175028d1767af62f5e3af68e50f7ff8bb8e0dc8b960262e5c94c0de8a",
+    "real-compact-fla-native-norm/rank0.json": "49de63d216735c52ec147e81a9e1af34e5c870ccbbfc5b7d3f01ce45b13cfaad",
+    "real-compact-fla-native-norm/rank0.pt": "b3708490f720a101b78dfc9a887167ba2cb89cdb530d4d6cc218a99c6cc4290d",
+    "real-compact-fla-native-norm/rank1.json": "8787a5be81caafbe843eaa3615888e0af521592659954748c3213e1711e727b1",
+    "real-compact-fla-native-norm/rank1.pt": "56ab0e9314bd202b22b7c069e974a9560c6e7f302955d7b4c085a2efb0263466",
+    "real-compact-fla-native-norm/rank2.json": "1da187a8dde3a6840bbd5f05455e7f81dbec6e6d69841e83ade4f21ebf648240",
+    "real-compact-fla-native-norm/rank2.pt": "de67e726371f8427f75a416cbc79d98b9b62d23e6527735b05a14b0fd648a4ab",
+    "real-compact-fla-native-norm/rank3.json": "d4b41074b23ff20703242e7367c914d859494bc66348d6d382f756483a81394e",
+    "real-compact-fla-native-norm/rank3.pt": "fd7dad712daa372a3d77cba46c4a99186797f3d5d8d7489cf1cbe66059406333",
+    "real-compact-fla-native-norm.log": "59b534cb84b96846c8efc094e1c17b6ffd3d44558b5bb52e4a292acc5db11084",
+    "real-compact-fla.log": "0d976d89a8730f193de7d529f02cb9a16856604e32bd9bc545e1037a74b16908",
+    "real-compact-right/rank0.json": "13a11dfa8f22afdd65f8a9d0f4be78fe6ace822b00f14c132eb6ee983a01ea49",
+    "real-compact-right/rank0.pt": "e124affb00e24145ca9d6dbfb34f0d02913fe8035880abc574f5e6b379135290",
+    "real-compact-right/rank1.json": "5ac0f1331c64f6b614d4694fb357439a299132a61cc5f61e7b42c7a0b98ae065",
+    "real-compact-right/rank1.pt": "8dc464f84e8a3759e46c671595e7830202d75d59aeffdd1eedf319706674fb6b",
+    "real-compact-right/rank2.json": "97e3fe54b65b9c01f5e92ded4644bde024751d13b8ca82769efa627bdeeff450",
+    "real-compact-right/rank2.pt": "a6b91777d04bd01603f32d7def09ae72c032b439c935c941532d8a2f540e2c0a",
+    "real-compact-right/rank3.json": "7e09e901dbb72a19281a1f8fde13e4277cd8cbe51e7290749d53d6e96d0bb7bc",
+    "real-compact-right/rank3.pt": "6ad237ca5363259611c93911fc1250939cdded8a0ba36489ecf8dab4927b604a",
+    "real-compact-right.log": "295c209ab4edb35ba3a51b7581f440148e0cdbc1fbac4c4b4ad72786ef8fff96",
+    "real-compact-trim/rank0.json": "d16ee98528e3f0567d4e31ee1f6295e4acc4861cc633e2798000c197b8059027",
+    "real-compact-trim/rank0.pt": "97a22fd8669c86644f76dc732734f106468aca45cf629a9dfcc3315c609154e2",
+    "real-compact-trim/rank1.json": "c7d28097fcdce594d1384746fba61961004aa355f14b8c4c3fac19b6e215624f",
+    "real-compact-trim/rank1.pt": "ea550ae4c7a08b4c9c94701f168b648fc5efd2f72ea44b5d072f9bc791fa3c15",
+    "real-compact-trim/rank2.json": "3c5246269aea8840b7debcd5fbd45a67bba1a83ee3f1ba0fa4dc4e2fd8a0a47b",
+    "real-compact-trim/rank2.pt": "4ec0d129ff6bc33981d926cd8d7b00361c69c086ed20d4b05e7d3d39f5d87f1d",
+    "real-compact-trim/rank3.json": "6f7af4978d25f91a0479451d0e50bc722197a8199466373b5bd31b0778b0fac7",
+    "real-compact-trim/rank3.pt": "d43d0820177e6cbeee50f7fd230b9bc5628d3f3a7a249689322c0b45b661b723",
+    "real-compact-trim.log": "735f58108e456835ce16859a3bbcf6e94cf65927ef86b3a9c323eeab85f61a89",
+    "real-compact.log": "6d9cf92cafe9ebc6af803b656d8856317994d4c17250868bd92851e01b3f548b",
+    "real-comparison.json": "fc4aa5b6db97db6a1aaa91d5dcf3294052c440510ccd0a35974d6ddadd26e273",
+    "real-comparison.log": "9e428e043b9028ebfdc679431103c52f4992085caadf7cacb29fafc855e99feb",
+    "right-real-comparison.json": "023e0d713feb10a25bfd653f14931500fb579055cf48885c541332b908f386ae",
+    "right-real-comparison.log": "d37f3a5a78d937f44ea97e7bc60325322c9bec90f3b09183957cc1956fa03f19",
+    "rollout-16.json": "c20b824a81b887803187f1e8e05b0c91083ab5646bc0fb86dd79962765d55346",
+    "rollout-16.log": "cc2f738be301250638b1ea5138bd1b9ff9bb37a0f223b58bde8e85327b558c8a",
+    "rollout-16.samples.json": "32b2075a4149af487769562a29f8173ef242a2a6973f8579dd4a0a4724950ac6",
+    "rollout-4.json": "296bfee677aab7d1366a08ce590d3a70e7c36ce1110d264d7d9f0f3e5af5266a",
+    "rollout-4.log": "65b03be262bb1f86bc9b4a0e58b612189d69987e5f92ed97eb9bb6387e06e809",
+    "rollout-8.json": "04552b4e5b978c2d5057be1fe2a1b6ca0fee7ee38bd1569feba9734c6d807d4e",
+    "rollout-8.log": "a50942b963277ffdb4f8f156c72d7f79dac9e271cb368d0eaa6474c61d1a7633",
+    "rollout-8.samples.json": "ae6d6a4dda52eb6a33f2057f736dca77f11ef945e1680959776d433172a0168b",
+    "rollout-logprob-audit.json": "2d73c2e3ae9dc592d799cbed3687bdcf4401f827cf8b8e6cbab6b3c33c4b6e42",
+    "rollout-logprob-audit.log": "4bee9ce32c908febef9600272dd4a8bc5214605c85c22fbeab418e150df24a60",
+    "tiny-baseline/rank0.json": "76dd73cc577f479fea70f5cb69833ba59b9f0719c935d7014f9499cfac6e6e3e",
+    "tiny-baseline/rank0.pt": "a3771cafbce01f94fdbe479ac2a98d23a74eb9ea1467f222cb3d564cc7636167",
+    "tiny-baseline/rank1.json": "a2f5144d484e3ac6c276a852dec9d12e6259630b604106f584bb6ab96a733ba3",
+    "tiny-baseline/rank1.pt": "b07095ff7604508ce7d702406b92fe250bff31dab0b226734a181a9dceeaf241",
+    "tiny-baseline/rank2.json": "e67ecc22f5589d794009bbfc3af839f1c124c8678cba55afed49a5e4c6bbdf10",
+    "tiny-baseline/rank2.pt": "ad67289bbecf49fca3df7176b28472b3226ba65bafcd2944137894fbfc1fea17",
+    "tiny-baseline/rank3.json": "ef9b1f178fc95678a282e80dab15152f91884e8c8a9b32b01da2059001fbaf0e",
+    "tiny-baseline/rank3.pt": "0e60f92a40ea4ded79a01806375decaf264d30f1b5d4076b23f150527a7d77ab",
+    "tiny-baseline.log": "26cf65eace0cc65c10f92267856cdd5ca9d92944ee42e647554f17615e55e1d7",
+    "tiny-compact/rank0.json": "cc69e2b92d20ef884875500a2d7633275905c1d4ac94d9ce4aae7f3354014795",
+    "tiny-compact/rank0.pt": "b5dfd91d31a2bb6a5910227234baff0255288f2855850ef435f3c3148b9a2451",
+    "tiny-compact/rank1.json": "e8745d06d770324658b4636826a976040a47c9ae4a3a8c6596637ff3a5acf68c",
+    "tiny-compact/rank1.pt": "be6e03d64f8cce23d0577e3a771556b295eb94b4ab8fc234a391f7475d0a0e25",
+    "tiny-compact/rank2.json": "e9d1f22841c59ccf45984965c22458e087ff40e8434060a9a1858d31b20d7944",
+    "tiny-compact/rank2.pt": "4399f6e11a0c2e3b8db9f5677502a40dceb514c979e29b0bc3231c5c7f3fbbe6",
+    "tiny-compact/rank3.json": "a60ad5b6f49f91c7572f5dca1ed6f241256a07a3b38b5c21c9f3262187f57269",
+    "tiny-compact/rank3.pt": "319a9246af80f4b6dc7b39c52ca0d56d37552bf1bfb52621013f5ade8f22ba2b",
+    "tiny-compact.log": "d8b9a903b620a151fc8b1a9a759c6ba24fc2d63b0fa77f16060e99e96de5fc68",
+    "tiny-comparison.json": "51a89435f76bbb6f3ad2ba7aadd35fa0c7b19014fcd47851d51e27dda6050670",
+    "tiny-comparison.log": "a6ceb5ebdc729af1dfd29bacbba0595472b9777aa7ccea5180cb699e605331b9",
+    "trim-real-comparison.json": "9b755258c95012581746e4593812d5a59eb79a924c24e7be8015567c84d77b5a",
+    "trim-real-comparison.log": "8e5f4b1fad3960d4033d0a4f36ed7f38b7ab72e1b8b83fb503f4a315b70714f1"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "baseline_commit": "07146c8bb4be98698cec368e96b1d57157a46a77",
+  "files": {
+    "verl/verl/utils/qwen35_fla_ieee.py": "3de1dfd3f393da6d4b3092eead88aa3a652f6009a6677c404deb66d28a51dd9c",
+    "verl/verl/workers/fsdp_workers.py": "e69c05f9eeadb79ffa7cddae3ca6c5bfad195c4a881d35645ca87b3a1ac552f9",
+    "verl/verl/models/transformers/monkey_patch.py": "b28982ff38dfe36288bd008bd4075d176ffd63b79c08359a9609697920006c4e",
+    "configs/train/rl/qwen35_4b_full_a800_fla_online_smoke_20260912.yaml": "e18597365730d1457a37c1e74e7a6a11c5b2d72f4a925a20e61d22dba564b916",
+    "env_info/a800_20260912/run_fla_online_smoke.py": "866235ed1e8ab26de64fdf65697616d8f633e64b277de3a2ea00f08770691495",
+    "env_info/a800_20260912/launch_fla_online_smoke.sh": "3892e276aebeff7e13b89414f17a56ed963ba767f069a2ea5cc4e7f8306b5714"
+  }
+}

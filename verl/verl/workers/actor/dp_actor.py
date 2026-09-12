@@ -125,6 +125,13 @@ class DataParallelPPOActor(BasePPOActor):
         """
         calculate_sum_pi_squared = self.config.get("calculate_sum_pi_squared", False)
         sum_pi_squared_checkpointing = self.config.get("sum_pi_squared_checkpointing", False)
+        if os.environ.get("VERL_QWEN35_COMPACT_HEAD", "0") == "1":
+            if os.environ.get("VERL_QWEN35_LOSS_ONLY_LOGITS", "0") == "1":
+                raise ValueError("Enable only one Qwen3.5 projection backend: COMPACT_HEAD or LOSS_ONLY_LOGITS")
+            from verl.utils.qwen35_compact_head import compact_forward
+
+            return compact_forward(self, micro_batch, temperature, calculate_entropy,
+                int(os.environ.get("VERL_QWEN35_COMPACT_CHUNK", "256")))
         # Tau3-GRPO local patch: explicitly opt in for 32 GB Qwen3.5 profiles.
         loss_projection = os.environ.get("VERL_QWEN35_LOSS_ONLY_LOGITS", "0") == "1"
         head_chunk_size = int(os.environ.get("VERL_QWEN35_HEAD_CHUNK_SIZE", "128")) if loss_projection else 0
@@ -505,7 +512,8 @@ class DataParallelPPOActor(BasePPOActor):
         has_multi_modal_inputs = "multi_modal_inputs" in data.non_tensor_batch.keys()
 
         select_keys = ["responses", "input_ids", "attention_mask", "position_ids"]
-        if os.environ.get("VERL_QWEN35_LOSS_ONLY_LOGITS", "0") == "1":
+        if (os.environ.get("VERL_QWEN35_LOSS_ONLY_LOGITS", "0") == "1"
+                or os.environ.get("VERL_QWEN35_COMPACT_HEAD", "0") == "1"):
             select_keys.append("response_mask")
         non_tensor_select_keys = ["multi_modal_inputs"] if has_multi_modal_inputs else []
         if self.use_prefix_grouper:

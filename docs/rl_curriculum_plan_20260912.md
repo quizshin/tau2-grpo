@@ -1,5 +1,7 @@
 # RL 数据筛查与实验方案（2026-09-12 更新）
 
+> 此文保留本地 50 任务/100 步草案。当前正式训练使用 `qwen35_4b_full_a800_c50_matched6h_{e0,e1,e2,e3}_20260912.yaml`，以 [正式执行方案](formal50_fla_execution_20260912.md) 为准。40/50 任务配置已分开，旧草案不代表当前运行预算。
+
 当前方案：**保留原 40 个候选，增加 10 个组合任务，共 50 个 RL 任务；每批 8 个任务，每任务采样 8 次，先做 10 step 诊断，计划累计至 100 step＝6400 条轨迹。** 50 step 是阶段检查点，不代表已经训练充分。此次只更新方案与配置，未启动新 GPU 实验。
 
 ## 任务池与 SFT 的关系
@@ -85,11 +87,11 @@ seed42 的前 10 批有 15 个新增任务槽位，即 120 条新增组合轨迹
 
 ## 文件与配置使用
 
-为保留已有链接，三个文档/配置文件名继续沿用，其中含 `40` 的名字不再代表当前任务数量：
+为保留已有链接，历史文档名继续沿用；合并后 `curriculum40` 配置恢复为 40 任务，50 任务使用独立 `curriculum50` 配置：
 
 - 本方案：`docs/rl_curriculum_plan_20260912.md`。
 - 50 候选报告：`results/analysis/rl_curriculum_20260912/report.md`。
-- 10-step 配置：`configs/train/rl/qwen35_4b_full_a800_curriculum40_pilot_20260912.yaml`，实际读取新的 50 任务 manifest。
+- 10-step 配置：`configs/train/rl/qwen35_4b_full_a800_curriculum50_pilot_20260912.yaml`，读取 50 任务 manifest。
 
 运行时训练输入为 `results/analysis/rl_curriculum50_20260912/manifests/areal_airline_train_seed42.jsonl`；对应 sidecar 使用 50 任务自身 hash，记录父 split_hash。原 `candidate_40_manifest.jsonl` 保留为核心快照。
 
