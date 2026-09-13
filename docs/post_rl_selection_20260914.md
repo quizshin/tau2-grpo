@@ -13,8 +13,10 @@ CPU 阶段提前校验 new-off SFT，导出 E0/E1/E2 step20 的 BF16 Hugging Fac
 | 0 | SFT new-off | 8200 |
 | 1 | E0 step20 | 8201 |
 | 2 | E3 step20 | 8202 |
-| 3 | E1 step20，完成后接 E2 step20 | 8203 |
+| 3 | E1 step20 | 8203 |
 | 4 | 27B INT4 用户模拟器 | 8210 |
+
+E2 step20 排在候补队列，由最先完成评测并释放服务的策略卡接续；不会固定等待某一组较慢的评测。
 
 每个模型先独立运行固定 4 个 selection 任务各 1 次 smoke，然后执行 selection60×4。共 20 条 smoke 和 1,200 条正式轨迹，分别保存，smoke 不混入成绩。smoke 验证端点/协议/完成性，不按成功率挑选模型。
 

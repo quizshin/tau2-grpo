@@ -137,8 +137,10 @@ def test_occupied_gpu_never_launches_services(module, tmp_path, monkeypatch):
 
 def test_priority_and_frozen_command(module, tmp_path):
     assert module.SLOTS[:3] == (('sft',), ('e0',), ('e3',))
-    assert sorted(a for slot in module.SLOTS for a in slot) == ['e0', 'e1', 'e2', 'e3', 'sft']
+    assert sorted(a for slot in module.SLOTS for a in slot) == ['e0', 'e1', 'e3', 'sft']
     c = module.Controller(tmp_path, tmp_path)
+    assert c.next_pending() == 'e2'
+    assert c.next_pending() is None
     c.models['e3'] = tmp_path / 'e3'
     c.env['TAU3_USER_SERVED_MODEL_NAME'] = 'simulator'
     cmd = c.evaluation_command('e3', 8202, tmp_path / 'out', tmp_path / 'manifests', 4)

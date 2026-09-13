@@ -28,7 +28,7 @@ import urllib.request
 CODE = Path(__file__).resolve().parents[2]
 ARMS = ('e0', 'e1', 'e2', 'e3')
 # Put the SFT and GRPO baselines and combined method on the first three slots.
-SLOTS = (('sft',), ('e0',), ('e3',), ('e1', 'e2'))
+SLOTS = (('sft',), ('e0',), ('e3',), ('e1',))
 GIB = 2**30
 
 
@@ -185,6 +185,7 @@ class Controller:
         self.children = []
         self.stop_event = threading.Event()
         self.models = {}
+        self.pending = ['e2']
         self.state = {'status': 'preparing_cpu', 'models': {}, 'backups': {}}
 
     def status(self, **updates):
@@ -200,6 +201,8 @@ class Controller:
             atomic_json(self.output / 'state.json', self.state)
 
     def launch(self, args, env, logname):
+        if self.stop_event.is_set():
+            raise InterruptedError('Controller is stopping; no child launched')
         with (self.output / f'{logname}.log').open('x') as log:
             proc = subprocess.Popen(args, cwd=CODE, env=env, stdout=log, stderr=subprocess.STDOUT,
                                     start_new_session=True)
@@ -246,7 +249,8 @@ class Controller:
             if (data / 'raw/areal_tau2').resolve() not in p.parents or sha(p) != x['db_hash']:
                 raise ValueError('Selection database hash mismatch')
         plan = {'target': 'selection', 'target_step': 20, 'models': ['sft', 'e0', 'e3', 'e1', 'e2'],
-                'slots': [list(x) for x in SLOTS], 'trials': 4, 'seed': 42, 'data_seed': 42,
+                'slots': [list(x) for x in SLOTS], 'first_free_slot_queue': ['e2'],
+                'trials': 4, 'seed': 42, 'data_seed': 42,
                 'task_ids': ids, 'manifest_sha256': sha(manifest), 'manifest': str(manifest),
                 'policy_temperature': .4, 'user_temperature': 1.0, 'max_steps': 30,
                 'max_errors': 10, 'per_model_concurrency': 4, 'global_max_concurrency': 16,
@@ -331,15 +335,20 @@ class Controller:
                 raise InterruptedError('Stopped waiting for GPU release')
 
     @staticmethod
-    def gpu_pids():
-        text = subprocess.check_output(['nvidia-smi', '-i', '0,1,2,3,4',
+    def gpu_pids(devices='0,1,2,3,4'):
+        text = subprocess.check_output(['nvidia-smi', '-i', devices,
             '--query-compute-apps=pid', '--format=csv,noheader'], text=True)
         return {int(line.strip()) for line in text.splitlines() if line.strip().isdigit()}
 
     @staticmethod
     def port_free(port):
         with socket.socket() as sock:
+            sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             sock.bind(('127.0.0.1', port))
+
+    def next_pending(self):
+        with self.lock:
+            return self.pending.pop(0) if self.pending else None
 
     def wait_health(self, process, port, model):
         deadline = time.monotonic() + 1200
@@ -370,9 +379,15 @@ class Controller:
     def evaluate_slot(self, slot, arms, simulator):
         results = {}
         port = 8200 + slot
-        for arm in arms:
+        arms = list(arms)
+        while arms:
+            arm = arms.pop(0)
             policy = None
             try:
+                deadline = time.monotonic() + 120
+                while self.gpu_pids(str(slot)):
+                    if time.monotonic() >= deadline or self.stop_event.wait(2):
+                        raise RuntimeError(f'GPU {slot} still occupied; no process killed')
                 self.port_free(port)
                 checkpoint = str(self.models[arm])
                 self.model_status(arm, status='starting_service', gpu=slot, port=port)
@@ -412,6 +427,9 @@ class Controller:
             finally:
                 if policy is not None:
                     self.stop(policy)
+            pending = self.next_pending()
+            if pending:
+                arms.append(pending)
         return results
 
     def evaluate(self):
