@@ -1,0 +1,107 @@
+{
+  "started_at": 1789260737.5050976,
+  "authorization": "Move three non-RL SFT merged models; retain original paths as symlinks",
+  "models": [
+    {
+      "name": "old-off",
+      "source": "/root/autodl-fs/tau3-core-20260912/checkpoints/sft-merged/old-off",
+      "destination": "/root/tau3-sft-archive-20260913/old-off",
+      "bytes": 9098621669,
+      "files": {
+        "chat_template.jinja": {
+          "bytes": 7756,
+          "sha256": "a4aee8afcf2e0711942cf848899be66016f8d14a889ff9ede07bca099c28f715"
+        },
+        "config.json": {
+          "bytes": 2821,
+          "sha256": "6f96c1a35664be019c01f7813d061ee89a933609563b1b318e2e2c7be61fcf1f"
+        },
+        "generation_config.json": {
+          "bytes": 115,
+          "sha256": "f3a0764e07b023e09370876f1f474c43a147791391f38a6ad6a851772a25b7f6"
+        },
+        "model.safetensors": {
+          "bytes": 9078620536,
+          "sha256": "d292e836400b2b8dc410a428ad8877459ab01890b65dbf2ad87ff895a190a2c1"
+        },
+        "tokenizer.json": {
+          "bytes": 19989343,
+          "sha256": "87a7830d63fcf43bf241c3c5242e96e62dd3fdc29224ca26fed8ea333db72de4"
+        },
+        "tokenizer_config.json": {
+          "bytes": 1098,
+          "sha256": "83febe739ecefd99f984f546dfdc10149cedf293b9ee0291b99894341188b613"
+        }
+      },
+      "status": "moved_verified_symlink"
+    },
+    {
+      "name": "old-on",
+      "source": "/root/autodl-fs/tau3-core-20260912/checkpoints/sft-merged/old-on",
+      "destination": "/root/tau3-sft-archive-20260913/old-on",
+      "bytes": 9098621669,
+      "files": {
+        "chat_template.jinja": {
+          "bytes": 7756,
+          "sha256": "a4aee8afcf2e0711942cf848899be66016f8d14a889ff9ede07bca099c28f715"
+        },
+        "config.json": {
+          "bytes": 2821,
+          "sha256": "6f96c1a35664be019c01f7813d061ee89a933609563b1b318e2e2c7be61fcf1f"
+        },
+        "generation_config.json": {
+          "bytes": 115,
+          "sha256": "f3a0764e07b023e09370876f1f474c43a147791391f38a6ad6a851772a25b7f6"
+        },
+        "model.safetensors": {
+          "bytes": 9078620536,
+          "sha256": "99f05b2cef731c69b477dd66159822d0e93e95cf8eeff5ad1d90397037a27741"
+        },
+        "tokenizer.json": {
+          "bytes": 19989343,
+          "sha256": "87a7830d63fcf43bf241c3c5242e96e62dd3fdc29224ca26fed8ea333db72de4"
+        },
+        "tokenizer_config.json": {
+          "bytes": 1098,
+          "sha256": "83febe739ecefd99f984f546dfdc10149cedf293b9ee0291b99894341188b613"
+        }
+      },
+      "status": "moved_verified_symlink"
+    },
+    {
+      "name": "new-on",
+      "source": "/root/autodl-fs/tau3-core-20260912/checkpoints/sft-merged/new-on",
+      "destination": "/root/autodl-tmp/tau3-sft-archive-20260913/new-on",
+      "bytes": 9098621669,
+      "files": {
+        "chat_template.jinja": {
+          "bytes": 7756,
+          "sha256": "a4aee8afcf2e0711942cf848899be66016f8d14a889ff9ede07bca099c28f715"
+        },
+        "config.json": {
+          "bytes": 2821,
+          "sha256": "6f96c1a35664be019c01f7813d061ee89a933609563b1b318e2e2c7be61fcf1f"
+        },
+        "generation_config.json": {
+          "bytes": 115,
+          "sha256": "f3a0764e07b023e09370876f1f474c43a147791391f38a6ad6a851772a25b7f6"
+        },
+        "model.safetensors": {
+          "bytes": 9078620536,
+          "sha256": "fc0e75058a6c797215d845a09b5c4551ae8c5fc236c64bc4c58047e7d998cb07"
+        },
+        "tokenizer.json": {
+          "bytes": 19989343,
+          "sha256": "87a7830d63fcf43bf241c3c5242e96e62dd3fdc29224ca26fed8ea333db72de4"
+        },
+        "tokenizer_config.json": {
+          "bytes": 1098,
+          "sha256": "83febe739ecefd99f984f546dfdc10149cedf293b9ee0291b99894341188b613"
+        }
+      },
+      "status": "moved_verified_symlink"
+    }
+  ],
+  "completed_at": 1789260860.9686785,
+  "passed": true
+}

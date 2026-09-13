@@ -9,6 +9,8 @@ export OMP_NUM_THREADS=4 OPENBLAS_NUM_THREADS=4 HF_HUB_OFFLINE=1 TRANSFORMERS_OF
 export PYTHONUNBUFFERED=1 PYTORCH_ALLOC_CONF=expandable_segments:True
 cd "$MATCHED_CODE"
 case "${1:-run}" in
+  e1-dry-run) exec python env_info/a800_20260912/run_e1_after_e0.py --dry-run ;;
+  e1) exec python env_info/a800_20260912/run_e1_after_e0.py ;;
   dry-run) exec python env_info/a800_20260912/run_matched50.py --dry-run ;;
   run) exec python env_info/a800_20260912/run_matched50.py ;;
   *) exit 2 ;;
