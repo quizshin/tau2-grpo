@@ -68,3 +68,7 @@ TAU3_SEMANTIC_API_KEY=
 原始初测与补测文件分别保留于本地
 `results/analysis/semantic_kimi_k3_smoke_20260914_live1/`，未覆盖初测结果。
 新增包装兼容测试后，相关 CPU 测试共 52 项通过。没有启动 GPU 或 RL。
+
+后续已增加可选严格字段模式，默认 API smoke 配置启用 `slot_schema: airline_slots_v1`。
+字段归并、金额核查、扩大真实验证及无 API 重验流程见
+[严格字段验证](semantic_slots_strict_20260914.md)。上述首测数字保留为历史结果。

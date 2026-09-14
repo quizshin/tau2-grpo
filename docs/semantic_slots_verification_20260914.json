@@ -1,0 +1,229 @@
+{
+  "date": "2026-09-14",
+  "model": "Kimi-K3",
+  "real_api_requests_this_round": 21,
+  "cpu_tests_passed": 85,
+  "gpu_used": false,
+  "rl_enabled": false,
+  "first_round_corrected": {
+    "cases": 16,
+    "valid_cases": 10,
+    "pairs": 14,
+    "passed_pairs": 9,
+    "unavailable_pairs": 5
+  },
+  "final_offline_revalidation": {
+    "new_api_calls": 0,
+    "training_enabled": false,
+    "cases": 16,
+    "valid_cases": 12,
+    "pairs": 14,
+    "passed_pairs": 11,
+    "false_merges": 0,
+    "missed_merges": 0,
+    "abstained_pairs": 4,
+    "unavailable_pairs": 2,
+    "checks": [
+      {
+        "id": "equivalent_goals_and_approval",
+        "a": "approved",
+        "b": "paraphrased",
+        "expected": "merge",
+        "actual": "merge",
+        "response_available": true,
+        "passed": true
+      },
+      {
+        "id": "different_amount",
+        "a": "approved",
+        "b": "amount",
+        "expected": "separate",
+        "actual": "separate",
+        "response_available": true,
+        "passed": true
+      },
+      {
+        "id": "different_card",
+        "a": "approved",
+        "b": "card",
+        "expected": "separate",
+        "actual": "separate",
+        "response_available": true,
+        "passed": true
+      },
+      {
+        "id": "different_currency",
+        "a": "approved",
+        "b": "currency",
+        "expected": "separate",
+        "actual": "separate",
+        "response_available": true,
+        "passed": true
+      },
+      {
+        "id": "different_object",
+        "a": "approved",
+        "b": "object",
+        "expected": "separate",
+        "actual": "separate",
+        "response_available": true,
+        "passed": true
+      },
+      {
+        "id": "conditional_vs_absolute",
+        "a": "approved",
+        "b": "conditional",
+        "expected": "separate",
+        "actual": "separate",
+        "response_available": true,
+        "passed": true
+      },
+      {
+        "id": "preference_is_still_state_information",
+        "a": "approved",
+        "b": "preference",
+        "expected": "separate",
+        "actual": "abstain",
+        "response_available": true,
+        "passed": false
+      },
+      {
+        "id": "later_condition_invalidates",
+        "a": "approved",
+        "b": "later_condition",
+        "expected": "separate",
+        "actual": "separate",
+        "response_available": true,
+        "passed": true
+      },
+      {
+        "id": "identity_question_yes_abstains",
+        "a": "approved",
+        "b": "ambiguous_yes",
+        "expected": "abstain",
+        "actual": "abstain",
+        "response_available": true,
+        "passed": true
+      },
+      {
+        "id": "new_quote_not_preapproved",
+        "a": "approved",
+        "b": "changed_pending",
+        "expected": "separate",
+        "actual": "separate",
+        "response_available": true,
+        "passed": true
+      },
+      {
+        "id": "same_reconfirmed_new_offer",
+        "a": "changed_approved",
+        "b": "changed_approve_synonym",
+        "expected": "merge",
+        "actual": "abstain",
+        "response_available": false,
+        "passed": false
+      },
+      {
+        "id": "old_financial_promise_retained",
+        "a": "amount",
+        "b": "changed_approved",
+        "expected": "separate",
+        "actual": "separate",
+        "response_available": true,
+        "passed": true
+      },
+      {
+        "id": "old_offer_reference_rejected",
+        "a": "approved",
+        "b": "stale_approval",
+        "expected": "abstain",
+        "actual": "abstain",
+        "response_available": false,
+        "passed": false
+      },
+      {
+        "id": "reaffirm_does_not_duplicate_goal",
+        "a": "approved",
+        "b": "reaffirm",
+        "expected": "merge",
+        "actual": "merge",
+        "response_available": true,
+        "passed": true
+      }
+    ],
+    "errors": {
+      "preference": "invalid_currency_slot",
+      "ambiguous_yes": "unresolved_semantics:u1",
+      "changed_approve_synonym": "Semantic API transport error or timeout (ReadTimeout); no retry",
+      "stale_approval": "Semantic API transport error or timeout (ReadTimeout); no retry"
+    },
+    "provenance": {
+      "source_packets_sha256": "97ed584167918493fa52bb26a5aa8f867e07c0cd676f3c378e17bf57d6aaad76",
+      "all_source_packets_sha256": [
+        "97ed584167918493fa52bb26a5aa8f867e07c0cd676f3c378e17bf57d6aaad76",
+        "0fb54771f27289fba4456686f541a186004fe55d52dbc97841bbe2529d17bcf1"
+      ],
+      "cases_sha256": "0f903d0319e9ebf6039c0435fd44c8334a38aae11fd537f5e0903115b051f472",
+      "slot_schema": "airline_slots_v1",
+      "slots_code_sha256": "d33b91579e560e2c65a4fafdad9b0b19c5a1a1cd0874bbcdeaaeefa6846e4e7e",
+      "state_code_sha256": "366d48b07afc506392e66d6c61658053669f0c84a7ea15ee3224ac3cd3116dc7"
+    }
+  },
+  "authored_state_comparison": [
+    {
+      "id": "approved",
+      "matches_authored_state": true
+    },
+    {
+      "id": "paraphrased",
+      "matches_authored_state": true
+    },
+    {
+      "id": "amount",
+      "matches_authored_state": true
+    },
+    {
+      "id": "card",
+      "matches_authored_state": true
+    },
+    {
+      "id": "currency",
+      "matches_authored_state": true
+    },
+    {
+      "id": "object",
+      "matches_authored_state": true
+    },
+    {
+      "id": "conditional",
+      "matches_authored_state": true
+    },
+    {
+      "id": "later_condition",
+      "matches_authored_state": true
+    },
+    {
+      "id": "changed_pending",
+      "matches_authored_state": false
+    },
+    {
+      "id": "changed_approved",
+      "matches_authored_state": true
+    },
+    {
+      "id": "reaffirm",
+      "matches_authored_state": true
+    },
+    {
+      "id": "replace_goal",
+      "matches_authored_state": false
+    }
+  ],
+  "authored_responses_sha256": "ed2a27fcaee6b8f01d9ffa9f8dbb07ab89e32ee0a52994b7de78309e7488a625",
+  "scope": "Development contract cases; not independent rollout accuracy, not proof of RL improvement. Existing packets were never replaced by better-scoring responses.",
+  "remaining": [
+    "Currency-independent no-fee preference is not yet represented by the strict fee predicate.",
+    "Passenger scope and historical other-action decomposition still vary.",
+    "Two samples still have no model packet after one bounded retry."
+  ]
+}

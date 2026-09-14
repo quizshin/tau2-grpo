@@ -68,8 +68,11 @@ def canonical_semantics(value, field=''):
     return value
 
 
-def validate_packet(messages, packet):
+def validate_packet(messages, packet, *, slot_schema=None):
     """Strict schema, chronological citations, and complete text accounting."""
+    if slot_schema is not None:
+        from tau3_grpo.algorithms.anchors.semantic_slots import normalize_packet
+        packet = normalize_packet(packet, slot_schema)
     _exact_fields(packet, {'schema', 'prefix_sha256', 'events'}, 'packet')
     _require(packet['schema'] == SCHEMA and packet['prefix_sha256'] == sha256_json(messages), 'prefix_mismatch')
     _require(isinstance(packet['events'], list), 'events_not_list')
@@ -118,6 +121,9 @@ def validate_packet(messages, packet):
         if kind in ('proposal', 'question'):
             _require(role == 'assistant', 'event_requires_assistant')
         if kind == 'goal':
+            if slot_schema is not None:
+                from tau3_grpo.algorithms.anchors.semantic_slots import check_identity_evidence
+                check_identity_evidence(event, data['target'])
             _require(data['operation'] in OPERATIONS and isinstance(data['target'], dict)
                      and data['target'] and _strings(data['replaces'])
                      and data['relation'] in ('add', 'replace', 'reaffirm'), 'invalid_goal')
@@ -152,10 +158,18 @@ def validate_packet(messages, packet):
                                            if c['kind'] == 'money_mention'
                                            and ev['start'] <= c['evidence']['start'] < c['evidence']['end'] <= ev['end'])
                 terms = canonical_semantics(operation['terms'])
+                if slot_schema is not None:
+                    from tau3_grpo.algorithms.anchors.semantic_slots import check_identity_evidence, check_money_roles
+                    check_identity_evidence(event, operation['target'])
+                    check_identity_evidence(event, terms)
+                    check_money_roles(messages, event, terms)
                 for field in ('quoted_refund', 'quoted_charge'):
                     if field in terms:
                         _require({'currency': terms.get('currency'), 'amount': terms[field]} in supported_money,
                                  'unsupported_communicated_amount')
+            if slot_schema is not None:
+                from tau3_grpo.algorithms.anchors.semantic_slots import check_proposal_money_coverage
+                check_proposal_money_coverage(messages, event)
         elif kind == 'consent':
             indices = data['operation_indices']
             _require(isinstance(data['proposal_id'], str) and isinstance(indices, list) and indices
@@ -180,14 +194,18 @@ def validate_packet(messages, packet):
     return True
 
 
-def compile_state(messages, packet, *, task_id, db_hash, policy_hash, remaining_turns=None):
+def compile_state(messages, packet, *, task_id, db_hash, policy_hash, remaining_turns=None,
+                  slot_schema=None):
     """Construct an offline candidate key; no claim of model semantic accuracy.
 
     IDs and evidence positions are local references and disappear from the key.
     Exact unparsed context and historical financial proposals remain protected.
     Unknown events or invalid references yield a hard validation failure.
     """
-    validate_packet(messages, packet)
+    validate_packet(messages, packet, slot_schema=slot_schema)
+    if slot_schema is not None:
+        from tau3_grpo.algorithms.anchors.semantic_slots import normalize_packet
+        packet = normalize_packet(packet, slot_schema)
     _require(bool(task_id) and bool(db_hash) and bool(policy_hash), 'missing_environment_context')
     _require(remaining_turns is None or type(remaining_turns) is int and remaining_turns >= 0, 'invalid_remaining_turns')
     goals, constraints, proposals, consents = {}, {}, {}, {}
@@ -319,7 +337,10 @@ def compile_state(messages, packet, *, task_id, db_hash, policy_hash, remaining_
                                    if open_question['proposal_id'] else None} if open_question else None),
              'read_hash': knowledge.read_hash, 'tool_event_hash': knowledge.tool_event_hash,
              'remaining_turns': remaining_turns}
-    key = 'semantic:v1:' + sha256_json({'task': task_id, 'db': db_hash, 'policy': policy_hash, 'state': state})
+    identity = {'task': task_id, 'db': db_hash, 'policy': policy_hash, 'state': state}
+    if slot_schema is not None:
+        identity['slot_schema'] = slot_schema
+    key = 'semantic:v1:' + sha256_json(identity)
     return {'key': key, 'state': state, 'evidence_valid': True,
             'semantic_accuracy_verified': False, 'training_enabled': False}
 

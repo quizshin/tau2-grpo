@@ -29,31 +29,45 @@ async def run(config, output, *, transport=None):
     if limit is not None and (type(limit) is not int or limit <= 0):
         raise ValueError('limit must be a positive integer or null')
     cases = cases[:limit]
+    concurrency = config.get('concurrency', 1)
+    if type(concurrency) is not int or not 1 <= concurrency <= 4:
+        raise ValueError('concurrency must be between 1 and 4')
+    slot_schema = config.get('slot_schema')
+    build_request([], slot_schema=slot_schema)  # Validate switch before network/output.
+    semaphore = asyncio.Semaphore(concurrency)
     output = Path(output)
     output.mkdir(parents=True, exist_ok=False)
     results, cached = {}, {}
     # Neither pair labels nor task metadata/returns are sent to the API.
     with (output / 'packets.jsonl').open('w') as packets, (output / 'states.jsonl').open('w') as states:
-        for case in cases:
-            request = build_request(case['messages'])
-            prefix = request['prefix_sha256']
-            if prefix not in cached:
+        async def extract(request):
+            async with semaphore:
                 try:
-                    cached[prefix] = (await model.extract(request), None)
+                    packet, error = await model.extract(request), None
                 except (SemanticError, SemanticAPIError) as exc:
-                    cached[prefix] = (None, str(exc))
-                packet, error = cached[prefix]
-                packets.write(json.dumps({'prefix_sha256': prefix, 'packet': packet, 'error': error},
+                    packet, error = None, str(exc)
+                packets.write(json.dumps({'prefix_sha256': request['prefix_sha256'], 'packet': packet,
+                                         'raw_packet': model.response_packets.get(request['prefix_sha256']),
+                                         'error': error},
                                          ensure_ascii=False) + '\n')
                 packets.flush()
-            packet, error = cached[prefix]
+                return packet, error
+
+        async def process(case):
+            request = build_request(case['messages'], slot_schema=slot_schema)
+            prefix = request['prefix_sha256']
+            if prefix not in cached:
+                cached[prefix] = asyncio.create_task(extract(request))
+            packet, error = await cached[prefix]
             row = {'id': case['id'], 'key': None, 'error': error, 'simulated': False}
+            row['response_available'] = prefix in model.response_packets
             if packet is not None:
                 try:
                     compiled = compile_state(request['visible_messages'], packet,
                                              task_id=case['task_id'], db_hash=case['db_hash'],
                                              policy_hash=case['policy_hash'],
-                                             remaining_turns=case.get('remaining_turns'))
+                                             remaining_turns=case.get('remaining_turns'),
+                                             slot_schema=slot_schema)
                     row.update(key=compiled['key'], state=compiled['state'])
                 except SemanticError as exc:
                     row['error'] = str(exc)
@@ -62,20 +76,30 @@ async def run(config, output, *, transport=None):
             results[case['id']] = row
             states.write(json.dumps(row, ensure_ascii=False) + '\n')
             states.flush()
+        await asyncio.gather(*(process(case) for case in cases))
     checks = []
     for pair in dataset['pairs']:
         if pair['a'] not in results or pair['b'] not in results:
             continue
         a, b = results[pair['a']]['key'], results[pair['b']]['key']
         actual = 'abstain' if a is None or b is None else 'merge' if a == b else 'separate'
-        checks.append({**pair, 'actual': actual, 'passed': actual == pair['expected']})
+        available = results[pair['a']]['response_available'] and results[pair['b']]['response_available']
+        checks.append({**pair, 'actual': actual, 'response_available': available,
+                       'passed': available and actual == pair['expected']})
     summary = {'simulated_model': False, 'api_request_attempts': model.attempted_calls,
                'gpu_used_locally': False, 'training_enabled': False,
                'cases': len(results), 'valid_cases': sum(r['key'] is not None for r in results.values()),
                'pairs': len(checks), 'passed_pairs': sum(c['passed'] for c in checks),
+               'false_merges': sum(c['actual'] == 'merge' and c['expected'] == 'separate' for c in checks),
+               'missed_merges': sum(c['actual'] == 'separate' and c['expected'] == 'merge' for c in checks),
+               'abstained_pairs': sum(c['actual'] == 'abstain' for c in checks),
+               'unavailable_pairs': sum(not c['response_available'] for c in checks),
                'checks': checks, 'usage': model.metadata,
                'provenance': {**model.provenance, 'cases_sha256': sha256_file(config['cases']),
-                              'prompt_sha256': sha256_file(PROMPT_PATH), 'limit': limit},
+                              'prompt_sha256': sha256_file(PROMPT_PATH), 'limit': limit,
+                              'concurrency': concurrency, 'slot_schema': slot_schema,
+                              'slot_prompt_sha256': sha256_file(PROMPT_PATH.with_name('semantic_airline_slots_v1.txt'))
+                              if slot_schema is not None else None},
                'scope': 'Real-model extraction on authored contract cases; not real rollout accuracy or RL improvement.'}
     (output / 'summary.json').write_text(json.dumps(summary, ensure_ascii=False, indent=2) + '\n')
     return summary

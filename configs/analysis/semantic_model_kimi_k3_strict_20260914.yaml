@@ -1,10 +1,10 @@
-# Only the explicit audit CLI makes API calls; never used by the RL launcher.
+# Bounded real API contract audit. Existing RL configurations are unaffected.
 enabled: true
 provider: openai_compatible
 slot_schema: airline_slots_v1
 cases: tests/fixtures/semantic_model_cases_20260914.json
-# Begin with one paraphrase pair. Set null to audit the entire fixture set later.
-limit: 2
+limit: 16
+concurrency: 3
 timeout_seconds: 120
 max_tokens: 8192
 temperature: 0

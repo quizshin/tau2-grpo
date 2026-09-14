@@ -42,6 +42,7 @@ class OpenAICompatibleSemanticModel:
         self.transport = transport
         self.attempted_calls = 0
         self.metadata = []
+        self.response_packets = {}
 
     @classmethod
     def from_env(cls, config, *, transport=None):
@@ -78,8 +79,8 @@ class OpenAICompatibleSemanticModel:
                 response = await client.post(self.base_url + '/chat/completions',
                                              headers={'Authorization': 'Bearer ' + self._api_key},
                                              json=payload)
-        except httpx.HTTPError:
-            raise SemanticAPIError('Semantic API transport error or timeout; no retry') from None
+        except httpx.HTTPError as exc:
+            raise SemanticAPIError(f'Semantic API transport error or timeout ({type(exc).__name__}); no retry') from None
         if response.status_code != 200:
             raise SemanticAPIError(f'Semantic API HTTP {response.status_code}; no retry')
         try:
@@ -100,12 +101,13 @@ class OpenAICompatibleSemanticModel:
         except (ValueError, TypeError, KeyError, IndexError, AttributeError):
             raise SemanticAPIError('Semantic API returned invalid JSON/envelope') from None
         usage = body.get('usage')
+        self.response_packets[request['prefix_sha256']] = packet
         self.metadata.append({'prefix_sha256': request['prefix_sha256'],
                               'usage': {k: v for k, v in usage.items()
                                         if k in ('prompt_tokens', 'completion_tokens', 'total_tokens')
                                         and type(v) is int} if isinstance(usage, dict) else {}})
         try:
-            validate_packet(request['visible_messages'], packet)
+            validate_packet(request['visible_messages'], packet, slot_schema=request.get('slot_schema'))
         except (TypeError, KeyError, IndexError, AttributeError):
             raise SemanticAPIError('Semantic API packet has malformed field types') from None
         return packet

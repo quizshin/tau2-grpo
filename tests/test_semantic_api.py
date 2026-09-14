@@ -154,4 +154,89 @@ def test_audit_api_failure_is_abstention(monkeypatch, tmp_path):
         lambda req: httpx.Response(401, text=FAKE_KEY))))
     assert summary['valid_cases'] == 0
     assert summary['checks'][0]['actual'] == 'abstain'
+    assert summary['unavailable_pairs'] == 1
     assert all(FAKE_KEY not in p.read_text() for p in (tmp_path / 'out').iterdir())
+
+
+def test_parallel_audit_shares_prefix_request_and_bounds_concurrency(monkeypatch, tmp_path):
+    set_env(monkeypatch, tmp_path)
+    dataset = json.loads(CASES.read_text())
+    dataset['cases'] = dataset['cases'][:2] + [{**dataset['cases'][0], 'id': 'duplicate_prefix'}]
+    case_path = tmp_path / 'cases.json'
+    case_path.write_text(json.dumps(dataset))
+    settings = {**config(), 'cases': str(case_path), 'limit': 3, 'concurrency': 2}
+    packets = {p['prefix_sha256']: p for p in json.loads(PACKETS.read_text())['packets']}
+    active = peak = 0
+
+    async def handler(req):
+        nonlocal active, peak
+        active += 1
+        peak = max(peak, active)
+        await asyncio.sleep(0.01)
+        prefix = json.loads(json.loads(req.content)['messages'][1]['content'])['prefix_sha256']
+        active -= 1
+        return httpx.Response(200, json=envelope(packets[prefix]))
+
+    summary = asyncio.run(run(settings, tmp_path / 'out', transport=httpx.MockTransport(handler)))
+    assert summary['cases'] == summary['valid_cases'] == 3
+    assert summary['api_request_attempts'] == peak == 2
+    assert summary['provenance']['slot_schema'] == 'airline_slots_v1'
+    assert summary['provenance']['slot_prompt_sha256']
+
+
+def test_rejected_packet_is_saved_for_audit_without_becoming_valid(monkeypatch, tmp_path):
+    set_env(monkeypatch, tmp_path)
+    request, packet = request_and_packet()
+    packet['prefix_sha256'] = 'wrong'
+    summary = asyncio.run(run({**config(), 'limit': 1}, tmp_path / 'out',
+                             transport=httpx.MockTransport(lambda req: httpx.Response(200, json=envelope(packet)))))
+    assert summary['valid_cases'] == 0
+    saved = json.loads((tmp_path / 'out' / 'packets.jsonl').read_text())
+    assert saved['packet'] is None and saved['raw_packet'] == packet
+    assert saved['error'] == 'prefix_mismatch'
+
+
+def test_offline_replay_rejects_previously_unchecked_alias_amount(tmp_path):
+    from tau3_grpo.analysis.replay_semantic_api import run as replay
+    request, packet = request_and_packet()
+    proposal = next(e for e in packet['events'] if e['kind'] == 'proposal')
+    terms = proposal['data']['operations'][0]['terms']
+    del terms['quoted_refund']
+    terms['refund_amount'] = '999'
+    source = tmp_path / 'source'
+    source.mkdir()
+    (source / 'packets.jsonl').write_text(json.dumps({'prefix_sha256': request['prefix_sha256'],
+                                                   'packet': packet, 'error': None}) + '\n')
+    summary = replay({**config(), 'limit': 1}, source, tmp_path / 'out')
+    assert summary['new_api_calls'] == summary['valid_cases'] == 0
+    assert summary['errors']['approved'] == 'unsupported_money_role:quoted_refund'
+
+
+def test_network_failure_is_not_a_correct_semantic_abstention(monkeypatch, tmp_path):
+    set_env(monkeypatch, tmp_path)
+    dataset = json.loads(CASES.read_text())
+    dataset['cases'] = dataset['cases'][:2]
+    dataset['pairs'] = [{'a': dataset['cases'][0]['id'], 'b': dataset['cases'][1]['id'],
+                         'expected': 'abstain'}]
+    path = tmp_path / 'cases.json'
+    path.write_text(json.dumps(dataset))
+    summary = asyncio.run(run({**config(), 'cases': str(path)}, tmp_path / 'out',
+                             transport=httpx.MockTransport(lambda req: httpx.Response(500))))
+    assert summary['passed_pairs'] == 0
+    assert summary['unavailable_pairs'] == summary['abstained_pairs'] == 1
+
+
+def test_supplement_only_replaces_missing_packets(tmp_path):
+    from tau3_grpo.analysis.replay_semantic_api import run as replay
+    request, packet = request_and_packet()
+    source, extra = tmp_path / 'source', tmp_path / 'extra'
+    source.mkdir()
+    extra.mkdir()
+    base = {'prefix_sha256': request['prefix_sha256'], 'packet': None, 'error': 'transport failed'}
+    (source / 'packets.jsonl').write_text(json.dumps(base) + '\n')
+    (extra / 'packets.jsonl').write_text(json.dumps({**base, 'packet': packet, 'error': None}) + '\n')
+    result = replay({**config(), 'limit': 1}, source, tmp_path / 'out', supplements=[extra])
+    assert result['valid_cases'] == 1 and result['new_api_calls'] == 0
+    with pytest.raises(ValueError, match='only replace'):
+        replay({**config(), 'limit': 1}, extra, tmp_path / 'not_created', supplements=[extra])
+    assert not (tmp_path / 'not_created').exists()

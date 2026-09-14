@@ -1,4 +1,4 @@
-"""Replaceable semantic-model boundary; this release executes fixtures only."""
+"""Semantic request construction and an explicit, simulated fixture provider."""
 from __future__ import annotations
 
 from copy import deepcopy
@@ -17,10 +17,17 @@ class SemanticModel(Protocol):
     async def extract(self, request: dict) -> dict: ...
 
 
-def build_request(messages):
+def build_request(messages, *, slot_schema=None):
     prefix = [visible_message(m) for m in messages]
-    return {'system': PROMPT_PATH.read_text(), 'schema': SCHEMA,
+    request = {'system': PROMPT_PATH.read_text(), 'schema': SCHEMA,
             'prefix_sha256': sha256_json(prefix), 'visible_messages': prefix}
+    if slot_schema is not None:
+        from tau3_grpo.algorithms.anchors.semantic_slots import VERSION
+        if slot_schema != VERSION:
+            raise ValueError('Unsupported slot schema')
+        request['slot_schema'] = slot_schema
+        request['system'] += '\n' + PROMPT_PATH.with_name('semantic_airline_slots_v1.txt').read_text()
+    return request
 
 
 class FixtureSemanticModel:

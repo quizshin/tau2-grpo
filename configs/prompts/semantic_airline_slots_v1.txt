@@ -1,0 +1,28 @@
+
+STRICT AIRLINE SLOT VOCABULARY v1 (offline validation subset).
+Use reservation_id for both booking/reservation IDs, never booking_id.
+Allowed target keys ONLY: reservation_id, user_id_claim, action, request,
+information, source_cabin, target_cabin, passengers, date, add_bags, flight_type,
+flight_ids, origin, destination. add_bags is a nonnegative integer; passengers
+and flight_ids are explicit strings or string lists; other values are strings
+or null for explicitly unknown slots. Use business/economy as cabin names.
+Preserve IDs exactly, and distinguish user_id_claim from verified identity.
+
+Allowed terms keys ONLY: quoted_refund, quoted_charge, currency,
+refund_payment_id, charge_payment_id, refund_timing, fee_condition, insurance,
+passengers, flight_ids, date, add_bags. Use quoted_refund/quoted_charge as decimal
+strings, currency as a 3-letter uppercase code explicitly supported in the
+current proposal text. Never invent USD for 'free'. Never rename financial
+fields to refund_amount, price, cost, or nested objects. If simultaneous refund
+and charge have different currencies, output unknown (not supported by v1).
+Refund and charge must have explicit role evidence in the current assistant
+proposal. Historical or DB amounts cannot support a new quote. Preserve separate
+refund_payment_id vs charge_payment_id; do not infer one from the other.
+
+Only the following constraint predicate is supported in this initial strict
+subset: {"fee":{"op":"eq|lte|lt|gte|gt","amount":"decimal","currency":"ISO"}}.
+Do not erase any unsupported condition to fit this vocabulary: emit unknown
+with the clause as evidence instead. Free-text target/terms slots remain exact
+guards, not proof of synonym equivalence. No extra fields or unsupported nested
+structures. Local goal/proposal IDs may vary; slot names must not vary.
+If you cannot faithfully represent the complete meaning, emit unknown.
