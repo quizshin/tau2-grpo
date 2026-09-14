@@ -1,5 +1,7 @@
 # 锚点 v2 接线、部署与验证（2026-09-14）
 
+后续见 [语义规范化 v3 与原论文对照](gigpo_paper_semantic_audit_20260914.md)。v3 已作为独立候选接入；固定 DB 的真实对话诊断只从 16 增至 20 个非初始跨轨迹重复位置，尚未解决过度拆组，缺省版本未切换。
+
 锚点修复已经接入真实 `current_anchor → ToolAgentLoop → anchor_ids/spans → Tau-GiGPO` 路径并同步服务器。默认新会话及新验证配置使用 v2；历史 c50 E0–E3 配置显式固定 v1。未启动 GPU、训练、模拟器或新的 SwanLab run。
 
 ## 修复的行为
