@@ -20,7 +20,7 @@ DEFAULT_ANCHOR_VERSION = 'v1'
 
 
 def validate_version(value: str) -> str:
-    if value not in ('v1', 'v2', 'v3'):
+    if value not in ('v1', 'v2', 'v3', 'v4'):
         raise ValueError(f'unsupported anchor version: {value!r}')
     return value
 
@@ -93,8 +93,8 @@ def decision_evidence(messages: Iterable[Any], *, version: str = "v2") -> Decisi
     solely to join requests to responses, never as state features.
     """
     validate_version(version)
-    if version == "v1":
-        raise ValueError("v1 uses the legacy feature extractor")
+    if version not in ("v2", "v3"):
+        raise ValueError("decision_evidence only supports v2/v3; v1 and v4 have separate reducers")
     normalized_count = opaque_count = 0
     pending = {}
     reads: dict[str, list[str]] = {}

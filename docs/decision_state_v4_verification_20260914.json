@@ -1,0 +1,161 @@
+{
+  "holdout_lock": {
+    "selection_rule": "sha256(v4-holdout-42:task_id), excluding all reviewed task IDs",
+    "excluded": [
+      "airline_1035",
+      "airline_1059",
+      "airline_1060",
+      "airline_1073",
+      "airline_109",
+      "airline_1106",
+      "airline_1113",
+      "airline_112",
+      "airline_1143",
+      "airline_126",
+      "airline_14",
+      "airline_162"
+    ],
+    "chosen": [
+      "airline_458",
+      "airline_976",
+      "airline_994"
+    ],
+    "reducer_sha256": "0b7406611843a66a3e5d613c0d51f16b5a5e417ee01e11d6fa1b92fe6118ecca",
+    "manifest_sha256": "020f58bac76c52bbbd3dea63e3a38935bec00833531c69d79a47fd4d34c4287f",
+    "independent_human_review": false
+  },
+  "tests": {
+    "passed": 245,
+    "warnings": 2,
+    "seconds": 15.76
+  },
+  "models_called": false,
+  "gpu_used": false,
+  "replays": {
+    "pilot": {
+      "counts": {
+        "trajectories": 24,
+        "verified": 24,
+        "verified_tool_responses": 108,
+        "certified_decisions": 248,
+        "certified_noninitial_decisions": 224,
+        "emitted/v1": 248,
+        "emitted/v2": 248,
+        "emitted/v3": 248,
+        "abstained/v4": 248,
+        "abstention_reason/v4/identity_or_reservation_not_verified": 248,
+        "abstention_reason/v4/incomplete_goal": 248,
+        "abstention_reason/v4/missing_proposal": 248,
+        "abstention_reason/v4/no_scoped_decision": 248,
+        "abstention_reason/v4/unsupported_goal": 248,
+        "abstention_reason/v4/unparsed_or_unresolved_history": 224,
+        "abstention_reason/v4/write_or_unsupported_tool": 45,
+        "abstention_reason/v4/tool_error": 12
+      },
+      "partitions": {
+        "v1": {
+          "cross_trial_noninitial_repeated_decisions": 182,
+          "fraction_of_certified_noninitial": 0.8125
+        },
+        "v2": {
+          "cross_trial_noninitial_repeated_decisions": 0,
+          "fraction_of_certified_noninitial": 0.0
+        },
+        "v3": {
+          "cross_trial_noninitial_repeated_decisions": 0,
+          "fraction_of_certified_noninitial": 0.0
+        },
+        "v4": {
+          "cross_trial_noninitial_repeated_decisions": 0,
+          "fraction_of_certified_noninitial": 0.0
+        }
+      },
+      "source_sha256": {
+        "/Users/apple/Projects/program-llm/tau3_grpo_fix/perf-20260912/results/analysis/decision_pairs_20260914/source/e2/trajectories.jsonl": "c561ac450bd899eacbcbc44bd11a501263ae945db0285beb1790d03c36400a92",
+        "/Users/apple/Projects/program-llm/tau3_grpo_fix/perf-20260912/results/analysis/decision_pairs_20260914/source/e3/trajectories.jsonl": "05546ddb39679992ce0b91a92c0065089bc3b8620ad489e41dca2107b1038fa6",
+        "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/data/manifests/areal_airline_selection_seed42.jsonl": "020f58bac76c52bbbd3dea63e3a38935bec00833531c69d79a47fd4d34c4287f"
+      },
+      "code_sha256": {
+        "tau3_grpo/algorithms/anchors/semantic.py": "dcdd81bb55d3fbf8fe39833893605e73783dba32f4118de4356e20e873f86f83",
+        "tau3_grpo/algorithms/anchors/protocol.py": "7ea66a8dc1ec55bf58fdc8bbcff7c68b85cc77176149e1142d2c9920ff3f2684",
+        "tau3_grpo/algorithms/anchors/__init__.py": "8bd0641bfa2a0b6b3e50dcc27423668fad0b748f0728c9fe57d074349ca495d5",
+        "tau3_grpo/algorithms/anchors/features.py": "124f064ba0a28b45388bb76a7b09d52649139c0cb291663dd45a32b650e69024",
+        "tau3_grpo/algorithms/anchors/decision_state.py": "0b7406611843a66a3e5d613c0d51f16b5a5e417ee01e11d6fa1b92fe6118ecca",
+        "tau3_grpo/algorithms/anchors/encoder.py": "d4d1a52a8e5dfa4311de7399e53f23c1269b6c068ab3cacd2b4ba253372efeb0",
+        "tau3_grpo/algorithms/anchors/evidence.py": "30e85b2271780a2c04c895b51fd71a748445e1a3681473d0149bcc9a366abd2b",
+        "tau3_grpo/analysis/__init__.py": "88b972ff9f05712481ee812e27eb98bbaa4864bdbba02d942c9b5a89a757df38",
+        "tau3_grpo/analysis/replay_decisions.py": "575bccf07c7920e2bdffa294cde0e3b8c703ecb3b9d276614e6aad77bdf72332",
+        "tau2-bench/src/tau2/domains/airline/tools.py": "3987f21c286314cb48764f97052934ff4fd60e27a0b2e4a43423911adf8eaa26",
+        "tau2-bench/src/tau2/domains/airline/__init__.py": "48747a78fd49944aaef6f540269b5b77e558b8b996cb0f7210b80317769bc032",
+        "tau2-bench/src/tau2/domains/airline/data_model.py": "a8083e2f590e4b9b66a65d7cd50b7a0247e4fa33d6961aaeb02e4d92488b3cff",
+        "tau2-bench/src/tau2/domains/airline/utils.py": "9da26327af3d7fa94e05d48869d8b06cd8110313fc24d308993a750106b11f06",
+        "tau2-bench/src/tau2/domains/airline/environment.py": "79811f2edff311c02e889def34fb0bf116e06f15f8a72fc25bba246715f1b567",
+        "tau3_grpo/integrations/anchor_hook.py": "d00747048308bd8fe634c6bd37a6d201476997bd80335873e9b5a2ad39e02ba0",
+        "tau3_grpo/envs/adapter.py": "bc7fa00a15a2280cbd4058a1ca85b7b6e38e3012412cec9a8bf590e25980826c",
+        "tau2-bench/src/tau2/environment/environment.py": "b5357f11e2914c11ce0372af919cc1d726191b91cd97f776b8fb388ae0615350"
+      }
+    },
+    "holdout": {
+      "counts": {
+        "trajectories": 12,
+        "verified": 12,
+        "verified_tool_responses": 118,
+        "certified_decisions": 148,
+        "certified_noninitial_decisions": 136,
+        "emitted/v1": 148,
+        "emitted/v2": 148,
+        "emitted/v3": 148,
+        "abstained/v4": 148,
+        "abstention_reason/v4/identity_or_reservation_not_verified": 148,
+        "abstention_reason/v4/incomplete_goal": 148,
+        "abstention_reason/v4/missing_proposal": 148,
+        "abstention_reason/v4/no_scoped_decision": 148,
+        "abstention_reason/v4/unsupported_goal": 148,
+        "abstention_reason/v4/unparsed_or_unresolved_history": 136,
+        "abstention_reason/v4/write_or_unsupported_tool": 37,
+        "abstention_reason/v4/tool_error": 32
+      },
+      "partitions": {
+        "v1": {
+          "cross_trial_noninitial_repeated_decisions": 85,
+          "fraction_of_certified_noninitial": 0.625
+        },
+        "v2": {
+          "cross_trial_noninitial_repeated_decisions": 2,
+          "fraction_of_certified_noninitial": 0.014705882352941176
+        },
+        "v3": {
+          "cross_trial_noninitial_repeated_decisions": 2,
+          "fraction_of_certified_noninitial": 0.014705882352941176
+        },
+        "v4": {
+          "cross_trial_noninitial_repeated_decisions": 0,
+          "fraction_of_certified_noninitial": 0.0
+        }
+      },
+      "source_sha256": {
+        "/Users/apple/Projects/program-llm/tau3_grpo_fix/perf-20260912/results/analysis/decision_pairs_20260914/source/e3/trajectories.jsonl": "05546ddb39679992ce0b91a92c0065089bc3b8620ad489e41dca2107b1038fa6",
+        "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/data/manifests/areal_airline_selection_seed42.jsonl": "020f58bac76c52bbbd3dea63e3a38935bec00833531c69d79a47fd4d34c4287f"
+      },
+      "code_sha256": {
+        "tau3_grpo/algorithms/anchors/semantic.py": "dcdd81bb55d3fbf8fe39833893605e73783dba32f4118de4356e20e873f86f83",
+        "tau3_grpo/algorithms/anchors/protocol.py": "7ea66a8dc1ec55bf58fdc8bbcff7c68b85cc77176149e1142d2c9920ff3f2684",
+        "tau3_grpo/algorithms/anchors/__init__.py": "8bd0641bfa2a0b6b3e50dcc27423668fad0b748f0728c9fe57d074349ca495d5",
+        "tau3_grpo/algorithms/anchors/features.py": "124f064ba0a28b45388bb76a7b09d52649139c0cb291663dd45a32b650e69024",
+        "tau3_grpo/algorithms/anchors/decision_state.py": "0b7406611843a66a3e5d613c0d51f16b5a5e417ee01e11d6fa1b92fe6118ecca",
+        "tau3_grpo/algorithms/anchors/encoder.py": "d4d1a52a8e5dfa4311de7399e53f23c1269b6c068ab3cacd2b4ba253372efeb0",
+        "tau3_grpo/algorithms/anchors/evidence.py": "30e85b2271780a2c04c895b51fd71a748445e1a3681473d0149bcc9a366abd2b",
+        "tau3_grpo/analysis/__init__.py": "88b972ff9f05712481ee812e27eb98bbaa4864bdbba02d942c9b5a89a757df38",
+        "tau3_grpo/analysis/replay_decisions.py": "575bccf07c7920e2bdffa294cde0e3b8c703ecb3b9d276614e6aad77bdf72332",
+        "tau2-bench/src/tau2/domains/airline/tools.py": "3987f21c286314cb48764f97052934ff4fd60e27a0b2e4a43423911adf8eaa26",
+        "tau2-bench/src/tau2/domains/airline/__init__.py": "48747a78fd49944aaef6f540269b5b77e558b8b996cb0f7210b80317769bc032",
+        "tau2-bench/src/tau2/domains/airline/data_model.py": "a8083e2f590e4b9b66a65d7cd50b7a0247e4fa33d6961aaeb02e4d92488b3cff",
+        "tau2-bench/src/tau2/domains/airline/utils.py": "9da26327af3d7fa94e05d48869d8b06cd8110313fc24d308993a750106b11f06",
+        "tau2-bench/src/tau2/domains/airline/environment.py": "79811f2edff311c02e889def34fb0bf116e06f15f8a72fc25bba246715f1b567",
+        "tau3_grpo/integrations/anchor_hook.py": "d00747048308bd8fe634c6bd37a6d201476997bd80335873e9b5a2ad39e02ba0",
+        "tau3_grpo/envs/adapter.py": "bc7fa00a15a2280cbd4058a1ca85b7b6e38e3012412cec9a8bf590e25980826c",
+        "tau2-bench/src/tau2/environment/environment.py": "b5357f11e2914c11ce0372af919cc1d726191b91cd97f776b8fb388ae0615350"
+      }
+    }
+  }
+}

@@ -262,6 +262,8 @@ def steps_from_anchor_payload(
     the token stream.
     """
 
+    # v4 abstention remains an assistant time step for terminal discounting.
+    # None still denotes an observation segment and is skipped.
     records: list[StepRecord] = []
     for trajectory_index, (ids, spans) in enumerate(
         zip(anchor_ids, anchor_spans, strict=True)
@@ -278,7 +280,7 @@ def steps_from_anchor_payload(
                 StepRecord(
                     trajectory_index=trajectory_index,
                     step_index=step_index,
-                    anchor_id=str(anchor_id),
+                    anchor_id=None if anchor_id == "abstain:v4" else str(anchor_id),
                     span=parsed,
                 )
             )

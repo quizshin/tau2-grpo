@@ -149,6 +149,12 @@ def compute_tau_gigpo_verl(
     settings = _gigpo_settings(config)
     ids, spans = _anchor_payload(non_tensor_batch, batch_size)
     ids = _resolve_similarity_payload(ids, threshold=settings.pop("similarity_threshold"))
+    # v4 state equality is necessary but not sufficient: comparisons remain
+    # inside the original sampled episode group, including repeated task IDs.
+    from tau3_grpo.utils.hashing import sha256_json
+    ids = [[("structured:v4:" + sha256_json([uids[i], aid]))
+            if isinstance(aid, str) and aid.startswith("structured:v4:") else aid
+            for aid in row] for i, row in enumerate(ids)]
     steps = steps_from_anchor_payload(ids, spans)
 
     advantages_np, stats = compute_tau_gigpo_advantage(

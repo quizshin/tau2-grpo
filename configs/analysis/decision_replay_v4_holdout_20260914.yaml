@@ -1,0 +1,14 @@
+# Task-disjoint diagnostic; chosen by hash before inspecting these dialogues.
+enabled: true
+manifest: data/manifests/areal_airline_selection_seed42.jsonl
+db_root: data/raw/areal_tau2
+anchor_versions:
+- v1
+- v2
+- v3
+- v4
+comparison: json
+task_ids:
+- airline_458
+- airline_976
+- airline_994

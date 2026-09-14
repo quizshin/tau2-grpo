@@ -73,17 +73,18 @@ def replay_messages(environment, messages, *, task_id, versions=('v1','v2','v3')
             db_hash=environment.get_db_hash()
             if db_hash is None:
                 failure=fail('missing_db_hash',index);break
-            session=NS(task_id=task_id,messages=[as_object(m) for m in prefix],db_hash=lambda:db_hash)
-            request='replay-'+uuid.uuid4().hex;entry=SessionEntry(session=session);anchors={}
+            session=NS(task_id=task_id,messages=[as_object(m) for m in prefix],db_hash=lambda:db_hash,policy=environment.get_policy)
+            request='replay-'+uuid.uuid4().hex;entry=SessionEntry(session=session);anchors={};diagnostics={}
             SESSIONS.register(request,entry)
             try:
                 for version in versions:
                     entry.anchor_version=version
                     anchors[version]=current_anchor(NS(request_id=request),'assistant')
+                    if version=='v4':diagnostics[version]=deepcopy(entry.decision_diagnostics)
             finally:SESSIONS.pop(request)
             snapshots.append({'message_index':index,'assistant_step':len(snapshots),'db_hash':db_hash,
                               'policy_hash':policy_hash,'prefix_hash':sha256_json(prefix),'anchors':anchors,
-                              'verified_tool_responses':len(events),'certified_prefix':True})
+                              'verified_tool_responses':len(events),'certified_prefix':True,'decision_diagnostics':diagnostics})
             calls=raw.get('tool_calls') or []
             for call in calls:
                 if not call.get('id') or call['id'] in used_ids:
@@ -187,6 +188,12 @@ def run(config, inputs, output):
                     for s in r['snapshots']:
                         counts['certified_decisions']+=1;counts['certified_noninitial_decisions']+=int(s['assistant_step']>0)
                         for v in versions:
+                            if s['anchors'][v] in (None, 'abstain:v4'):
+                                counts['abstained/'+v]+=1
+                                for reason in s.get('decision_diagnostics',{}).get(v,{}).get('reasons',[]):
+                                    counts['abstention_reason/'+v+'/'+reason]+=1
+                                continue
+                            counts['emitted/'+v]+=1
                             # Never mix experimental arms or tasks. This analysis groups
                             # evaluation trials, NOT original training rollout groups.
                             key=(str(source),r['task_id'],s['anchors'][v])

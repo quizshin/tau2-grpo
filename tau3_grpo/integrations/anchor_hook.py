@@ -53,6 +53,24 @@ def current_anchor(agent_data: Any, segment_kind: str) -> Optional[str]:
     session = entry.session
     messages = session.messages
     version = validate_version(entry.anchor_version)
+    if version == "v4":
+        from tau3_grpo.algorithms.anchors.decision_state import ABSTAIN_ANCHOR, assess_messages
+        from tau3_grpo.utils.hashing import sha256_json
+        if entry.anchor_mode is not AnchorMode.STRUCTURED:
+            raise ValueError("v4 currently supports structured anchors only")
+        assessed = assess_messages(messages)
+        db_hash = session.db_hash()
+        policy = session.policy() if callable(getattr(session, "policy", None)) else None
+        reasons = list(assessed.reasons)
+        if db_hash is None: reasons.append("missing_db_hash")
+        if not policy: reasons.append("missing_policy")
+        entry.decision_diagnostics = {"comparable": not reasons, "reasons": sorted(set(reasons)),
+                                      "consent": assessed.state["decision"]["consent"],
+                                      "parsed_events": sum(e["kind"] != "unknown" for e in assessed.events)}
+        if reasons:
+            return ABSTAIN_ANCHOR
+        return "structured:v4:" + sha256_json({"task": session.task_id, "db": db_hash,
+                                                "policy": policy, "decision": assessed.state})
     evidence = decision_evidence(messages, version=version) if version in ("v2", "v3") else None
     state = AnchorState(
         task_id=session.task_id,

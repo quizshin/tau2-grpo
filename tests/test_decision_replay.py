@@ -104,7 +104,7 @@ def test_disabled_replay_does_not_read_inputs_or_create_output(tmp_path):
     assert not target.exists()
 
 
-@pytest.mark.parametrize('version',['v1','v2','v3'])
+@pytest.mark.parametrize('version',['v1','v2','v3','v4'])
 def test_switch_reaches_shell_ray_and_metadata_without_starting_run(tmp_path,version):
     profile=CODE_ROOT/'configs/train/rl/qwen35_4b_full_a800_c50_matched6h_e2_20260912.yaml' if version=='v1' else CODE_ROOT/f'configs/train/rl/qwen35_4b_full_a800_anchor_{version}_20260914.yaml'
     inherited={**os.environ,'TAU3_ROOT':str(tmp_path),'TAU3_RUN_ROOT':str(tmp_path/'runs'),
