@@ -1,0 +1,10 @@
+# Explicit offline invocation only. No policy/user model is constructed.
+enabled: true
+manifest: data/manifests/areal_airline_selection_seed42.jsonl
+db_root: data/raw/areal_tau2
+anchor_versions: [v1, v2, v3]
+# Match JSON after key/whitespace canonicalization. No fuzzy result matching.
+comparison: json
+# First tranche: previously reviewed cabin/date/baggage decision contexts.
+# Set [] to audit all tasks in the frozen selection manifest.
+task_ids: [airline_1035, airline_1060, airline_1106]
