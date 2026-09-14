@@ -44,8 +44,15 @@ def audit(paths):
                     prefix.append(msg)
                     confirmed='user_confirmed' in confirmation_flags(prefix)
                     if msg.role=='user':
-                        text=msg.content or '';counts['user_turns']+=1
-                        single='user_confirmed' in confirmation_flags([msg])
+                        text=msg.content or ''
+                        if '###STOP###' in text:
+                            counts['terminal_control_messages']+=1
+                            text=text.replace('###STOP###', '').strip()
+                            if not text:
+                                previously=confirmed
+                                continue
+                        counts['user_turns']+=1
+                        single='user_confirmed' in confirmation_flags([SimpleNamespace(role='user',content=text)])
                         counts['keyword_matching_user_turns']+=int(single)
                         item={'source':str(path),'task_id':row['task_id'],'trial':row.get('trial'),
                               'turn':turn,'user':text,'previous_assistant':next((x.content for x in reversed(prefix[:-1]) if x.role=='assistant' and x.content),None)}
@@ -73,5 +80,5 @@ def audit(paths):
 
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--input',type=Path,action='append',required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args()
-    result=audit(a.input);a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
+    result=audit(a.input);result['script_sha256']=hashlib.sha256(Path(__file__).read_bytes()).hexdigest();a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
     print(json.dumps({k:v for k,v in result.items() if k!='screening_examples'},ensure_ascii=False))

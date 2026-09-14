@@ -170,3 +170,18 @@ def test_padding_is_excluded_and_corrupt_padding_fails():
     before[-1,0]=1
     with pytest.raises(ValueError,match='padding'):
         analyze(data,before,config)
+
+
+def test_dialogue_screening_excludes_stop_control_messages(tmp_path):
+    from env_info.a800_20260912.dialogue_anchor_audit import audit
+    p=tmp_path/'trajectories.jsonl'
+    p.write_text(json.dumps({'task_id':'t','trial':0,'simulation':{'messages':[
+        {'role':'assistant','content':'Search first?'},
+        {'role':'user','content':'Yes, search first.'},
+        {'role':'assistant','content':'Done'},
+        {'role':'user','content':'###STOP###'},
+        {'role':'user','content':'Thanks, goodbye! ###STOP###'},
+    ]}})+'\n')
+    result=audit([p]);assert result['counts']['terminal_control_messages']==2
+    assert result['counts']['user_turns']==2
+    assert result['counts'].get('latched_after_pause_cue',0)==0
