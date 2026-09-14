@@ -72,7 +72,8 @@ def validate_packet(messages, packet, *, slot_schema=None):
     """Strict schema, chronological citations, and complete text accounting."""
     if slot_schema is not None:
         from tau3_grpo.algorithms.anchors.semantic_slots import normalize_packet
-        packet = normalize_packet(packet, slot_schema)
+        packet = normalize_packet(packet, slot_schema, messages=messages)
+    operations = OPERATIONS | ({'remove_passenger'} if slot_schema == 'airline_slots_v2' else set())
     _exact_fields(packet, {'schema', 'prefix_sha256', 'events'}, 'packet')
     _require(packet['schema'] == SCHEMA and packet['prefix_sha256'] == sha256_json(messages), 'prefix_mismatch')
     _require(isinstance(packet['events'], list), 'events_not_list')
@@ -124,7 +125,7 @@ def validate_packet(messages, packet, *, slot_schema=None):
             if slot_schema is not None:
                 from tau3_grpo.algorithms.anchors.semantic_slots import check_identity_evidence
                 check_identity_evidence(event, data['target'])
-            _require(data['operation'] in OPERATIONS and isinstance(data['target'], dict)
+            _require(data['operation'] in operations and isinstance(data['target'], dict)
                      and data['target'] and _strings(data['replaces'])
                      and data['relation'] in ('add', 'replace', 'reaffirm'), 'invalid_goal')
             _require((data['relation'] == 'add' and not data['replaces'])
@@ -140,7 +141,7 @@ def validate_packet(messages, packet, *, slot_schema=None):
                      and isinstance(data['operations'], list) and data['operations'], 'invalid_proposal')
             for operation in data['operations']:
                 _exact_fields(operation, {'operation', 'target', 'terms', 'goal_ids'}, 'proposal_operation')
-                _require(operation['operation'] in OPERATIONS and isinstance(operation['target'], dict)
+                _require(operation['operation'] in operations and isinstance(operation['target'], dict)
                          and operation['target'] and isinstance(operation['terms'], dict)
                          and _strings(operation['goal_ids'])
                          and set(operation['goal_ids']) <= set(data['goal_ids']), 'invalid_operation')
@@ -205,7 +206,7 @@ def compile_state(messages, packet, *, task_id, db_hash, policy_hash, remaining_
     validate_packet(messages, packet, slot_schema=slot_schema)
     if slot_schema is not None:
         from tau3_grpo.algorithms.anchors.semantic_slots import normalize_packet
-        packet = normalize_packet(packet, slot_schema)
+        packet = normalize_packet(packet, slot_schema, messages=messages)
     _require(bool(task_id) and bool(db_hash) and bool(policy_hash), 'missing_environment_context')
     _require(remaining_turns is None or type(remaining_turns) is int and remaining_turns >= 0, 'invalid_remaining_turns')
     goals, constraints, proposals, consents = {}, {}, {}, {}

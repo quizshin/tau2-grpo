@@ -60,7 +60,10 @@ def slots(value, *, terms=False):
     return result
 
 
-def normalize_packet(packet, version):
+def normalize_packet(packet, version, *, messages=None):
+    if version == 'airline_slots_v2':
+        from tau3_grpo.algorithms.anchors.semantic_slots_v2 import normalize_packet as v2
+        return v2(packet, messages if messages is not None else [])
     if version != VERSION:
         fail('unsupported_slot_schema')
     normalized = deepcopy(packet)

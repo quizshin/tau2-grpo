@@ -30,7 +30,13 @@ def run(config, source, output, *, supplements=()):
             packets[prefix] = row
         source_hashes.append(sha256_file(path))
     dataset = json.loads(Path(config['cases']).read_text())
-    cases = dataset['cases'][:config.get('limit', 2)]
+    cases = dataset['cases']
+    if config.get('case_ids') is not None:
+        ids = config['case_ids']
+        if not isinstance(ids, list) or not ids or len(set(ids)) != len(ids) or not set(ids) <= {c['id'] for c in cases}:
+            raise ValueError('case_ids must select unique known cases')
+        cases = [c for c in cases if c['id'] in ids]
+    cases = cases[:config.get('limit', 2)]
     results = {}
     for case in cases:
         request = build_request(case['messages'], slot_schema=config.get('slot_schema'))
@@ -74,7 +80,10 @@ def run(config, source, output, *, supplements=()):
                               'all_source_packets_sha256': source_hashes,
                               'cases_sha256': sha256_file(config['cases']),
                               'slot_schema': config.get('slot_schema'),
+                              'case_ids': config.get('case_ids'), 'limit': config.get('limit', 2),
                               'slots_code_sha256': sha256_file(root / 'tau3_grpo/algorithms/anchors/semantic_slots.py'),
+                              'slots_v2_code_sha256': sha256_file(root / 'tau3_grpo/algorithms/anchors/semantic_slots_v2.py')
+                              if config.get('slot_schema') == 'airline_slots_v2' else None,
                               'state_code_sha256': sha256_file(root / 'tau3_grpo/algorithms/anchors/semantic_state.py')}}
     output.mkdir(parents=True, exist_ok=False)
     (output / 'packets.jsonl').write_text(''.join(json.dumps(r, ensure_ascii=False) + '\n'

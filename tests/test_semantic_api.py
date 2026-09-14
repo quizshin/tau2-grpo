@@ -74,6 +74,16 @@ def test_timeout_is_redacted():
     assert FAKE_KEY not in str(exc.value)
 
 
+def test_total_deadline_bounds_even_a_slow_transport():
+    async def handler(req):
+        await asyncio.sleep(1)
+        pytest.fail('Deadline should cancel transport')
+    client = model(handler, timeout=0.01)
+    with pytest.raises(SemanticAPIError, match='total deadline'):
+        asyncio.run(client.extract(request_and_packet()[0]))
+    assert len(client.request_timings) == 1
+
+
 @pytest.mark.parametrize('body', [None, {'choices': []}, {'choices': [None]}, envelope({}, 'length'),
                                  {'choices': [{'finish_reason': 'stop', 'message': {'content': 'oops'}}]},
                                  envelope([])])

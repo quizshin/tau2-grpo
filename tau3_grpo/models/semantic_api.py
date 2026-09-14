@@ -1,9 +1,11 @@
 """Opt-in OpenAI-compatible semantic extraction, separate from rollout clients."""
 from __future__ import annotations
 
+import asyncio
 import json
 import os
 import re
+import time
 from pathlib import Path
 from urllib.parse import urlsplit
 
@@ -43,6 +45,7 @@ class OpenAICompatibleSemanticModel:
         self.attempted_calls = 0
         self.metadata = []
         self.response_packets = {}
+        self.request_timings = []
 
     @classmethod
     def from_env(cls, config, *, transport=None):
@@ -73,14 +76,20 @@ class OpenAICompatibleSemanticModel:
                                     ensure_ascii=False)}]}
         # No special thinking/JSON-mode flags: provider support has not been verified.
         self.attempted_calls += 1
+        started = time.monotonic()
         try:
-            async with httpx.AsyncClient(timeout=self.timeout, transport=self.transport,
+            async with asyncio.timeout(self.timeout), httpx.AsyncClient(timeout=self.timeout, transport=self.transport,
                                          follow_redirects=False) as client:
                 response = await client.post(self.base_url + '/chat/completions',
                                              headers={'Authorization': 'Bearer ' + self._api_key},
                                              json=payload)
         except httpx.HTTPError as exc:
             raise SemanticAPIError(f'Semantic API transport error or timeout ({type(exc).__name__}); no retry') from None
+        except TimeoutError:
+            raise SemanticAPIError('Semantic API total deadline exceeded; no retry') from None
+        finally:
+            self.request_timings.append({'prefix_sha256': request['prefix_sha256'],
+                                         'elapsed_seconds': round(time.monotonic()-started, 3)})
         if response.status_code != 200:
             raise SemanticAPIError(f'Semantic API HTTP {response.status_code}; no retry')
         try:

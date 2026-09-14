@@ -1,0 +1,16 @@
+# Three protocol targets plus the two previously unavailable cases.
+enabled: true
+provider: openai_compatible
+slot_schema: airline_slots_v2
+cases: tests/fixtures/semantic_model_cases_20260914.json
+case_ids:
+  - preference
+  - replace_goal
+  - changed_pending
+  - changed_approve_synonym
+  - stale_approval
+limit: null
+concurrency: 1
+timeout_seconds: 180
+max_tokens: 8192
+temperature: 0

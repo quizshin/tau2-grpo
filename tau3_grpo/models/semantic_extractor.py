@@ -13,6 +13,12 @@ from tau3_grpo.utils.hashing import sha256_json, sha256_file
 PROMPT_PATH = Path(__file__).resolve().parents[2] / 'configs/prompts/semantic_events_v1.txt'
 
 
+def slot_prompt_path(version):
+    if version not in ('airline_slots_v1', 'airline_slots_v2'):
+        raise ValueError('Unsupported slot schema')
+    return PROMPT_PATH.with_name('semantic_' + version + '.txt')
+
+
 class SemanticModel(Protocol):
     async def extract(self, request: dict) -> dict: ...
 
@@ -22,11 +28,8 @@ def build_request(messages, *, slot_schema=None):
     request = {'system': PROMPT_PATH.read_text(), 'schema': SCHEMA,
             'prefix_sha256': sha256_json(prefix), 'visible_messages': prefix}
     if slot_schema is not None:
-        from tau3_grpo.algorithms.anchors.semantic_slots import VERSION
-        if slot_schema != VERSION:
-            raise ValueError('Unsupported slot schema')
         request['slot_schema'] = slot_schema
-        request['system'] += '\n' + PROMPT_PATH.with_name('semantic_airline_slots_v1.txt').read_text()
+        request['system'] += '\n' + slot_prompt_path(slot_schema).read_text()
     return request
 
 

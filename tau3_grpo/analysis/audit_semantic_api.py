@@ -10,7 +10,7 @@ import yaml
 
 from tau3_grpo.algorithms.anchors.semantic_state import SemanticError, compile_state
 from tau3_grpo.models.semantic_api import OpenAICompatibleSemanticModel, SemanticAPIError
-from tau3_grpo.models.semantic_extractor import PROMPT_PATH, build_request
+from tau3_grpo.models.semantic_extractor import PROMPT_PATH, build_request, slot_prompt_path
 from tau3_grpo.utils.hashing import sha256_file
 
 
@@ -25,6 +25,12 @@ async def run(config, output, *, transport=None):
     cases = dataset['cases']
     if len({c['id'] for c in cases}) != len(cases):
         raise ValueError('Duplicate case IDs')
+    case_ids = config.get('case_ids')
+    if case_ids is not None:
+        if (not isinstance(case_ids, list) or not case_ids or len(set(case_ids)) != len(case_ids)
+                or not set(case_ids) <= {c['id'] for c in cases}):
+            raise ValueError('case_ids must select unique known cases')
+        cases = [c for c in cases if c['id'] in case_ids]
     limit = config.get('limit', 2)
     if limit is not None and (type(limit) is not int or limit <= 0):
         raise ValueError('limit must be a positive integer or null')
@@ -94,11 +100,12 @@ async def run(config, output, *, transport=None):
                'missed_merges': sum(c['actual'] == 'separate' and c['expected'] == 'merge' for c in checks),
                'abstained_pairs': sum(c['actual'] == 'abstain' for c in checks),
                'unavailable_pairs': sum(not c['response_available'] for c in checks),
-               'checks': checks, 'usage': model.metadata,
+               'checks': checks, 'usage': model.metadata, 'request_timings': model.request_timings,
                'provenance': {**model.provenance, 'cases_sha256': sha256_file(config['cases']),
                               'prompt_sha256': sha256_file(PROMPT_PATH), 'limit': limit,
                               'concurrency': concurrency, 'slot_schema': slot_schema,
-                              'slot_prompt_sha256': sha256_file(PROMPT_PATH.with_name('semantic_airline_slots_v1.txt'))
+                              'case_ids': case_ids,
+                              'slot_prompt_sha256': sha256_file(slot_prompt_path(slot_schema))
                               if slot_schema is not None else None},
                'scope': 'Real-model extraction on authored contract cases; not real rollout accuracy or RL improvement.'}
     (output / 'summary.json').write_text(json.dumps(summary, ensure_ascii=False, indent=2) + '\n')

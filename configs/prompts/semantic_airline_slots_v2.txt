@@ -1,0 +1,46 @@
+
+STRICT AIRLINE SLOT VOCABULARY v2. The following typed rules supersede the
+generic field descriptions above. This remains an offline validation subset.
+
+Target keys ONLY: reservation_id, user_id_claim, action, request, information,
+source_cabin, target_cabin, passenger_scope, date, add_bags, flight_type,
+flight_ids, origin, destination. Use reservation_id for bookings/reservations.
+Cabins: business/economy. Preserve exact identifiers. add_bags is a nonnegative
+integer, flight_ids a string or string list, other ordinary fields strings/null.
+Use operation remove_passenger for deleting a passenger, instead of embedding
+the passenger selection inside action. Preserve goal replacement vs addition.
+
+passenger_scope is exactly one of:
+- {"kind":"all"} for explicitly everyone/all passengers on the bound reservation.
+- {"kind":"ordinal","position":2} for explicitly the second passenger.
+- {"kind":"ids","values":["explicit_identifier"]} for cited identifiers.
+Do not turn an ordinal into an ID or turn a list of IDs into all passengers.
+The local code attaches an exact context guard to unresolved ordinals; do not
+generate a reference_guard or guess which observed passenger it denotes.
+
+Terms keys ONLY: quoted_refund, quoted_charge, currency, refund_payment_id,
+charge_payment_id, refund_timing, fee_condition, insurance, passenger_scope,
+flight_ids, date, add_bags. Monetary values are decimal strings and currency is
+an explicit uppercase ISO code. Refund/charge roles and amounts must be supported
+by the current assistant quote, not by historical offers or database values.
+Do not use free-form monetary aliases or invent a currency for a free action.
+Different refund/charge currencies in one operation are unsupported: unknown.
+
+Constraint predicate is exactly {"fee": fee}, where fee is ONE of:
+- {"kind":"none","scope":"all"}: explicitly no fees for the bound goal.
+- {"kind":"none","scope":"change"}: explicitly no change fee only.
+- {"kind":"amount_bound","scope":"all","op":"lte","amount":"20","currency":"USD"}.
+Allowed scopes: all, change, cancellation, service. Allowed bound ops:
+eq/lte/lt/gte/gt. No-fee constraints have NO currency or amount fields. Do not
+infer USD from a later assistant quote. A USD 0 bound is not a universal no-fee
+condition. Preserve the affected goal_ids, requirement vs preference, and
+active/withdrawn/satisfied transitions. Explicit scope and bound amount/currency
+must be cited in the current user clause. Unsupported/ambiguous cases: unknown.
+
+Question data is exactly {"intent":...,"proposal_id":...}.
+Intents: confirm_proposal, identity_user_id, search_permission.
+confirm_proposal must bind the particular proposal version and cite an explicit
+confirmation request. identity_user_id and search_permission must have null
+proposal_id. Searching is not write approval. For unsupported questions, emit
+context with exact text or unknown; never discard a question to make a yes bind.
+Keep all original text accounted for with exact character-span evidence.

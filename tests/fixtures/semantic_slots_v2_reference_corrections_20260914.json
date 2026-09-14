@@ -1,0 +1,63 @@
+{
+  "source_sha256": "ed2a27fcaee6b8f01d9ffa9f8dbb07ab89e32ee0a52994b7de78309e7488a625",
+  "original_unchanged": true,
+  "corrections": [
+    {
+      "prefix_sha256": "3f8982eb6703c23be38a18f3f94c33d7df50e75fe282fd121774c872e71596bd",
+      "event_id": "c",
+      "old_predicate": {
+        "fee": {
+          "op": "eq",
+          "amount": "0",
+          "currency": "USD"
+        }
+      },
+      "corrected_predicate": {
+        "fee": {
+          "kind": "none",
+          "scope": "all"
+        }
+      },
+      "source_quote": "Yes, but only if there is no fee.",
+      "reason": "User clause states no fee, not USD 0; currency was unsupported in the original authored fixture."
+    },
+    {
+      "prefix_sha256": "7ba8750fea1afa7c12c70341dde0a3385b7405ac55a4298a6d02086bf589384d",
+      "event_id": "c",
+      "old_predicate": {
+        "fee": {
+          "op": "eq",
+          "amount": "0",
+          "currency": "USD"
+        }
+      },
+      "corrected_predicate": {
+        "fee": {
+          "kind": "none",
+          "scope": "all"
+        }
+      },
+      "source_quote": "Please cancel ABC123. I would prefer no fee.",
+      "reason": "User clause states no fee, not USD 0; currency was unsupported in the original authored fixture."
+    },
+    {
+      "prefix_sha256": "69dae5a5806d01db0711c8b1225667235f3ac59f4f8310aa47918148399be08c",
+      "event_id": "c",
+      "old_predicate": {
+        "fee": {
+          "op": "eq",
+          "amount": "0",
+          "currency": "USD"
+        }
+      },
+      "corrected_predicate": {
+        "fee": {
+          "kind": "none",
+          "scope": "all"
+        }
+      },
+      "source_quote": "I now require no fee.",
+      "reason": "User clause states no fee, not USD 0; currency was unsupported in the original authored fixture."
+    }
+  ]
+}

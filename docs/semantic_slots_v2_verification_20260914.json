@@ -1,0 +1,192 @@
+{
+  "date": "2026-09-14",
+  "schema": "airline_slots_v2",
+  "cpu_tests_passed": 109,
+  "new_api_calls": 5,
+  "live_summary": {
+    "simulated_model": false,
+    "api_request_attempts": 5,
+    "gpu_used_locally": false,
+    "training_enabled": false,
+    "cases": 5,
+    "valid_cases": 4,
+    "pairs": 0,
+    "passed_pairs": 0,
+    "false_merges": 0,
+    "missed_merges": 0,
+    "abstained_pairs": 0,
+    "unavailable_pairs": 0,
+    "checks": [],
+    "usage": [
+      {
+        "prefix_sha256": "7ba8750fea1afa7c12c70341dde0a3385b7405ac55a4298a6d02086bf589384d",
+        "usage": {
+          "completion_tokens": 6036,
+          "prompt_tokens": 1897,
+          "total_tokens": 7933
+        }
+      },
+      {
+        "prefix_sha256": "6d621daea3f84de1edcd8be04dfc34bf491f5e43b45e34deb765df82de786cdf",
+        "usage": {
+          "completion_tokens": 2131,
+          "prompt_tokens": 1921,
+          "total_tokens": 4052
+        }
+      },
+      {
+        "prefix_sha256": "8c0711f92c505001ad8d28676656e80f6d43605a3b92cd4f275fd8b8837e3135",
+        "usage": {
+          "completion_tokens": 6093,
+          "prompt_tokens": 1939,
+          "total_tokens": 8032
+        }
+      },
+      {
+        "prefix_sha256": "0c8da94e59ef5d42463ccb7527f765be249f4cb816b09bb9b710a668d369da0b",
+        "usage": {
+          "completion_tokens": 3953,
+          "prompt_tokens": 1943,
+          "total_tokens": 5896
+        }
+      },
+      {
+        "prefix_sha256": "40b44f10e208c41949afa98b1b0af66615c85baa64964b86fc93ae7a3847be84",
+        "usage": {
+          "completion_tokens": 2647,
+          "prompt_tokens": 1871,
+          "total_tokens": 4518
+        }
+      }
+    ],
+    "request_timings": [
+      {
+        "prefix_sha256": "7ba8750fea1afa7c12c70341dde0a3385b7405ac55a4298a6d02086bf589384d",
+        "elapsed_seconds": 144.305
+      },
+      {
+        "prefix_sha256": "6d621daea3f84de1edcd8be04dfc34bf491f5e43b45e34deb765df82de786cdf",
+        "elapsed_seconds": 73.954
+      },
+      {
+        "prefix_sha256": "8c0711f92c505001ad8d28676656e80f6d43605a3b92cd4f275fd8b8837e3135",
+        "elapsed_seconds": 147.896
+      },
+      {
+        "prefix_sha256": "0c8da94e59ef5d42463ccb7527f765be249f4cb816b09bb9b710a668d369da0b",
+        "elapsed_seconds": 80.37
+      },
+      {
+        "prefix_sha256": "40b44f10e208c41949afa98b1b0af66615c85baa64964b86fc93ae7a3847be84",
+        "elapsed_seconds": 67.582
+      }
+    ],
+    "provenance": {
+      "provider": "openai_compatible",
+      "base_url": "https://llmapi.paratera.com/v1",
+      "model": "Kimi-K3",
+      "timeout_seconds": 180,
+      "max_tokens": 8192,
+      "temperature": 0,
+      "automatic_retries": 0,
+      "cases_sha256": "0f903d0319e9ebf6039c0435fd44c8334a38aae11fd537f5e0903115b051f472",
+      "prompt_sha256": "0bd3ef9cd34d372d092997965a97f5cab8ed4fe0ab8425ce5601b2542f18c6fc",
+      "limit": null,
+      "concurrency": 1,
+      "slot_schema": "airline_slots_v2",
+      "case_ids": [
+        "preference",
+        "replace_goal",
+        "changed_pending",
+        "changed_approve_synonym",
+        "stale_approval"
+      ],
+      "slot_prompt_sha256": "c41e60bc8bc4788cbcf6c8e1ad12248604186a70c49913871be39dac1de9a782"
+    },
+    "scope": "Real-model extraction on authored contract cases; not real rollout accuracy or RL improvement."
+  },
+  "final_revalidation": {
+    "new_api_calls": 0,
+    "training_enabled": false,
+    "cases": 5,
+    "valid_cases": 4,
+    "pairs": 0,
+    "passed_pairs": 0,
+    "false_merges": 0,
+    "missed_merges": 0,
+    "abstained_pairs": 0,
+    "unavailable_pairs": 0,
+    "checks": [],
+    "errors": {
+      "stale_approval": "consent_to_inactive_proposal"
+    },
+    "provenance": {
+      "source_packets_sha256": "c7a427a1acfe6c14a7b1b056efa33f57a4aff337a95c5bc22b02a93e811849e4",
+      "all_source_packets_sha256": [
+        "c7a427a1acfe6c14a7b1b056efa33f57a4aff337a95c5bc22b02a93e811849e4"
+      ],
+      "cases_sha256": "0f903d0319e9ebf6039c0435fd44c8334a38aae11fd537f5e0903115b051f472",
+      "slot_schema": "airline_slots_v2",
+      "case_ids": [
+        "preference",
+        "replace_goal",
+        "changed_pending",
+        "changed_approve_synonym",
+        "stale_approval"
+      ],
+      "limit": null,
+      "slots_code_sha256": "53b2a952cde7bcd8183441f81375b5960a9d7d1926416a1d347495320481165a",
+      "slots_v2_code_sha256": "f634d40e6796c03d874cfca589cbae1239262e9a6e13ee0328c9a3e63fd1d828",
+      "state_code_sha256": "026e202119a10427070060c449d72b57cb1baad0c949f1faf70f8f572735647f"
+    }
+  },
+  "reference_checks": [
+    {
+      "id": "preference",
+      "expected": "match_corrected_reference_state",
+      "passed": true
+    },
+    {
+      "id": "changed_pending",
+      "expected": "match_corrected_reference_state",
+      "passed": true
+    },
+    {
+      "id": "changed_approve_synonym",
+      "expected": "match_corrected_reference_state",
+      "passed": true
+    },
+    {
+      "id": "stale_approval",
+      "expected": "reject_stale_consent",
+      "passed": true,
+      "actual_error": "consent_to_inactive_proposal"
+    },
+    {
+      "id": "replace_goal",
+      "expected": "match_corrected_reference_state",
+      "passed": true
+    }
+  ],
+  "corrections_sha256": "83cce54f9256cbe6849401202ceb4f8206fbe92523ea401f4dec04032f5f2ee9",
+  "old_output_reference_checks": [
+    {
+      "id": "preference",
+      "matches_corrected_reference_state": true
+    },
+    {
+      "id": "changed_pending",
+      "matches_corrected_reference_state": true
+    },
+    {
+      "id": "replace_goal",
+      "matches_corrected_reference_state": true
+    }
+  ],
+  "limitations": [
+    "Focused development cases, not independent rollout accuracy or an RL result.",
+    "Stale consent was rejected by deterministic validation, not necessarily recognized correctly by the model.",
+    "Unresolved passenger ordinals remain exact-context guarded; no ordinal-to-ID inference.",
+    "Currency-specific zero claims without evidence remain rejected; old real outputs are not automatically corrected."
+  ]
+}
