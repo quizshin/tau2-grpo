@@ -1,0 +1,1321 @@
+{
+  "simulated": true,
+  "note": "Manually authored assumed semantic outputs; reused real prefixes and controlled cases, not independent semantic model evaluation.",
+  "cases": [
+    {
+      "id": "approved",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Please cancel reservation ABC123."
+        },
+        {
+          "role": "assistant",
+          "content": "Cancel ABC123 with a USD 100 refund to card_1. Please confirm."
+        },
+        {
+          "role": "user",
+          "content": "Yes, please proceed."
+        }
+      ],
+      "task_id": "mock_task",
+      "db_hash": "SIMULATED_EQUAL_DB",
+      "policy_hash": "SIMULATED_POLICY",
+      "remaining_turns": 12
+    },
+    {
+      "id": "paraphrased",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Could you cancel booking ABC123?"
+        },
+        {
+          "role": "assistant",
+          "content": "Cancel ABC123 with a USD 100 refund to card_1. Please confirm."
+        },
+        {
+          "role": "user",
+          "content": "I approve."
+        }
+      ],
+      "task_id": "mock_task",
+      "db_hash": "SIMULATED_EQUAL_DB",
+      "policy_hash": "SIMULATED_POLICY",
+      "remaining_turns": 12
+    },
+    {
+      "id": "amount",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Please cancel reservation ABC123."
+        },
+        {
+          "role": "assistant",
+          "content": "Cancel ABC123 with a USD 272 refund to card_1. Please confirm."
+        },
+        {
+          "role": "user",
+          "content": "Yes, please proceed."
+        }
+      ],
+      "task_id": "mock_task",
+      "db_hash": "SIMULATED_EQUAL_DB",
+      "policy_hash": "SIMULATED_POLICY",
+      "remaining_turns": 12
+    },
+    {
+      "id": "card",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Please cancel reservation ABC123."
+        },
+        {
+          "role": "assistant",
+          "content": "Cancel ABC123 with a USD 100 refund to card_2. Please confirm."
+        },
+        {
+          "role": "user",
+          "content": "Yes, please proceed."
+        }
+      ],
+      "task_id": "mock_task",
+      "db_hash": "SIMULATED_EQUAL_DB",
+      "policy_hash": "SIMULATED_POLICY",
+      "remaining_turns": 12
+    },
+    {
+      "id": "currency",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Please cancel reservation ABC123."
+        },
+        {
+          "role": "assistant",
+          "content": "Cancel ABC123 with a EUR 100 refund to card_1. Please confirm."
+        },
+        {
+          "role": "user",
+          "content": "Yes, please proceed."
+        }
+      ],
+      "task_id": "mock_task",
+      "db_hash": "SIMULATED_EQUAL_DB",
+      "policy_hash": "SIMULATED_POLICY",
+      "remaining_turns": 12
+    },
+    {
+      "id": "object",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Please cancel reservation XYZ999."
+        },
+        {
+          "role": "assistant",
+          "content": "Cancel XYZ999 with a USD 100 refund to card_1. Please confirm."
+        },
+        {
+          "role": "user",
+          "content": "Yes, please proceed."
+        }
+      ],
+      "task_id": "mock_task",
+      "db_hash": "SIMULATED_EQUAL_DB",
+      "policy_hash": "SIMULATED_POLICY",
+      "remaining_turns": 12
+    },
+    {
+      "id": "conditional",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Please cancel reservation ABC123."
+        },
+        {
+          "role": "assistant",
+          "content": "Cancel ABC123 with a USD 100 refund to card_1. Please confirm."
+        },
+        {
+          "role": "user",
+          "content": "Yes, but only if there is no fee."
+        }
+      ],
+      "task_id": "mock_task",
+      "db_hash": "SIMULATED_EQUAL_DB",
+      "policy_hash": "SIMULATED_POLICY",
+      "remaining_turns": 12
+    },
+    {
+      "id": "preference",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Please cancel ABC123. I would prefer no fee."
+        },
+        {
+          "role": "assistant",
+          "content": "Cancel ABC123 with a USD 100 refund to card_1. Please confirm."
+        },
+        {
+          "role": "user",
+          "content": "Yes, please proceed."
+        }
+      ],
+      "task_id": "mock_task",
+      "db_hash": "SIMULATED_EQUAL_DB",
+      "policy_hash": "SIMULATED_POLICY",
+      "remaining_turns": 12
+    },
+    {
+      "id": "later_condition",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Please cancel reservation ABC123."
+        },
+        {
+          "role": "assistant",
+          "content": "Cancel ABC123 with a USD 100 refund to card_1. Please confirm."
+        },
+        {
+          "role": "user",
+          "content": "Yes, please proceed."
+        },
+        {
+          "role": "user",
+          "content": "I now require no fee."
+        }
+      ],
+      "task_id": "mock_task",
+      "db_hash": "SIMULATED_EQUAL_DB",
+      "policy_hash": "SIMULATED_POLICY",
+      "remaining_turns": 12
+    },
+    {
+      "id": "ambiguous_yes",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Please cancel reservation ABC123."
+        },
+        {
+          "role": "assistant",
+          "content": "Cancel ABC123 with a USD 100 refund to card_1. Please confirm."
+        },
+        {
+          "role": "user",
+          "content": "Yes, please proceed."
+        },
+        {
+          "role": "assistant",
+          "content": "What is your user ID?"
+        },
+        {
+          "role": "user",
+          "content": "Yes"
+        }
+      ],
+      "task_id": "mock_task",
+      "db_hash": "SIMULATED_EQUAL_DB",
+      "policy_hash": "SIMULATED_POLICY",
+      "remaining_turns": 12
+    },
+    {
+      "id": "changed_pending",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Please cancel reservation ABC123."
+        },
+        {
+          "role": "assistant",
+          "content": "Cancel ABC123 with a USD 100 refund to card_1. Please confirm."
+        },
+        {
+          "role": "user",
+          "content": "Yes, please proceed."
+        },
+        {
+          "role": "assistant",
+          "content": "New quote: cancel ABC123 for USD 272 back to card_1. Please confirm."
+        }
+      ],
+      "task_id": "mock_task",
+      "db_hash": "SIMULATED_EQUAL_DB",
+      "policy_hash": "SIMULATED_POLICY",
+      "remaining_turns": 12
+    },
+    {
+      "id": "changed_approved",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Please cancel reservation ABC123."
+        },
+        {
+          "role": "assistant",
+          "content": "Cancel ABC123 with a USD 100 refund to card_1. Please confirm."
+        },
+        {
+          "role": "user",
+          "content": "Yes, please proceed."
+        },
+        {
+          "role": "assistant",
+          "content": "New quote: cancel ABC123 for USD 272 back to card_1. Please confirm."
+        },
+        {
+          "role": "user",
+          "content": "Yes"
+        }
+      ],
+      "task_id": "mock_task",
+      "db_hash": "SIMULATED_EQUAL_DB",
+      "policy_hash": "SIMULATED_POLICY",
+      "remaining_turns": 12
+    },
+    {
+      "id": "changed_approve_synonym",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Please cancel reservation ABC123."
+        },
+        {
+          "role": "assistant",
+          "content": "Cancel ABC123 with a USD 100 refund to card_1. Please confirm."
+        },
+        {
+          "role": "user",
+          "content": "Yes, please proceed."
+        },
+        {
+          "role": "assistant",
+          "content": "New quote: cancel ABC123 for USD 272 back to card_1. Please confirm."
+        },
+        {
+          "role": "user",
+          "content": "I approve."
+        }
+      ],
+      "task_id": "mock_task",
+      "db_hash": "SIMULATED_EQUAL_DB",
+      "policy_hash": "SIMULATED_POLICY",
+      "remaining_turns": 12
+    },
+    {
+      "id": "stale_approval",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Please cancel reservation ABC123."
+        },
+        {
+          "role": "assistant",
+          "content": "Cancel ABC123 with a USD 100 refund to card_1. Please confirm."
+        },
+        {
+          "role": "user",
+          "content": "Yes, please proceed."
+        },
+        {
+          "role": "assistant",
+          "content": "New quote: cancel ABC123 for USD 272 back to card_1. Please confirm."
+        },
+        {
+          "role": "user",
+          "content": "I approve the earlier USD 100 quote."
+        }
+      ],
+      "task_id": "mock_task",
+      "db_hash": "SIMULATED_EQUAL_DB",
+      "policy_hash": "SIMULATED_POLICY",
+      "remaining_turns": 12
+    },
+    {
+      "id": "reaffirm",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Please cancel reservation ABC123."
+        },
+        {
+          "role": "assistant",
+          "content": "Cancel ABC123 with a USD 100 refund to card_1. Please confirm."
+        },
+        {
+          "role": "user",
+          "content": "Yes, please proceed."
+        },
+        {
+          "role": "user",
+          "content": "Please cancel ABC123, as already discussed."
+        }
+      ],
+      "task_id": "mock_task",
+      "db_hash": "SIMULATED_EQUAL_DB",
+      "policy_hash": "SIMULATED_POLICY",
+      "remaining_turns": 12
+    },
+    {
+      "id": "replace_goal",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Remove the second passenger from ABC123."
+        },
+        {
+          "role": "user",
+          "content": "Instead, downgrade everyone on ABC123 to economy."
+        }
+      ],
+      "task_id": "mock_task",
+      "db_hash": "SIMULATED_EQUAL_DB",
+      "policy_hash": "SIMULATED_POLICY",
+      "remaining_turns": 12
+    },
+    {
+      "id": "add_goal",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Remove the second passenger from ABC123."
+        },
+        {
+          "role": "user",
+          "content": "Also downgrade everyone on ABC123 to economy."
+        }
+      ],
+      "task_id": "mock_task",
+      "db_hash": "SIMULATED_EQUAL_DB",
+      "policy_hash": "SIMULATED_POLICY",
+      "remaining_turns": 12
+    },
+    {
+      "id": "partial",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Move ABC123 to May 16 and add two bags."
+        },
+        {
+          "role": "assistant",
+          "content": "Offer: move ABC123 to May 16 and add two bags, both free. Confirm which changes you want."
+        },
+        {
+          "role": "user",
+          "content": "Approve only the date change."
+        }
+      ],
+      "task_id": "mock_task",
+      "db_hash": "SIMULATED_EQUAL_DB",
+      "policy_hash": "SIMULATED_POLICY",
+      "remaining_turns": 12
+    },
+    {
+      "id": "both",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Move ABC123 to May 16 and add two bags."
+        },
+        {
+          "role": "assistant",
+          "content": "Offer: move ABC123 to May 16 and add two bags, both free. Confirm which changes you want."
+        },
+        {
+          "role": "user",
+          "content": "Approve both changes."
+        }
+      ],
+      "task_id": "mock_task",
+      "db_hash": "SIMULATED_EQUAL_DB",
+      "policy_hash": "SIMULATED_POLICY",
+      "remaining_turns": 12
+    },
+    {
+      "id": "accumulated",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Move ABC123 to May 16 and add two bags."
+        },
+        {
+          "role": "assistant",
+          "content": "Offer: move ABC123 to May 16 and add two bags, both free. Confirm which changes you want."
+        },
+        {
+          "role": "user",
+          "content": "Approve only the date change."
+        },
+        {
+          "role": "user",
+          "content": "I also approve the two free bags in your offer."
+        }
+      ],
+      "task_id": "mock_task",
+      "db_hash": "SIMULATED_EQUAL_DB",
+      "policy_hash": "SIMULATED_POLICY",
+      "remaining_turns": 12
+    },
+    {
+      "id": "revoke_bags",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Move ABC123 to May 16 and add two bags."
+        },
+        {
+          "role": "assistant",
+          "content": "Offer: move ABC123 to May 16 and add two bags, both free. Confirm which changes you want."
+        },
+        {
+          "role": "user",
+          "content": "Approve both changes."
+        },
+        {
+          "role": "user",
+          "content": "I revoke approval for the bags; keep the date change."
+        }
+      ],
+      "task_id": "mock_task",
+      "db_hash": "SIMULATED_EQUAL_DB",
+      "policy_hash": "SIMULATED_POLICY",
+      "remaining_turns": 12
+    },
+    {
+      "id": "search_permission",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Please search for economy prices."
+        },
+        {
+          "role": "assistant",
+          "content": "Shall I search for economy prices?"
+        },
+        {
+          "role": "user",
+          "content": "Yes"
+        }
+      ],
+      "task_id": "mock_task",
+      "db_hash": "SIMULATED_EQUAL_DB",
+      "policy_hash": "SIMULATED_POLICY",
+      "remaining_turns": 12
+    },
+    {
+      "id": "unknown",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Please cancel reservation ABC123."
+        },
+        {
+          "role": "assistant",
+          "content": "Cancel ABC123 with a USD 100 refund to card_1. Please confirm."
+        },
+        {
+          "role": "user",
+          "content": "Yes, please proceed."
+        },
+        {
+          "role": "user",
+          "content": "Only proceed if the passenger really is me."
+        }
+      ],
+      "task_id": "mock_task",
+      "db_hash": "SIMULATED_EQUAL_DB",
+      "policy_hash": "SIMULATED_POLICY",
+      "remaining_turns": 12
+    },
+    {
+      "id": "natural-01/a",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": "Hi! How can I help you today?",
+          "tool_calls": null
+        },
+        {
+          "role": "user",
+          "content": "Hi, I’d like to modify my existing reservation. I want to downgrade my cabin class from business to economy to save some money.",
+          "tool_calls": null
+        }
+      ],
+      "task_id": "airline_1059",
+      "db_hash": "MATCHED_DB_ASSUMPTION:airline_1059",
+      "policy_hash": "LEGACY_FIXTURE_POLICY_ASSUMPTION",
+      "remaining_turns": 12
+    },
+    {
+      "id": "natural-01/b",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": "Hi! How can I help you today?",
+          "tool_calls": null
+        },
+        {
+          "role": "user",
+          "content": "Hi, I’d like to change my flight reservation from business class to economy class. Can you help me with that?",
+          "tool_calls": null
+        }
+      ],
+      "task_id": "airline_1059",
+      "db_hash": "MATCHED_DB_ASSUMPTION:airline_1059",
+      "policy_hash": "LEGACY_FIXTURE_POLICY_ASSUMPTION",
+      "remaining_turns": 12
+    },
+    {
+      "id": "natural-02/a",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": "Hi! How can I help you today?",
+          "tool_calls": null
+        },
+        {
+          "role": "user",
+          "content": "Hi, I’d like to change the cabin class on my existing reservation. I want to switch from business to economy to save some money.",
+          "tool_calls": null
+        }
+      ],
+      "task_id": "airline_1060",
+      "db_hash": "MATCHED_DB_ASSUMPTION:airline_1060",
+      "policy_hash": "LEGACY_FIXTURE_POLICY_ASSUMPTION",
+      "remaining_turns": 12
+    },
+    {
+      "id": "natural-02/b",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": "Hi! How can I help you today?",
+          "tool_calls": null
+        },
+        {
+          "role": "user",
+          "content": "Hi, I'd like to modify my existing reservation. I want to downgrade from business class to economy class to save some money.",
+          "tool_calls": null
+        }
+      ],
+      "task_id": "airline_1060",
+      "db_hash": "MATCHED_DB_ASSUMPTION:airline_1060",
+      "policy_hash": "LEGACY_FIXTURE_POLICY_ASSUMPTION",
+      "remaining_turns": 12
+    },
+    {
+      "id": "natural-03/a",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": "Hi! How can I help you today?",
+          "tool_calls": null
+        },
+        {
+          "role": "user",
+          "content": "Hi, I’d like to change the cabin class on my existing reservation. I want to switch from business to economy to save some money.",
+          "tool_calls": null
+        }
+      ],
+      "task_id": "airline_1060",
+      "db_hash": "MATCHED_DB_ASSUMPTION:airline_1060",
+      "policy_hash": "LEGACY_FIXTURE_POLICY_ASSUMPTION",
+      "remaining_turns": 12
+    },
+    {
+      "id": "natural-03/b",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": "Hi! How can I help you today?",
+          "tool_calls": null
+        },
+        {
+          "role": "user",
+          "content": "Hi, I’d like to change the cabin class on my existing reservation. I currently have a business class ticket, but I’d like to downgrade it to economy to save some money.",
+          "tool_calls": null
+        }
+      ],
+      "task_id": "airline_1060",
+      "db_hash": "MATCHED_DB_ASSUMPTION:airline_1060",
+      "policy_hash": "LEGACY_FIXTURE_POLICY_ASSUMPTION",
+      "remaining_turns": 12
+    },
+    {
+      "id": "natural-04/a",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": "Hi! How can I help you today?",
+          "tool_calls": null
+        },
+        {
+          "role": "user",
+          "content": "Hi! I’d like to change the flight date on my reservation HKEG34 and add two checked bags to it. Could you please pull up the full details of that reservation for me first?",
+          "tool_calls": null
+        }
+      ],
+      "task_id": "airline_1106",
+      "db_hash": "MATCHED_DB_ASSUMPTION:airline_1106",
+      "policy_hash": "LEGACY_FIXTURE_POLICY_ASSUMPTION",
+      "remaining_turns": 12
+    },
+    {
+      "id": "natural-04/b",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": "Hi! How can I help you today?",
+          "tool_calls": null
+        },
+        {
+          "role": "user",
+          "content": "Hi there. I need to change the flight date on my reservation HKEG34 and add 2 checked bags to it. Could you please pull up the full details of that reservation for me first?",
+          "tool_calls": null
+        }
+      ],
+      "task_id": "airline_1106",
+      "db_hash": "MATCHED_DB_ASSUMPTION:airline_1106",
+      "policy_hash": "LEGACY_FIXTURE_POLICY_ASSUMPTION",
+      "remaining_turns": 12
+    },
+    {
+      "id": "natural-05/a",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": "Hi! How can I help you today?",
+          "tool_calls": null
+        },
+        {
+          "role": "user",
+          "content": "Hi there. I need to change the flight date on my reservation HKEG34 and add 2 checked bags to it. Could you please pull up the full details of that reservation for me first?",
+          "tool_calls": null
+        }
+      ],
+      "task_id": "airline_1106",
+      "db_hash": "MATCHED_DB_ASSUMPTION:airline_1106",
+      "policy_hash": "LEGACY_FIXTURE_POLICY_ASSUMPTION",
+      "remaining_turns": 12
+    },
+    {
+      "id": "natural-05/b",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": "Hi! How can I help you today?",
+          "tool_calls": null
+        },
+        {
+          "role": "user",
+          "content": "Hi, I’d like to change the flight date on reservation HKEG34 and add 2 checked bags to it. Could you please pull up the full details of that reservation for me first?",
+          "tool_calls": null
+        }
+      ],
+      "task_id": "airline_1106",
+      "db_hash": "MATCHED_DB_ASSUMPTION:airline_1106",
+      "policy_hash": "LEGACY_FIXTURE_POLICY_ASSUMPTION",
+      "remaining_turns": 12
+    },
+    {
+      "id": "natural-13/a",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": "Hi! How can I help you today?",
+          "tool_calls": null
+        },
+        {
+          "role": "user",
+          "content": "Hi, I’d like to downgrade my business class flight to economy to save some costs. My user ID is sofia_brown_9485.",
+          "tool_calls": null
+        }
+      ],
+      "task_id": "airline_1035",
+      "db_hash": "MATCHED_DB_ASSUMPTION:airline_1035",
+      "policy_hash": "LEGACY_FIXTURE_POLICY_ASSUMPTION",
+      "remaining_turns": 12
+    },
+    {
+      "id": "natural-13/b",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": "Hi! How can I help you today?",
+          "tool_calls": null
+        },
+        {
+          "role": "user",
+          "content": "Hi there! I'd like to make a change to my booking. My user ID is sofia_brown_9485.",
+          "tool_calls": null
+        }
+      ],
+      "task_id": "airline_1035",
+      "db_hash": "MATCHED_DB_ASSUMPTION:airline_1035",
+      "policy_hash": "LEGACY_FIXTURE_POLICY_ASSUMPTION",
+      "remaining_turns": 12
+    },
+    {
+      "id": "natural-14/a",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": "Hi! How can I help you today?",
+          "tool_calls": null
+        },
+        {
+          "role": "user",
+          "content": "Hi, I’d like to modify my existing reservation. I want to downgrade my cabin class from business to economy to save some money.",
+          "tool_calls": null
+        }
+      ],
+      "task_id": "airline_1059",
+      "db_hash": "MATCHED_DB_ASSUMPTION:airline_1059",
+      "policy_hash": "LEGACY_FIXTURE_POLICY_ASSUMPTION",
+      "remaining_turns": 12
+    },
+    {
+      "id": "natural-14/b",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": "Hi! How can I help you today?",
+          "tool_calls": null
+        },
+        {
+          "role": "user",
+          "content": "Hi, I'm calling about my flight reservation. I'd like to modify my booking to save some money. Could you help me with that?",
+          "tool_calls": null
+        }
+      ],
+      "task_id": "airline_1059",
+      "db_hash": "MATCHED_DB_ASSUMPTION:airline_1059",
+      "policy_hash": "LEGACY_FIXTURE_POLICY_ASSUMPTION",
+      "remaining_turns": 12
+    },
+    {
+      "id": "natural-15/a",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": "Hi! How can I help you today?",
+          "tool_calls": null
+        },
+        {
+          "role": "user",
+          "content": "Hi, I’d like to modify my existing reservation. I want to downgrade my cabin class from business to economy to save some money.",
+          "tool_calls": null
+        }
+      ],
+      "task_id": "airline_1059",
+      "db_hash": "MATCHED_DB_ASSUMPTION:airline_1059",
+      "policy_hash": "LEGACY_FIXTURE_POLICY_ASSUMPTION",
+      "remaining_turns": 12
+    },
+    {
+      "id": "natural-15/b",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": "Hi! How can I help you today?",
+          "tool_calls": null
+        },
+        {
+          "role": "user",
+          "content": "Hi, I'd like to modify my reservation. I want to downgrade my cabin class from business to economy for a round-trip flight.",
+          "tool_calls": null
+        }
+      ],
+      "task_id": "airline_1059",
+      "db_hash": "MATCHED_DB_ASSUMPTION:airline_1059",
+      "policy_hash": "LEGACY_FIXTURE_POLICY_ASSUMPTION",
+      "remaining_turns": 12
+    },
+    {
+      "id": "natural-24/a",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": "Hi! How can I help you today?",
+          "tool_calls": null
+        },
+        {
+          "role": "user",
+          "content": "Hi! I’d like to change the flight date on my reservation HKEG34 and then add 2 checked bags. Could you please look up that reservation for me?",
+          "tool_calls": null
+        }
+      ],
+      "task_id": "airline_14",
+      "db_hash": "MATCHED_DB_ASSUMPTION:airline_14",
+      "policy_hash": "LEGACY_FIXTURE_POLICY_ASSUMPTION",
+      "remaining_turns": 12
+    },
+    {
+      "id": "natural-24/b",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": "Hi! How can I help you today?",
+          "tool_calls": null
+        },
+        {
+          "role": "user",
+          "content": "Hi, I need help with my reservation. Could you please review reservation HKEG34 for me? I need to change the flight date.",
+          "tool_calls": null
+        }
+      ],
+      "task_id": "airline_14",
+      "db_hash": "MATCHED_DB_ASSUMPTION:airline_14",
+      "policy_hash": "LEGACY_FIXTURE_POLICY_ASSUMPTION",
+      "remaining_turns": 12
+    },
+    {
+      "id": "controlled-08/a",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": null,
+          "tool_calls": [
+            {
+              "id": "call_1",
+              "name": "get_reservation_details",
+              "arguments": {
+                "reservation_id": "ABC123"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "content": "{\"reservation_id\":\"ABC123\",\"cabin\":\"business\"}",
+          "id": "call_1",
+          "error": false
+        }
+      ],
+      "task_id": "synthetic_task",
+      "db_hash": "CONTROLLED_EQUAL_DB",
+      "policy_hash": "LEGACY_FIXTURE_POLICY_ASSUMPTION",
+      "remaining_turns": 12
+    },
+    {
+      "id": "controlled-08/b",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": null,
+          "tool_calls": [
+            {
+              "id": "other_id",
+              "name": "get_reservation_details",
+              "arguments": {
+                "reservation_id": "ABC123"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "content": "{\"reservation_id\":\"ABC123\",\"cabin\":\"business\"}",
+          "id": "other_id",
+          "error": false
+        }
+      ],
+      "task_id": "synthetic_task",
+      "db_hash": "CONTROLLED_EQUAL_DB",
+      "policy_hash": "LEGACY_FIXTURE_POLICY_ASSUMPTION",
+      "remaining_turns": 12
+    },
+    {
+      "id": "controlled-09/a",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": null,
+          "tool_calls": [
+            {
+              "id": "call_1",
+              "name": "get_reservation_details",
+              "arguments": {
+                "reservation_id": "ABC123"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "content": "{\"reservation_id\":\"ABC123\",\"cabin\":\"business\"}",
+          "id": "call_1",
+          "error": false
+        }
+      ],
+      "task_id": "synthetic_task",
+      "db_hash": "CONTROLLED_EQUAL_DB",
+      "policy_hash": "LEGACY_FIXTURE_POLICY_ASSUMPTION",
+      "remaining_turns": 12
+    },
+    {
+      "id": "controlled-09/b",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": null,
+          "tool_calls": [
+            {
+              "id": "call_1",
+              "name": "get_reservation_details",
+              "arguments": {
+                "reservation_id": "ABC123"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "content": "{ \"cabin\": \"business\", \"reservation_id\": \"ABC123\" }",
+          "id": "call_1",
+          "error": false
+        }
+      ],
+      "task_id": "synthetic_task",
+      "db_hash": "CONTROLLED_EQUAL_DB",
+      "policy_hash": "LEGACY_FIXTURE_POLICY_ASSUMPTION",
+      "remaining_turns": 12
+    },
+    {
+      "id": "controlled-10/a",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": null,
+          "tool_calls": [
+            {
+              "id": "call_1",
+              "name": "get_reservation_details",
+              "arguments": {
+                "reservation_id": "ABC123"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "content": "{\"reservation_id\":\"ABC123\",\"cabin\":\"business\"}",
+          "id": "call_1",
+          "error": false
+        }
+      ],
+      "task_id": "synthetic_task",
+      "db_hash": "CONTROLLED_EQUAL_DB",
+      "policy_hash": "LEGACY_FIXTURE_POLICY_ASSUMPTION",
+      "remaining_turns": 12
+    },
+    {
+      "id": "controlled-10/b",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": null,
+          "tool_calls": [
+            {
+              "id": "call_1",
+              "name": "get_reservation_details",
+              "arguments": {
+                "reservation_id": "ABC123"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "content": "{\"reservation_id\":\"ABC123\",\"cabin\":\"economy\"}",
+          "id": "call_1",
+          "error": false
+        }
+      ],
+      "task_id": "synthetic_task",
+      "db_hash": "CONTROLLED_EQUAL_DB",
+      "policy_hash": "LEGACY_FIXTURE_POLICY_ASSUMPTION",
+      "remaining_turns": 12
+    },
+    {
+      "id": "controlled-11/a",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": "Cancel reservation ABC123 for a $100 refund to card card_1. Do you confirm?"
+        },
+        {
+          "role": "user",
+          "content": "Yes, please proceed."
+        }
+      ],
+      "task_id": "synthetic_task",
+      "db_hash": "CONTROLLED_EQUAL_DB",
+      "policy_hash": "LEGACY_FIXTURE_POLICY_ASSUMPTION",
+      "remaining_turns": 12
+    },
+    {
+      "id": "controlled-11/b",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": "Cancel reservation ABC123 for a $100 refund to card card_1. Do you confirm?"
+        },
+        {
+          "role": "user",
+          "content": "Yes, please proceed."
+        }
+      ],
+      "task_id": "synthetic_task",
+      "db_hash": "DIFFERENT_DB",
+      "policy_hash": "LEGACY_FIXTURE_POLICY_ASSUMPTION",
+      "remaining_turns": 12
+    },
+    {
+      "id": "controlled-12/a",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": "Cancel reservation ABC123 for a $100 refund to card card_1. Do you confirm?"
+        },
+        {
+          "role": "user",
+          "content": "Yes, please proceed."
+        }
+      ],
+      "task_id": "synthetic_task",
+      "db_hash": "CONTROLLED_EQUAL_DB",
+      "policy_hash": "LEGACY_FIXTURE_POLICY_ASSUMPTION",
+      "remaining_turns": 12
+    },
+    {
+      "id": "controlled-12/b",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": "Cancel reservation ABC123 for a $100 refund to card card_1. Do you confirm?"
+        },
+        {
+          "role": "user",
+          "content": "Yes, please proceed."
+        }
+      ],
+      "task_id": "other_task",
+      "db_hash": "CONTROLLED_EQUAL_DB",
+      "policy_hash": "LEGACY_FIXTURE_POLICY_ASSUMPTION",
+      "remaining_turns": 12
+    }
+  ],
+  "pairs": [
+    {
+      "id": "equivalent_goals_and_approval",
+      "a": "approved",
+      "b": "paraphrased",
+      "expected": "merge"
+    },
+    {
+      "id": "different_amount",
+      "a": "approved",
+      "b": "amount",
+      "expected": "separate"
+    },
+    {
+      "id": "different_card",
+      "a": "approved",
+      "b": "card",
+      "expected": "separate"
+    },
+    {
+      "id": "different_currency",
+      "a": "approved",
+      "b": "currency",
+      "expected": "separate"
+    },
+    {
+      "id": "different_object",
+      "a": "approved",
+      "b": "object",
+      "expected": "separate"
+    },
+    {
+      "id": "conditional_vs_absolute",
+      "a": "approved",
+      "b": "conditional",
+      "expected": "separate"
+    },
+    {
+      "id": "preference_is_still_state_information",
+      "a": "approved",
+      "b": "preference",
+      "expected": "separate"
+    },
+    {
+      "id": "later_condition_invalidates",
+      "a": "approved",
+      "b": "later_condition",
+      "expected": "separate"
+    },
+    {
+      "id": "identity_question_yes_abstains",
+      "a": "approved",
+      "b": "ambiguous_yes",
+      "expected": "abstain"
+    },
+    {
+      "id": "new_quote_not_preapproved",
+      "a": "approved",
+      "b": "changed_pending",
+      "expected": "separate"
+    },
+    {
+      "id": "same_reconfirmed_new_offer",
+      "a": "changed_approved",
+      "b": "changed_approve_synonym",
+      "expected": "merge"
+    },
+    {
+      "id": "old_financial_promise_retained",
+      "a": "amount",
+      "b": "changed_approved",
+      "expected": "separate"
+    },
+    {
+      "id": "old_offer_reference_rejected",
+      "a": "approved",
+      "b": "stale_approval",
+      "expected": "abstain"
+    },
+    {
+      "id": "reaffirm_does_not_duplicate_goal",
+      "a": "approved",
+      "b": "reaffirm",
+      "expected": "merge"
+    },
+    {
+      "id": "replace_vs_add_goal",
+      "a": "replace_goal",
+      "b": "add_goal",
+      "expected": "separate"
+    },
+    {
+      "id": "partial_vs_full_scope",
+      "a": "partial",
+      "b": "both",
+      "expected": "separate"
+    },
+    {
+      "id": "accumulated_same_scope",
+      "a": "both",
+      "b": "accumulated",
+      "expected": "merge"
+    },
+    {
+      "id": "partial_revocation",
+      "a": "both",
+      "b": "revoke_bags",
+      "expected": "separate"
+    },
+    {
+      "id": "lookup_not_write_approval",
+      "a": "approved",
+      "b": "search_permission",
+      "expected": "separate"
+    },
+    {
+      "id": "unresolved_business_condition_abstains",
+      "a": "approved",
+      "b": "unknown",
+      "expected": "abstain"
+    },
+    {
+      "id": "legacy/natural-01",
+      "a": "natural-01/a",
+      "b": "natural-01/b",
+      "expected": "merge"
+    },
+    {
+      "id": "legacy/natural-02",
+      "a": "natural-02/a",
+      "b": "natural-02/b",
+      "expected": "merge"
+    },
+    {
+      "id": "legacy/natural-03",
+      "a": "natural-03/a",
+      "b": "natural-03/b",
+      "expected": "merge"
+    },
+    {
+      "id": "legacy/natural-04",
+      "a": "natural-04/a",
+      "b": "natural-04/b",
+      "expected": "merge"
+    },
+    {
+      "id": "legacy/natural-05",
+      "a": "natural-05/a",
+      "b": "natural-05/b",
+      "expected": "merge"
+    },
+    {
+      "id": "legacy/natural-13",
+      "a": "natural-13/a",
+      "b": "natural-13/b",
+      "expected": "separate"
+    },
+    {
+      "id": "legacy/natural-14",
+      "a": "natural-14/a",
+      "b": "natural-14/b",
+      "expected": "separate"
+    },
+    {
+      "id": "legacy/natural-15",
+      "a": "natural-15/a",
+      "b": "natural-15/b",
+      "expected": "separate"
+    },
+    {
+      "id": "legacy/natural-24",
+      "a": "natural-24/a",
+      "b": "natural-24/b",
+      "expected": "separate"
+    },
+    {
+      "id": "legacy/controlled-08",
+      "a": "controlled-08/a",
+      "b": "controlled-08/b",
+      "expected": "merge"
+    },
+    {
+      "id": "legacy/controlled-09",
+      "a": "controlled-09/a",
+      "b": "controlled-09/b",
+      "expected": "merge"
+    },
+    {
+      "id": "legacy/controlled-10",
+      "a": "controlled-10/a",
+      "b": "controlled-10/b",
+      "expected": "separate"
+    },
+    {
+      "id": "legacy/controlled-11",
+      "a": "controlled-11/a",
+      "b": "controlled-11/b",
+      "expected": "separate"
+    },
+    {
+      "id": "legacy/controlled-12",
+      "a": "controlled-12/a",
+      "b": "controlled-12/b",
+      "expected": "separate"
+    }
+  ]
+}

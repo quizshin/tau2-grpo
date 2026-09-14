@@ -1,0 +1,372 @@
+{
+  "simulated_model": true,
+  "real_model_calls": 0,
+  "gpu_used": false,
+  "training_enabled": false,
+  "cases": 51,
+  "valid_cases": 48,
+  "pairs": 34,
+  "passed_pairs": 34,
+  "checks": [
+    {
+      "id": "equivalent_goals_and_approval",
+      "a": "approved",
+      "b": "paraphrased",
+      "expected": "merge",
+      "actual": "merge",
+      "passed": true
+    },
+    {
+      "id": "different_amount",
+      "a": "approved",
+      "b": "amount",
+      "expected": "separate",
+      "actual": "separate",
+      "passed": true
+    },
+    {
+      "id": "different_card",
+      "a": "approved",
+      "b": "card",
+      "expected": "separate",
+      "actual": "separate",
+      "passed": true
+    },
+    {
+      "id": "different_currency",
+      "a": "approved",
+      "b": "currency",
+      "expected": "separate",
+      "actual": "separate",
+      "passed": true
+    },
+    {
+      "id": "different_object",
+      "a": "approved",
+      "b": "object",
+      "expected": "separate",
+      "actual": "separate",
+      "passed": true
+    },
+    {
+      "id": "conditional_vs_absolute",
+      "a": "approved",
+      "b": "conditional",
+      "expected": "separate",
+      "actual": "separate",
+      "passed": true
+    },
+    {
+      "id": "preference_is_still_state_information",
+      "a": "approved",
+      "b": "preference",
+      "expected": "separate",
+      "actual": "separate",
+      "passed": true
+    },
+    {
+      "id": "later_condition_invalidates",
+      "a": "approved",
+      "b": "later_condition",
+      "expected": "separate",
+      "actual": "separate",
+      "passed": true
+    },
+    {
+      "id": "identity_question_yes_abstains",
+      "a": "approved",
+      "b": "ambiguous_yes",
+      "expected": "abstain",
+      "actual": "abstain",
+      "passed": true
+    },
+    {
+      "id": "new_quote_not_preapproved",
+      "a": "approved",
+      "b": "changed_pending",
+      "expected": "separate",
+      "actual": "separate",
+      "passed": true
+    },
+    {
+      "id": "same_reconfirmed_new_offer",
+      "a": "changed_approved",
+      "b": "changed_approve_synonym",
+      "expected": "merge",
+      "actual": "merge",
+      "passed": true
+    },
+    {
+      "id": "old_financial_promise_retained",
+      "a": "amount",
+      "b": "changed_approved",
+      "expected": "separate",
+      "actual": "separate",
+      "passed": true
+    },
+    {
+      "id": "old_offer_reference_rejected",
+      "a": "approved",
+      "b": "stale_approval",
+      "expected": "abstain",
+      "actual": "abstain",
+      "passed": true
+    },
+    {
+      "id": "reaffirm_does_not_duplicate_goal",
+      "a": "approved",
+      "b": "reaffirm",
+      "expected": "merge",
+      "actual": "merge",
+      "passed": true
+    },
+    {
+      "id": "replace_vs_add_goal",
+      "a": "replace_goal",
+      "b": "add_goal",
+      "expected": "separate",
+      "actual": "separate",
+      "passed": true
+    },
+    {
+      "id": "partial_vs_full_scope",
+      "a": "partial",
+      "b": "both",
+      "expected": "separate",
+      "actual": "separate",
+      "passed": true
+    },
+    {
+      "id": "accumulated_same_scope",
+      "a": "both",
+      "b": "accumulated",
+      "expected": "merge",
+      "actual": "merge",
+      "passed": true
+    },
+    {
+      "id": "partial_revocation",
+      "a": "both",
+      "b": "revoke_bags",
+      "expected": "separate",
+      "actual": "separate",
+      "passed": true
+    },
+    {
+      "id": "lookup_not_write_approval",
+      "a": "approved",
+      "b": "search_permission",
+      "expected": "separate",
+      "actual": "separate",
+      "passed": true
+    },
+    {
+      "id": "unresolved_business_condition_abstains",
+      "a": "approved",
+      "b": "unknown",
+      "expected": "abstain",
+      "actual": "abstain",
+      "passed": true
+    },
+    {
+      "id": "legacy/natural-01",
+      "a": "natural-01/a",
+      "b": "natural-01/b",
+      "expected": "merge",
+      "actual": "merge",
+      "passed": true
+    },
+    {
+      "id": "legacy/natural-02",
+      "a": "natural-02/a",
+      "b": "natural-02/b",
+      "expected": "merge",
+      "actual": "merge",
+      "passed": true
+    },
+    {
+      "id": "legacy/natural-03",
+      "a": "natural-03/a",
+      "b": "natural-03/b",
+      "expected": "merge",
+      "actual": "merge",
+      "passed": true
+    },
+    {
+      "id": "legacy/natural-04",
+      "a": "natural-04/a",
+      "b": "natural-04/b",
+      "expected": "merge",
+      "actual": "merge",
+      "passed": true
+    },
+    {
+      "id": "legacy/natural-05",
+      "a": "natural-05/a",
+      "b": "natural-05/b",
+      "expected": "merge",
+      "actual": "merge",
+      "passed": true
+    },
+    {
+      "id": "legacy/natural-13",
+      "a": "natural-13/a",
+      "b": "natural-13/b",
+      "expected": "separate",
+      "actual": "separate",
+      "passed": true
+    },
+    {
+      "id": "legacy/natural-14",
+      "a": "natural-14/a",
+      "b": "natural-14/b",
+      "expected": "separate",
+      "actual": "separate",
+      "passed": true
+    },
+    {
+      "id": "legacy/natural-15",
+      "a": "natural-15/a",
+      "b": "natural-15/b",
+      "expected": "separate",
+      "actual": "separate",
+      "passed": true
+    },
+    {
+      "id": "legacy/natural-24",
+      "a": "natural-24/a",
+      "b": "natural-24/b",
+      "expected": "separate",
+      "actual": "separate",
+      "passed": true
+    },
+    {
+      "id": "legacy/controlled-08",
+      "a": "controlled-08/a",
+      "b": "controlled-08/b",
+      "expected": "merge",
+      "actual": "merge",
+      "passed": true
+    },
+    {
+      "id": "legacy/controlled-09",
+      "a": "controlled-09/a",
+      "b": "controlled-09/b",
+      "expected": "merge",
+      "actual": "merge",
+      "passed": true
+    },
+    {
+      "id": "legacy/controlled-10",
+      "a": "controlled-10/a",
+      "b": "controlled-10/b",
+      "expected": "separate",
+      "actual": "separate",
+      "passed": true
+    },
+    {
+      "id": "legacy/controlled-11",
+      "a": "controlled-11/a",
+      "b": "controlled-11/b",
+      "expected": "separate",
+      "actual": "separate",
+      "passed": true
+    },
+    {
+      "id": "legacy/controlled-12",
+      "a": "controlled-12/a",
+      "b": "controlled-12/b",
+      "expected": "separate",
+      "actual": "separate",
+      "passed": true
+    }
+  ],
+  "synthetic_credit_probes": [
+    {
+      "id": "equivalent_states_mixed_return",
+      "synthetic_returns": [
+        1,
+        0
+      ],
+      "combined_advantages": [
+        [
+          1.0
+        ],
+        [
+          -1.0
+        ]
+      ],
+      "usable_anchor_groups": 1,
+      "synthetic_not_rl_measurement": true
+    },
+    {
+      "id": "different_quotes_mixed_return",
+      "synthetic_returns": [
+        1,
+        0
+      ],
+      "combined_advantages": [
+        [
+          0.5
+        ],
+        [
+          -0.5
+        ]
+      ],
+      "usable_anchor_groups": 0,
+      "synthetic_not_rl_measurement": true
+    },
+    {
+      "id": "equivalent_states_equal_return",
+      "synthetic_returns": [
+        1,
+        1
+      ],
+      "combined_advantages": [
+        [
+          0.0
+        ],
+        [
+          0.0
+        ]
+      ],
+      "usable_anchor_groups": 1,
+      "synthetic_not_rl_measurement": true
+    },
+    {
+      "id": "different_episode_groups",
+      "synthetic_returns": [
+        1,
+        0
+      ],
+      "combined_advantages": [
+        [
+          0.0
+        ],
+        [
+          0.0
+        ]
+      ],
+      "usable_anchor_groups": 0,
+      "synthetic_not_rl_measurement": true
+    }
+  ],
+  "provenance": {
+    "cases_sha256": "0f903d0319e9ebf6039c0435fd44c8334a38aae11fd537f5e0903115b051f472",
+    "responses_sha256": "ed2a27fcaee6b8f01d9ffa9f8dbb07ab89e32ee0a52994b7de78309e7488a625",
+    "prompt_sha256": "0bd3ef9cd34d372d092997965a97f5cab8ed4fe0ab8425ce5601b2542f18c6fc"
+  },
+  "scope": "State-transition/normalization contracts with pre-authored simulated semantic outputs; NOT real-model extraction accuracy.",
+  "tests": {
+    "passed": 310,
+    "warnings": 2,
+    "seconds": 15.55
+  },
+  "code_sha256": {
+    "tau3_grpo/algorithms/anchors/semantic_state.py": "db4bf3b4adc9382b389db5b958e740560860086f9477657612fef4674031f077",
+    "tau3_grpo/models/semantic_extractor.py": "7c38e61b9bb1fc43f5d259fe2174d30dc204e5d5e1921b4541523b3010ab04cd",
+    "tau3_grpo/analysis/audit_semantic_model.py": "586901f8503607735818dd657ebdc1edf13765f0b5ce1a54a651a7c1053398d3",
+    "configs/prompts/semantic_events_v1.txt": "0bd3ef9cd34d372d092997965a97f5cab8ed4fe0ab8425ce5601b2542f18c6fc",
+    "tests/test_semantic_state.py": "e9b04006329489d7d2ce98716cdb6f6330834cdf0c205c54f358444aafc6d0fe"
+  }
+}

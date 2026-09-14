@@ -1,0 +1,22 @@
+# Assumed semantic model only: no network requests, no training hook changes.
+enabled: true
+provider: fixture
+cases: tests/fixtures/semantic_model_cases_20260914.json
+responses: tests/fixtures/semantic_model_responses_20260914.json
+synthetic_credit_probes:
+- id: equivalent_states_mixed_return
+  cases: [approved, paraphrased]
+  episode_groups: [g, g]
+  synthetic_returns: [1, 0]
+- id: different_quotes_mixed_return
+  cases: [approved, amount]
+  episode_groups: [g, g]
+  synthetic_returns: [1, 0]
+- id: equivalent_states_equal_return
+  cases: [approved, paraphrased]
+  episode_groups: [g, g]
+  synthetic_returns: [1, 1]
+- id: different_episode_groups
+  cases: [approved, paraphrased]
+  episode_groups: [g1, g2]
+  synthetic_returns: [1, 0]

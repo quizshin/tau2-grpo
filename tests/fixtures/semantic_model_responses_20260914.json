@@ -1,0 +1,3278 @@
+{
+  "simulated": true,
+  "packets": [
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "41f4d07d03269754fb98246fbf3d9627803d210dee200c2f726ce6cd19155105",
+      "events": [
+        {
+          "id": "g",
+          "kind": "goal",
+          "at": 0,
+          "data": {
+            "operation": "cancel",
+            "target": {
+              "reservation_id": "ABC123"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 33,
+              "quote": "Please cancel reservation ABC123."
+            }
+          ]
+        },
+        {
+          "id": "p",
+          "kind": "proposal",
+          "at": 1,
+          "data": {
+            "goal_ids": [
+              "g"
+            ],
+            "operations": [
+              {
+                "operation": "cancel",
+                "target": {
+                  "reservation_id": "ABC123"
+                },
+                "terms": {
+                  "quoted_refund": "100",
+                  "currency": "USD",
+                  "refund_payment_id": "card_1"
+                },
+                "goal_ids": [
+                  "g"
+                ]
+              }
+            ],
+            "supersedes": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 62,
+              "quote": "Cancel ABC123 with a USD 100 refund to card_1. Please confirm."
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "kind": "consent",
+          "at": 2,
+          "data": {
+            "proposal_id": "p",
+            "operation_indices": [
+              0
+            ],
+            "status": "approved",
+            "binding": "reply"
+          },
+          "evidence": [
+            {
+              "message_index": 2,
+              "start": 0,
+              "end": 20,
+              "quote": "Yes, please proceed."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "2c4deac3c40a362348be9bf7abbcaf9eafd05809b5f8070019246ffd7d6b960e",
+      "events": [
+        {
+          "id": "g",
+          "kind": "goal",
+          "at": 0,
+          "data": {
+            "operation": "cancel",
+            "target": {
+              "reservation_id": "ABC123"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 32,
+              "quote": "Could you cancel booking ABC123?"
+            }
+          ]
+        },
+        {
+          "id": "p",
+          "kind": "proposal",
+          "at": 1,
+          "data": {
+            "goal_ids": [
+              "g"
+            ],
+            "operations": [
+              {
+                "operation": "cancel",
+                "target": {
+                  "reservation_id": "ABC123"
+                },
+                "terms": {
+                  "quoted_refund": "100",
+                  "currency": "USD",
+                  "refund_payment_id": "card_1"
+                },
+                "goal_ids": [
+                  "g"
+                ]
+              }
+            ],
+            "supersedes": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 62,
+              "quote": "Cancel ABC123 with a USD 100 refund to card_1. Please confirm."
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "kind": "consent",
+          "at": 2,
+          "data": {
+            "proposal_id": "p",
+            "operation_indices": [
+              0
+            ],
+            "status": "approved",
+            "binding": "reply"
+          },
+          "evidence": [
+            {
+              "message_index": 2,
+              "start": 0,
+              "end": 10,
+              "quote": "I approve."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "0107ae084cd7d68e9884c0c8794b4ae862e2fa5a6e0de7d715f0028a58bbe6c1",
+      "events": [
+        {
+          "id": "g",
+          "kind": "goal",
+          "at": 0,
+          "data": {
+            "operation": "cancel",
+            "target": {
+              "reservation_id": "ABC123"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 33,
+              "quote": "Please cancel reservation ABC123."
+            }
+          ]
+        },
+        {
+          "id": "p",
+          "kind": "proposal",
+          "at": 1,
+          "data": {
+            "goal_ids": [
+              "g"
+            ],
+            "operations": [
+              {
+                "operation": "cancel",
+                "target": {
+                  "reservation_id": "ABC123"
+                },
+                "terms": {
+                  "quoted_refund": "272",
+                  "currency": "USD",
+                  "refund_payment_id": "card_1"
+                },
+                "goal_ids": [
+                  "g"
+                ]
+              }
+            ],
+            "supersedes": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 62,
+              "quote": "Cancel ABC123 with a USD 272 refund to card_1. Please confirm."
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "kind": "consent",
+          "at": 2,
+          "data": {
+            "proposal_id": "p",
+            "operation_indices": [
+              0
+            ],
+            "status": "approved",
+            "binding": "reply"
+          },
+          "evidence": [
+            {
+              "message_index": 2,
+              "start": 0,
+              "end": 20,
+              "quote": "Yes, please proceed."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "d721f0a6f6e407849f914319f9d9ccd3473022250a2ab963e8ad410a973badcf",
+      "events": [
+        {
+          "id": "g",
+          "kind": "goal",
+          "at": 0,
+          "data": {
+            "operation": "cancel",
+            "target": {
+              "reservation_id": "ABC123"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 33,
+              "quote": "Please cancel reservation ABC123."
+            }
+          ]
+        },
+        {
+          "id": "p",
+          "kind": "proposal",
+          "at": 1,
+          "data": {
+            "goal_ids": [
+              "g"
+            ],
+            "operations": [
+              {
+                "operation": "cancel",
+                "target": {
+                  "reservation_id": "ABC123"
+                },
+                "terms": {
+                  "quoted_refund": "100",
+                  "currency": "USD",
+                  "refund_payment_id": "card_2"
+                },
+                "goal_ids": [
+                  "g"
+                ]
+              }
+            ],
+            "supersedes": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 62,
+              "quote": "Cancel ABC123 with a USD 100 refund to card_2. Please confirm."
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "kind": "consent",
+          "at": 2,
+          "data": {
+            "proposal_id": "p",
+            "operation_indices": [
+              0
+            ],
+            "status": "approved",
+            "binding": "reply"
+          },
+          "evidence": [
+            {
+              "message_index": 2,
+              "start": 0,
+              "end": 20,
+              "quote": "Yes, please proceed."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "4c92c7eaeca5d9d8ff82c9e56731152586f0d2b352aa8c935b697f8d56cc52c1",
+      "events": [
+        {
+          "id": "g",
+          "kind": "goal",
+          "at": 0,
+          "data": {
+            "operation": "cancel",
+            "target": {
+              "reservation_id": "ABC123"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 33,
+              "quote": "Please cancel reservation ABC123."
+            }
+          ]
+        },
+        {
+          "id": "p",
+          "kind": "proposal",
+          "at": 1,
+          "data": {
+            "goal_ids": [
+              "g"
+            ],
+            "operations": [
+              {
+                "operation": "cancel",
+                "target": {
+                  "reservation_id": "ABC123"
+                },
+                "terms": {
+                  "quoted_refund": "100",
+                  "currency": "EUR",
+                  "refund_payment_id": "card_1"
+                },
+                "goal_ids": [
+                  "g"
+                ]
+              }
+            ],
+            "supersedes": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 62,
+              "quote": "Cancel ABC123 with a EUR 100 refund to card_1. Please confirm."
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "kind": "consent",
+          "at": 2,
+          "data": {
+            "proposal_id": "p",
+            "operation_indices": [
+              0
+            ],
+            "status": "approved",
+            "binding": "reply"
+          },
+          "evidence": [
+            {
+              "message_index": 2,
+              "start": 0,
+              "end": 20,
+              "quote": "Yes, please proceed."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "e002ca7f021b081c7e08393d974ff767b89d894b057860fb91fb6e81282252e8",
+      "events": [
+        {
+          "id": "g",
+          "kind": "goal",
+          "at": 0,
+          "data": {
+            "operation": "cancel",
+            "target": {
+              "reservation_id": "XYZ999"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 33,
+              "quote": "Please cancel reservation XYZ999."
+            }
+          ]
+        },
+        {
+          "id": "p",
+          "kind": "proposal",
+          "at": 1,
+          "data": {
+            "goal_ids": [
+              "g"
+            ],
+            "operations": [
+              {
+                "operation": "cancel",
+                "target": {
+                  "reservation_id": "XYZ999"
+                },
+                "terms": {
+                  "quoted_refund": "100",
+                  "currency": "USD",
+                  "refund_payment_id": "card_1"
+                },
+                "goal_ids": [
+                  "g"
+                ]
+              }
+            ],
+            "supersedes": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 62,
+              "quote": "Cancel XYZ999 with a USD 100 refund to card_1. Please confirm."
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "kind": "consent",
+          "at": 2,
+          "data": {
+            "proposal_id": "p",
+            "operation_indices": [
+              0
+            ],
+            "status": "approved",
+            "binding": "reply"
+          },
+          "evidence": [
+            {
+              "message_index": 2,
+              "start": 0,
+              "end": 20,
+              "quote": "Yes, please proceed."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "3f8982eb6703c23be38a18f3f94c33d7df50e75fe282fd121774c872e71596bd",
+      "events": [
+        {
+          "id": "g",
+          "kind": "goal",
+          "at": 0,
+          "data": {
+            "operation": "cancel",
+            "target": {
+              "reservation_id": "ABC123"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 33,
+              "quote": "Please cancel reservation ABC123."
+            }
+          ]
+        },
+        {
+          "id": "p",
+          "kind": "proposal",
+          "at": 1,
+          "data": {
+            "goal_ids": [
+              "g"
+            ],
+            "operations": [
+              {
+                "operation": "cancel",
+                "target": {
+                  "reservation_id": "ABC123"
+                },
+                "terms": {
+                  "quoted_refund": "100",
+                  "currency": "USD",
+                  "refund_payment_id": "card_1"
+                },
+                "goal_ids": [
+                  "g"
+                ]
+              }
+            ],
+            "supersedes": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 62,
+              "quote": "Cancel ABC123 with a USD 100 refund to card_1. Please confirm."
+            }
+          ]
+        },
+        {
+          "id": "c",
+          "kind": "constraint",
+          "at": 2,
+          "data": {
+            "goal_ids": [
+              "g"
+            ],
+            "predicate": {
+              "fee": {
+                "op": "eq",
+                "amount": "0",
+                "currency": "USD"
+              }
+            },
+            "strength": "requirement",
+            "status": "active",
+            "supersedes": []
+          },
+          "evidence": [
+            {
+              "message_index": 2,
+              "start": 0,
+              "end": 33,
+              "quote": "Yes, but only if there is no fee."
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "kind": "consent",
+          "at": 2,
+          "data": {
+            "proposal_id": "p",
+            "operation_indices": [
+              0
+            ],
+            "status": "conditional",
+            "binding": "reply"
+          },
+          "evidence": [
+            {
+              "message_index": 2,
+              "start": 0,
+              "end": 33,
+              "quote": "Yes, but only if there is no fee."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "7ba8750fea1afa7c12c70341dde0a3385b7405ac55a4298a6d02086bf589384d",
+      "events": [
+        {
+          "id": "g",
+          "kind": "goal",
+          "at": 0,
+          "data": {
+            "operation": "cancel",
+            "target": {
+              "reservation_id": "ABC123"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 44,
+              "quote": "Please cancel ABC123. I would prefer no fee."
+            }
+          ]
+        },
+        {
+          "id": "c",
+          "kind": "constraint",
+          "at": 0,
+          "data": {
+            "goal_ids": [
+              "g"
+            ],
+            "predicate": {
+              "fee": {
+                "op": "eq",
+                "amount": "0",
+                "currency": "USD"
+              }
+            },
+            "strength": "preference",
+            "status": "active",
+            "supersedes": []
+          },
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 44,
+              "quote": "Please cancel ABC123. I would prefer no fee."
+            }
+          ]
+        },
+        {
+          "id": "p",
+          "kind": "proposal",
+          "at": 1,
+          "data": {
+            "goal_ids": [
+              "g"
+            ],
+            "operations": [
+              {
+                "operation": "cancel",
+                "target": {
+                  "reservation_id": "ABC123"
+                },
+                "terms": {
+                  "quoted_refund": "100",
+                  "currency": "USD",
+                  "refund_payment_id": "card_1"
+                },
+                "goal_ids": [
+                  "g"
+                ]
+              }
+            ],
+            "supersedes": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 62,
+              "quote": "Cancel ABC123 with a USD 100 refund to card_1. Please confirm."
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "kind": "consent",
+          "at": 2,
+          "data": {
+            "proposal_id": "p",
+            "operation_indices": [
+              0
+            ],
+            "status": "approved",
+            "binding": "reply"
+          },
+          "evidence": [
+            {
+              "message_index": 2,
+              "start": 0,
+              "end": 20,
+              "quote": "Yes, please proceed."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "69dae5a5806d01db0711c8b1225667235f3ac59f4f8310aa47918148399be08c",
+      "events": [
+        {
+          "id": "g",
+          "kind": "goal",
+          "at": 0,
+          "data": {
+            "operation": "cancel",
+            "target": {
+              "reservation_id": "ABC123"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 33,
+              "quote": "Please cancel reservation ABC123."
+            }
+          ]
+        },
+        {
+          "id": "p",
+          "kind": "proposal",
+          "at": 1,
+          "data": {
+            "goal_ids": [
+              "g"
+            ],
+            "operations": [
+              {
+                "operation": "cancel",
+                "target": {
+                  "reservation_id": "ABC123"
+                },
+                "terms": {
+                  "quoted_refund": "100",
+                  "currency": "USD",
+                  "refund_payment_id": "card_1"
+                },
+                "goal_ids": [
+                  "g"
+                ]
+              }
+            ],
+            "supersedes": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 62,
+              "quote": "Cancel ABC123 with a USD 100 refund to card_1. Please confirm."
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "kind": "consent",
+          "at": 2,
+          "data": {
+            "proposal_id": "p",
+            "operation_indices": [
+              0
+            ],
+            "status": "approved",
+            "binding": "reply"
+          },
+          "evidence": [
+            {
+              "message_index": 2,
+              "start": 0,
+              "end": 20,
+              "quote": "Yes, please proceed."
+            }
+          ]
+        },
+        {
+          "id": "c",
+          "kind": "constraint",
+          "at": 3,
+          "data": {
+            "goal_ids": [
+              "g"
+            ],
+            "predicate": {
+              "fee": {
+                "op": "eq",
+                "amount": "0",
+                "currency": "USD"
+              }
+            },
+            "strength": "requirement",
+            "status": "active",
+            "supersedes": []
+          },
+          "evidence": [
+            {
+              "message_index": 3,
+              "start": 0,
+              "end": 21,
+              "quote": "I now require no fee."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "6f119e768d7912a87f69faea6c9553a0f5ce8d5d5f1f9bfecaf89f92a72f2c0c",
+      "events": [
+        {
+          "id": "g",
+          "kind": "goal",
+          "at": 0,
+          "data": {
+            "operation": "cancel",
+            "target": {
+              "reservation_id": "ABC123"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 33,
+              "quote": "Please cancel reservation ABC123."
+            }
+          ]
+        },
+        {
+          "id": "p",
+          "kind": "proposal",
+          "at": 1,
+          "data": {
+            "goal_ids": [
+              "g"
+            ],
+            "operations": [
+              {
+                "operation": "cancel",
+                "target": {
+                  "reservation_id": "ABC123"
+                },
+                "terms": {
+                  "quoted_refund": "100",
+                  "currency": "USD",
+                  "refund_payment_id": "card_1"
+                },
+                "goal_ids": [
+                  "g"
+                ]
+              }
+            ],
+            "supersedes": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 62,
+              "quote": "Cancel ABC123 with a USD 100 refund to card_1. Please confirm."
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "kind": "consent",
+          "at": 2,
+          "data": {
+            "proposal_id": "p",
+            "operation_indices": [
+              0
+            ],
+            "status": "approved",
+            "binding": "reply"
+          },
+          "evidence": [
+            {
+              "message_index": 2,
+              "start": 0,
+              "end": 20,
+              "quote": "Yes, please proceed."
+            }
+          ]
+        },
+        {
+          "id": "q",
+          "kind": "question",
+          "at": 3,
+          "data": {
+            "topic": "request_user_id",
+            "proposal_id": null
+          },
+          "evidence": [
+            {
+              "message_index": 3,
+              "start": 0,
+              "end": 21,
+              "quote": "What is your user ID?"
+            }
+          ]
+        },
+        {
+          "id": "a2",
+          "kind": "consent",
+          "at": 4,
+          "data": {
+            "proposal_id": "p",
+            "operation_indices": [
+              0
+            ],
+            "status": "approved",
+            "binding": "reply"
+          },
+          "evidence": [
+            {
+              "message_index": 4,
+              "start": 0,
+              "end": 3,
+              "quote": "Yes"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "6d621daea3f84de1edcd8be04dfc34bf491f5e43b45e34deb765df82de786cdf",
+      "events": [
+        {
+          "id": "g",
+          "kind": "goal",
+          "at": 0,
+          "data": {
+            "operation": "cancel",
+            "target": {
+              "reservation_id": "ABC123"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 33,
+              "quote": "Please cancel reservation ABC123."
+            }
+          ]
+        },
+        {
+          "id": "p",
+          "kind": "proposal",
+          "at": 1,
+          "data": {
+            "goal_ids": [
+              "g"
+            ],
+            "operations": [
+              {
+                "operation": "cancel",
+                "target": {
+                  "reservation_id": "ABC123"
+                },
+                "terms": {
+                  "quoted_refund": "100",
+                  "currency": "USD",
+                  "refund_payment_id": "card_1"
+                },
+                "goal_ids": [
+                  "g"
+                ]
+              }
+            ],
+            "supersedes": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 62,
+              "quote": "Cancel ABC123 with a USD 100 refund to card_1. Please confirm."
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "kind": "consent",
+          "at": 2,
+          "data": {
+            "proposal_id": "p",
+            "operation_indices": [
+              0
+            ],
+            "status": "approved",
+            "binding": "reply"
+          },
+          "evidence": [
+            {
+              "message_index": 2,
+              "start": 0,
+              "end": 20,
+              "quote": "Yes, please proceed."
+            }
+          ]
+        },
+        {
+          "id": "p2",
+          "kind": "proposal",
+          "at": 3,
+          "data": {
+            "goal_ids": [
+              "g"
+            ],
+            "operations": [
+              {
+                "operation": "cancel",
+                "target": {
+                  "reservation_id": "ABC123"
+                },
+                "terms": {
+                  "quoted_refund": "272",
+                  "currency": "USD",
+                  "refund_payment_id": "card_1"
+                },
+                "goal_ids": [
+                  "g"
+                ]
+              }
+            ],
+            "supersedes": [
+              "p"
+            ]
+          },
+          "evidence": [
+            {
+              "message_index": 3,
+              "start": 0,
+              "end": 68,
+              "quote": "New quote: cancel ABC123 for USD 272 back to card_1. Please confirm."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "d2d448afafb6addf1a3468fecfa0c87213d7a66616a6dcd9b26856c076647d06",
+      "events": [
+        {
+          "id": "g",
+          "kind": "goal",
+          "at": 0,
+          "data": {
+            "operation": "cancel",
+            "target": {
+              "reservation_id": "ABC123"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 33,
+              "quote": "Please cancel reservation ABC123."
+            }
+          ]
+        },
+        {
+          "id": "p",
+          "kind": "proposal",
+          "at": 1,
+          "data": {
+            "goal_ids": [
+              "g"
+            ],
+            "operations": [
+              {
+                "operation": "cancel",
+                "target": {
+                  "reservation_id": "ABC123"
+                },
+                "terms": {
+                  "quoted_refund": "100",
+                  "currency": "USD",
+                  "refund_payment_id": "card_1"
+                },
+                "goal_ids": [
+                  "g"
+                ]
+              }
+            ],
+            "supersedes": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 62,
+              "quote": "Cancel ABC123 with a USD 100 refund to card_1. Please confirm."
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "kind": "consent",
+          "at": 2,
+          "data": {
+            "proposal_id": "p",
+            "operation_indices": [
+              0
+            ],
+            "status": "approved",
+            "binding": "reply"
+          },
+          "evidence": [
+            {
+              "message_index": 2,
+              "start": 0,
+              "end": 20,
+              "quote": "Yes, please proceed."
+            }
+          ]
+        },
+        {
+          "id": "p2",
+          "kind": "proposal",
+          "at": 3,
+          "data": {
+            "goal_ids": [
+              "g"
+            ],
+            "operations": [
+              {
+                "operation": "cancel",
+                "target": {
+                  "reservation_id": "ABC123"
+                },
+                "terms": {
+                  "quoted_refund": "272",
+                  "currency": "USD",
+                  "refund_payment_id": "card_1"
+                },
+                "goal_ids": [
+                  "g"
+                ]
+              }
+            ],
+            "supersedes": [
+              "p"
+            ]
+          },
+          "evidence": [
+            {
+              "message_index": 3,
+              "start": 0,
+              "end": 68,
+              "quote": "New quote: cancel ABC123 for USD 272 back to card_1. Please confirm."
+            }
+          ]
+        },
+        {
+          "id": "a2",
+          "kind": "consent",
+          "at": 4,
+          "data": {
+            "proposal_id": "p2",
+            "operation_indices": [
+              0
+            ],
+            "status": "approved",
+            "binding": "reply"
+          },
+          "evidence": [
+            {
+              "message_index": 4,
+              "start": 0,
+              "end": 3,
+              "quote": "Yes"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "8c0711f92c505001ad8d28676656e80f6d43605a3b92cd4f275fd8b8837e3135",
+      "events": [
+        {
+          "id": "g",
+          "kind": "goal",
+          "at": 0,
+          "data": {
+            "operation": "cancel",
+            "target": {
+              "reservation_id": "ABC123"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 33,
+              "quote": "Please cancel reservation ABC123."
+            }
+          ]
+        },
+        {
+          "id": "p",
+          "kind": "proposal",
+          "at": 1,
+          "data": {
+            "goal_ids": [
+              "g"
+            ],
+            "operations": [
+              {
+                "operation": "cancel",
+                "target": {
+                  "reservation_id": "ABC123"
+                },
+                "terms": {
+                  "quoted_refund": "100",
+                  "currency": "USD",
+                  "refund_payment_id": "card_1"
+                },
+                "goal_ids": [
+                  "g"
+                ]
+              }
+            ],
+            "supersedes": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 62,
+              "quote": "Cancel ABC123 with a USD 100 refund to card_1. Please confirm."
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "kind": "consent",
+          "at": 2,
+          "data": {
+            "proposal_id": "p",
+            "operation_indices": [
+              0
+            ],
+            "status": "approved",
+            "binding": "reply"
+          },
+          "evidence": [
+            {
+              "message_index": 2,
+              "start": 0,
+              "end": 20,
+              "quote": "Yes, please proceed."
+            }
+          ]
+        },
+        {
+          "id": "p2",
+          "kind": "proposal",
+          "at": 3,
+          "data": {
+            "goal_ids": [
+              "g"
+            ],
+            "operations": [
+              {
+                "operation": "cancel",
+                "target": {
+                  "reservation_id": "ABC123"
+                },
+                "terms": {
+                  "quoted_refund": "272",
+                  "currency": "USD",
+                  "refund_payment_id": "card_1"
+                },
+                "goal_ids": [
+                  "g"
+                ]
+              }
+            ],
+            "supersedes": [
+              "p"
+            ]
+          },
+          "evidence": [
+            {
+              "message_index": 3,
+              "start": 0,
+              "end": 68,
+              "quote": "New quote: cancel ABC123 for USD 272 back to card_1. Please confirm."
+            }
+          ]
+        },
+        {
+          "id": "a2",
+          "kind": "consent",
+          "at": 4,
+          "data": {
+            "proposal_id": "p2",
+            "operation_indices": [
+              0
+            ],
+            "status": "approved",
+            "binding": "reply"
+          },
+          "evidence": [
+            {
+              "message_index": 4,
+              "start": 0,
+              "end": 10,
+              "quote": "I approve."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "0c8da94e59ef5d42463ccb7527f765be249f4cb816b09bb9b710a668d369da0b",
+      "events": [
+        {
+          "id": "g",
+          "kind": "goal",
+          "at": 0,
+          "data": {
+            "operation": "cancel",
+            "target": {
+              "reservation_id": "ABC123"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 33,
+              "quote": "Please cancel reservation ABC123."
+            }
+          ]
+        },
+        {
+          "id": "p",
+          "kind": "proposal",
+          "at": 1,
+          "data": {
+            "goal_ids": [
+              "g"
+            ],
+            "operations": [
+              {
+                "operation": "cancel",
+                "target": {
+                  "reservation_id": "ABC123"
+                },
+                "terms": {
+                  "quoted_refund": "100",
+                  "currency": "USD",
+                  "refund_payment_id": "card_1"
+                },
+                "goal_ids": [
+                  "g"
+                ]
+              }
+            ],
+            "supersedes": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 62,
+              "quote": "Cancel ABC123 with a USD 100 refund to card_1. Please confirm."
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "kind": "consent",
+          "at": 2,
+          "data": {
+            "proposal_id": "p",
+            "operation_indices": [
+              0
+            ],
+            "status": "approved",
+            "binding": "reply"
+          },
+          "evidence": [
+            {
+              "message_index": 2,
+              "start": 0,
+              "end": 20,
+              "quote": "Yes, please proceed."
+            }
+          ]
+        },
+        {
+          "id": "p2",
+          "kind": "proposal",
+          "at": 3,
+          "data": {
+            "goal_ids": [
+              "g"
+            ],
+            "operations": [
+              {
+                "operation": "cancel",
+                "target": {
+                  "reservation_id": "ABC123"
+                },
+                "terms": {
+                  "quoted_refund": "272",
+                  "currency": "USD",
+                  "refund_payment_id": "card_1"
+                },
+                "goal_ids": [
+                  "g"
+                ]
+              }
+            ],
+            "supersedes": [
+              "p"
+            ]
+          },
+          "evidence": [
+            {
+              "message_index": 3,
+              "start": 0,
+              "end": 68,
+              "quote": "New quote: cancel ABC123 for USD 272 back to card_1. Please confirm."
+            }
+          ]
+        },
+        {
+          "id": "a2",
+          "kind": "consent",
+          "at": 4,
+          "data": {
+            "proposal_id": "p",
+            "operation_indices": [
+              0
+            ],
+            "status": "approved",
+            "binding": "explicit"
+          },
+          "evidence": [
+            {
+              "message_index": 4,
+              "start": 0,
+              "end": 36,
+              "quote": "I approve the earlier USD 100 quote."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "9d3f3485560dcae08814a30e3465b516e5c66f5b0e153216b6a923ff3ae957c8",
+      "events": [
+        {
+          "id": "g",
+          "kind": "goal",
+          "at": 0,
+          "data": {
+            "operation": "cancel",
+            "target": {
+              "reservation_id": "ABC123"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 33,
+              "quote": "Please cancel reservation ABC123."
+            }
+          ]
+        },
+        {
+          "id": "p",
+          "kind": "proposal",
+          "at": 1,
+          "data": {
+            "goal_ids": [
+              "g"
+            ],
+            "operations": [
+              {
+                "operation": "cancel",
+                "target": {
+                  "reservation_id": "ABC123"
+                },
+                "terms": {
+                  "quoted_refund": "100",
+                  "currency": "USD",
+                  "refund_payment_id": "card_1"
+                },
+                "goal_ids": [
+                  "g"
+                ]
+              }
+            ],
+            "supersedes": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 62,
+              "quote": "Cancel ABC123 with a USD 100 refund to card_1. Please confirm."
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "kind": "consent",
+          "at": 2,
+          "data": {
+            "proposal_id": "p",
+            "operation_indices": [
+              0
+            ],
+            "status": "approved",
+            "binding": "reply"
+          },
+          "evidence": [
+            {
+              "message_index": 2,
+              "start": 0,
+              "end": 20,
+              "quote": "Yes, please proceed."
+            }
+          ]
+        },
+        {
+          "id": "g2",
+          "kind": "goal",
+          "at": 3,
+          "data": {
+            "operation": "cancel",
+            "target": {
+              "reservation_id": "ABC123"
+            },
+            "relation": "reaffirm",
+            "replaces": [
+              "g"
+            ]
+          },
+          "evidence": [
+            {
+              "message_index": 3,
+              "start": 0,
+              "end": 43,
+              "quote": "Please cancel ABC123, as already discussed."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "40b44f10e208c41949afa98b1b0af66615c85baa64964b86fc93ae7a3847be84",
+      "events": [
+        {
+          "id": "g0",
+          "kind": "goal",
+          "at": 0,
+          "data": {
+            "operation": "other",
+            "target": {
+              "reservation_id": "ABC123",
+              "action": "remove_second_passenger"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 40,
+              "quote": "Remove the second passenger from ABC123."
+            }
+          ]
+        },
+        {
+          "id": "g1",
+          "kind": "goal",
+          "at": 1,
+          "data": {
+            "operation": "change_cabin",
+            "target": {
+              "reservation_id": "ABC123",
+              "target_cabin": "economy",
+              "passengers": "all"
+            },
+            "relation": "replace",
+            "replaces": [
+              "g0"
+            ]
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 49,
+              "quote": "Instead, downgrade everyone on ABC123 to economy."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "27f5d8cf66d2d6f82286e201b2b580b9b284f4f9b2757e42b7a7fa60f5db1a29",
+      "events": [
+        {
+          "id": "g0",
+          "kind": "goal",
+          "at": 0,
+          "data": {
+            "operation": "other",
+            "target": {
+              "reservation_id": "ABC123",
+              "action": "remove_second_passenger"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 40,
+              "quote": "Remove the second passenger from ABC123."
+            }
+          ]
+        },
+        {
+          "id": "g1",
+          "kind": "goal",
+          "at": 1,
+          "data": {
+            "operation": "change_cabin",
+            "target": {
+              "reservation_id": "ABC123",
+              "target_cabin": "economy",
+              "passengers": "all"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 45,
+              "quote": "Also downgrade everyone on ABC123 to economy."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "9714e54701c557589db706c3ed6a713804901f23e1bbbf42c2878eee625536e3",
+      "events": [
+        {
+          "id": "gf",
+          "kind": "goal",
+          "at": 0,
+          "data": {
+            "operation": "change_flights",
+            "target": {
+              "reservation_id": "ABC123",
+              "date": "2024-05-16"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 39,
+              "quote": "Move ABC123 to May 16 and add two bags."
+            }
+          ]
+        },
+        {
+          "id": "gb",
+          "kind": "goal",
+          "at": 0,
+          "data": {
+            "operation": "change_baggage",
+            "target": {
+              "reservation_id": "ABC123",
+              "add_bags": 2
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 39,
+              "quote": "Move ABC123 to May 16 and add two bags."
+            }
+          ]
+        },
+        {
+          "id": "p",
+          "kind": "proposal",
+          "at": 1,
+          "data": {
+            "goal_ids": [
+              "gf",
+              "gb"
+            ],
+            "operations": [
+              {
+                "operation": "change_flights",
+                "target": {
+                  "reservation_id": "ABC123",
+                  "date": "2024-05-16"
+                },
+                "terms": {
+                  "charge": "0",
+                  "currency": "USD"
+                },
+                "goal_ids": [
+                  "gf"
+                ]
+              },
+              {
+                "operation": "change_baggage",
+                "target": {
+                  "reservation_id": "ABC123",
+                  "add_bags": 2
+                },
+                "terms": {
+                  "charge": "0",
+                  "currency": "USD"
+                },
+                "goal_ids": [
+                  "gb"
+                ]
+              }
+            ],
+            "supersedes": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 89,
+              "quote": "Offer: move ABC123 to May 16 and add two bags, both free. Confirm which changes you want."
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "kind": "consent",
+          "at": 2,
+          "data": {
+            "proposal_id": "p",
+            "operation_indices": [
+              0
+            ],
+            "status": "approved",
+            "binding": "reply"
+          },
+          "evidence": [
+            {
+              "message_index": 2,
+              "start": 0,
+              "end": 29,
+              "quote": "Approve only the date change."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "fc0028f7c5a7cde86f2bd9d42c2b78afc8420c3cf8d1f15dea991dd572a28a4e",
+      "events": [
+        {
+          "id": "gf",
+          "kind": "goal",
+          "at": 0,
+          "data": {
+            "operation": "change_flights",
+            "target": {
+              "reservation_id": "ABC123",
+              "date": "2024-05-16"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 39,
+              "quote": "Move ABC123 to May 16 and add two bags."
+            }
+          ]
+        },
+        {
+          "id": "gb",
+          "kind": "goal",
+          "at": 0,
+          "data": {
+            "operation": "change_baggage",
+            "target": {
+              "reservation_id": "ABC123",
+              "add_bags": 2
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 39,
+              "quote": "Move ABC123 to May 16 and add two bags."
+            }
+          ]
+        },
+        {
+          "id": "p",
+          "kind": "proposal",
+          "at": 1,
+          "data": {
+            "goal_ids": [
+              "gf",
+              "gb"
+            ],
+            "operations": [
+              {
+                "operation": "change_flights",
+                "target": {
+                  "reservation_id": "ABC123",
+                  "date": "2024-05-16"
+                },
+                "terms": {
+                  "charge": "0",
+                  "currency": "USD"
+                },
+                "goal_ids": [
+                  "gf"
+                ]
+              },
+              {
+                "operation": "change_baggage",
+                "target": {
+                  "reservation_id": "ABC123",
+                  "add_bags": 2
+                },
+                "terms": {
+                  "charge": "0",
+                  "currency": "USD"
+                },
+                "goal_ids": [
+                  "gb"
+                ]
+              }
+            ],
+            "supersedes": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 89,
+              "quote": "Offer: move ABC123 to May 16 and add two bags, both free. Confirm which changes you want."
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "kind": "consent",
+          "at": 2,
+          "data": {
+            "proposal_id": "p",
+            "operation_indices": [
+              0,
+              1
+            ],
+            "status": "approved",
+            "binding": "reply"
+          },
+          "evidence": [
+            {
+              "message_index": 2,
+              "start": 0,
+              "end": 21,
+              "quote": "Approve both changes."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "f29113769d04f0cd89b36848a03e7e147505256caec0afee2810b8602b6deaa9",
+      "events": [
+        {
+          "id": "gf",
+          "kind": "goal",
+          "at": 0,
+          "data": {
+            "operation": "change_flights",
+            "target": {
+              "reservation_id": "ABC123",
+              "date": "2024-05-16"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 39,
+              "quote": "Move ABC123 to May 16 and add two bags."
+            }
+          ]
+        },
+        {
+          "id": "gb",
+          "kind": "goal",
+          "at": 0,
+          "data": {
+            "operation": "change_baggage",
+            "target": {
+              "reservation_id": "ABC123",
+              "add_bags": 2
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 39,
+              "quote": "Move ABC123 to May 16 and add two bags."
+            }
+          ]
+        },
+        {
+          "id": "p",
+          "kind": "proposal",
+          "at": 1,
+          "data": {
+            "goal_ids": [
+              "gf",
+              "gb"
+            ],
+            "operations": [
+              {
+                "operation": "change_flights",
+                "target": {
+                  "reservation_id": "ABC123",
+                  "date": "2024-05-16"
+                },
+                "terms": {
+                  "charge": "0",
+                  "currency": "USD"
+                },
+                "goal_ids": [
+                  "gf"
+                ]
+              },
+              {
+                "operation": "change_baggage",
+                "target": {
+                  "reservation_id": "ABC123",
+                  "add_bags": 2
+                },
+                "terms": {
+                  "charge": "0",
+                  "currency": "USD"
+                },
+                "goal_ids": [
+                  "gb"
+                ]
+              }
+            ],
+            "supersedes": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 89,
+              "quote": "Offer: move ABC123 to May 16 and add two bags, both free. Confirm which changes you want."
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "kind": "consent",
+          "at": 2,
+          "data": {
+            "proposal_id": "p",
+            "operation_indices": [
+              0
+            ],
+            "status": "approved",
+            "binding": "reply"
+          },
+          "evidence": [
+            {
+              "message_index": 2,
+              "start": 0,
+              "end": 29,
+              "quote": "Approve only the date change."
+            }
+          ]
+        },
+        {
+          "id": "a2",
+          "kind": "consent",
+          "at": 3,
+          "data": {
+            "proposal_id": "p",
+            "operation_indices": [
+              1
+            ],
+            "status": "approved",
+            "binding": "explicit"
+          },
+          "evidence": [
+            {
+              "message_index": 3,
+              "start": 0,
+              "end": 47,
+              "quote": "I also approve the two free bags in your offer."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "fb674a2f6dcf0a70bdbac15f1865615c59fa064bd0b5c9b0e98fe3111738ea78",
+      "events": [
+        {
+          "id": "gf",
+          "kind": "goal",
+          "at": 0,
+          "data": {
+            "operation": "change_flights",
+            "target": {
+              "reservation_id": "ABC123",
+              "date": "2024-05-16"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 39,
+              "quote": "Move ABC123 to May 16 and add two bags."
+            }
+          ]
+        },
+        {
+          "id": "gb",
+          "kind": "goal",
+          "at": 0,
+          "data": {
+            "operation": "change_baggage",
+            "target": {
+              "reservation_id": "ABC123",
+              "add_bags": 2
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 39,
+              "quote": "Move ABC123 to May 16 and add two bags."
+            }
+          ]
+        },
+        {
+          "id": "p",
+          "kind": "proposal",
+          "at": 1,
+          "data": {
+            "goal_ids": [
+              "gf",
+              "gb"
+            ],
+            "operations": [
+              {
+                "operation": "change_flights",
+                "target": {
+                  "reservation_id": "ABC123",
+                  "date": "2024-05-16"
+                },
+                "terms": {
+                  "charge": "0",
+                  "currency": "USD"
+                },
+                "goal_ids": [
+                  "gf"
+                ]
+              },
+              {
+                "operation": "change_baggage",
+                "target": {
+                  "reservation_id": "ABC123",
+                  "add_bags": 2
+                },
+                "terms": {
+                  "charge": "0",
+                  "currency": "USD"
+                },
+                "goal_ids": [
+                  "gb"
+                ]
+              }
+            ],
+            "supersedes": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 89,
+              "quote": "Offer: move ABC123 to May 16 and add two bags, both free. Confirm which changes you want."
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "kind": "consent",
+          "at": 2,
+          "data": {
+            "proposal_id": "p",
+            "operation_indices": [
+              0,
+              1
+            ],
+            "status": "approved",
+            "binding": "reply"
+          },
+          "evidence": [
+            {
+              "message_index": 2,
+              "start": 0,
+              "end": 21,
+              "quote": "Approve both changes."
+            }
+          ]
+        },
+        {
+          "id": "a2",
+          "kind": "consent",
+          "at": 3,
+          "data": {
+            "proposal_id": "p",
+            "operation_indices": [
+              1
+            ],
+            "status": "revoked",
+            "binding": "explicit"
+          },
+          "evidence": [
+            {
+              "message_index": 3,
+              "start": 0,
+              "end": 53,
+              "quote": "I revoke approval for the bags; keep the date change."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "54daab8687f2ddbaf5f979a0870eea595659d0f6efe46dbb1be43578e7e9abd4",
+      "events": [
+        {
+          "id": "g",
+          "kind": "goal",
+          "at": 0,
+          "data": {
+            "operation": "lookup",
+            "target": {
+              "information": "economy_prices"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 33,
+              "quote": "Please search for economy prices."
+            }
+          ]
+        },
+        {
+          "id": "q",
+          "kind": "question",
+          "at": 1,
+          "data": {
+            "topic": "permission_to_search",
+            "proposal_id": null
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 34,
+              "quote": "Shall I search for economy prices?"
+            }
+          ]
+        },
+        {
+          "id": "g2",
+          "kind": "goal",
+          "at": 2,
+          "data": {
+            "operation": "lookup",
+            "target": {
+              "information": "economy_prices"
+            },
+            "relation": "reaffirm",
+            "replaces": [
+              "g"
+            ]
+          },
+          "evidence": [
+            {
+              "message_index": 2,
+              "start": 0,
+              "end": 3,
+              "quote": "Yes"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "0ae8375a28083b9b95d24cd7e1a40abb6fb52bcb6c2b2fcf4f443037247ea5df",
+      "events": [
+        {
+          "id": "g",
+          "kind": "goal",
+          "at": 0,
+          "data": {
+            "operation": "cancel",
+            "target": {
+              "reservation_id": "ABC123"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 33,
+              "quote": "Please cancel reservation ABC123."
+            }
+          ]
+        },
+        {
+          "id": "p",
+          "kind": "proposal",
+          "at": 1,
+          "data": {
+            "goal_ids": [
+              "g"
+            ],
+            "operations": [
+              {
+                "operation": "cancel",
+                "target": {
+                  "reservation_id": "ABC123"
+                },
+                "terms": {
+                  "quoted_refund": "100",
+                  "currency": "USD",
+                  "refund_payment_id": "card_1"
+                },
+                "goal_ids": [
+                  "g"
+                ]
+              }
+            ],
+            "supersedes": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 62,
+              "quote": "Cancel ABC123 with a USD 100 refund to card_1. Please confirm."
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "kind": "consent",
+          "at": 2,
+          "data": {
+            "proposal_id": "p",
+            "operation_indices": [
+              0
+            ],
+            "status": "approved",
+            "binding": "reply"
+          },
+          "evidence": [
+            {
+              "message_index": 2,
+              "start": 0,
+              "end": 20,
+              "quote": "Yes, please proceed."
+            }
+          ]
+        },
+        {
+          "id": "u",
+          "kind": "unknown",
+          "at": 3,
+          "data": {
+            "reason": "unresolved_identity_condition"
+          },
+          "evidence": [
+            {
+              "message_index": 3,
+              "start": 0,
+              "end": 43,
+              "quote": "Only proceed if the passenger really is me."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "f1ba61ecc90b980c4b5cec0f18cf8a622e7c38b774c09e9ed22b1f6cb9a11da7",
+      "events": [
+        {
+          "id": "opening",
+          "kind": "ignore",
+          "at": 0,
+          "data": {},
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 29,
+              "quote": "Hi! How can I help you today?"
+            }
+          ]
+        },
+        {
+          "id": "g",
+          "kind": "goal",
+          "at": 1,
+          "data": {
+            "operation": "change_cabin",
+            "target": {
+              "reservation_id": null,
+              "source_cabin": "business",
+              "target_cabin": "economy"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 127,
+              "quote": "Hi, I’d like to modify my existing reservation. I want to downgrade my cabin class from business to economy to save some money."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "a870c6cd22448fbddcf1bf28133eb95864f96849be76aa73016cd77cf8431d85",
+      "events": [
+        {
+          "id": "opening",
+          "kind": "ignore",
+          "at": 0,
+          "data": {},
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 29,
+              "quote": "Hi! How can I help you today?"
+            }
+          ]
+        },
+        {
+          "id": "g",
+          "kind": "goal",
+          "at": 1,
+          "data": {
+            "operation": "change_cabin",
+            "target": {
+              "reservation_id": null,
+              "source_cabin": "business",
+              "target_cabin": "economy"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 109,
+              "quote": "Hi, I’d like to change my flight reservation from business class to economy class. Can you help me with that?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "3e2cbcd15095fbcb5c25ae96709843464d622cfcb6a23c2670ee009a1b605fb7",
+      "events": [
+        {
+          "id": "opening",
+          "kind": "ignore",
+          "at": 0,
+          "data": {},
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 29,
+              "quote": "Hi! How can I help you today?"
+            }
+          ]
+        },
+        {
+          "id": "g",
+          "kind": "goal",
+          "at": 1,
+          "data": {
+            "operation": "change_cabin",
+            "target": {
+              "reservation_id": null,
+              "source_cabin": "business",
+              "target_cabin": "economy"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 128,
+              "quote": "Hi, I’d like to change the cabin class on my existing reservation. I want to switch from business to economy to save some money."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "565cbc9b408bd99bddd6ff5a39959d978a854784fcde8f3421904c2ef0afb5e6",
+      "events": [
+        {
+          "id": "opening",
+          "kind": "ignore",
+          "at": 0,
+          "data": {},
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 29,
+              "quote": "Hi! How can I help you today?"
+            }
+          ]
+        },
+        {
+          "id": "g",
+          "kind": "goal",
+          "at": 1,
+          "data": {
+            "operation": "change_cabin",
+            "target": {
+              "reservation_id": null,
+              "source_cabin": "business",
+              "target_cabin": "economy"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 124,
+              "quote": "Hi, I'd like to modify my existing reservation. I want to downgrade from business class to economy class to save some money."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "c79243c785a922d85bf6618982ba481c4b1fe78b6fed59450b2c5a1b22d22e55",
+      "events": [
+        {
+          "id": "opening",
+          "kind": "ignore",
+          "at": 0,
+          "data": {},
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 29,
+              "quote": "Hi! How can I help you today?"
+            }
+          ]
+        },
+        {
+          "id": "g",
+          "kind": "goal",
+          "at": 1,
+          "data": {
+            "operation": "change_cabin",
+            "target": {
+              "reservation_id": null,
+              "source_cabin": "business",
+              "target_cabin": "economy"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 168,
+              "quote": "Hi, I’d like to change the cabin class on my existing reservation. I currently have a business class ticket, but I’d like to downgrade it to economy to save some money."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "90855ecae90fc92dac32aaa42e5e3a872f1788bf062fb1b475b5e39f67f2b10f",
+      "events": [
+        {
+          "id": "opening",
+          "kind": "ignore",
+          "at": 0,
+          "data": {},
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 29,
+              "quote": "Hi! How can I help you today?"
+            }
+          ]
+        },
+        {
+          "id": "gf",
+          "kind": "goal",
+          "at": 1,
+          "data": {
+            "operation": "change_flights",
+            "target": {
+              "reservation_id": "HKEG34",
+              "date": null
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 171,
+              "quote": "Hi! I’d like to change the flight date on my reservation HKEG34 and add two checked bags to it. Could you please pull up the full details of that reservation for me first?"
+            }
+          ]
+        },
+        {
+          "id": "gb",
+          "kind": "goal",
+          "at": 1,
+          "data": {
+            "operation": "change_baggage",
+            "target": {
+              "reservation_id": "HKEG34",
+              "add_bags": 2
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 171,
+              "quote": "Hi! I’d like to change the flight date on my reservation HKEG34 and add two checked bags to it. Could you please pull up the full details of that reservation for me first?"
+            }
+          ]
+        },
+        {
+          "id": "gl",
+          "kind": "goal",
+          "at": 1,
+          "data": {
+            "operation": "lookup",
+            "target": {
+              "reservation_id": "HKEG34",
+              "information": "reservation_details"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 171,
+              "quote": "Hi! I’d like to change the flight date on my reservation HKEG34 and add two checked bags to it. Could you please pull up the full details of that reservation for me first?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "d05f21bbdb4026d32a96f5b58c9c229c406a81cf782211d596837ee4d902e54e",
+      "events": [
+        {
+          "id": "opening",
+          "kind": "ignore",
+          "at": 0,
+          "data": {},
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 29,
+              "quote": "Hi! How can I help you today?"
+            }
+          ]
+        },
+        {
+          "id": "gf",
+          "kind": "goal",
+          "at": 1,
+          "data": {
+            "operation": "change_flights",
+            "target": {
+              "reservation_id": "HKEG34",
+              "date": null
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 173,
+              "quote": "Hi there. I need to change the flight date on my reservation HKEG34 and add 2 checked bags to it. Could you please pull up the full details of that reservation for me first?"
+            }
+          ]
+        },
+        {
+          "id": "gb",
+          "kind": "goal",
+          "at": 1,
+          "data": {
+            "operation": "change_baggage",
+            "target": {
+              "reservation_id": "HKEG34",
+              "add_bags": 2
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 173,
+              "quote": "Hi there. I need to change the flight date on my reservation HKEG34 and add 2 checked bags to it. Could you please pull up the full details of that reservation for me first?"
+            }
+          ]
+        },
+        {
+          "id": "gl",
+          "kind": "goal",
+          "at": 1,
+          "data": {
+            "operation": "lookup",
+            "target": {
+              "reservation_id": "HKEG34",
+              "information": "reservation_details"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 173,
+              "quote": "Hi there. I need to change the flight date on my reservation HKEG34 and add 2 checked bags to it. Could you please pull up the full details of that reservation for me first?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "8479a4e5da2c2083750829f58f24161bb45930dc69815ef22221b4465b0bb5e4",
+      "events": [
+        {
+          "id": "opening",
+          "kind": "ignore",
+          "at": 0,
+          "data": {},
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 29,
+              "quote": "Hi! How can I help you today?"
+            }
+          ]
+        },
+        {
+          "id": "gf",
+          "kind": "goal",
+          "at": 1,
+          "data": {
+            "operation": "change_flights",
+            "target": {
+              "reservation_id": "HKEG34",
+              "date": null
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 166,
+              "quote": "Hi, I’d like to change the flight date on reservation HKEG34 and add 2 checked bags to it. Could you please pull up the full details of that reservation for me first?"
+            }
+          ]
+        },
+        {
+          "id": "gb",
+          "kind": "goal",
+          "at": 1,
+          "data": {
+            "operation": "change_baggage",
+            "target": {
+              "reservation_id": "HKEG34",
+              "add_bags": 2
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 166,
+              "quote": "Hi, I’d like to change the flight date on reservation HKEG34 and add 2 checked bags to it. Could you please pull up the full details of that reservation for me first?"
+            }
+          ]
+        },
+        {
+          "id": "gl",
+          "kind": "goal",
+          "at": 1,
+          "data": {
+            "operation": "lookup",
+            "target": {
+              "reservation_id": "HKEG34",
+              "information": "reservation_details"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 166,
+              "quote": "Hi, I’d like to change the flight date on reservation HKEG34 and add 2 checked bags to it. Could you please pull up the full details of that reservation for me first?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "144fbf2c339e34512642530bebba494a04a508ca5191f868203840b28a9221de",
+      "events": [
+        {
+          "id": "opening",
+          "kind": "ignore",
+          "at": 0,
+          "data": {},
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 29,
+              "quote": "Hi! How can I help you today?"
+            }
+          ]
+        },
+        {
+          "id": "g",
+          "kind": "goal",
+          "at": 1,
+          "data": {
+            "operation": "change_cabin",
+            "target": {
+              "reservation_id": null,
+              "source_cabin": "business",
+              "target_cabin": "economy",
+              "user_id_claim": "sofia_brown_9485"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 113,
+              "quote": "Hi, I’d like to downgrade my business class flight to economy to save some costs. My user ID is sofia_brown_9485."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "f1e7fb9f702bc39a4a5f0c48ec7b85b1e9062dce5ca5ac08238d3312a444e156",
+      "events": [
+        {
+          "id": "opening",
+          "kind": "ignore",
+          "at": 0,
+          "data": {},
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 29,
+              "quote": "Hi! How can I help you today?"
+            }
+          ]
+        },
+        {
+          "id": "g",
+          "kind": "goal",
+          "at": 1,
+          "data": {
+            "operation": "other",
+            "target": {
+              "reservation_id": null,
+              "request": "modify_reservation_unspecified",
+              "user_id_claim": "sofia_brown_9485"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 82,
+              "quote": "Hi there! I'd like to make a change to my booking. My user ID is sofia_brown_9485."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "072741a28f67c9328d60831fde742b41081084ffda82f020ab36e341a920f3ff",
+      "events": [
+        {
+          "id": "opening",
+          "kind": "ignore",
+          "at": 0,
+          "data": {},
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 29,
+              "quote": "Hi! How can I help you today?"
+            }
+          ]
+        },
+        {
+          "id": "g",
+          "kind": "goal",
+          "at": 1,
+          "data": {
+            "operation": "other",
+            "target": {
+              "reservation_id": null,
+              "request": "modify_reservation_unspecified"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 123,
+              "quote": "Hi, I'm calling about my flight reservation. I'd like to modify my booking to save some money. Could you help me with that?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "d348a378fbfd4443feb8b06ad9470726c08fa2c1b286c45d09bf814ed1cc76e5",
+      "events": [
+        {
+          "id": "opening",
+          "kind": "ignore",
+          "at": 0,
+          "data": {},
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 29,
+              "quote": "Hi! How can I help you today?"
+            }
+          ]
+        },
+        {
+          "id": "g",
+          "kind": "goal",
+          "at": 1,
+          "data": {
+            "operation": "change_cabin",
+            "target": {
+              "reservation_id": null,
+              "source_cabin": "business",
+              "target_cabin": "economy",
+              "flight_type": "round_trip"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 123,
+              "quote": "Hi, I'd like to modify my reservation. I want to downgrade my cabin class from business to economy for a round-trip flight."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "91fecc8b50f4e700afd3cb25fedb86549b7cdd9e2f2caa246f288e899eb19c55",
+      "events": [
+        {
+          "id": "opening",
+          "kind": "ignore",
+          "at": 0,
+          "data": {},
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 29,
+              "quote": "Hi! How can I help you today?"
+            }
+          ]
+        },
+        {
+          "id": "gf",
+          "kind": "goal",
+          "at": 1,
+          "data": {
+            "operation": "change_flights",
+            "target": {
+              "reservation_id": "HKEG34",
+              "date": null
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 142,
+              "quote": "Hi! I’d like to change the flight date on my reservation HKEG34 and then add 2 checked bags. Could you please look up that reservation for me?"
+            }
+          ]
+        },
+        {
+          "id": "gb",
+          "kind": "goal",
+          "at": 1,
+          "data": {
+            "operation": "change_baggage",
+            "target": {
+              "reservation_id": "HKEG34",
+              "add_bags": 2
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 142,
+              "quote": "Hi! I’d like to change the flight date on my reservation HKEG34 and then add 2 checked bags. Could you please look up that reservation for me?"
+            }
+          ]
+        },
+        {
+          "id": "gl",
+          "kind": "goal",
+          "at": 1,
+          "data": {
+            "operation": "lookup",
+            "target": {
+              "reservation_id": "HKEG34",
+              "information": "reservation_details"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 142,
+              "quote": "Hi! I’d like to change the flight date on my reservation HKEG34 and then add 2 checked bags. Could you please look up that reservation for me?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "86287e1ece7347f8dc9b67cbdf747aca043ed7ae731fbab1fff5152e58bd4e78",
+      "events": [
+        {
+          "id": "opening",
+          "kind": "ignore",
+          "at": 0,
+          "data": {},
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 29,
+              "quote": "Hi! How can I help you today?"
+            }
+          ]
+        },
+        {
+          "id": "gf",
+          "kind": "goal",
+          "at": 1,
+          "data": {
+            "operation": "change_flights",
+            "target": {
+              "reservation_id": "HKEG34",
+              "date": null
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 121,
+              "quote": "Hi, I need help with my reservation. Could you please review reservation HKEG34 for me? I need to change the flight date."
+            }
+          ]
+        },
+        {
+          "id": "gl",
+          "kind": "goal",
+          "at": 1,
+          "data": {
+            "operation": "lookup",
+            "target": {
+              "reservation_id": "HKEG34",
+              "information": "reservation_details"
+            },
+            "relation": "add",
+            "replaces": []
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 121,
+              "quote": "Hi, I need help with my reservation. Could you please review reservation HKEG34 for me? I need to change the flight date."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "788851d50fd14a5646afdaee6906adde66fd2551d185e8991bc8e3fedc819944",
+      "events": []
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "ccca38902d797c066d457ba6de6eb0dedec4ce22afe6b31adcf0c74a25bc0328",
+      "events": []
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "22092dd0ac2072174f186fb48a19af24c18e60761dd89e0768a152c815bbe866",
+      "events": []
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "f64dd60a2dbafcfb7048fa3b25d39ed5c53897ccb1e49b23198d14dad6935b05",
+      "events": []
+    },
+    {
+      "schema": "semantic_events_v1",
+      "prefix_sha256": "27eabaf39b5540e84812deb6340b25ccef6f6dd1d213929b2898096724590574",
+      "events": [
+        {
+          "id": "opening",
+          "kind": "proposal",
+          "at": 0,
+          "data": {
+            "goal_ids": [],
+            "operations": [
+              {
+                "operation": "cancel",
+                "target": {
+                  "reservation_id": "ABC123"
+                },
+                "terms": {
+                  "quoted_refund": "100",
+                  "currency": "USD",
+                  "refund_payment_id": "card_1"
+                },
+                "goal_ids": []
+              }
+            ],
+            "supersedes": []
+          },
+          "evidence": [
+            {
+              "message_index": 0,
+              "start": 0,
+              "end": 75,
+              "quote": "Cancel reservation ABC123 for a $100 refund to card card_1. Do you confirm?"
+            }
+          ]
+        },
+        {
+          "id": "g",
+          "kind": "consent",
+          "at": 1,
+          "data": {
+            "proposal_id": "opening",
+            "operation_indices": [
+              0
+            ],
+            "status": "approved",
+            "binding": "reply"
+          },
+          "evidence": [
+            {
+              "message_index": 1,
+              "start": 0,
+              "end": 20,
+              "quote": "Yes, please proceed."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
