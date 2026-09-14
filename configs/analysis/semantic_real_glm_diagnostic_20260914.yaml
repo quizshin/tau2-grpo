@@ -1,0 +1,11 @@
+# Diagnostic only. Pilot did not establish reliable long-dialog extraction.
+enabled: true
+provider: openai_compatible
+model: GLM-5.3-Flash
+slot_schema: airline_slots_v2
+cases: results/analysis/semantic_real_audit_20260914/inputs/audit_cases.json
+limit: null
+concurrency: 4
+timeout_seconds: 180
+max_tokens: 8192
+temperature: 0

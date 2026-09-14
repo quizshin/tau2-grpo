@@ -84,6 +84,24 @@ def test_total_deadline_bounds_even_a_slow_transport():
     assert len(client.request_timings) == 1
 
 
+def test_optional_vendor_thinking_mode_is_explicit_and_recorded():
+    request, packet = request_and_packet()
+    def handler(req):
+        assert json.loads(req.content)['thinking'] == {'type': 'disabled'}
+        return httpx.Response(200, json=envelope(packet))
+    client = model(handler, thinking_mode='disabled')
+    asyncio.run(client.extract(request))
+    assert client.provenance['thinking_mode_requested'] == 'disabled'
+
+
+def test_model_override_does_not_mutate_environment(monkeypatch, tmp_path):
+    import os
+    set_env(monkeypatch, tmp_path)
+    client = OpenAICompatibleSemanticModel.from_env({'model': 'GLM-5.3-Flash', 'thinking_mode': 'disabled'})
+    assert client.model == 'GLM-5.3-Flash' and client.thinking_mode == 'disabled'
+    assert os.environ['TAU3_SEMANTIC_MODEL'] == 'Kimi-K3'
+
+
 @pytest.mark.parametrize('body', [None, {'choices': []}, {'choices': [None]}, envelope({}, 'length'),
                                  {'choices': [{'finish_reason': 'stop', 'message': {'content': 'oops'}}]},
                                  envelope([])])

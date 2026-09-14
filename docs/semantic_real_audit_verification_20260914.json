@@ -1,0 +1,674 @@
+{
+  "scope": "CPU replay and live semantic API diagnostic, not an RL run; source is SFT selection evaluation, not RL training rollout groups.",
+  "base_commit": "20536ff",
+  "independent_human_labels": false,
+  "default_env_model_unchanged": true,
+  "gpu_used": false,
+  "training_started": false,
+  "frozen_prompt_and_reducer_unchanged": true,
+  "pilot": [
+    {
+      "variant": "pilot_kimi",
+      "model": "Kimi-K3",
+      "cases": 2,
+      "valid_cases": 1,
+      "timings": [
+        {
+          "prefix_sha256": "25e27e0effef2f5cd50d7971ef2c06e2865275a8f561f1befceab5291a3af92a",
+          "elapsed_seconds": 169.156
+        },
+        {
+          "prefix_sha256": "8da67738f41a9577b8aa04d86d2cc35d3c3b274db1c38cbcdf00329da2b0927b",
+          "elapsed_seconds": 180.002
+        }
+      ],
+      "errors": {
+        "airline_683/trial0/step6": "Semantic API total deadline exceeded; no retry"
+      },
+      "provenance": {
+        "provider": "openai_compatible",
+        "base_url": "https://llmapi.paratera.com/v1",
+        "model": "Kimi-K3",
+        "timeout_seconds": 180,
+        "max_tokens": 8192,
+        "temperature": 0,
+        "automatic_retries": 0,
+        "cases_sha256": "369501a185ff9d6c035a9c5b9907890b89cb41e3befe283a6fbce136f2c5b53c",
+        "prompt_sha256": "0bd3ef9cd34d372d092997965a97f5cab8ed4fe0ab8425ce5601b2542f18c6fc",
+        "limit": null,
+        "concurrency": 1,
+        "slot_schema": "airline_slots_v2",
+        "case_ids": null,
+        "slot_prompt_sha256": "c41e60bc8bc4788cbcf6c8e1ad12248604186a70c49913871be39dac1de9a782"
+      }
+    },
+    {
+      "variant": "pilot_glm",
+      "model": "GLM-5.3-Flash",
+      "cases": 2,
+      "valid_cases": 1,
+      "timings": [
+        {
+          "prefix_sha256": "25e27e0effef2f5cd50d7971ef2c06e2865275a8f561f1befceab5291a3af92a",
+          "elapsed_seconds": 34.218
+        },
+        {
+          "prefix_sha256": "8da67738f41a9577b8aa04d86d2cc35d3c3b274db1c38cbcdf00329da2b0927b",
+          "elapsed_seconds": 87.996
+        }
+      ],
+      "errors": {
+        "airline_683/trial0/step6": "Semantic API did not finish normally; packet rejected"
+      },
+      "provenance": {
+        "provider": "openai_compatible",
+        "base_url": "https://llmapi.paratera.com/v1",
+        "model": "GLM-5.3-Flash",
+        "timeout_seconds": 180,
+        "max_tokens": 8192,
+        "temperature": 0,
+        "automatic_retries": 0,
+        "cases_sha256": "369501a185ff9d6c035a9c5b9907890b89cb41e3befe283a6fbce136f2c5b53c",
+        "prompt_sha256": "0bd3ef9cd34d372d092997965a97f5cab8ed4fe0ab8425ce5601b2542f18c6fc",
+        "limit": null,
+        "concurrency": 1,
+        "slot_schema": "airline_slots_v2",
+        "case_ids": null,
+        "slot_prompt_sha256": "c41e60bc8bc4788cbcf6c8e1ad12248604186a70c49913871be39dac1de9a782"
+      }
+    },
+    {
+      "variant": "pilot_qwen",
+      "model": "Qwen3.8-Flash",
+      "cases": 2,
+      "valid_cases": 1,
+      "timings": [
+        {
+          "prefix_sha256": "25e27e0effef2f5cd50d7971ef2c06e2865275a8f561f1befceab5291a3af92a",
+          "elapsed_seconds": 24.377
+        },
+        {
+          "prefix_sha256": "8da67738f41a9577b8aa04d86d2cc35d3c3b274db1c38cbcdf00329da2b0927b",
+          "elapsed_seconds": 180.002
+        }
+      ],
+      "errors": {
+        "airline_683/trial0/step6": "Semantic API total deadline exceeded; no retry"
+      },
+      "provenance": {
+        "provider": "openai_compatible",
+        "base_url": "https://llmapi.paratera.com/v1",
+        "model": "Qwen3.8-Flash",
+        "timeout_seconds": 180,
+        "max_tokens": 8192,
+        "temperature": 0,
+        "automatic_retries": 0,
+        "cases_sha256": "369501a185ff9d6c035a9c5b9907890b89cb41e3befe283a6fbce136f2c5b53c",
+        "prompt_sha256": "0bd3ef9cd34d372d092997965a97f5cab8ed4fe0ab8425ce5601b2542f18c6fc",
+        "limit": null,
+        "concurrency": 1,
+        "slot_schema": "airline_slots_v2",
+        "case_ids": null,
+        "slot_prompt_sha256": "c41e60bc8bc4788cbcf6c8e1ad12248604186a70c49913871be39dac1de9a782"
+      }
+    },
+    {
+      "variant": "pilot_deepseek",
+      "model": "DeepSeek-V3.2-Instruct",
+      "cases": 2,
+      "valid_cases": 0,
+      "timings": [
+        {
+          "prefix_sha256": "25e27e0effef2f5cd50d7971ef2c06e2865275a8f561f1befceab5291a3af92a",
+          "elapsed_seconds": 13.152
+        },
+        {
+          "prefix_sha256": "8da67738f41a9577b8aa04d86d2cc35d3c3b274db1c38cbcdf00329da2b0927b",
+          "elapsed_seconds": 98.128
+        }
+      ],
+      "errors": {
+        "airline_683/trial0/step1": "invalid_passenger_scope",
+        "airline_683/trial0/step6": "invalid_passenger_scope"
+      },
+      "provenance": {
+        "provider": "openai_compatible",
+        "base_url": "https://llmapi.paratera.com/v1",
+        "model": "DeepSeek-V3.2-Instruct",
+        "timeout_seconds": 180,
+        "max_tokens": 8192,
+        "temperature": 0,
+        "automatic_retries": 0,
+        "cases_sha256": "369501a185ff9d6c035a9c5b9907890b89cb41e3befe283a6fbce136f2c5b53c",
+        "prompt_sha256": "0bd3ef9cd34d372d092997965a97f5cab8ed4fe0ab8425ce5601b2542f18c6fc",
+        "limit": null,
+        "concurrency": 1,
+        "slot_schema": "airline_slots_v2",
+        "case_ids": null,
+        "slot_prompt_sha256": "c41e60bc8bc4788cbcf6c8e1ad12248604186a70c49913871be39dac1de9a782"
+      }
+    },
+    {
+      "variant": "pilot_glm_nothink",
+      "model": "GLM-5.3-Flash",
+      "cases": 2,
+      "valid_cases": 0,
+      "timings": [
+        {
+          "prefix_sha256": "25e27e0effef2f5cd50d7971ef2c06e2865275a8f561f1befceab5291a3af92a",
+          "elapsed_seconds": 0.331
+        },
+        {
+          "prefix_sha256": "8da67738f41a9577b8aa04d86d2cc35d3c3b274db1c38cbcdf00329da2b0927b",
+          "elapsed_seconds": 91.989
+        }
+      ],
+      "errors": {
+        "airline_683/trial0/step1": "Semantic API HTTP 400; no retry",
+        "airline_683/trial0/step6": "Semantic API did not finish normally; packet rejected"
+      },
+      "provenance": {
+        "provider": "openai_compatible",
+        "base_url": "https://llmapi.paratera.com/v1",
+        "model": "GLM-5.3-Flash",
+        "timeout_seconds": 180,
+        "max_tokens": 8192,
+        "temperature": 0,
+        "thinking_mode_requested": "disabled",
+        "automatic_retries": 0,
+        "cases_sha256": "369501a185ff9d6c035a9c5b9907890b89cb41e3befe283a6fbce136f2c5b53c",
+        "prompt_sha256": "0bd3ef9cd34d372d092997965a97f5cab8ed4fe0ab8425ce5601b2542f18c6fc",
+        "limit": null,
+        "concurrency": 1,
+        "slot_schema": "airline_slots_v2",
+        "case_ids": null,
+        "slot_prompt_sha256": "c41e60bc8bc4788cbcf6c8e1ad12248604186a70c49913871be39dac1de9a782"
+      }
+    },
+    {
+      "variant": "pilot_glm4",
+      "model": "GLM-4-Flash",
+      "cases": 2,
+      "valid_cases": 0,
+      "timings": [
+        {
+          "prefix_sha256": "25e27e0effef2f5cd50d7971ef2c06e2865275a8f561f1befceab5291a3af92a",
+          "elapsed_seconds": 17.764
+        },
+        {
+          "prefix_sha256": "8da67738f41a9577b8aa04d86d2cc35d3c3b274db1c38cbcdf00329da2b0927b",
+          "elapsed_seconds": 84.315
+        }
+      ],
+      "errors": {
+        "airline_683/trial0/step1": "schema:goal",
+        "airline_683/trial0/step6": "unsupported_fee_bound_money"
+      },
+      "provenance": {
+        "provider": "openai_compatible",
+        "base_url": "https://llmapi.paratera.com/v1",
+        "model": "GLM-4-Flash",
+        "timeout_seconds": 180,
+        "max_tokens": 8192,
+        "temperature": 0,
+        "thinking_mode_requested": null,
+        "automatic_retries": 0,
+        "cases_sha256": "369501a185ff9d6c035a9c5b9907890b89cb41e3befe283a6fbce136f2c5b53c",
+        "prompt_sha256": "0bd3ef9cd34d372d092997965a97f5cab8ed4fe0ab8425ce5601b2542f18c6fc",
+        "limit": null,
+        "concurrency": 1,
+        "slot_schema": "airline_slots_v2",
+        "case_ids": null,
+        "slot_prompt_sha256": "c41e60bc8bc4788cbcf6c8e1ad12248604186a70c49913871be39dac1de9a782"
+      }
+    },
+    {
+      "variant": "pilot_glm16k",
+      "model": "GLM-5.3-Flash",
+      "cases": 1,
+      "valid_cases": 0,
+      "timings": [
+        {
+          "prefix_sha256": "8da67738f41a9577b8aa04d86d2cc35d3c3b274db1c38cbcdf00329da2b0927b",
+          "elapsed_seconds": 163.768
+        }
+      ],
+      "errors": {
+        "airline_683/trial0/step6": "Semantic API did not finish normally; packet rejected"
+      },
+      "provenance": {
+        "provider": "openai_compatible",
+        "base_url": "https://llmapi.paratera.com/v1",
+        "model": "GLM-5.3-Flash",
+        "timeout_seconds": 180,
+        "max_tokens": 16384,
+        "temperature": 0,
+        "thinking_mode_requested": null,
+        "automatic_retries": 0,
+        "cases_sha256": "369501a185ff9d6c035a9c5b9907890b89cb41e3befe283a6fbce136f2c5b53c",
+        "prompt_sha256": "0bd3ef9cd34d372d092997965a97f5cab8ed4fe0ab8425ce5601b2542f18c6fc",
+        "limit": null,
+        "concurrency": 1,
+        "slot_schema": "airline_slots_v2",
+        "case_ids": [
+          "airline_683/trial0/step6"
+        ],
+        "slot_prompt_sha256": "c41e60bc8bc4788cbcf6c8e1ad12248604186a70c49913871be39dac1de9a782"
+      }
+    }
+  ],
+  "selection": {
+    "model": "GLM-5.3-Flash",
+    "max_tokens": 8192,
+    "reason": "Valid short prefix, faster than Kimi on pilot; no tested model passed long prefix. Diagnostic selection only, not deployment approval.",
+    "holdout_config": {
+      "cases": "results/analysis/semantic_real_audit_20260914/inputs/audit_cases.json",
+      "concurrency": 4,
+      "enabled": true,
+      "limit": null,
+      "max_tokens": 8192,
+      "model": "GLM-5.3-Flash",
+      "provider": "openai_compatible",
+      "slot_schema": "airline_slots_v2",
+      "temperature": 0,
+      "timeout_seconds": 180
+    },
+    "default_env_unchanged": true
+  },
+  "audit": {
+    "cases": 24,
+    "valid_cases": 9,
+    "unique_prefixes": 18,
+    "valid_unique_prefixes": 3,
+    "errors": {
+      "Semantic API did not finish normally; packet rejected": 15
+    },
+    "valid_with_opaque_context": 1,
+    "by_step": {
+      "1": {
+        "cases": 8,
+        "valid": 8
+      },
+      "3": {
+        "cases": 8,
+        "valid": 1
+      },
+      "6": {
+        "cases": 8,
+        "valid": 0
+      }
+    },
+    "exact_prefix_checks": {
+      "pairs": 12,
+      "decidable": 12,
+      "passed": 12,
+      "abstained": 0,
+      "false_merges": 0,
+      "missed_merges": 0
+    },
+    "semantic_checks": {
+      "pairs": 10,
+      "decidable": 0,
+      "passed": 0,
+      "abstained": 10,
+      "false_merges": 0,
+      "missed_merges": 0
+    },
+    "by_category": {
+      "exact_prefix": {
+        "pairs": 12,
+        "decidable": 12,
+        "passed": 12,
+        "abstained": 0,
+        "false_merges": 0,
+        "missed_merges": 0
+      },
+      "knowledge_difference": {
+        "pairs": 3,
+        "decidable": 0,
+        "passed": 0,
+        "abstained": 3,
+        "false_merges": 0,
+        "missed_merges": 0
+      },
+      "same_db_different_consent": {
+        "pairs": 2,
+        "decidable": 0,
+        "passed": 0,
+        "abstained": 2,
+        "false_merges": 0,
+        "missed_merges": 0
+      },
+      "same_db_different_promise": {
+        "pairs": 2,
+        "decidable": 0,
+        "passed": 0,
+        "abstained": 2,
+        "false_merges": 0,
+        "missed_merges": 0
+      },
+      "semantic_positive": {
+        "pairs": 3,
+        "decidable": 0,
+        "passed": 0,
+        "abstained": 3,
+        "false_merges": 0,
+        "missed_merges": 0
+      }
+    },
+    "checks": [
+      {
+        "a": "airline_378/trial0/step1",
+        "b": "airline_378/trial1/step1",
+        "expected": "merge",
+        "category": "exact_prefix",
+        "reason": "Identical visible pre-action prefix and same task/environment; this is a cache identity check, not semantic generalization.",
+        "actual": "merge",
+        "passed": true
+      },
+      {
+        "a": "airline_378/trial0/step1",
+        "b": "airline_378/trial2/step1",
+        "expected": "merge",
+        "category": "exact_prefix",
+        "reason": "Identical visible pre-action prefix and same task/environment; this is a cache identity check, not semantic generalization.",
+        "actual": "merge",
+        "passed": true
+      },
+      {
+        "a": "airline_378/trial0/step1",
+        "b": "airline_378/trial3/step1",
+        "expected": "merge",
+        "category": "exact_prefix",
+        "reason": "Identical visible pre-action prefix and same task/environment; this is a cache identity check, not semantic generalization.",
+        "actual": "merge",
+        "passed": true
+      },
+      {
+        "a": "airline_378/trial1/step1",
+        "b": "airline_378/trial2/step1",
+        "expected": "merge",
+        "category": "exact_prefix",
+        "reason": "Identical visible pre-action prefix and same task/environment; this is a cache identity check, not semantic generalization.",
+        "actual": "merge",
+        "passed": true
+      },
+      {
+        "a": "airline_378/trial1/step1",
+        "b": "airline_378/trial3/step1",
+        "expected": "merge",
+        "category": "exact_prefix",
+        "reason": "Identical visible pre-action prefix and same task/environment; this is a cache identity check, not semantic generalization.",
+        "actual": "merge",
+        "passed": true
+      },
+      {
+        "a": "airline_378/trial2/step1",
+        "b": "airline_378/trial3/step1",
+        "expected": "merge",
+        "category": "exact_prefix",
+        "reason": "Identical visible pre-action prefix and same task/environment; this is a cache identity check, not semantic generalization.",
+        "actual": "merge",
+        "passed": true
+      },
+      {
+        "a": "airline_706/trial0/step1",
+        "b": "airline_706/trial1/step1",
+        "expected": "merge",
+        "category": "exact_prefix",
+        "reason": "Identical visible pre-action prefix and same task/environment; this is a cache identity check, not semantic generalization.",
+        "actual": "merge",
+        "passed": true
+      },
+      {
+        "a": "airline_706/trial0/step1",
+        "b": "airline_706/trial2/step1",
+        "expected": "merge",
+        "category": "exact_prefix",
+        "reason": "Identical visible pre-action prefix and same task/environment; this is a cache identity check, not semantic generalization.",
+        "actual": "merge",
+        "passed": true
+      },
+      {
+        "a": "airline_706/trial0/step1",
+        "b": "airline_706/trial3/step1",
+        "expected": "merge",
+        "category": "exact_prefix",
+        "reason": "Identical visible pre-action prefix and same task/environment; this is a cache identity check, not semantic generalization.",
+        "actual": "merge",
+        "passed": true
+      },
+      {
+        "a": "airline_706/trial1/step1",
+        "b": "airline_706/trial2/step1",
+        "expected": "merge",
+        "category": "exact_prefix",
+        "reason": "Identical visible pre-action prefix and same task/environment; this is a cache identity check, not semantic generalization.",
+        "actual": "merge",
+        "passed": true
+      },
+      {
+        "a": "airline_706/trial1/step1",
+        "b": "airline_706/trial3/step1",
+        "expected": "merge",
+        "category": "exact_prefix",
+        "reason": "Identical visible pre-action prefix and same task/environment; this is a cache identity check, not semantic generalization.",
+        "actual": "merge",
+        "passed": true
+      },
+      {
+        "a": "airline_706/trial2/step1",
+        "b": "airline_706/trial3/step1",
+        "expected": "merge",
+        "category": "exact_prefix",
+        "reason": "Identical visible pre-action prefix and same task/environment; this is a cache identity check, not semantic generalization.",
+        "actual": "merge",
+        "passed": true
+      },
+      {
+        "a": "airline_378/trial0/step3",
+        "b": "airline_378/trial1/step3",
+        "expected": "merge",
+        "category": "semantic_positive",
+        "reason": "Same cabin-change goal; user has answered ID request; same reservation/user tool facts; no proposal or approval yet. Prior ID-request wording differs.",
+        "actual": "abstain",
+        "passed": false
+      },
+      {
+        "a": "airline_378/trial0/step3",
+        "b": "airline_378/trial2/step3",
+        "expected": "merge",
+        "category": "semantic_positive",
+        "reason": "Same cabin-change goal; user has answered ID request; same reservation/user tool facts; no proposal or approval yet. Prior ID-request wording differs.",
+        "actual": "abstain",
+        "passed": false
+      },
+      {
+        "a": "airline_378/trial1/step3",
+        "b": "airline_378/trial2/step3",
+        "expected": "merge",
+        "category": "semantic_positive",
+        "reason": "Same cabin-change goal; user has answered ID request; same reservation/user tool facts; no proposal or approval yet. Prior ID-request wording differs.",
+        "actual": "abstain",
+        "passed": false
+      },
+      {
+        "a": "airline_378/trial0/step3",
+        "b": "airline_378/trial3/step3",
+        "expected": "separate",
+        "category": "knowledge_difference",
+        "reason": "Trial 3 has reservation facts only; the other trial also has returned user-profile facts.",
+        "actual": "abstain",
+        "passed": false
+      },
+      {
+        "a": "airline_378/trial1/step3",
+        "b": "airline_378/trial3/step3",
+        "expected": "separate",
+        "category": "knowledge_difference",
+        "reason": "Trial 3 has reservation facts only; the other trial also has returned user-profile facts.",
+        "actual": "abstain",
+        "passed": false
+      },
+      {
+        "a": "airline_378/trial2/step3",
+        "b": "airline_378/trial3/step3",
+        "expected": "separate",
+        "category": "knowledge_difference",
+        "reason": "Trial 3 has reservation facts only; the other trial also has returned user-profile facts.",
+        "actual": "abstain",
+        "passed": false
+      },
+      {
+        "a": "airline_378/trial0/step6",
+        "b": "airline_378/trial2/step6",
+        "expected": "separate",
+        "category": "same_db_different_promise",
+        "reason": "Both performed cabin update, but communicated refunds were USD 2380 vs USD 2504; commitments must remain distinct.",
+        "actual": "abstain",
+        "passed": false
+      },
+      {
+        "a": "airline_378/trial1/step6",
+        "b": "airline_378/trial3/step6",
+        "expected": "separate",
+        "category": "same_db_different_consent",
+        "reason": "Trial 1 has confirmed a full USD 2462 proposal; trial 3 has only selected the refund card and is awaiting a full confirmation.",
+        "actual": "abstain",
+        "passed": false
+      },
+      {
+        "a": "airline_706/trial0/step6",
+        "b": "airline_706/trial2/step6",
+        "expected": "separate",
+        "category": "same_db_different_promise",
+        "reason": "Communicated charges USD 360 vs USD 924 differ even though the requested upgrade is the same.",
+        "actual": "abstain",
+        "passed": false
+      },
+      {
+        "a": "airline_706/trial2/step6",
+        "b": "airline_706/trial3/step6",
+        "expected": "separate",
+        "category": "same_db_different_consent",
+        "reason": "Trial 2 approves a USD 924 upgrade; trial 3 challenges USD 681 pricing and asks for clarification, not approval.",
+        "actual": "abstain",
+        "passed": false
+      }
+    ],
+    "comparable_groups": [
+      {
+        "source": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/a800-multicall-aa267bb/comparison-four-way/raw/selection-dual-gpu/results-off/trajectories.jsonl",
+        "task": "airline_378",
+        "step": 1,
+        "key": "semantic:v1:ec9d6b088af10815b56ca63b8fe13bfd68f7b5783e4b0bbe2317f21bdb89de70",
+        "members": [
+          "airline_378/trial0/step1",
+          "airline_378/trial1/step1",
+          "airline_378/trial2/step1",
+          "airline_378/trial3/step1"
+        ],
+        "rewards": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "variable_return": false,
+        "proper_subgroup": false,
+        "cohort_size": 4,
+        "all_cohort_states_available": true
+      },
+      {
+        "source": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/a800-multicall-aa267bb/comparison-four-way/raw/selection-dual-gpu/results-off/trajectories.jsonl",
+        "task": "airline_706",
+        "step": 1,
+        "key": "semantic:v1:b11d829ea39ff2b9dee89154473bfce37f524f2770983d879691d81c973a5331",
+        "members": [
+          "airline_706/trial0/step1",
+          "airline_706/trial1/step1",
+          "airline_706/trial2/step1",
+          "airline_706/trial3/step1"
+        ],
+        "rewards": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "variable_return": false,
+        "proper_subgroup": false,
+        "cohort_size": 4,
+        "all_cohort_states_available": true
+      }
+    ],
+    "variable_return_groups": 0,
+    "variable_return_proper_subgroups": 0,
+    "fully_observed_variable_return_proper_subgroups": 0,
+    "scope": "Evaluation trials, aligned by task and sampled decision position; not original RL groups or an estimate of training gains. Valid means protocol/evidence accepted, not verified semantic accuracy.",
+    "provenance": {
+      "results/analysis/semantic_real_audit_20260914/inputs/audit_cases.json": "864a83feec3a7a2e08aa24f8919463b1a52aff687239d941946082400abc30ec",
+      "results/analysis/semantic_real_audit_20260914/audit_glm/states.jsonl": "113da0bd6be60944d298d7eef0703b9d1587b9656889b780b29a6f2d13209b69",
+      "results/analysis/semantic_real_audit_20260914/review_labels.json": "4010422868510f17ad37f31f8f9d1beea2755cd394546bc6952a21386b8c779f",
+      "results/analysis/semantic_real_audit_20260914/inputs/outcome_metadata.json": "165d9c2f176a71a286da1e3a22f6e2489f7afb2a246aec44f414fd73b0f43919"
+    }
+  },
+  "api_requests": 18,
+  "api_provenance": {
+    "provider": "openai_compatible",
+    "base_url": "https://llmapi.paratera.com/v1",
+    "model": "GLM-5.3-Flash",
+    "timeout_seconds": 180,
+    "max_tokens": 8192,
+    "temperature": 0,
+    "thinking_mode_requested": null,
+    "automatic_retries": 0,
+    "cases_sha256": "864a83feec3a7a2e08aa24f8919463b1a52aff687239d941946082400abc30ec",
+    "prompt_sha256": "0bd3ef9cd34d372d092997965a97f5cab8ed4fe0ab8425ce5601b2542f18c6fc",
+    "limit": null,
+    "concurrency": 4,
+    "slot_schema": "airline_slots_v2",
+    "case_ids": null,
+    "slot_prompt_sha256": "c41e60bc8bc4788cbcf6c8e1ad12248604186a70c49913871be39dac1de9a782"
+  },
+  "api_elapsed_seconds": {
+    "min": 49.282,
+    "max": 95.9,
+    "median": 84.03,
+    "sum_not_wall_clock": 1426.829
+  },
+  "replay_counts": {
+    "trajectories": 12,
+    "verified": 12,
+    "verified_tool_responses": 84,
+    "certified_decisions": 129,
+    "certified_noninitial_decisions": 117,
+    "emitted/v1": 129,
+    "emitted/v2": 129,
+    "emitted/v3": 129
+  },
+  "post_audit_source_inventory": {
+    "scope": "Post-audit inventory for planning a separate reward-stratified diagnostic; not used to alter frozen audit",
+    "trajectories": 239,
+    "tasks": 60,
+    "complete_four_trial_tasks": 59,
+    "mixed_four_trial_tasks": 22
+  },
+  "validation": {
+    "related_cpu_tests_passed": 117,
+    "ruff": "passed",
+    "git_diff_check": "passed"
+  },
+  "artifact_hashes": {
+    "results/analysis/semantic_real_audit_20260914/lock.json": "e801b17d4567ce2978b2fb7ec9fd6a2cc7c86757626d7024859090fff7d6bd6b",
+    "results/analysis/semantic_real_audit_20260914/review_labels.json": "4010422868510f17ad37f31f8f9d1beea2755cd394546bc6952a21386b8c779f",
+    "results/analysis/semantic_real_audit_20260914/audit_glm/summary.json": "1ff555cec1b8666afbe6d757bba2d58671aa2260b7e4a4d089db7ebdd76d72ce",
+    "results/analysis/semantic_real_audit_20260914/audit_glm/packets.jsonl": "6368e3f62dc137fd2206aa356d40903e13a021aff47d43131759458477ed763d",
+    "results/analysis/semantic_real_audit_20260914/audit_glm/states.jsonl": "113da0bd6be60944d298d7eef0703b9d1587b9656889b780b29a6f2d13209b69",
+    "results/analysis/semantic_real_audit_20260914/inputs/manifest.json": "a35ad8227e3a2ede01dc197fa6e5e6b4dbedae7b8457371d1bef9fffa2c7d396",
+    "results/analysis/semantic_real_audit_20260914/inputs/audit_cases.json": "864a83feec3a7a2e08aa24f8919463b1a52aff687239d941946082400abc30ec",
+    "results/analysis/semantic_real_audit_20260914/inputs/outcome_metadata.json": "165d9c2f176a71a286da1e3a22f6e2489f7afb2a246aec44f414fd73b0f43919",
+    "results/analysis/semantic_real_audit_20260914/scored.json": "7f7abef8dbb15c043aacb45a918bea7552c6d3f81e8c8aa0f9772358d74cbacf"
+  },
+  "conclusion": "No tested model passed both pilot prefixes. Held-out intermediate-state coverage 1/16 and semantic pair decidability 0/10 do not justify online semantic GiGPO training. No claim about GiGPO algorithm effectiveness."
+}

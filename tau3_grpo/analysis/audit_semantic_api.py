@@ -107,7 +107,7 @@ async def run(config, output, *, transport=None):
                               'case_ids': case_ids,
                               'slot_prompt_sha256': sha256_file(slot_prompt_path(slot_schema))
                               if slot_schema is not None else None},
-               'scope': 'Real-model extraction on authored contract cases; not real rollout accuracy or RL improvement.'}
+               'scope': 'Real-model extraction on supplied prefixes. Valid means protocol/evidence accepted; dataset provenance and semantic accuracy require a separate audit. Not evidence of RL improvement.'}
     (output / 'summary.json').write_text(json.dumps(summary, ensure_ascii=False, indent=2) + '\n')
     return summary
 

@@ -1,0 +1,163 @@
+{
+  "independent_human_labels": false,
+  "reviewer": "Codex",
+  "outcomes_inspected_for_labeling": false,
+  "labels_frozen_before_holdout_inference": true,
+  "cases_sha256": "864a83feec3a7a2e08aa24f8919463b1a52aff687239d941946082400abc30ec",
+  "pairs": [
+    {
+      "a": "airline_378/trial0/step1",
+      "b": "airline_378/trial1/step1",
+      "expected": "merge",
+      "category": "exact_prefix",
+      "reason": "Identical visible pre-action prefix and same task/environment; this is a cache identity check, not semantic generalization."
+    },
+    {
+      "a": "airline_378/trial0/step1",
+      "b": "airline_378/trial2/step1",
+      "expected": "merge",
+      "category": "exact_prefix",
+      "reason": "Identical visible pre-action prefix and same task/environment; this is a cache identity check, not semantic generalization."
+    },
+    {
+      "a": "airline_378/trial0/step1",
+      "b": "airline_378/trial3/step1",
+      "expected": "merge",
+      "category": "exact_prefix",
+      "reason": "Identical visible pre-action prefix and same task/environment; this is a cache identity check, not semantic generalization."
+    },
+    {
+      "a": "airline_378/trial1/step1",
+      "b": "airline_378/trial2/step1",
+      "expected": "merge",
+      "category": "exact_prefix",
+      "reason": "Identical visible pre-action prefix and same task/environment; this is a cache identity check, not semantic generalization."
+    },
+    {
+      "a": "airline_378/trial1/step1",
+      "b": "airline_378/trial3/step1",
+      "expected": "merge",
+      "category": "exact_prefix",
+      "reason": "Identical visible pre-action prefix and same task/environment; this is a cache identity check, not semantic generalization."
+    },
+    {
+      "a": "airline_378/trial2/step1",
+      "b": "airline_378/trial3/step1",
+      "expected": "merge",
+      "category": "exact_prefix",
+      "reason": "Identical visible pre-action prefix and same task/environment; this is a cache identity check, not semantic generalization."
+    },
+    {
+      "a": "airline_706/trial0/step1",
+      "b": "airline_706/trial1/step1",
+      "expected": "merge",
+      "category": "exact_prefix",
+      "reason": "Identical visible pre-action prefix and same task/environment; this is a cache identity check, not semantic generalization."
+    },
+    {
+      "a": "airline_706/trial0/step1",
+      "b": "airline_706/trial2/step1",
+      "expected": "merge",
+      "category": "exact_prefix",
+      "reason": "Identical visible pre-action prefix and same task/environment; this is a cache identity check, not semantic generalization."
+    },
+    {
+      "a": "airline_706/trial0/step1",
+      "b": "airline_706/trial3/step1",
+      "expected": "merge",
+      "category": "exact_prefix",
+      "reason": "Identical visible pre-action prefix and same task/environment; this is a cache identity check, not semantic generalization."
+    },
+    {
+      "a": "airline_706/trial1/step1",
+      "b": "airline_706/trial2/step1",
+      "expected": "merge",
+      "category": "exact_prefix",
+      "reason": "Identical visible pre-action prefix and same task/environment; this is a cache identity check, not semantic generalization."
+    },
+    {
+      "a": "airline_706/trial1/step1",
+      "b": "airline_706/trial3/step1",
+      "expected": "merge",
+      "category": "exact_prefix",
+      "reason": "Identical visible pre-action prefix and same task/environment; this is a cache identity check, not semantic generalization."
+    },
+    {
+      "a": "airline_706/trial2/step1",
+      "b": "airline_706/trial3/step1",
+      "expected": "merge",
+      "category": "exact_prefix",
+      "reason": "Identical visible pre-action prefix and same task/environment; this is a cache identity check, not semantic generalization."
+    },
+    {
+      "a": "airline_378/trial0/step3",
+      "b": "airline_378/trial1/step3",
+      "expected": "merge",
+      "category": "semantic_positive",
+      "reason": "Same cabin-change goal; user has answered ID request; same reservation/user tool facts; no proposal or approval yet. Prior ID-request wording differs."
+    },
+    {
+      "a": "airline_378/trial0/step3",
+      "b": "airline_378/trial2/step3",
+      "expected": "merge",
+      "category": "semantic_positive",
+      "reason": "Same cabin-change goal; user has answered ID request; same reservation/user tool facts; no proposal or approval yet. Prior ID-request wording differs."
+    },
+    {
+      "a": "airline_378/trial1/step3",
+      "b": "airline_378/trial2/step3",
+      "expected": "merge",
+      "category": "semantic_positive",
+      "reason": "Same cabin-change goal; user has answered ID request; same reservation/user tool facts; no proposal or approval yet. Prior ID-request wording differs."
+    },
+    {
+      "a": "airline_378/trial0/step3",
+      "b": "airline_378/trial3/step3",
+      "expected": "separate",
+      "category": "knowledge_difference",
+      "reason": "Trial 3 has reservation facts only; the other trial also has returned user-profile facts."
+    },
+    {
+      "a": "airline_378/trial1/step3",
+      "b": "airline_378/trial3/step3",
+      "expected": "separate",
+      "category": "knowledge_difference",
+      "reason": "Trial 3 has reservation facts only; the other trial also has returned user-profile facts."
+    },
+    {
+      "a": "airline_378/trial2/step3",
+      "b": "airline_378/trial3/step3",
+      "expected": "separate",
+      "category": "knowledge_difference",
+      "reason": "Trial 3 has reservation facts only; the other trial also has returned user-profile facts."
+    },
+    {
+      "a": "airline_378/trial0/step6",
+      "b": "airline_378/trial2/step6",
+      "expected": "separate",
+      "category": "same_db_different_promise",
+      "reason": "Both performed cabin update, but communicated refunds were USD 2380 vs USD 2504; commitments must remain distinct."
+    },
+    {
+      "a": "airline_378/trial1/step6",
+      "b": "airline_378/trial3/step6",
+      "expected": "separate",
+      "category": "same_db_different_consent",
+      "reason": "Trial 1 has confirmed a full USD 2462 proposal; trial 3 has only selected the refund card and is awaiting a full confirmation."
+    },
+    {
+      "a": "airline_706/trial0/step6",
+      "b": "airline_706/trial2/step6",
+      "expected": "separate",
+      "category": "same_db_different_promise",
+      "reason": "Communicated charges USD 360 vs USD 924 differ even though the requested upgrade is the same."
+    },
+    {
+      "a": "airline_706/trial2/step6",
+      "b": "airline_706/trial3/step6",
+      "expected": "separate",
+      "category": "same_db_different_consent",
+      "reason": "Trial 2 approves a USD 924 upgrade; trial 3 challenges USD 681 pricing and asks for clarification, not approval."
+    }
+  ]
+}

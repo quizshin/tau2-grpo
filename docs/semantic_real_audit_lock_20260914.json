@@ -1,0 +1,49 @@
+{
+  "source": "/Users/apple/Projects/program-llm/tau3_grpo_fix/code/results/a800-multicall-aa267bb/comparison-four-way/raw/selection-dual-gpu/results-off/trajectories.jsonl",
+  "source_sha256": "cac0f5bee1565cc7d2b27d30da39b882524c7822bfccb8f9d17f82d2a4b060a3",
+  "excluded": [
+    "airline_1035",
+    "airline_1059",
+    "airline_1060",
+    "airline_1073",
+    "airline_109",
+    "airline_1106",
+    "airline_1113",
+    "airline_112",
+    "airline_1143",
+    "airline_126",
+    "airline_14",
+    "airline_162",
+    "airline_458",
+    "airline_976",
+    "airline_994",
+    "other_task",
+    "synthetic_task",
+    "airline_548",
+    "airline_363",
+    "airline_895"
+  ],
+  "selection_rule": "sha256(semantic-real-v2-42:task_id), select first 3 excluding all prior-reviewed tasks; no rewards/messages inspected",
+  "pilot_task": "airline_683",
+  "audit_tasks": [
+    "airline_706",
+    "airline_378"
+  ],
+  "positions": [
+    1,
+    3,
+    6
+  ],
+  "model_candidates": [
+    "Kimi-K3",
+    "GLM-5.3-Flash",
+    "Qwen3.8-Flash",
+    "DeepSeek-V3.2-Instruct"
+  ],
+  "code_sha256": {
+    "tau3_grpo/algorithms/anchors/semantic_slots_v2.py": "f634d40e6796c03d874cfca589cbae1239262e9a6e13ee0328c9a3e63fd1d828",
+    "tau3_grpo/algorithms/anchors/semantic_state.py": "026e202119a10427070060c449d72b57cb1baad0c949f1faf70f8f572735647f",
+    "configs/prompts/semantic_airline_slots_v2.txt": "c41e60bc8bc4788cbcf6c8e1ad12248604186a70c49913871be39dac1de9a782"
+  },
+  "scope": "SFT selection trajectories, not RL training groups; Codex audit, not independent human labels"
+}

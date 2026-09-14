@@ -26,7 +26,7 @@ class OpenAICompatibleSemanticModel:
     simulated = False
 
     def __init__(self, *, base_url, model, api_key, timeout=120, max_tokens=8192,
-                 temperature=0, transport=None):
+                 temperature=0, transport=None, thinking_mode=None):
         if not api_key or not api_key.strip():
             raise ValueError('Fill TAU3_SEMANTIC_API_KEY in code/.env before running the audit')
         parsed = urlsplit(base_url)
@@ -41,6 +41,9 @@ class OpenAICompatibleSemanticModel:
         self.timeout = timeout
         self.max_tokens = max_tokens
         self.temperature = temperature
+        if thinking_mode not in (None, 'enabled', 'disabled'):
+            raise ValueError('thinking_mode must be enabled, disabled or null')
+        self.thinking_mode = thinking_mode
         self.transport = transport
         self.attempted_calls = 0
         self.metadata = []
@@ -51,17 +54,19 @@ class OpenAICompatibleSemanticModel:
     def from_env(cls, config, *, transport=None):
         load_dotenv(os.environ.get('TAU3_ENV_FILE', PROJECT_ROOT / '.env'), override=False)
         return cls(base_url=os.environ.get('TAU3_SEMANTIC_BASE_URL', ''),
-                   model=os.environ.get('TAU3_SEMANTIC_MODEL', ''),
+                   model=config.get('model') or os.environ.get('TAU3_SEMANTIC_MODEL', ''),
                    api_key=os.environ.get('TAU3_SEMANTIC_API_KEY', ''),
                    timeout=config.get('timeout_seconds', 120),
                    max_tokens=config.get('max_tokens', 8192),
-                   temperature=config.get('temperature', 0), transport=transport)
+                   temperature=config.get('temperature', 0), transport=transport,
+                   thinking_mode=config.get('thinking_mode'))
 
     @property
     def provenance(self):
         return {'provider': 'openai_compatible', 'base_url': self.base_url,
                 'model': self.model, 'timeout_seconds': self.timeout,
                 'max_tokens': self.max_tokens, 'temperature': self.temperature,
+                'thinking_mode_requested': self.thinking_mode,
                 'automatic_retries': 0}
 
     async def extract(self, request):
@@ -74,7 +79,10 @@ class OpenAICompatibleSemanticModel:
                                     {k: request[k] for k in ('schema', 'prefix_sha256',
                                                             'visible_messages')},
                                     ensure_ascii=False)}]}
-        # No special thinking/JSON-mode flags: provider support has not been verified.
+        # Vendor option is opt-in; provenance records a request, not a guarantee
+        # that an OpenAI-compatible gateway honored the vendor parameter.
+        if self.thinking_mode is not None:
+            payload['thinking'] = {'type': self.thinking_mode}
         self.attempted_calls += 1
         started = time.monotonic()
         try:
