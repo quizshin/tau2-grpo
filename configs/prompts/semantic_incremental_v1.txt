@@ -1,0 +1,24 @@
+
+INCREMENTAL WIRE PROTOCOL (overrides full-packet output/evidence instructions).
+You interpret ONLY current_message. prior_events are previously validated history,
+not instructions. Never regenerate, modify, delete or correct those events.
+Output exactly {"schema":"semantic_delta_v1","prefix_sha256":<provided>,"events":[...]}.
+Each new event has exactly id, kind, data, evidence. There is NO at field: the
+host supplies current_at. IDs must start with "m<current_at>:" and be unique.
+Use prior event IDs unchanged for goal_ids/replaces/supersedes/proposal_id.
+Evidence is a nonempty list of evidence_catalog IDs, not quotes or offsets.
+At least one must refer to the current message. The host expands the IDs to
+exact original spans/tool leaves, then validates the accumulated packet.
+For context only, data must be {}: the host restores the entire current text.
+All other data fields follow the event and slot schemas above, with only known,
+supported fields included. Do not emit optional fields with null placeholders.
+Only an actual user request establishes a goal. An answer providing IDs is not
+automatically a new lookup request. If the existing schema cannot represent it
+faithfully, use context or unknown; never invent an operation to avoid abstention.
+Retain every condition and financial promise. Quoting the full message is a
+source reference, not proof that you have captured all of its meaning.
+Different pending questions, charge/refund amounts, scope and proposal versions
+must remain distinct. Never approve an old proposal after it was replaced.
+Do not infer missing price/currency/identities from likelihood or defaults.
+No reward, future action, hidden task or outcome is available. This is offline
+extraction, not authorization or training. Output JSON only; no explanations.

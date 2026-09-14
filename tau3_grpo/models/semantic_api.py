@@ -70,14 +70,23 @@ class OpenAICompatibleSemanticModel:
                 'automatic_retries': 0}
 
     async def extract(self, request):
+        packet = await self.extract_json(request)
+        try:
+            validate_packet(request['visible_messages'], packet, slot_schema=request.get('slot_schema'))
+        except (TypeError, KeyError, IndexError, AttributeError):
+            raise SemanticAPIError('Semantic API packet has malformed field types') from None
+        return packet
+
+    async def extract_json(self, request, *, user_payload=None):
+        """Transport only; callers of this method must validate their own schema."""
         if request['prefix_sha256'] != sha256_json(request['visible_messages']):
             raise ValueError('Model request prefix changed')
         payload = {'model': self.model, 'temperature': self.temperature,
                    'max_tokens': self.max_tokens, 'stream': False,
                    'messages': [{'role': 'system', 'content': request['system']},
                                 {'role': 'user', 'content': json.dumps(
-                                    {k: request[k] for k in ('schema', 'prefix_sha256',
-                                                            'visible_messages')},
+                                    user_payload if user_payload is not None else
+                                    {k: request[k] for k in ('schema', 'prefix_sha256', 'visible_messages')},
                                     ensure_ascii=False)}]}
         # Vendor option is opt-in; provenance records a request, not a guarantee
         # that an OpenAI-compatible gateway honored the vendor parameter.
@@ -103,6 +112,12 @@ class OpenAICompatibleSemanticModel:
         try:
             body = response.json()
             choice = body['choices'][0]
+            usage = body.get('usage')
+            self.metadata.append({'prefix_sha256': request['prefix_sha256'],
+                                  'finish_reason': choice.get('finish_reason') if isinstance(choice.get('finish_reason'), str) else None,
+                                  'usage': {k: v for k, v in usage.items()
+                                            if k in ('prompt_tokens', 'completion_tokens', 'total_tokens')
+                                            and type(v) is int} if isinstance(usage, dict) else {}})
             if choice.get('finish_reason') != 'stop':
                 raise SemanticAPIError('Semantic API did not finish normally; packet rejected')
             content = choice['message']['content']
@@ -117,14 +132,5 @@ class OpenAICompatibleSemanticModel:
                 raise SemanticAPIError('Semantic API packet must be a JSON object')
         except (ValueError, TypeError, KeyError, IndexError, AttributeError):
             raise SemanticAPIError('Semantic API returned invalid JSON/envelope') from None
-        usage = body.get('usage')
         self.response_packets[request['prefix_sha256']] = packet
-        self.metadata.append({'prefix_sha256': request['prefix_sha256'],
-                              'usage': {k: v for k, v in usage.items()
-                                        if k in ('prompt_tokens', 'completion_tokens', 'total_tokens')
-                                        and type(v) is int} if isinstance(usage, dict) else {}})
-        try:
-            validate_packet(request['visible_messages'], packet, slot_schema=request.get('slot_schema'))
-        except (TypeError, KeyError, IndexError, AttributeError):
-            raise SemanticAPIError('Semantic API packet has malformed field types') from None
         return packet

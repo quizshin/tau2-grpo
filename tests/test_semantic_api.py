@@ -110,6 +110,25 @@ def test_invalid_or_truncated_envelope_abstains(body):
         asyncio.run(model(lambda req: httpx.Response(200, json=body)).extract(request_and_packet()[0]))
 
 
+@pytest.mark.parametrize('finish', ['stop', 'length', 'content_filter'])
+def test_finish_and_usage_preserved_even_when_packet_rejected(finish):
+    request, packet = request_and_packet()
+    body = envelope(packet, finish)
+    body['usage'] = {'prompt_tokens': 12, 'completion_tokens': 8, 'total_tokens': 20,
+                     'secret': FAKE_KEY, 'invalid_counter': True}
+    client = model(lambda req: httpx.Response(200, json=body))
+    if finish == 'stop':
+        asyncio.run(client.extract(request))
+    else:
+        with pytest.raises(SemanticAPIError, match='did not finish normally'):
+            asyncio.run(client.extract(request))
+        assert client.response_packets == {}
+    assert client.metadata == [{'prefix_sha256': request['prefix_sha256'],
+                                'finish_reason': finish,
+                                'usage': {'prompt_tokens': 12, 'completion_tokens': 8,
+                                          'total_tokens': 20}}]
+
+
 def test_wrong_prefix_is_rejected_by_evidence_validator():
     request, packet = request_and_packet()
     packet['prefix_sha256'] = 'wrong'

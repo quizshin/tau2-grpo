@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+from contextlib import ExitStack
 from pathlib import Path
 
 import yaml
@@ -40,12 +41,29 @@ async def run(config, output, *, transport=None):
         raise ValueError('concurrency must be between 1 and 4')
     slot_schema = config.get('slot_schema')
     build_request([], slot_schema=slot_schema)  # Validate switch before network/output.
+    mode = config.get('extraction_mode', 'full_prefix')
+    if mode == 'incremental_v1':
+        from tau3_grpo.models.semantic_incremental import IncrementalSemanticModel
+        model = IncrementalSemanticModel(model, slot_schema=slot_schema,
+                                         max_calls=config.get('max_incremental_calls', 32))
+    elif mode != 'full_prefix':
+        raise ValueError('Unsupported extraction_mode')
     semaphore = asyncio.Semaphore(concurrency)
     output = Path(output)
     output.mkdir(parents=True, exist_ok=False)
     results, cached = {}, {}
     # Neither pair labels nor task metadata/returns are sent to the API.
-    with (output / 'packets.jsonl').open('w') as packets, (output / 'states.jsonl').open('w') as states:
+    with ExitStack() as stack:
+        packets = stack.enter_context((output / 'packets.jsonl').open('w'))
+        states = stack.enter_context((output / 'states.jsonl').open('w'))
+        if mode == 'incremental_v1':
+            deltas = stack.enter_context((output / 'deltas.jsonl').open('w'))
+
+            def persist_delta(record):
+                deltas.write(json.dumps(record, ensure_ascii=False) + '\n')
+                deltas.flush()
+
+            model.on_delta = persist_delta
         async def extract(request):
             async with semaphore:
                 try:
