@@ -49,7 +49,7 @@ def source_hashes():
     paths = ['tau3_grpo/algorithms/verl_estimator.py', 'tau3_grpo/algorithms/tau_gigpo.py',
              'tau3_grpo/tracking/signal_audit.py', 'tau3_grpo/algorithms/dynamic_filtering.py',
              'tau3_grpo/integrations/anchor_hook.py', 'tau3_grpo/algorithms/anchors/features.py',
-             'tau3_grpo/algorithms/anchors/encoder.py', 'tau3_grpo/algorithms/anchors/evidence.py', 'verl/verl/trainer/ppo/ray_trainer.py',
+             'tau3_grpo/algorithms/anchors/encoder.py', 'tau3_grpo/algorithms/anchors/evidence.py', 'tau3_grpo/algorithms/anchors/semantic.py', 'verl/verl/trainer/ppo/ray_trainer.py',
              'verl/verl/trainer/ppo/core_algos.py']
     return {p: hashlib.sha256((root / p).read_bytes()).hexdigest() for p in paths}
 

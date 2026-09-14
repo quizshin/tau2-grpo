@@ -20,7 +20,7 @@ def pin_protocol(directory: Path, version: str):
     # resume their checkpoint with a different credit-assignment protocol.
     historical=(directory/'experiment_manifest.json').exists() or any(directory.glob('global_step_*'))
     if historical and version!='v1':
-        raise ValueError('historical run has v1 anchors; choose a new run directory for v2')
+        raise ValueError(f'historical run has v1 anchors; choose a new run directory for {version}')
     directory.mkdir(parents=True,exist_ok=True)
     try:
         with path.open('x') as f:json.dump(expected,f,sort_keys=True)

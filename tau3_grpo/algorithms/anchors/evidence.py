@@ -20,7 +20,7 @@ DEFAULT_ANCHOR_VERSION = 'v2'
 
 
 def validate_version(value: str) -> str:
-    if value not in ('v1', 'v2'):
+    if value not in ('v1', 'v2', 'v3'):
         raise ValueError(f'unsupported anchor version: {value!r}')
     return value
 
@@ -69,9 +69,12 @@ class DecisionEvidence:
     reply_kind: str
     committed_tools: tuple[str, ...]
     read_keys: int
+    version: str = "v2"
+    normalized_utterances: int = 0
+    opaque_utterances: int = 0
 
     def payload(self):
-        return {'version': 'v2', 'read_hash': self.read_hash, 'dialogue_hash': self.dialogue_hash,
+        return {'version': self.version, 'read_hash': self.read_hash, 'dialogue_hash': self.dialogue_hash,
                 'tool_event_hash': self.tool_event_hash,
                 'confirmation_exchange': {'proposal_hash': self.proposal_hash, 'reply_hash': self.reply_hash},
                 'committed_tools': self.committed_tools}
@@ -81,7 +84,7 @@ class DecisionEvidence:
         return sha256_json(self.payload())
 
 
-def decision_evidence(messages: Iterable[Any]) -> DecisionEvidence:
+def decision_evidence(messages: Iterable[Any], *, version: str = "v2") -> DecisionEvidence:
     """Reconstruct only observed evidence. No future action/reward/DB peeking.
 
     Successful reads form a sorted query ledger. Repeating the same observation
@@ -89,6 +92,10 @@ def decision_evidence(messages: Iterable[Any]) -> DecisionEvidence:
     failures and unmatched results are ordered events. Tool-call IDs are used
     solely to join requests to responses, never as state features.
     """
+    validate_version(version)
+    if version == "v1":
+        raise ValueError("v1 uses the legacy feature extractor")
+    normalized_count = opaque_count = 0
     pending = {}
     reads: dict[str, list[str]] = {}
     dialogue = sha256_json([])
@@ -102,13 +109,19 @@ def decision_evidence(messages: Iterable[Any]) -> DecisionEvidence:
         if role in ('assistant', 'user') and text:
             # Full visible conversational evidence is the conservative fallback
             # for unresolved scope/conditions, not a guessed action parser.
-            dialogue = sha256_json([dialogue, role, text])
+            normalized = text
+            if version == "v3":
+                from tau3_grpo.algorithms.anchors.semantic import normalize_utterance
+                normalized = normalize_utterance(role, text)
+                normalized_count += int(normalized["kind"] != "opaque")
+                opaque_count += int(normalized["kind"] == "opaque")
+            dialogue = sha256_json([dialogue, role, normalized])
             if role == 'assistant':
-                proposal = sha256_json({'text': text, 'reads': reads, 'events': events})
+                proposal = sha256_json({'text': normalized, 'reads': reads, 'events': events})
                 reply = None
                 kind = 'none'
             else:
-                reply = sha256_json(text)
+                reply = sha256_json(normalized)
                 kind = reply_kind(text)
         for call in _get(message, 'tool_calls', None) or []:
             function = _get(call, 'function', None)
@@ -143,4 +156,4 @@ def decision_evidence(messages: Iterable[Any]) -> DecisionEvidence:
         # Preserve incomplete evidence instead of collapsing it into no action.
         events = sha256_json([events, 'pending', sorted(pending.values(), key=sha256_json)])
     return DecisionEvidence(sha256_json(reads), dialogue, events, proposal, reply, kind,
-                            tuple(sorted(committed)), len(reads))
+                            tuple(sorted(committed)), len(reads), version, normalized_count, opaque_count)

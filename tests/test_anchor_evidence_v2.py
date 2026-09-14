@@ -183,7 +183,7 @@ def test_run_protocol_pin_prevents_silent_resume_changes(tmp_path):
     from tau3_grpo.algorithms.anchors.protocol import pin_protocol
     path=pin_protocol(tmp_path,'v2');assert pin_protocol(tmp_path,'v2')==path
     with pytest.raises(ValueError,match='protocol changed'):pin_protocol(tmp_path,'v1')
-    with pytest.raises(ValueError,match='unsupported'):pin_protocol(tmp_path,'v3')
+    with pytest.raises(ValueError,match='unsupported'):pin_protocol(tmp_path,'unknown')
 
 
 def test_historical_run_protocol_stays_v1(tmp_path):

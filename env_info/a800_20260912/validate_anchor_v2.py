@@ -21,8 +21,8 @@ def convert(raw):
     return NS(**raw)
 
 
-def validate(paths):
-    source={};groups={'v1':defaultdict(list),'v2':defaultdict(list)};counts=Counter();rows=[];seconds=Counter();examples=[]
+def validate(paths, versions=("v1", "v2")):
+    source={};groups={version:defaultdict(list) for version in versions};counts=Counter();rows=[];seconds=Counter();examples=[]
     for path in paths:
         source[str(path)]=hashlib.sha256(path.read_bytes()).hexdigest()
         with path.open() as f:
@@ -44,6 +44,10 @@ def validate(paths):
                             rows.append({'identity':identity,'assistant_step':turn,'message_index':message_index,**ids})
                             counts['assistant_decisions']+=1;counts['noninitial_decisions']+=int(turn>0);turn+=1
                         prefix.append(msg)
+                        if msg.role in ('assistant', 'user') and msg.content:
+                            from tau3_grpo.algorithms.anchors.semantic import normalize_utterance
+                            kind=normalize_utterance(msg.role, str(msg.content))['kind']
+                            counts['utterance/'+kind]+=1
                         if msg.role=='user' and path.parent.name=='e2' and (row['task_id'],row['trial'],message_index) in {('airline_1035',0,9),('airline_1060',1,13),('airline_1106',2,12)}:
                             ev=decision_evidence(prefix);examples.append({'task_id':row['task_id'],'trial':row['trial'],'message_index':message_index,
                                 'user':msg.content,'reply_kind':ev.reply_kind,'payload':ev.payload()})
@@ -62,6 +66,6 @@ def validate(paths):
             'models_called':False,'gpu_used':False}
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('--input',type=Path,action='append',required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args()
-    result=validate(a.input);a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
+    p=argparse.ArgumentParser();p.add_argument('--input',type=Path,action='append',required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--versions',nargs='+',default=['v1','v2']);a=p.parse_args()
+    result=validate(a.input, versions=a.versions);a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
     print(json.dumps({k:v for k,v in result.items() if k not in ('decisions','reviewed_examples')},ensure_ascii=False))

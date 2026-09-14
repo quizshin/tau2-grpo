@@ -53,7 +53,7 @@ def current_anchor(agent_data: Any, segment_kind: str) -> Optional[str]:
     session = entry.session
     messages = session.messages
     version = validate_version(entry.anchor_version)
-    evidence = decision_evidence(messages) if version == "v2" else None
+    evidence = decision_evidence(messages, version=version) if version in ("v2", "v3") else None
     state = AnchorState(
         task_id=session.task_id,
         db_hash=session.db_hash(),

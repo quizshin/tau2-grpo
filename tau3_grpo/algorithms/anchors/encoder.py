@@ -68,10 +68,10 @@ class AnchorState:
             "policy_precondition_flags": sorted(self.policy_precondition_flags),
             "last_observation": self.last_observation.value,
         }
-        if self.anchor_version == "v2":
+        if self.anchor_version in ("v2", "v3"):
             if not self.decision_evidence_hash:
                 raise ValueError("v2 anchors require decision evidence")
-            payload.update(anchor_version="v2", decision_evidence_hash=self.decision_evidence_hash)
+            payload.update(anchor_version=self.anchor_version, decision_evidence_hash=self.decision_evidence_hash)
         elif self.anchor_version != "v1":
             raise ValueError(f"unsupported anchor version: {self.anchor_version}")
         return payload
@@ -93,9 +93,9 @@ class AnchorState:
             features.add(f"confirm:{flag}")
         for flag in self.policy_precondition_flags:
             features.add(f"precond:{flag}")
-        if self.anchor_version == "v2":
+        if self.anchor_version in ("v2", "v3"):
             self.structured_payload()  # validate evidence before serialization
-            features.update(("protocol:v2", f"evidence:{self.decision_evidence_hash}"))
+            features.update((f"protocol:{self.anchor_version}", f"evidence:{self.decision_evidence_hash}"))
         return frozenset(features)
 
 
@@ -160,13 +160,13 @@ def encode_anchor(state: AnchorState, mode: AnchorMode | str = AnchorMode.STRUCT
         # SIMILARITY starts from the structured id; grouping merges afterwards.
         payload = state.structured_payload()
     digest = sha256_text(canonical_json(payload))
-    version = "v2:" if state.anchor_version == "v2" and resolved is not AnchorMode.DB_HASH_ONLY else ""
+    version = f"{state.anchor_version}:" if state.anchor_version in ("v2", "v3") and resolved is not AnchorMode.DB_HASH_ONLY else ""
     return f"{resolved.value}:{version}{digest[:ANCHOR_ID_LENGTH]}"
 
 
 def _compatible_evidence(left: frozenset[str], right: frozenset[str]) -> bool:
     prefixes = ("task:",)
-    if "protocol:v2" in left or "protocol:v2" in right:
+    if {"protocol:v2", "protocol:v3"} & (left | right):
         # Approximate grouping must never erase v2's scope/observation guard.
         prefixes = ("task:", "db:", "protocol:", "evidence:")
     return {x for x in left if x.startswith(prefixes)} == {x for x in right if x.startswith(prefixes)}

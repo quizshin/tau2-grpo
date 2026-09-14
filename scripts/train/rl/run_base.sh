@@ -121,7 +121,7 @@ ANCHOR_MODE="${TAU3_GRPO_CONFIG_ANCHOR_MODE:-${ANCHOR_MODE}}"
 
 export TAU3_GRPO_ANCHOR_VERSION="${TAU3_GRPO_ANCHOR_VERSION:-v2}"
 case "${TAU3_GRPO_ANCHOR_VERSION}" in
-  v1|v2) ;;
+  v1|v2|v3) ;;
   *) echo "error: unsupported anchor version ${TAU3_GRPO_ANCHOR_VERSION}" >&2; exit 2 ;;
 esac
 

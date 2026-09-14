@@ -1,0 +1,8 @@
+# Bounded semantic-normalization candidate. No run is launched by this file.
+includes:
+- qwen35_4b_full_a800_gigpo_audit_20260914.yaml
+launch:
+  environment:
+    TAU3_GRPO_ANCHOR_VERSION: v3
+    RESULTS_DIR: ${TAU3_RUN_ROOT}/gigpo-semantic-20260914/e2_seed42
+    SWANLAB_EXPERIMENT_NAME: GiGPO-semantic-candidate-e2-s42
