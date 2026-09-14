@@ -1,0 +1,9 @@
+# Only the explicit audit CLI makes API calls; never used by the RL launcher.
+enabled: true
+provider: openai_compatible
+cases: tests/fixtures/semantic_model_cases_20260914.json
+# Begin with one paraphrase pair. Set null to audit the entire fixture set later.
+limit: 2
+timeout_seconds: 120
+max_tokens: 8192
+temperature: 0

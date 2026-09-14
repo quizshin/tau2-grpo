@@ -1,0 +1,106 @@
+"""Opt-in OpenAI-compatible semantic extraction, separate from rollout clients."""
+from __future__ import annotations
+
+import json
+import os
+from pathlib import Path
+from urllib.parse import urlsplit
+
+import httpx
+from dotenv import load_dotenv
+
+from tau3_grpo.algorithms.anchors.semantic_state import validate_packet
+from tau3_grpo.utils.hashing import sha256_json
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+
+
+class SemanticAPIError(RuntimeError):
+    """Safe public error: never include credentials or provider response bodies."""
+
+
+class OpenAICompatibleSemanticModel:
+    simulated = False
+
+    def __init__(self, *, base_url, model, api_key, timeout=120, max_tokens=8192,
+                 temperature=0, transport=None):
+        if not api_key or not api_key.strip():
+            raise ValueError('Fill TAU3_SEMANTIC_API_KEY in code/.env before running the audit')
+        parsed = urlsplit(base_url)
+        if (parsed.scheme != 'https' or not parsed.hostname or parsed.username
+                or parsed.password or parsed.query or parsed.fragment):
+            raise ValueError('Semantic base URL must be HTTPS without credentials/query/fragment')
+        if not model or timeout <= 0 or max_tokens <= 0:
+            raise ValueError('Model, positive timeout and positive max_tokens are required')
+        self.base_url = base_url.rstrip('/')
+        self.model = model
+        self._api_key = api_key.strip()
+        self.timeout = timeout
+        self.max_tokens = max_tokens
+        self.temperature = temperature
+        self.transport = transport
+        self.attempted_calls = 0
+        self.metadata = []
+
+    @classmethod
+    def from_env(cls, config, *, transport=None):
+        load_dotenv(os.environ.get('TAU3_ENV_FILE', PROJECT_ROOT / '.env'), override=False)
+        return cls(base_url=os.environ.get('TAU3_SEMANTIC_BASE_URL', ''),
+                   model=os.environ.get('TAU3_SEMANTIC_MODEL', ''),
+                   api_key=os.environ.get('TAU3_SEMANTIC_API_KEY', ''),
+                   timeout=config.get('timeout_seconds', 120),
+                   max_tokens=config.get('max_tokens', 8192),
+                   temperature=config.get('temperature', 0), transport=transport)
+
+    @property
+    def provenance(self):
+        return {'provider': 'openai_compatible', 'base_url': self.base_url,
+                'model': self.model, 'timeout_seconds': self.timeout,
+                'max_tokens': self.max_tokens, 'temperature': self.temperature,
+                'automatic_retries': 0}
+
+    async def extract(self, request):
+        if request['prefix_sha256'] != sha256_json(request['visible_messages']):
+            raise ValueError('Model request prefix changed')
+        payload = {'model': self.model, 'temperature': self.temperature,
+                   'max_tokens': self.max_tokens, 'stream': False,
+                   'messages': [{'role': 'system', 'content': request['system']},
+                                {'role': 'user', 'content': json.dumps(
+                                    {k: request[k] for k in ('schema', 'prefix_sha256',
+                                                            'visible_messages')},
+                                    ensure_ascii=False)}]}
+        # No special thinking/JSON-mode flags: provider support has not been verified.
+        self.attempted_calls += 1
+        try:
+            async with httpx.AsyncClient(timeout=self.timeout, transport=self.transport,
+                                         follow_redirects=False) as client:
+                response = await client.post(self.base_url + '/chat/completions',
+                                             headers={'Authorization': 'Bearer ' + self._api_key},
+                                             json=payload)
+        except httpx.HTTPError:
+            raise SemanticAPIError('Semantic API transport error or timeout; no retry') from None
+        if response.status_code != 200:
+            raise SemanticAPIError(f'Semantic API HTTP {response.status_code}; no retry')
+        try:
+            body = response.json()
+            choice = body['choices'][0]
+            if choice.get('finish_reason') != 'stop':
+                raise SemanticAPIError('Semantic API did not finish normally; packet rejected')
+            content = choice['message']['content']
+            if not isinstance(content, str):
+                raise SemanticAPIError('Semantic API returned no text JSON packet')
+            packet = json.loads(content)
+            if not isinstance(packet, dict):
+                raise SemanticAPIError('Semantic API packet must be a JSON object')
+        except (ValueError, TypeError, KeyError, IndexError, AttributeError):
+            raise SemanticAPIError('Semantic API returned invalid JSON/envelope') from None
+        usage = body.get('usage')
+        self.metadata.append({'prefix_sha256': request['prefix_sha256'],
+                              'usage': {k: v for k, v in usage.items()
+                                        if k in ('prompt_tokens', 'completion_tokens', 'total_tokens')
+                                        and type(v) is int} if isinstance(usage, dict) else {}})
+        try:
+            validate_packet(request['visible_messages'], packet)
+        except (TypeError, KeyError, IndexError, AttributeError):
+            raise SemanticAPIError('Semantic API packet has malformed field types') from None
+        return packet
