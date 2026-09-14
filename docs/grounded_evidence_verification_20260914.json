@@ -1,0 +1,261 @@
+{
+  "holdout_lock": {
+    "selection_rule": "sha256(grounded-holdout-42:task_id), exclude all previously reviewed and v4 diagnostic tasks",
+    "excluded": [
+      "airline_1035",
+      "airline_1059",
+      "airline_1060",
+      "airline_1073",
+      "airline_109",
+      "airline_1106",
+      "airline_1113",
+      "airline_112",
+      "airline_1143",
+      "airline_126",
+      "airline_14",
+      "airline_162",
+      "airline_458",
+      "airline_976",
+      "airline_994",
+      "other_task",
+      "synthetic_task"
+    ],
+    "chosen": [
+      "airline_548",
+      "airline_363",
+      "airline_895"
+    ],
+    "extractor_dependencies_sha256": {
+      "tau3_grpo/algorithms/anchors/grounded.py": "813723652622901206b4845688d36069c1cf03e17623a9ef77c8b5d3b63534da",
+      "tau3_grpo/algorithms/anchors/decision_state.py": "0b7406611843a66a3e5d613c0d51f16b5a5e417ee01e11d6fa1b92fe6118ecca",
+      "tau3_grpo/algorithms/anchors/semantic.py": "dcdd81bb55d3fbf8fe39833893605e73783dba32f4118de4356e20e873f86f83"
+    },
+    "source_sha256": "05546ddb39679992ce0b91a92c0065089bc3b8620ad489e41dca2107b1038fa6",
+    "independent_human_labels": false
+  },
+  "semantics_lock": {
+    "note": "Before validation-only type hardening; extraction rules remain frozen.",
+    "functions": {
+      "extract": "152609b691dfa5573b4f4e80feba5ea89575d21c87fab468f6b0464088b26592",
+      "decision_view": "2162191917c38842cc9b6ccd807168237cd700c1bdafc5495796eec1cc0b1c2a",
+      "text_claims": "f624bd1f6553157bcdafa70a6e2b9aa79d4a622ebb24342031fd839802933f01",
+      "_canonical": "a1a2dab4a839bd206d64921bc6cdc7d4d95121131b415c767bcfccf527001d2a",
+      "_content": "05a5c3cd8df29feb98fa9fe9ef356d49e845e829b7b678b51b5eb4b208be2666",
+      "_json": "aafac25896895d66554a2cd95b9623f2c1d371da9eeae46e496aa5db61621f35",
+      "_leaves": "ae1f7e8b72e48c68390021eaf62847cfd5ce1be583aec288aaaa24f71d6c152f"
+    },
+    "patterns": {
+      "user_id_mention": "\\b[a-z][a-z_]+_\\d+\\b",
+      "reservation_id_mention": "\\b[A-Z0-9]{6}\\b",
+      "payment_id_mention": "\\b(?:credit_card|gift_card|certificate)_\\d+\\b",
+      "card_tail_mention": "(?i:ending in|ends in)\\s*\\*{0,2}(?P<value>\\d{4})\\b",
+      "flight_mention": "\\bHAT\\d{3}\\b",
+      "cabin_mention": "(?i:\\bbasic economy\\b|\\beconomy\\b|\\bbusiness(?: class)?\\b)",
+      "money_mention": "(?P<sign>-)?(?P<currency>USD|EUR|GBP|\\$|€|£)\\s*(?P<amount>-?(?:\\d{1,3}(?:,\\d{3})+|\\d+)(?:\\.\\d+)?)\\b",
+      "date_mention": "\\b\\d{4}-\\d{2}-\\d{2}\\b|\\b(?:January|February|March|April|May|June|July|August|September|October|November|December) \\d{1,2}(?:, \\d{4})?\\b",
+      "qualification_marker": "(?i:\\bif\\b|\\bunless\\b|\\bonly\\b|\\bnot\\b|\\bno\\b|\\bbefore\\b|\\bbut\\b|\\bdon['’]t\\b)"
+    }
+  },
+  "validation_hardening": "Canonical JSON comparison rejects boolean/numeric substitutions. Extraction functions/patterns unchanged after holdout lock.",
+  "tests": {
+    "passed": 278,
+    "warnings": 2
+  },
+  "replays": {
+    "development": {
+      "enabled": true,
+      "counts": {
+        "trajectories": 24,
+        "decisions": 248,
+        "evidence_validation_passed": 248,
+        "with_claims": 224,
+        "with_observed_association": 122,
+        "with_communicated_money": 143,
+        "with_payment_correspondence": 98,
+        "semantic_complete": 0,
+        "training_eligible": 0,
+        "ambiguous_payment_links": 0,
+        "positions_with/user_id_mention": 170,
+        "positions_with/cabin_mention": 190,
+        "positions_with/reservation_id_mention": 198,
+        "positions_with/date_mention": 150,
+        "positions_with/money_mention": 143,
+        "positions_with/flight_mention": 143,
+        "positions_with/card_tail_mention": 111,
+        "positions_with_issue/write_or_unsupported_tool": 45,
+        "positions_with/qualification_marker": 140,
+        "positions_with/payment_id_mention": 75,
+        "positions_with_issue/tool_error": 12,
+        "exact_guard_cross_trial_noninitial": 0
+      },
+      "source_sha256": {
+        "results/analysis/decision_state_v4_20260914/pilot_final/summary.json": "7a3623076a65ea49d8bbf1cf5d45a514a534a575dfa89d9cb0fca122c87cbdf2",
+        "results/analysis/decision_state_v4_20260914/pilot_final/trajectories.jsonl": "9e50b4dbc9ee4a9648a9ca968e944ba1d52811a3555be4105feefb5f64426dd3",
+        "/Users/apple/Projects/program-llm/tau3_grpo_fix/perf-20260912/results/analysis/decision_pairs_20260914/source/e2/trajectories.jsonl": "c561ac450bd899eacbcbc44bd11a501263ae945db0285beb1790d03c36400a92",
+        "/Users/apple/Projects/program-llm/tau3_grpo_fix/perf-20260912/results/analysis/decision_pairs_20260914/source/e3/trajectories.jsonl": "05546ddb39679992ce0b91a92c0065089bc3b8620ad489e41dca2107b1038fa6"
+      },
+      "extractor_sha256": "6f4f0a863b9347060d515d3cef61ee29d9c170a6a83ddf47255611abb1c9d651",
+      "models_called": false,
+      "gpu_used": false,
+      "limitations": [
+        "Evidence validity is not semantic completeness or field recall.",
+        "Mentions do not establish intent, authorization, or a correct refund.",
+        "No training hook is connected; exact-guard repetition is not semantic grouping accuracy."
+      ]
+    },
+    "holdout": {
+      "enabled": true,
+      "counts": {
+        "trajectories": 12,
+        "decisions": 139,
+        "evidence_validation_passed": 139,
+        "with_claims": 127,
+        "with_observed_association": 63,
+        "with_communicated_money": 80,
+        "with_payment_correspondence": 56,
+        "semantic_complete": 0,
+        "training_eligible": 0,
+        "ambiguous_payment_links": 0,
+        "positions_with/qualification_marker": 110,
+        "positions_with/reservation_id_mention": 110,
+        "positions_with/date_mention": 101,
+        "positions_with/card_tail_mention": 68,
+        "positions_with/cabin_mention": 106,
+        "positions_with/user_id_mention": 30,
+        "positions_with/money_mention": 80,
+        "positions_with/flight_mention": 59,
+        "positions_with_issue/tool_error": 32,
+        "positions_with_issue/write_or_unsupported_tool": 34,
+        "positions_with/payment_id_mention": 21,
+        "exact_guard_cross_trial_noninitial": 0
+      },
+      "source_sha256": {
+        "results/analysis/grounded_evidence_20260914/holdout_replay/summary.json": "6f72883365ff882d88b307a3ff01386b6e14e0289cb9a0507c6bc97dc8f6cb9b",
+        "results/analysis/grounded_evidence_20260914/holdout_replay/trajectories.jsonl": "b5856af178e5a87082e911d2b60a0ff9e227146022166ce96391681c32872a4a",
+        "/Users/apple/Projects/program-llm/tau3_grpo_fix/perf-20260912/results/analysis/decision_pairs_20260914/source/e3/trajectories.jsonl": "05546ddb39679992ce0b91a92c0065089bc3b8620ad489e41dca2107b1038fa6"
+      },
+      "extractor_sha256": "6f4f0a863b9347060d515d3cef61ee29d9c170a6a83ddf47255611abb1c9d651",
+      "models_called": false,
+      "gpu_used": false,
+      "limitations": [
+        "Evidence validity is not semantic completeness or field recall.",
+        "Mentions do not establish intent, authorization, or a correct refund.",
+        "No training hook is connected; exact-guard repetition is not semantic grouping accuracy."
+      ]
+    }
+  },
+  "literal_witness_scores": {
+    "labels": 13,
+    "evidence_valid": 13,
+    "extracted": 10,
+    "results": [
+      {
+        "id": "holdout-literal-01",
+        "evidence_valid": true,
+        "extracted": true,
+        "kind": "user_id_mention",
+        "expected_value": "isabella_khan_6576"
+      },
+      {
+        "id": "holdout-literal-02",
+        "evidence_valid": true,
+        "extracted": true,
+        "kind": "reservation_id_mention",
+        "expected_value": "OR3ZU0"
+      },
+      {
+        "id": "holdout-literal-03",
+        "evidence_valid": true,
+        "extracted": true,
+        "kind": "money_mention",
+        "expected_value": {
+          "currency": "USD",
+          "amount": "2910"
+        }
+      },
+      {
+        "id": "holdout-literal-04",
+        "evidence_valid": true,
+        "extracted": true,
+        "kind": "card_tail_mention",
+        "expected_value": "6790"
+      },
+      {
+        "id": "holdout-literal-05",
+        "evidence_valid": true,
+        "extracted": true,
+        "kind": "reservation_id_mention",
+        "expected_value": "MM67S8"
+      },
+      {
+        "id": "holdout-literal-06",
+        "evidence_valid": true,
+        "extracted": true,
+        "kind": "flight_mention",
+        "expected_value": "HAT216"
+      },
+      {
+        "id": "holdout-literal-07",
+        "evidence_valid": true,
+        "extracted": true,
+        "kind": "money_mention",
+        "expected_value": {
+          "currency": "USD",
+          "amount": "680"
+        }
+      },
+      {
+        "id": "holdout-literal-08",
+        "evidence_valid": true,
+        "extracted": false,
+        "kind": "card_tail_mention",
+        "expected_value": "6123046"
+      },
+      {
+        "id": "holdout-literal-09",
+        "evidence_valid": true,
+        "extracted": false,
+        "kind": "user_id_mention",
+        "expected_value": "avery_davis_4ce3bc"
+      },
+      {
+        "id": "holdout-literal-10",
+        "evidence_valid": true,
+        "extracted": false,
+        "kind": "flight_mention",
+        "expected_value": "5SNBRL3"
+      },
+      {
+        "id": "holdout-literal-11",
+        "evidence_valid": true,
+        "extracted": true,
+        "kind": "cabin_mention",
+        "expected_value": "basic_economy"
+      },
+      {
+        "id": "holdout-literal-12",
+        "evidence_valid": true,
+        "extracted": true,
+        "kind": "money_mention",
+        "expected_value": {
+          "currency": "USD",
+          "amount": "160"
+        }
+      },
+      {
+        "id": "holdout-literal-13",
+        "evidence_valid": true,
+        "extracted": true,
+        "kind": "reservation_id_mention",
+        "expected_value": "ED6DB4"
+      }
+    ],
+    "scope": "Purposively selected literal witnesses, not population recall, precision or semantic accuracy.",
+    "independent_human_labels": false
+  },
+  "code_sha256": {
+    "tau3_grpo/algorithms/anchors/grounded.py": "6f4f0a863b9347060d515d3cef61ee29d9c170a6a83ddf47255611abb1c9d651",
+    "tau3_grpo/analysis/audit_grounded.py": "130d112b9db06247beb772f23473bed32efe6d803f4c1bcc2cfe3370cc4d34fd",
+    "tau3_grpo/analysis/score_grounded_labels.py": "a38a5d0a3e8c9ca0d24ec3f4d28b8c86b92a271badb7077316249988190c3e5c"
+  }
+}

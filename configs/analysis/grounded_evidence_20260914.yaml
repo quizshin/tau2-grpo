@@ -1,0 +1,3 @@
+# CPU-only evidence audit. This does not select a training anchor version.
+enabled: true
+schema: grounded_evidence_v1

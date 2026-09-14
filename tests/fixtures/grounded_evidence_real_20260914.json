@@ -1,0 +1,461 @@
+{
+  "annotation": {
+    "author": "Codex assistant, manually selected literal field expectations from development prefixes",
+    "independent_human_labels": false,
+    "semantic_gold": false,
+    "outcomes_used": false
+  },
+  "source_sha256": "c561ac450bd899eacbcbc44bd11a501263ae945db0285beb1790d03c36400a92",
+  "cases": [
+    {
+      "id": "airline_1035/trial0/before14",
+      "messages": [
+        {
+          "content": "Hi! How can I help you today?",
+          "role": "assistant",
+          "tool_calls": null
+        },
+        {
+          "content": "Hi, I’d like to downgrade my business class flight to economy to save some costs. My user ID is sofia_brown_9485.",
+          "role": "user",
+          "tool_calls": null
+        },
+        {
+          "content": null,
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "arguments": {
+                "user_id": "sofia_brown_9485"
+              },
+              "id": "chatcmpl-tool-81a3fbf7416b202e",
+              "name": "get_user_details",
+              "requestor": "assistant"
+            }
+          ]
+        },
+        {
+          "content": "{\"user_id\": \"sofia_brown_9485\", \"name\": {\"first_name\": \"Sofia\", \"last_name\": \"Brown\"}, \"address\": {\"address1\": \"400 Hillcrest Drive\", \"address2\": \"Suite 132\", \"city\": \"Washington\", \"country\": \"USA\", \"state\": \"DC\", \"zip\": \"20314\"}, \"email\": \"sofia.brown9418@example.com\", \"dob\": \"1968-12-25\", \"payment_methods\": {\"credit_card_5332048\": {\"source\": \"credit_card\", \"id\": \"credit_card_5332048\", \"brand\": \"mastercard\", \"last_four\": \"2734\"}, \"certificate_4444665\": {\"source\": \"certificate\", \"id\": \"certificate_4444665\", \"amount\": 150.0}}, \"saved_passengers\": [{\"first_name\": \"Sophia\", \"last_name\": \"Moore\", \"dob\": \"1961-10-17\"}], \"membership\": \"silver\", \"reservations\": [\"GAST7Q\", \"103VYQ\", \"YPNCGY\", \"A8VNF1\", \"6NJYTZ\", \"JMGNLU\", \"YMNSP4\"]}",
+          "error": false,
+          "id": "chatcmpl-tool-81a3fbf7416b202e",
+          "requestor": "assistant",
+          "role": "tool"
+        },
+        {
+          "content": "I found your profile, Sofia. You're a silver member with 7 reservations. Which reservation would you like to downgrade from business class to economy? Here are your options:\n\n1. **GAST7Q**\n2. **103VYQ**\n3. **YPNCGY**\n4. **A8VNF1**\n5. **6NJYTZ**\n6. **JMGNLU**\n7. **YMNSP4**\n\nPlease let me know which one, and I'll show you the details.",
+          "role": "assistant",
+          "tool_calls": null
+        },
+        {
+          "content": "It’s the reservation with ID GAST7Q.",
+          "role": "user",
+          "tool_calls": null
+        },
+        {
+          "content": null,
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "arguments": {
+                "reservation_id": "GAST7Q"
+              },
+              "id": "chatcmpl-tool-ac58a68e0a321a3b",
+              "name": "get_reservation_details",
+              "requestor": "assistant"
+            }
+          ]
+        },
+        {
+          "content": "{\"reservation_id\": \"GAST7Q\", \"user_id\": \"sofia_brown_9485\", \"origin\": \"CLT\", \"destination\": \"BOS\", \"flight_type\": \"one_way\", \"cabin\": \"business\", \"flights\": [{\"flight_number\": \"HAT216\", \"origin\": \"CLT\", \"destination\": \"BOS\", \"date\": \"2024-05-21\", \"price\": 824}], \"passengers\": [{\"first_name\": \"Sofia\", \"last_name\": \"Brown\", \"dob\": \"1968-12-25\"}], \"payment_history\": [{\"payment_id\": \"credit_card_5332048\", \"amount\": 824}], \"created_at\": \"2024-05-01T16:42:49\", \"total_baggages\": 1, \"nonfree_baggages\": 0, \"insurance\": \"no\", \"status\": null}",
+          "error": false,
+          "id": "chatcmpl-tool-ac58a68e0a321a3b",
+          "requestor": "assistant",
+          "role": "tool"
+        },
+        {
+          "content": "Here are the details for reservation **GAST7Q**:\n\n| Detail | Value |\n|--------|-------|\n| **Route** | CLT → BOS (Charlotte → Boston) |\n| **Flight** | HAT216 on May 21, 2024 |\n| **Current Cabin** | Business ($824) |\n| **Passenger** | Sofia Brown |\n| **Total Paid** | $824 |\n\nTo proceed with the downgrade, I need to check the current price of this flight in economy class. Would you like me to search for the flight to see the economy price and calculate the refund you'd receive?",
+          "role": "assistant",
+          "tool_calls": null
+        },
+        {
+          "content": "Yes, please go ahead and search for the economy price for that flight so we can see the refund amount.",
+          "role": "user",
+          "tool_calls": null
+        },
+        {
+          "content": null,
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "arguments": {
+                "date": "2024-05-21",
+                "destination": "BOS",
+                "origin": "CLT"
+              },
+              "id": "chatcmpl-tool-a2443181d5511ab4",
+              "name": "search_direct_flight",
+              "requestor": "assistant"
+            }
+          ]
+        },
+        {
+          "content": "[{\"flight_number\": \"HAT064\", \"origin\": \"CLT\", \"destination\": \"BOS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"14:00:00\", \"scheduled_arrival_time_est\": \"16:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 11, \"economy\": 10, \"business\": 7}, \"prices\": {\"basic_economy\": 68, \"economy\": 136, \"business\": 354}}, {\"flight_number\": \"HAT216\", \"origin\": \"CLT\", \"destination\": \"BOS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"05:00:00\", \"scheduled_arrival_time_est\": \"07:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 14, \"economy\": 2, \"business\": 12}, \"prices\": {\"basic_economy\": 83, \"economy\": 170, \"business\": 220}}, {\"flight_number\": \"HAT287\", \"origin\": \"CLT\", \"destination\": \"BOS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"09:00:00\", \"scheduled_arrival_time_est\": \"11:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 14, \"economy\": 13, \"business\": 8}, \"prices\": {\"basic_economy\": 71, \"economy\": 128, \"business\": 267}}]",
+          "error": false,
+          "id": "chatcmpl-tool-a2443181d5511ab4",
+          "requestor": "assistant",
+          "role": "tool"
+        },
+        {
+          "content": "Here's the price comparison for flight **HAT216** on May 21, 2024:\n\n| Cabin | Price |\n|-------|-------|\n| Business | $824 (original) |\n| Economy | $170 |\n\n**Refund Amount: $654**\n\nSince you're downgrading from business to economy, you'll receive a refund of **$654**. This refund will be processed to your original payment method (Mastercard ending in 2734) within 5-7 business days.\n\nWould you like me to proceed with the downgrade? Please confirm with **yes** to continue.",
+          "role": "assistant",
+          "tool_calls": null
+        },
+        {
+          "content": "Yes",
+          "role": "user",
+          "tool_calls": null
+        }
+      ],
+      "expected_mentions": [
+        {
+          "message_index": 1,
+          "kind": "user_id_mention",
+          "value": "sofia_brown_9485"
+        },
+        {
+          "message_index": 5,
+          "kind": "reservation_id_mention",
+          "value": "GAST7Q"
+        },
+        {
+          "message_index": 12,
+          "kind": "money_mention",
+          "value": {
+            "currency": "USD",
+            "amount": "654"
+          }
+        }
+      ],
+      "expected_payment_pointers": [
+        {
+          "tail": "2734",
+          "pointer": "/payment_methods/credit_card_5332048/last_four"
+        }
+      ]
+    },
+    {
+      "id": "airline_1060/trial0/before14",
+      "messages": [
+        {
+          "content": "Hi! How can I help you today?",
+          "role": "assistant",
+          "tool_calls": null
+        },
+        {
+          "content": "Hi, I’d like to change the cabin class on my existing reservation. I want to switch from business to economy to save some money.",
+          "role": "user",
+          "tool_calls": null
+        },
+        {
+          "content": "I'd be happy to help you change the cabin class on your reservation. To get started, I'll need a couple of pieces of information:\n\n1. Your user ID\n2. Your reservation ID\n\nOnce I have those, I can look up your reservation and help you with the cabin change.",
+          "role": "assistant",
+          "tool_calls": null
+        },
+        {
+          "content": "Sure, my user ID is chen_gonzalez_5516 and my reservation ID is SNB279.",
+          "role": "user",
+          "tool_calls": null
+        },
+        {
+          "content": null,
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "arguments": {
+                "reservation_id": "SNB279"
+              },
+              "id": "chatcmpl-tool-a4c9cf8706e253b6",
+              "name": "get_reservation_details",
+              "requestor": "assistant"
+            },
+            {
+              "arguments": {
+                "user_id": "chen_gonzalez_5516"
+              },
+              "id": "chatcmpl-tool-a8f066735b979452",
+              "name": "get_user_details",
+              "requestor": "assistant"
+            }
+          ]
+        },
+        {
+          "content": "{\"reservation_id\": \"SNB279\", \"user_id\": \"chen_gonzalez_5516\", \"origin\": \"MIA\", \"destination\": \"SEA\", \"flight_type\": \"one_way\", \"cabin\": \"business\", \"flights\": [{\"flight_number\": \"HAT198\", \"origin\": \"MIA\", \"destination\": \"JFK\", \"date\": \"2024-05-18\", \"price\": 1658}, {\"flight_number\": \"HAT069\", \"origin\": \"JFK\", \"destination\": \"SEA\", \"date\": \"2024-05-18\", \"price\": 993}], \"passengers\": [{\"first_name\": \"Chen\", \"last_name\": \"Gonzalez\", \"dob\": \"1961-08-10\"}], \"payment_history\": [{\"payment_id\": \"credit_card_2870431\", \"amount\": 2651}], \"created_at\": \"2024-05-05T00:25:23\", \"total_baggages\": 0, \"nonfree_baggages\": 0, \"insurance\": \"no\", \"status\": null}",
+          "error": false,
+          "id": "chatcmpl-tool-a4c9cf8706e253b6",
+          "requestor": "assistant",
+          "role": "tool"
+        },
+        {
+          "content": "{\"user_id\": \"chen_gonzalez_5516\", \"name\": {\"first_name\": \"Chen\", \"last_name\": \"Gonzalez\"}, \"address\": {\"address1\": \"262 Lakeview Drive\", \"address2\": \"Suite 629\", \"city\": \"Dallas\", \"country\": \"USA\", \"state\": \"TX\", \"zip\": \"75209\"}, \"email\": \"chen.gonzalez3972@example.com\", \"dob\": \"1961-08-10\", \"payment_methods\": {\"credit_card_9588108\": {\"source\": \"credit_card\", \"id\": \"credit_card_9588108\", \"brand\": \"visa\", \"last_four\": \"6589\"}, \"certificate_9371471\": {\"source\": \"certificate\", \"id\": \"certificate_9371471\", \"amount\": 250.0}, \"credit_card_2870431\": {\"source\": \"credit_card\", \"id\": \"credit_card_2870431\", \"brand\": \"visa\", \"last_four\": \"7388\"}, \"credit_card_2191342\": {\"source\": \"credit_card\", \"id\": \"credit_card_2191342\", \"brand\": \"mastercard\", \"last_four\": \"1323\"}, \"credit_card_2231237\": {\"source\": \"credit_card\", \"id\": \"credit_card_2231237\", \"brand\": \"mastercard\", \"last_four\": \"2477\"}, \"credit_card_9615868\": {\"source\": \"credit_card\", \"id\": \"credit_card_9615868\", \"brand\": \"mastercard\", \"last_four\": \"5038\"}}, \"saved_passengers\": [{\"first_name\": \"Mia\", \"last_name\": \"Davis\", \"dob\": \"1951-05-23\"}, {\"first_name\": \"Raj\", \"last_name\": \"Li\", \"dob\": \"1972-04-19\"}], \"membership\": \"regular\", \"reservations\": [\"SNB279\", \"RFIG45\", \"5OY9I3\", \"RDYIPN\"]}",
+          "error": false,
+          "id": "chatcmpl-tool-a8f066735b979452",
+          "requestor": "assistant",
+          "role": "tool"
+        },
+        {
+          "content": "I found your reservation. Here are the details:\n\n**Current Reservation (SNB279)**\n- **Route:** MIA → JFK → SEA (May 18, 2024)\n- **Current Cabin:** Business ($2,651 total)\n- **Passenger:** Chen Gonzalez\n\nTo proceed with the cabin change, I need to know which payment method you'd like to use for the refund. Here are your available options:\n\n1. **Visa ending in 6589** (credit_card_9588108)\n2. **Travel Certificate** ($250.00) (certificate_9371471)\n3. **Visa ending in 7388** (credit_card_2870431)\n4. **Mastercard ending in 1323** (credit_card_2191342)\n5. **Mastercard ending in 2477** (credit_card_2231237)\n6. **Mastercard ending in 5038** (credit_card_9615868)\n\nAlso, please note that I'll need to search for the current economy class prices on these flights to calculate the refund amount. Would you like me to do that now, or do you have a preference for the refund method?",
+          "role": "assistant",
+          "tool_calls": null
+        },
+        {
+          "content": "Yes, please go ahead and search for the current economy class prices so we can calculate the refund. For the refund method, I’d like to use the Visa ending in 7388.",
+          "role": "user",
+          "tool_calls": null
+        },
+        {
+          "content": null,
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "arguments": {
+                "date": "2024-05-18",
+                "destination": "JFK",
+                "origin": "MIA"
+              },
+              "id": "chatcmpl-tool-9540aa26515e7442",
+              "name": "search_direct_flight",
+              "requestor": "assistant"
+            },
+            {
+              "arguments": {
+                "date": "2024-05-18",
+                "destination": "SEA",
+                "origin": "JFK"
+              },
+              "id": "chatcmpl-tool-a4d13785753ef029",
+              "name": "search_direct_flight",
+              "requestor": "assistant"
+            }
+          ]
+        },
+        {
+          "content": "[{\"flight_number\": \"HAT198\", \"origin\": \"MIA\", \"destination\": \"JFK\", \"status\": \"available\", \"scheduled_departure_time_est\": \"02:00:00\", \"scheduled_arrival_time_est\": \"05:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 16, \"economy\": 20, \"business\": 7}, \"prices\": {\"basic_economy\": 84, \"economy\": 181, \"business\": 348}}, {\"flight_number\": \"HAT224\", \"origin\": \"MIA\", \"destination\": \"JFK\", \"status\": \"available\", \"scheduled_departure_time_est\": \"15:00:00\", \"scheduled_arrival_time_est\": \"18:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 15, \"economy\": 9, \"business\": 2}, \"prices\": {\"basic_economy\": 72, \"economy\": 167, \"business\": 222}}, {\"flight_number\": \"HAT292\", \"origin\": \"MIA\", \"destination\": \"JFK\", \"status\": \"available\", \"scheduled_departure_time_est\": \"01:00:00\", \"scheduled_arrival_time_est\": \"04:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 11, \"economy\": 17, \"business\": 11}, \"prices\": {\"basic_economy\": 60, \"economy\": 153, \"business\": 200}}]",
+          "error": false,
+          "id": "chatcmpl-tool-9540aa26515e7442",
+          "requestor": "assistant",
+          "role": "tool"
+        },
+        {
+          "content": "[{\"flight_number\": \"HAT069\", \"origin\": \"JFK\", \"destination\": \"SEA\", \"status\": \"available\", \"scheduled_departure_time_est\": \"06:00:00\", \"scheduled_arrival_time_est\": \"12:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 13, \"economy\": 3, \"business\": 6}, \"prices\": {\"basic_economy\": 90, \"economy\": 139, \"business\": 244}}, {\"flight_number\": \"HAT083\", \"origin\": \"JFK\", \"destination\": \"SEA\", \"status\": \"available\", \"scheduled_departure_time_est\": \"01:00:00\", \"scheduled_arrival_time_est\": \"07:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 12, \"economy\": 1, \"business\": 6}, \"prices\": {\"basic_economy\": 84, \"economy\": 105, \"business\": 338}}]",
+          "error": false,
+          "id": "chatcmpl-tool-a4d13785753ef029",
+          "requestor": "assistant",
+          "role": "tool"
+        },
+        {
+          "content": "Here are the current economy class prices for your flights:\n\n**Flight 1: HAT198 (MIA → JFK)**\n- Economy: $181\n- Your original business price: $1,658\n\n**Flight 2: HAT069 (JFK → SEA)**\n- Economy: $139\n- Your original business price: $993\n\n**New Total (Economy): $320**\n**Original Total (Business): $2,651**\n\n**Refund Amount: $2,331**\n\nThe refund will be processed to your Visa ending in 7388 within 5-7 business days.\n\nWould you like me to proceed with this cabin change? Please confirm with **yes** to proceed.",
+          "role": "assistant",
+          "tool_calls": null
+        },
+        {
+          "content": "Yes, I’d like to proceed with the cabin change to economy.",
+          "role": "user",
+          "tool_calls": null
+        }
+      ],
+      "expected_mentions": [
+        {
+          "message_index": 3,
+          "kind": "user_id_mention",
+          "value": "chen_gonzalez_5516"
+        },
+        {
+          "message_index": 3,
+          "kind": "reservation_id_mention",
+          "value": "SNB279"
+        },
+        {
+          "message_index": 12,
+          "kind": "money_mention",
+          "value": {
+            "currency": "USD",
+            "amount": "2331"
+          }
+        }
+      ],
+      "expected_payment_pointers": [
+        {
+          "tail": "7388",
+          "pointer": "/payment_methods/credit_card_2870431/last_four"
+        }
+      ]
+    },
+    {
+      "id": "airline_1106/trial0/before18",
+      "messages": [
+        {
+          "content": "Hi! How can I help you today?",
+          "role": "assistant",
+          "tool_calls": null
+        },
+        {
+          "content": "Hi! I’d like to change the flight date on my reservation HKEG34 and add two checked bags to it. Could you please pull up the full details of that reservation for me first?",
+          "role": "user",
+          "tool_calls": null
+        },
+        {
+          "content": "I'll pull up the details of reservation HKEG34 for you.\n\n",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "arguments": {
+                "reservation_id": "HKEG34"
+              },
+              "id": "chatcmpl-tool-ac4392a1048aca9d",
+              "name": "get_reservation_details",
+              "requestor": "assistant"
+            }
+          ]
+        },
+        {
+          "content": "{\"reservation_id\": \"HKEG34\", \"user_id\": \"mia_li_3668\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"flight_type\": \"one_way\", \"cabin\": \"business\", \"flights\": [{\"flight_number\": \"HAT290\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"date\": \"2024-05-27\", \"price\": 1395}], \"passengers\": [{\"first_name\": \"Amelia\", \"last_name\": \"Ahmed\", \"dob\": \"1957-03-21\"}], \"payment_history\": [{\"payment_id\": \"credit_card_1955700\", \"amount\": 1395}], \"created_at\": \"2024-05-09T17:50:39\", \"total_baggages\": 0, \"nonfree_baggages\": 0, \"insurance\": \"no\", \"status\": null}",
+          "error": false,
+          "id": "chatcmpl-tool-ac4392a1048aca9d",
+          "requestor": "assistant",
+          "role": "tool"
+        },
+        {
+          "content": "Here are the details of your reservation **HKEG34**:\n\n| Field | Value |\n|-------|-------|\n| **Reservation ID** | HKEG34 |\n| **User ID** | mia_li_3668 |\n| **Trip Type** | One-way |\n| **Route** | Denver (DEN) → Las Vegas (LAS) |\n| **Flight** | HAT290 on May 27, 2024 |\n| **Cabin Class** | Business |\n| **Passenger** | Amelia Ahmed |\n| **Current Baggage** | 0 checked bags |\n| **Travel Insurance** | No |\n\n---\n\nNow, regarding your request:\n\n1. **Flight Date Change**: I can help you change the flight date. Since this is a business class reservation, it's eligible for modification. You'll need to provide a new date, and I'll search for available flights on that date.\n\n2. **Adding Checked Bags**: You're currently a regular member flying business class, which comes with **2 free checked bags**. Adding 2 checked bags would bring your total to 2, which would still be within your free allowance, so there would be no additional charge.\n\nWould you like me to search for available flights on a specific date? If so, please let me know which date you'd like to change to.",
+          "role": "assistant",
+          "tool_calls": null
+        },
+        {
+          "content": "Actually, I noticed the passenger name on the reservation says \"Amelia Ahmed,\" but my name is Mia Li. Could you please verify that this is indeed my reservation? I’m the Gold member from Austin, and my user ID is mia_li_3668.\n\nAlso, regarding the dates, I’d like to compare the best available premium direct flight options for DEN to LAS on **May 16** and **May 18** so I can choose the best option. Could you pull those up for me?",
+          "role": "user",
+          "tool_calls": null
+        },
+        {
+          "content": null,
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "arguments": {
+                "user_id": "mia_li_3668"
+              },
+              "id": "chatcmpl-tool-94c516de54ffab30",
+              "name": "get_user_details",
+              "requestor": "assistant"
+            },
+            {
+              "arguments": {
+                "date": "2024-05-16",
+                "destination": "LAS",
+                "origin": "DEN"
+              },
+              "id": "chatcmpl-tool-971071aee694e22f",
+              "name": "search_direct_flight",
+              "requestor": "assistant"
+            },
+            {
+              "arguments": {
+                "date": "2024-05-18",
+                "destination": "LAS",
+                "origin": "DEN"
+              },
+              "id": "chatcmpl-tool-a9c1a4c78994cb7a",
+              "name": "search_direct_flight",
+              "requestor": "assistant"
+            }
+          ]
+        },
+        {
+          "content": "{\"user_id\": \"mia_li_3668\", \"name\": {\"first_name\": \"Mia\", \"last_name\": \"Li\"}, \"address\": {\"address1\": \"975 Sunset Drive\", \"address2\": \"Suite 217\", \"city\": \"Austin\", \"country\": \"USA\", \"state\": \"TX\", \"zip\": \"78750\"}, \"email\": \"mia.li3818@example.com\", \"dob\": \"1990-04-05\", \"payment_methods\": {\"credit_card_4421486\": {\"source\": \"credit_card\", \"id\": \"credit_card_4421486\", \"brand\": \"visa\", \"last_four\": \"7447\"}, \"certificate_4856383\": {\"source\": \"certificate\", \"id\": \"certificate_4856383\", \"amount\": 100.0}, \"certificate_7504069\": {\"source\": \"certificate\", \"id\": \"certificate_7504069\", \"amount\": 250.0}, \"credit_card_1955700\": {\"source\": \"credit_card\", \"id\": \"credit_card_1955700\", \"brand\": \"visa\", \"last_four\": \"1907\"}}, \"saved_passengers\": [{\"first_name\": \"Amelia\", \"last_name\": \"Ahmed\", \"dob\": \"1957-03-21\"}], \"membership\": \"gold\", \"reservations\": [\"NO6JO3\", \"AIXC49\", \"HKEG34\"]}",
+          "error": false,
+          "id": "chatcmpl-tool-94c516de54ffab30",
+          "requestor": "assistant",
+          "role": "tool"
+        },
+        {
+          "content": "[{\"flight_number\": \"HAT084\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"04:00:00\", \"scheduled_arrival_time_est\": \"06:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 6, \"economy\": 2, \"business\": 14}, \"prices\": {\"basic_economy\": 85, \"economy\": 108, \"business\": 252}}, {\"flight_number\": \"HAT229\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"11:00:00\", \"scheduled_arrival_time_est\": \"13:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 16, \"economy\": 3, \"business\": 11}, \"prices\": {\"basic_economy\": 72, \"economy\": 192, \"business\": 405}}, {\"flight_number\": \"HAT290\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"14:00:00\", \"scheduled_arrival_time_est\": \"16:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 15, \"economy\": 7, \"business\": 0}, \"prices\": {\"basic_economy\": 53, \"economy\": 149, \"business\": 341}}]",
+          "error": false,
+          "id": "chatcmpl-tool-971071aee694e22f",
+          "requestor": "assistant",
+          "role": "tool"
+        },
+        {
+          "content": "[{\"flight_number\": \"HAT084\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"04:00:00\", \"scheduled_arrival_time_est\": \"06:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 19, \"economy\": 1, \"business\": 8}, \"prices\": {\"basic_economy\": 53, \"economy\": 113, \"business\": 264}}, {\"flight_number\": \"HAT229\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"11:00:00\", \"scheduled_arrival_time_est\": \"13:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 11, \"economy\": 19, \"business\": 8}, \"prices\": {\"basic_economy\": 52, \"economy\": 125, \"business\": 254}}, {\"flight_number\": \"HAT290\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"14:00:00\", \"scheduled_arrival_time_est\": \"16:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 4, \"economy\": 8, \"business\": 3}, \"prices\": {\"basic_economy\": 56, \"economy\": 150, \"business\": 293}}]",
+          "error": false,
+          "id": "chatcmpl-tool-a9c1a4c78994cb7a",
+          "requestor": "assistant",
+          "role": "tool"
+        },
+        {
+          "content": "Yes, I can confirm this **is your reservation**. Here's the verification:\n\n| Field | Value |\n|-------|-------|\n| **User ID** | mia_li_3668 ✓ |\n| **Name** | Mia Li ✓ |\n| **Address** | 975 Sunset Drive, Suite 217, Austin, TX 78750 ✓ |\n| **Membership** | Gold ✓ |\n| **Saved Passengers** | Amelia Ahmed (DOB: 1957-03-21) |\n\nThe passenger on the reservation is **Amelia Ahmed**, who is listed as a saved passenger in your profile. This is correct — you're booking a flight for Amelia Ahmed, not for yourself.\n\n---\n\n## Available Premium (Business Class) Direct Flights\n\n### May 16, 2024\n| Flight | Departure | Arrival | Business Price | Available Seats |\n|--------|-----------|---------|----------------|-----------------|\n| HAT084 | 4:00 AM | 6:00 AM | $252 | 14 |\n| HAT229 | 11:00 AM | 1:00 PM | $405 | 11 |\n| HAT290 | 2:00 PM | 4:00 PM | $341 | 0 ❌ |\n\n### May 18, 2024\n| Flight | Departure | Arrival | Business Price | Available Seats |\n|--------|-----------|---------|----------------|-----------------|\n| HAT084 | 4:00 AM | 6:00 AM | $264 | 8 |\n| HAT229 | 11:00 AM | 1:00 PM | $254 | 8 |\n| HAT290 | 2:00 PM | 4:00 PM | $293 | 3 |\n\n---\n\n**Best Value Options:**\n- **May 16**: HAT084 at $252 (cheapest)\n- **May 18**: HAT229 at $254 (cheapest)\n\n**Your current flight (HAT290 on May 27)** costs $1,395, so you'd get a refund on the price difference.\n\nWhich flight would you like to change to?",
+          "role": "assistant",
+          "tool_calls": null
+        },
+        {
+          "content": "Thank you for verifying the passenger details. Since I’m looking for the best available premium service, price is not the primary concern—I want the highest quality experience.\n\nBetween the options on May 16 and May 18, which flight offers the best overall premium service? Also, could you please calculate the total added cost for changing the date to that best option and adding two checked bags? I want a clear breakdown of any fees before I approve.",
+          "role": "user",
+          "tool_calls": null
+        },
+        {
+          "content": "For premium service, I'd recommend **HAT290** on either date since it's the same flight number you're currently on, which typically means consistent service quality and routing. Here's the comparison:\n\n| Flight | Date | Departure | Arrival | Business Price |\n|--------|------|-----------|---------|----------------|\n| HAT290 | May 16 | 2:00 PM | 4:00 PM | $341 |\n| HAT290 | May 18 | 2:00 PM | 4:00 PM | $293 |\n\nBoth flights offer the same departure/arrival times, so the choice between them depends on your schedule.\n\n---\n\n## Cost Breakdown\n\n| Item | Calculation | Cost |\n|------|-------------|------|\n| **Original Flight Cost** | $1,395 | -$1,395 |\n| **New Flight Cost (May 16)** | $341 | +$341 |\n| **New Flight Cost (May 18)** | $293 | +$293 |\n| **Flight Price Difference** | | **-$1,054** (refund) |\n| **Baggage Cost** | 2 checked bags (within your 2 free bags as Gold member) | $0 |\n| **Total** | | **-$1,054** (refund to your original Visa card ending in 1907) |\n\n**Note:** As a Gold member flying business class, you already receive **2 free checked bags**, so adding 2 bags incurs no additional charge.\n\n---\n\nWhich date would you prefer: **May 16** or **May 18**? Once you confirm, I'll provide the complete summary for your approval.",
+          "role": "assistant",
+          "tool_calls": null
+        },
+        {
+          "content": "I appreciate the breakdown, but I need to clarify a couple of things to ensure I’m getting the best service.\n\nFirst, regarding the \"best\" option: Is there a difference in service quality between HAT084, HAT229, and HAT290 on these dates? If HAT290 is not the absolute highest-tier service available, please let me know which flight offers the most premium experience. I want to select the best available flight, not just the one matching my current number.\n\nSecond, regarding the bags: You mentioned that as a Gold member in Business Class, I get 2 free checked bags. However, I specifically requested to **add** 2 checked bags to the reservation. If these are indeed included in my free allowance, please confirm that no fees will be charged for them. If there is any fee for exceeding the standard allowance or for specific bag types, I need to know that clearly.\n\nFinally, I will be paying for any applicable charges with my Visa ending in **7447** (credit_card_4421486). Please calculate the final total I need to pay with that card, assuming I choose the best flight option.",
+          "role": "user",
+          "tool_calls": null
+        },
+        {
+          "content": "I appreciate your diligence in seeking the best experience. Let me address each of your questions:\n\n---\n\n## 1. Service Quality Between Flights\n\nUnfortunately, **there is no publicly available information** that differentiates the service quality between HAT084, HAT229, and HAT290. All three flights operate on the same route (DEN → LAS) and are all business class, so they should offer the same premium service level. The flight number doesn't inherently indicate a tier of service.\n\nGiven this, I'd recommend selecting **HAT290** simply because:\n- It's the same flight you're currently on, ensuring familiar service\n- It has consistent departure/arrival times on both dates\n- On May 18, it's still available (3 seats), though at a lower price point\n\n---\n\n## 2. Checked Bag Confirmation\n\nAs a **Gold member flying Business Class**, your free baggage allowance is **2 checked bags per passenger**. Since your reservation has only 1 passenger, you're entitled to **2 free checked bags total**.\n\nAdding 2 checked bags will bring your total to 2, which is **within your free allowance**. Therefore:\n- **No fees will be charged** for the 2 checked bags\n- The bags are standard checked bags (no special types mentioned)\n\n---\n\n## 3. Payment Summary (Using Visa ending in 7447)\n\nHere's the final breakdown if you choose the best option:\n\n| Item | Amount |\n|------|--------|\n| **Original Flight** | -$1,395 |\n| **New Flight (HAT290 on May 18)** | +$293 |\n| **Flight Price Difference** | **-$1,054** |\n| **Checked Bags (2)** | $0 |\n| **Total to Pay** | **$0** |\n\n**Result:** You would actually **receive a refund of $1,054** to your original Visa card ending in 1907.\n\nIf you choose **HAT290 on May 16** instead:\n- Flight Difference: -$1,054\n- **Total to Pay:** $0 (still a refund)\n\n---\n\nWould you like to proceed with either date? Please confirm which flight you'd like and I'll provide the final summary for your approval.",
+          "role": "assistant",
+          "tool_calls": null
+        },
+        {
+          "content": "Since all the flights offer the same service level, I’ll go with **HAT290 on May 16**, as it’s the earlier date and fits my preference for premium scheduling.\n\nPlease confirm that the two checked bags are added to reservation HKEG34 with no charge, and that the date change to May 16 is processed. I understand this results in a refund rather than a charge, but I want to make sure the bags are officially recorded on the reservation.\n\nIf there are any fees I wasn’t aware of, please let me know, but I will use my Visa ending in **7447** for any amounts due.",
+          "role": "user",
+          "tool_calls": null
+        },
+        {
+          "content": "Here's the confirmation of your changes to reservation **HKEG34**:\n\n| Change | Details |\n|--------|---------|\n| **Flight Date** | Changed from May 27, 2024 → **May 16, 2024** |\n| **Flight Number** | HAT290 (DEN → LAS, 2:00 PM - 4:00 PM) |\n| **Cabin Class** | Business (unchanged) |\n| **Checked Bags** | Added **2 checked bags** (within your Gold member Business class allowance of 2 free bags) |\n| **Payment Method** | Visa ending in 7447 (for any charges; refund will go to original card) |\n\n---\n\n## Final Cost Summary\n\n| Item | Amount |\n|------|--------|\n| Original Flight | -$1,395 |\n| New Flight (HAT290 on May 16) | +$341 |\n| Flight Refund | **-$1,054** |\n| Checked Bags (2) | $0 |\n| **Total** | **-$1,054** |\n\n**You will receive a refund of $1,054** to your original Visa card ending in 1907 within 5-7 business days.\n\n---\n\n**Please confirm with \"yes\" if you'd like me to proceed with these changes.**",
+          "role": "assistant",
+          "tool_calls": null
+        },
+        {
+          "content": "Yes, please proceed with these changes.",
+          "role": "user",
+          "tool_calls": null
+        }
+      ],
+      "expected_mentions": [
+        {
+          "message_index": 5,
+          "kind": "user_id_mention",
+          "value": "mia_li_3668"
+        },
+        {
+          "message_index": 1,
+          "kind": "reservation_id_mention",
+          "value": "HKEG34"
+        },
+        {
+          "message_index": 16,
+          "kind": "money_mention",
+          "value": {
+            "currency": "USD",
+            "amount": "1054"
+          }
+        }
+      ],
+      "expected_payment_pointers": [
+        {
+          "tail": "7447",
+          "pointer": "/payment_methods/credit_card_4421486/last_four"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,257 @@
+{
+  "annotation": {
+    "author": "Codex assistant, manually selected literal witnesses after extractor lock",
+    "independent_human_labels": false,
+    "semantic_gold": false,
+    "selection": "purposive diagnostic including observed missing formats",
+    "no_tuning_on_these_labels": true
+  },
+  "source_sha256": {
+    "/Users/apple/Projects/program-llm/tau3_grpo_fix/perf-20260912/results/analysis/decision_pairs_20260914/source/e3/trajectories.jsonl": "05546ddb39679992ce0b91a92c0065089bc3b8620ad489e41dca2107b1038fa6"
+  },
+  "labels": [
+    {
+      "id": "holdout-literal-01",
+      "source": "/Users/apple/Projects/program-llm/tau3_grpo_fix/perf-20260912/results/analysis/decision_pairs_20260914/source/e3/trajectories.jsonl",
+      "source_line": 85,
+      "task_id": "airline_363",
+      "trial": 0,
+      "prefix_end": 6,
+      "prefix_sha256": "de3d586ae62e220e562c871164f3436a59b5cd494532c83d61472e2599344a52",
+      "kind": "user_id_mention",
+      "value": "isabella_khan_6576",
+      "evidence": {
+        "message_index": 5,
+        "role": "user",
+        "start": 14,
+        "end": 32,
+        "quote": "isabella_khan_6576"
+      }
+    },
+    {
+      "id": "holdout-literal-02",
+      "source": "/Users/apple/Projects/program-llm/tau3_grpo_fix/perf-20260912/results/analysis/decision_pairs_20260914/source/e3/trajectories.jsonl",
+      "source_line": 85,
+      "task_id": "airline_363",
+      "trial": 0,
+      "prefix_end": 2,
+      "prefix_sha256": "3802a7473ff1f98c1664650b4b42d0ded14202831def3126513ca4f4e11242b5",
+      "kind": "reservation_id_mention",
+      "value": "OR3ZU0",
+      "evidence": {
+        "message_index": 1,
+        "role": "user",
+        "start": 61,
+        "end": 67,
+        "quote": "OR3ZU0"
+      }
+    },
+    {
+      "id": "holdout-literal-03",
+      "source": "/Users/apple/Projects/program-llm/tau3_grpo_fix/perf-20260912/results/analysis/decision_pairs_20260914/source/e3/trajectories.jsonl",
+      "source_line": 85,
+      "task_id": "airline_363",
+      "trial": 0,
+      "prefix_end": 14,
+      "prefix_sha256": "3f4356d8d36aca34b8460277b9651cfcf7612202e0d1e55e0f1c2bfda92f1112",
+      "kind": "money_mention",
+      "value": {
+        "currency": "USD",
+        "amount": "2910"
+      },
+      "evidence": {
+        "message_index": 12,
+        "role": "assistant",
+        "start": 672,
+        "end": 678,
+        "quote": "$2,910"
+      }
+    },
+    {
+      "id": "holdout-literal-04",
+      "source": "/Users/apple/Projects/program-llm/tau3_grpo_fix/perf-20260912/results/analysis/decision_pairs_20260914/source/e3/trajectories.jsonl",
+      "source_line": 85,
+      "task_id": "airline_363",
+      "trial": 0,
+      "prefix_end": 4,
+      "prefix_sha256": "6e6267ccd90a3619cc3ce1a1f08a4c07c2c346d5676b2a7498fd368fbab6bad2",
+      "kind": "card_tail_mention",
+      "value": "6790",
+      "evidence": {
+        "message_index": 3,
+        "role": "user",
+        "start": 427,
+        "end": 431,
+        "quote": "6790"
+      }
+    },
+    {
+      "id": "holdout-literal-05",
+      "source": "/Users/apple/Projects/program-llm/tau3_grpo_fix/perf-20260912/results/analysis/decision_pairs_20260914/source/e3/trajectories.jsonl",
+      "source_line": 125,
+      "task_id": "airline_548",
+      "trial": 0,
+      "prefix_end": 2,
+      "prefix_sha256": "47b28477067d4748bd6931c292458fab2bc155a11efca7b7ea901f5bbab49edf",
+      "kind": "reservation_id_mention",
+      "value": "MM67S8",
+      "evidence": {
+        "message_index": 1,
+        "role": "user",
+        "start": 35,
+        "end": 41,
+        "quote": "MM67S8"
+      }
+    },
+    {
+      "id": "holdout-literal-06",
+      "source": "/Users/apple/Projects/program-llm/tau3_grpo_fix/perf-20260912/results/analysis/decision_pairs_20260914/source/e3/trajectories.jsonl",
+      "source_line": 125,
+      "task_id": "airline_548",
+      "trial": 0,
+      "prefix_end": 14,
+      "prefix_sha256": "e5f1606266d58b01c776e41be6e3236036eeff3e89987bb0360895b045846d64",
+      "kind": "flight_mention",
+      "value": "HAT216",
+      "evidence": {
+        "message_index": 12,
+        "role": "assistant",
+        "start": 79,
+        "end": 85,
+        "quote": "HAT216"
+      }
+    },
+    {
+      "id": "holdout-literal-07",
+      "source": "/Users/apple/Projects/program-llm/tau3_grpo_fix/perf-20260912/results/analysis/decision_pairs_20260914/source/e3/trajectories.jsonl",
+      "source_line": 125,
+      "task_id": "airline_548",
+      "trial": 0,
+      "prefix_end": 14,
+      "prefix_sha256": "e5f1606266d58b01c776e41be6e3236036eeff3e89987bb0360895b045846d64",
+      "kind": "money_mention",
+      "value": {
+        "currency": "USD",
+        "amount": "680"
+      },
+      "evidence": {
+        "message_index": 12,
+        "role": "assistant",
+        "start": 239,
+        "end": 243,
+        "quote": "$680"
+      }
+    },
+    {
+      "id": "holdout-literal-08",
+      "source": "/Users/apple/Projects/program-llm/tau3_grpo_fix/perf-20260912/results/analysis/decision_pairs_20260914/source/e3/trajectories.jsonl",
+      "source_line": 125,
+      "task_id": "airline_548",
+      "trial": 0,
+      "prefix_end": 14,
+      "prefix_sha256": "e5f1606266d58b01c776e41be6e3236036eeff3e89987bb0360895b045846d64",
+      "kind": "card_tail_mention",
+      "value": "6123046",
+      "evidence": {
+        "message_index": 13,
+        "role": "user",
+        "start": 300,
+        "end": 307,
+        "quote": "6123046"
+      }
+    },
+    {
+      "id": "holdout-literal-09",
+      "source": "/Users/apple/Projects/program-llm/tau3_grpo_fix/perf-20260912/results/analysis/decision_pairs_20260914/source/e3/trajectories.jsonl",
+      "source_line": 205,
+      "task_id": "airline_895",
+      "trial": 0,
+      "prefix_end": 4,
+      "prefix_sha256": "d8b6f998aea5cdbe2312b6b1d6da070c0a59096a50b4f556cf11e5f46d838968",
+      "kind": "user_id_mention",
+      "value": "avery_davis_4ce3bc",
+      "evidence": {
+        "message_index": 3,
+        "role": "user",
+        "start": 20,
+        "end": 38,
+        "quote": "avery_davis_4ce3bc"
+      }
+    },
+    {
+      "id": "holdout-literal-10",
+      "source": "/Users/apple/Projects/program-llm/tau3_grpo_fix/perf-20260912/results/analysis/decision_pairs_20260914/source/e3/trajectories.jsonl",
+      "source_line": 205,
+      "task_id": "airline_895",
+      "trial": 0,
+      "prefix_end": 24,
+      "prefix_sha256": "a0e41e6a95b44ab48c8ffe189b4cb80a0452b161390fde87672716717ab6c9c2",
+      "kind": "flight_mention",
+      "value": "5SNBRL3",
+      "evidence": {
+        "message_index": 22,
+        "role": "assistant",
+        "start": 88,
+        "end": 95,
+        "quote": "5SNBRL3"
+      }
+    },
+    {
+      "id": "holdout-literal-11",
+      "source": "/Users/apple/Projects/program-llm/tau3_grpo_fix/perf-20260912/results/analysis/decision_pairs_20260914/source/e3/trajectories.jsonl",
+      "source_line": 205,
+      "task_id": "airline_895",
+      "trial": 0,
+      "prefix_end": 4,
+      "prefix_sha256": "d8b6f998aea5cdbe2312b6b1d6da070c0a59096a50b4f556cf11e5f46d838968",
+      "kind": "cabin_mention",
+      "value": "basic_economy",
+      "evidence": {
+        "message_index": 3,
+        "role": "user",
+        "start": 128,
+        "end": 141,
+        "quote": "basic economy"
+      }
+    },
+    {
+      "id": "holdout-literal-12",
+      "source": "/Users/apple/Projects/program-llm/tau3_grpo_fix/perf-20260912/results/analysis/decision_pairs_20260914/source/e3/trajectories.jsonl",
+      "source_line": 205,
+      "task_id": "airline_895",
+      "trial": 0,
+      "prefix_end": 16,
+      "prefix_sha256": "3b176a76a8210b0b902c382c08522f89fcacfa0b7154bc84da114d2484fd5841",
+      "kind": "money_mention",
+      "value": {
+        "currency": "USD",
+        "amount": "160"
+      },
+      "evidence": {
+        "message_index": 14,
+        "role": "assistant",
+        "start": 80,
+        "end": 84,
+        "quote": "$160"
+      }
+    },
+    {
+      "id": "holdout-literal-13",
+      "source": "/Users/apple/Projects/program-llm/tau3_grpo_fix/perf-20260912/results/analysis/decision_pairs_20260914/source/e3/trajectories.jsonl",
+      "source_line": 205,
+      "task_id": "airline_895",
+      "trial": 0,
+      "prefix_end": 16,
+      "prefix_sha256": "3b176a76a8210b0b902c382c08522f89fcacfa0b7154bc84da114d2484fd5841",
+      "kind": "reservation_id_mention",
+      "value": "ED6DB4",
+      "evidence": {
+        "message_index": 14,
+        "role": "assistant",
+        "start": 26,
+        "end": 32,
+        "quote": "ED6DB4"
+      }
+    }
+  ]
+}
