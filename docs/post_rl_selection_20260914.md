@@ -67,3 +67,9 @@ bash env_info/a800_20260912/launch_post_rl_eval.sh watch \
 四组新导出均通过 724/724 张量精确相等校验，E0 实际 GPU 加载和工具调用预检通过，E2/E3 完整持久备份重新核验完成后，按用户授权删除两项：旧补评目录 `post-rl-selection-20260914/models` 中的错误导出，以及 `persistent-models/{e2,e3}_seed42/global_step_20/actor` 中共 8 个重复模型分片。清理前核对分片 SHA256 与完整备份回执，并检查没有进程打开待删文件。
 
 实际释放 77.19 GiB；清理后 500 GiB 持久盘已用 264.12 GiB、可用 235.88 GiB。四组 step20 完整续训检查点、新 BF16 导出、SFT 初始化及评测、轨迹、SwanLab 记录均保留。E2/E3 旧归档新增 `model-weights-location.json` 指向完整持久备份。逐项记录见新补评目录 `storage-cleanup.json`；内存盘副本不在本次清理范围。
+
+## E2 单条补测
+
+用户授权仅补跑原 E2 `airline_802 / trial=3 / seed=45` 的上下文超限记录。入口 `retry_one_selection_trial.py` 校验原失败身份、评测源码、提示词协议、checkpoint hash 与实际服务，再执行一次原 `_run_one`。保留原 task/trial/seed、模型、生成温度、非 thinking、多调用、30 轮和 24,576 上下文限制；不自动扩大预算或重复尝试到成功。
+
+结果独立写入新补评目录 `supplemental/e2-airline802-trial3-attempt1`，保存原失败、run/manifest/source hash、完整新轨迹或异常，以及 summary。原 `selection/e2` 的轨迹、错误和汇总不修改。补测是新的尝试，不是旧轨迹的精确续接；原始 E2 汇总有效性不会因补测自动改变。若补测完成，任何包含它的后续汇总都须显式标注重试来源。
