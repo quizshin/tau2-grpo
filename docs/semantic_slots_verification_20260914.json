@@ -224,6 +224,7 @@
   "remaining": [
     "Currency-independent no-fee preference is not yet represented by the strict fee predicate.",
     "Passenger scope and historical other-action decomposition still vary.",
-    "Two samples still have no model packet after one bounded retry."
+    "Two samples still have no model packet after one bounded retry.",
+    "Confirmation question topics still have free-text variation (changed_pending)."
   ]
 }

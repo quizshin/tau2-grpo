@@ -79,6 +79,11 @@
 仍不一致，虽可编译，但尚未解决这一类同义表示归并。人工 fixture 也只是开发参考，
 字段完全一致并不等于完整语义准确率。
 
+12 个有效状态中，10 个与人工 fixture 编译结果完全一致；另外两个分别是上述
+`replace_goal`，以及 `changed_pending` 的确认问题 topic（confirm_proposal 与
+confirm revised cancellation proposal）。后者仍被正确区分为“未批准新报价”，
+但说明确认问题的同义表示也需要进一步规范化。
+
 最终复验使用本轮全部校验修复，并记录代码哈希；首轮原始 summary 曾把一次
 传输失败计作正确弃权，其原文件保留，正确统计以 `score_corrected` 和最终复验为准。
 85 项相关 CPU 测试通过，Git diff 检查及新文件 lint 通过。未启动 GPU/RL。
