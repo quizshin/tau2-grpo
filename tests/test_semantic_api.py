@@ -89,6 +89,22 @@ def test_wrong_prefix_is_rejected_by_evidence_validator():
         asyncio.run(model(lambda req: httpx.Response(200, json=envelope(packet))).extract(request))
 
 
+@pytest.mark.parametrize('wrapper', ['```json\n{}\n```', '```\n{}\n```'])
+def test_single_markdown_json_wrapper_is_accepted(wrapper):
+    request, packet = request_and_packet()
+    body = envelope(packet)
+    body['choices'][0]['message']['content'] = wrapper.format(json.dumps(packet))
+    assert asyncio.run(model(lambda req: httpx.Response(200, json=body)).extract(request)) == packet
+
+
+def test_prose_around_markdown_packet_is_not_silently_discarded():
+    request, packet = request_and_packet()
+    body = envelope(packet)
+    body['choices'][0]['message']['content'] = 'Explanation\n```json\n' + json.dumps(packet) + '\n```'
+    with pytest.raises(SemanticAPIError):
+        asyncio.run(model(lambda req: httpx.Response(200, json=body)).extract(request))
+
+
 def test_malformed_event_type_is_rejected_safely():
     request, packet = request_and_packet()
     packet['events'][0]['kind'] = []

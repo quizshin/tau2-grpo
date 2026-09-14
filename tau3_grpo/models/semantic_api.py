@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from pathlib import Path
 from urllib.parse import urlsplit
 
@@ -89,7 +90,11 @@ class OpenAICompatibleSemanticModel:
             content = choice['message']['content']
             if not isinstance(content, str):
                 raise SemanticAPIError('Semantic API returned no text JSON packet')
-            packet = json.loads(content)
+            # Accept a single complete Markdown JSON wrapper, never search for
+            # a JSON substring in prose/reasoning or repair a malformed packet.
+            fenced = re.fullmatch(r'\s*```(?:json)?[ \t]*\r?\n(.*?)\r?\n```\s*',
+                                  content, flags=re.DOTALL)
+            packet = json.loads(fenced.group(1) if fenced else content)
             if not isinstance(packet, dict):
                 raise SemanticAPIError('Semantic API packet must be a JSON object')
         except (ValueError, TypeError, KeyError, IndexError, AttributeError):

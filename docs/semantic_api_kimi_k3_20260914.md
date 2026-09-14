@@ -51,3 +51,20 @@ TAU3_SEMANTIC_API_KEY=
 原 `audit_semantic_model` fixture 流程保持独立；已有模拟实验结果仍是模拟结果。
 
 验证命令：`python -m pytest -q tests/test_semantic_api.py tests/test_semantic_state.py`。
+
+## 首次真实接口验证（2026-09-14）
+
+用户填入 key 后共请求 4 次：初始两条、失败样例格式诊断一次、解析修复后补测一次。
+初始结果是 1/2 有效、配对弃权。格式诊断发现模型返回单个 Markdown JSON 代码块；
+适配器现允许剥离完整的外层代码块，仍拒绝周围说明文字和非法内部 JSON，保留证据校验。
+补测后第二条也能编译，但与第一条的状态 key 不同：两者目标字段分别为
+`reservation_id` 和 `booking_id`，其余编译状态相同。该同义样例尚未正确归并。
+
+另外，两条输出都使用 `refund_amount`/`refund_currency`，而现有金额原文核对仅针对
+`quoted_refund`/`quoted_charge` 与 `currency`。因此当前校验通过不代表这些替代字段
+经过金额证据校验。后续应约束 canonical slot/terms schema，并防止别名绕过检查；
+在此之前不接入 RL，不把这次 smoke 当作语义有效性的证明。
+
+原始初测与补测文件分别保留于本地
+`results/analysis/semantic_kimi_k3_smoke_20260914_live1/`，未覆盖初测结果。
+新增包装兼容测试后，相关 CPU 测试共 52 项通过。没有启动 GPU 或 RL。
