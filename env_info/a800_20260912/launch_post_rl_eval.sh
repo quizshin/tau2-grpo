@@ -9,4 +9,4 @@ export TOKENIZERS_PARALLELISM=false VLLM_NO_USAGE_STATS=1 TAU3_GRPO_TEXT_ONLY=1
 cd "$POST_CODE"
 exec python env_info/a800_20260912/run_post_rl_eval.py \
   --root "$TAU3_RUN_ROOT/rl-c50-matched6h-a800-20260912" \
-  --output "$TAU3_RUN_ROOT/post-rl-selection-20260914" --mode "${1:-dry-run}"
+  --output "${TAU3_POST_OUTPUT:-$TAU3_RUN_ROOT/post-rl-selection-20260914}" --mode "${1:-dry-run}" "${@:2}"

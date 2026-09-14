@@ -125,6 +125,37 @@ def validate_hf(path):
                 raise ValueError(f'Missing HF shard: {name}')
     if not (path / 'tokenizer_config.json').is_file():
         raise ValueError('Merged HF checkpoint lacks tokenizer')
+    from verl.utils.qwen35_checkpoint import qwen35_tensor_manifest
+    qwen35_tensor_manifest(path)
+
+
+def evaluation_source_hashes():
+    return {str(p.relative_to(CODE)): sha(p)
+            for p in sorted((CODE / 'tau3_grpo/evaluation').rglob('*.py'))}
+
+
+def validate_sft_reuse(previous, plan):
+    """Reuse scored SFT only; the RL attempts must have failed before any trials."""
+    previous = Path(previous)
+    old_plan = read(previous / 'plan.json')
+    ignored = {'slots', 'first_free_slot_queue', 'reuse_sft_from'}
+    if {k: v for k, v in old_plan.items() if k not in ignored} != {
+        k: v for k, v in plan.items() if k not in ignored
+    }:
+        raise ValueError('Cannot reuse SFT with a changed evaluation protocol')
+    if read(previous / 'software.json')['evaluation_source_sha256'] != evaluation_source_hashes():
+        raise ValueError('Cannot reuse SFT after changing evaluation source code')
+    if (previous / 'controller.exit').read_text().strip() != '1':
+        raise ValueError('Recovery requires an exited, failed prior attempt')
+    state = read(previous / 'state.json')
+    if state['status'] != 'incomplete' or state['models']['sft']['status'] != 'complete':
+        raise ValueError('Previous SFT evaluation is not complete')
+    for arm in ARMS:
+        if state['models'][arm]['status'] != 'failed' or any(
+            (previous / stage / arm).exists() for stage in ('smoke', 'selection')
+        ):
+            raise ValueError('Recovery cannot replay an RL model that already attempted trials')
+    return check_summary(previous / 'selection/sft', plan['task_ids'])
 
 
 def persist_complete(root, output, arm):
@@ -178,14 +209,17 @@ def check_summary(directory, task_ids, trials=4):
 
 
 class Controller:
-    def __init__(self, root, output):
+    def __init__(self, root, output, reuse_sft_from=None):
         self.root, self.output = Path(root), Path(output)
         self.env = dict(os.environ)
         self.lock = threading.Lock()
         self.children = []
         self.stop_event = threading.Event()
         self.models = {}
-        self.pending = ['e2']
+        self.reuse_sft_from = Path(reuse_sft_from).resolve() if reuse_sft_from else None
+        self.slots = tuple((arm,) for arm in ARMS) if self.reuse_sft_from else SLOTS
+        self.pending = [] if self.reuse_sft_from else ['e2']
+        self.reused_results = {}
         self.state = {'status': 'preparing_cpu', 'models': {}, 'backups': {}}
 
     def status(self, **updates):
@@ -249,7 +283,7 @@ class Controller:
             if (data / 'raw/areal_tau2').resolve() not in p.parents or sha(p) != x['db_hash']:
                 raise ValueError('Selection database hash mismatch')
         plan = {'target': 'selection', 'target_step': 20, 'models': ['sft', 'e0', 'e3', 'e1', 'e2'],
-                'slots': [list(x) for x in SLOTS], 'first_free_slot_queue': ['e2'],
+                'slots': [list(x) for x in self.slots], 'first_free_slot_queue': list(self.pending),
                 'trials': 4, 'seed': 42, 'data_seed': 42,
                 'task_ids': ids, 'manifest_sha256': sha(manifest), 'manifest': str(manifest),
                 'policy_temperature': .4, 'user_temperature': 1.0, 'max_steps': 30,
@@ -260,6 +294,11 @@ class Controller:
                 'simulator': self.env['TAU3_USER_MODEL'], 'root': str(self.root),
                 'sft': str(Path(self.env['TAU3_ROOT']) / 'checkpoints/sft-merged/new-off'),
                 'no_official_final': True, 'no_shutdown': True}
+        if self.reuse_sft_from:
+            if self.reuse_sft_from == self.output.resolve():
+                raise ValueError('Recovery output must differ from the previous attempt')
+            plan['reuse_sft_from'] = str(self.reuse_sft_from)
+            validate_sft_reuse(self.reuse_sft_from, plan)
         path = self.output / 'plan.json'
         if path.exists() and read(path) != plan:
             raise ValueError('Frozen plan differs from current configuration')
@@ -293,22 +332,40 @@ class Controller:
                               '--local_dir', str(cp / 'actor'), '--target_dir', str(staging)],
                              env, f'merge-{arm}')
             validate_hf(staging)
+            verification = read(staging / 'export-verification.json')
+            if not verification['native_format'] or verification['verified_tensors'] <= 0:
+                raise ValueError('Merged model has not passed exact FSDP tensor verification')
             atomic_json(receipt, {'source': str(cp), 'source_model_sha256': {
                 p.name: sha(p) for p in (cp / 'actor').glob('model_world_size_4_rank_*.pt')},
-                'dtype': 'bfloat16', 'files_sha256': file_hashes(staging)})
+                'dtype': 'bfloat16', 'tensor_verification': verification,
+                'files_sha256': file_hashes(staging)})
             staging.rename(dest)
         self.models[arm] = dest
         self.model_status(arm, status='prepared', checkpoint=str(dest))
 
     def backup(self, arm):
         self.status(status=f'backing_up_{arm}')
-        dest = persist_complete(self.root, self.output, arm)
+        dest = persist_complete(self.root, self.reuse_sft_from or self.output, arm)
+        if self.reuse_sft_from:
+            atomic_json(self.output / f'{arm}-backup.json', read(self.reuse_sft_from / f'{arm}-backup.json'))
         with self.lock:
             self.state['backups'][arm] = str(dest)
         self.status(status='preparing_cpu')
 
     def prepare_existing(self):
         self.prepare_model('sft')
+        if self.reuse_sft_from:
+            summary = validate_sft_reuse(self.reuse_sft_from, self.plan)
+            if read(self.output / 'sft-export.json')['files_sha256'] != read(
+                self.reuse_sft_from / 'sft-export.json'
+            )['files_sha256']:
+                raise ValueError('SFT checkpoint changed since the completed evaluation')
+            source = self.reuse_sft_from / 'selection/sft'
+            atomic_json(self.output / 'sft-reuse.json', {
+                'source': str(source), 'files_sha256': file_hashes(source),
+                'metrics': summary['metrics'], 'new_sft_trials': 0})
+            self.reused_results['sft'] = summary['metrics']
+            self.model_status('sft', status='complete', reused_from=str(source), metrics=summary['metrics'])
         for arm in ARMS:
             if (self.root / f'{arm}.exit').exists() and (self.root / f'{arm}_seed42/completion.json').exists():
                 self.prepare_model(arm)
@@ -443,10 +500,11 @@ class Controller:
                    TAU3_USER_GPU_MEMORY_UTILIZATION='.65', TAU3_USER_ENFORCE_EAGER='1')
         simulator = self.launch(['bash', str(CODE / 'scripts/serve/simulator_qwen38.sh')], env, 'simulator')
         self.wait_health(simulator, 8210, env['TAU3_USER_SERVED_MODEL_NAME'])
-        self.status(status='evaluating', planned_trajectories=1200, smoke_trajectories=20)
-        results = {}
+        count = sum(len(slot) for slot in self.slots) + len(self.pending)
+        self.status(status='evaluating', planned_trajectories=count * 240, smoke_trajectories=count * 4)
+        results = dict(self.reused_results)
         with ThreadPoolExecutor(max_workers=4) as pool:
-            futures = [pool.submit(self.evaluate_slot, slot, arms, simulator) for slot, arms in enumerate(SLOTS)]
+            futures = [pool.submit(self.evaluate_slot, slot, arms, simulator) for slot, arms in enumerate(self.slots)]
             for future in as_completed(futures):
                 results.update(future.result())
         complete = all('error' not in results.get(arm, {'error': 'missing'}) for arm in self.plan['models'])
@@ -460,11 +518,13 @@ def main(argv=None):
     parser.add_argument('--root', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--mode', choices=('dry-run', 'prepare', 'watch'), default='dry-run')
+    parser.add_argument('--reuse-sft-from', type=Path,
+                        help='Explicit recovery of RL startup failures; reuse the completed SFT evaluation')
     args = parser.parse_args(argv)
     args.output.mkdir(parents=True, exist_ok=True)
     with (args.output / 'controller.lock').open('a') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        controller = Controller(args.root, args.output)
+        controller = Controller(args.root, args.output, args.reuse_sft_from)
         def interrupted(signum, frame):
             controller.stop_event.set()
             raise KeyboardInterrupt('Post-RL controller interrupted')
@@ -478,8 +538,7 @@ def main(argv=None):
             atomic_json(args.output / 'software.json', {
                 'git_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=CODE, text=True).strip(),
                 'controller_sha256': sha(__file__),
-                'evaluation_source_sha256': {str(p.relative_to(CODE)): sha(p)
-                    for p in sorted((CODE / 'tau3_grpo/evaluation').rglob('*.py'))},
+                'evaluation_source_sha256': evaluation_source_hashes(),
                 'versions': {name: importlib.metadata.version(name) for name in ('torch', 'vllm', 'transformers')},
             })
             for sub, lines in [('manifests', None), ('smoke-manifests', 4)]:

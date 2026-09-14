@@ -164,3 +164,44 @@ def test_stop_only_targets_owned_process_group(module, tmp_path, monkeypatch):
     c.children.append(proc)
     c.cleanup()
     assert calls == [456]
+
+
+def reuse_fixture(module, tmp_path):
+    plan = {'task_ids': ['a'], 'policy_temperature': .4, 'slots': [['sft']], 'first_free_slot_queue': []}
+    module.atomic_json(tmp_path / 'plan.json', plan)
+    module.atomic_json(tmp_path / 'software.json', {'evaluation_source_sha256': module.evaluation_source_hashes()})
+    module.atomic_json(tmp_path / 'state.json', {'status': 'incomplete', 'models': {
+        'sft': {'status': 'complete'}, **{a: {'status': 'failed'} for a in module.ARMS}}})
+    (tmp_path / 'controller.exit').write_text('1')
+    module.atomic_json(tmp_path / 'selection/sft/run.json', {'planned': [
+        {'task_id': 'a', 'trial': i, 'seed': 42+i} for i in range(4)]})
+    module.atomic_json(tmp_path / 'selection/sft/summary.json', {
+        'metrics_valid': True, 'completed_trajectories': 4, 'per_task': {'a': {}},
+        'metrics': {'pass@1': .5}})
+    return dict(plan, slots=[['e0'], ['e1'], ['e2'], ['e3']], reuse_sft_from=str(tmp_path))
+
+
+def test_recovery_reuses_sft_without_scheduling_more_sft_trials(module, tmp_path):
+    plan = reuse_fixture(module, tmp_path)
+    summary = module.validate_sft_reuse(tmp_path, plan)
+    assert summary['metrics']['pass@1'] == .5
+    c = module.Controller(tmp_path, tmp_path / 'new', tmp_path)
+    assert c.slots == (('e0',), ('e1',), ('e2',), ('e3',))
+    assert c.next_pending() is None
+
+
+@pytest.mark.parametrize('change', ['protocol', 'source', 'attempted_trials', 'incomplete_sft'])
+def test_recovery_refuses_incomparable_or_previously_scored_replays(module, tmp_path, change):
+    plan = reuse_fixture(module, tmp_path)
+    if change == 'protocol':
+        plan['policy_temperature'] = .8
+    elif change == 'source':
+        module.atomic_json(tmp_path / 'software.json', {'evaluation_source_sha256': {}})
+    elif change == 'attempted_trials':
+        (tmp_path / 'smoke/e0').mkdir(parents=True)
+    else:
+        s = module.read(tmp_path / 'selection/sft/summary.json')
+        s['metrics_valid'] = False
+        module.atomic_json(tmp_path / 'selection/sft/summary.json', s)
+    with pytest.raises(ValueError):
+        module.validate_sft_reuse(tmp_path, plan)

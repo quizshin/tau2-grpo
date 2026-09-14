@@ -47,3 +47,17 @@ bash env_info/a800_20260912/launch_post_rl_eval.sh watch
 控制器使用进程锁防止重复启动；已有正式评测目录时拒绝自动覆盖或重跑。每个输出的 task/trial/seed 必须与冻结计划相同，任何未评分试验都会保留错误并使该模型评测无效，不取剩余任务排名。只结束自己启动的进程组，不执行全局 ray stop。
 
 本轮只执行 selection，不访问官方 final、不创建 winner lock、不追加 RL、不自动关机。GPU 评测实际 smoke 在 E3 完成后执行；CPU 单测或 dry-run 不表示 GPU 服务已实测通过。
+
+## 2026-09-14 导出修复与补评
+
+第一次接续中，四组 RL 均已完成 step20；SFT 独立 selection60×4 完成，pass@1=43.75%，pass@4=68.33%。E0–E3 在 vLLM 加载阶段失败，尚未开始任何 smoke 或正式评测。FSDP 源检查点的 724 个张量名称正确；导出时 Transformers 的反向格式转换把 `language_model` 前缀重复插入。修复在 Qwen3.5 merger 中显式设置 `save_original_format=False`，并以重建的 BF16 FSDP state 对导出文件逐张量进行精确比较。CPU header 检查会提前拒绝重复前缀、缺少关键权重或损坏的分片索引。
+
+用户已明确授权继续修复和执行。补评输出使用新目录 `post-rl-selection-recovery-20260914`，旧目录中的错误日志、错误导出和完整 SFT 结果保留。重新从原始 step20 分片导出四组模型；E2/E3 完整续训备份复用已有持久盘副本并重新校验，不复制第二份。
+
+```bash
+export TAU3_POST_OUTPUT="$TAU3_RUN_ROOT/post-rl-selection-recovery-20260914"
+bash env_info/a800_20260912/launch_post_rl_eval.sh watch \
+  --reuse-sft-from "$TAU3_RUN_ROOT/post-rl-selection-20260914"
+```
+
+补评的 GPU0/1/2/3 分别运行 E0/E1/E2/E3，GPU4 保持相同模拟器。每组先 smoke4，再 selection60×4，本次新增16条 smoke 和960条正式轨迹。任务、trial seed、生成配置和评测源码保持一致；`sft-reuse.json` 保存原 SFT 结果路径和文件哈希，不重跑、不混入 smoke、不将训练内成绩代替独立评测。复用入口会拒绝协议变化、SFT结果不完整、评测源码变化或 RL 已开始评测的情况。
