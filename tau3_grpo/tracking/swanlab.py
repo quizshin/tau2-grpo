@@ -61,7 +61,7 @@ def setup_rl_charts(loggers: Any) -> None:
     import swanlab
 
     for prefix in ("actor", "critic", "train", "training", "perf", "timing_s", "val",
-                   "val-core", "val-aux", "rollout", "dynamic_filter", "gigpo", "anchors", "budget"):
+                   "val-core", "val-aux", "rollout", "dynamic_filter", "gigpo", "gigpo_signal", "anchors", "budget"):
         swanlab.define_metric(prefix + "/*", x_axis="trainer/global_step", section_name=prefix)
     swanlab.define_metric("cases/*", section_name="cases")
     swanlab.define_metric("trainer/global_step", hidden=True)

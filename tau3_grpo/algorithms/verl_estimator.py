@@ -68,6 +68,9 @@ def _gigpo_settings(config: Any) -> dict[str, Any]:
         "gamma": float(pick("gamma", GAMMA)),
         "fnorm": float(pick("fnorm", FNORM)),
         "min_group_size": int(pick("min_anchor_group_size", MIN_ANCHOR_GROUP_SIZE)),
+        # Missing setting preserves historical checkpoints. New controlled
+        # comparisons explicitly choose grpo, including its singleton behavior.
+        "episode_normalization": str(pick("episode_normalization", "legacy_mean")),
         "similarity_threshold": float(
             pick("similarity_threshold", DEFAULT_SIMILARITY_THRESHOLD)
         ),
@@ -147,10 +150,42 @@ def compute_tau_gigpo_verl(
     mask_np = response_mask.detach().to("cpu").numpy()
 
     settings = _gigpo_settings(config)
+    episode_normalization = settings.pop("episode_normalization")
+    if episode_normalization not in ("legacy_mean", "grpo"):
+        raise ValueError(f"unknown episode_normalization: {episode_normalization!r}")
     ids, spans = _anchor_payload(non_tensor_batch, batch_size)
     ids = _resolve_similarity_payload(ids, threshold=settings.pop("similarity_threshold"))
     steps = steps_from_anchor_payload(ids, spans)
 
+    if episode_normalization == "grpo":
+        from verl.trainer.ppo.core_algos import compute_grpo_outcome_advantage
+        from tau3_grpo.algorithms.tau_gigpo import combine_advantages, step_advantages
+
+        normalize = kwargs.get("norm_adv_by_std_in_grpo")
+        if normalize is None:
+            normalize = config.get("norm_adv_by_std_in_grpo", True) if config is not None else True
+        episode, _ = compute_grpo_outcome_advantage(
+            token_level_rewards, response_mask,
+            np.asarray(index if index is not None else uids),
+            norm_adv_by_std_in_grpo=normalize,
+        )
+        step_values, stats = step_advantages(
+            steps, returns_np, gamma=settings["gamma"], fnorm=settings["fnorm"],
+            min_group_size=settings["min_group_size"],
+        )
+        step_tokens = combine_advantages(
+            np.zeros(batch_size), step_values, steps, num_trajectories=batch_size,
+            response_length=response_length, response_mask=mask_np, omega=settings["omega"],
+        )
+        advantages = episode + torch.as_tensor(
+            step_tokens, dtype=episode.dtype, device=episode.device,
+        )
+        stats.omega = settings["omega"]
+        _LAST_STATS = stats.to_dict()
+        _LAST_STATS["episode_grpo_normalization"] = 1
+        # Match both outputs of the stock estimator when omega=0. The actor
+        # consumes advantages; no critic is used in these GRPO experiments.
+        return advantages, advantages.clone()
     advantages_np, stats = compute_tau_gigpo_advantage(
         returns_np,
         uids,
@@ -164,6 +199,7 @@ def compute_tau_gigpo_verl(
     advantages = torch.as_tensor(
         advantages_np, dtype=token_level_rewards.dtype, device=token_level_rewards.device
     )
+    _LAST_STATS["episode_grpo_normalization"] = 0
     # Terminal-reward setting: the trajectory return broadcast over its tokens.
     returns = torch.as_tensor(
         np.repeat(returns_np[:, None], response_length, axis=1),
