@@ -1,0 +1,3497 @@
+{
+  "schema_version": 1,
+  "annotation": {
+    "author": "Codex assistant, context-reviewed",
+    "independent_human_labels": false,
+    "selection": "purposive, before reading predictions; correlated pairs, no population accuracy claim",
+    "target": "candidate visible decision-state abstraction; not proof of full policy/user-simulator Markov-state equivalence",
+    "db_scope": "natural prefixes precede tools; later real prefixes contain read tools only; matched DB supplied, intermediate DB NOT replayed",
+    "outcomes_used_for_labels": false
+  },
+  "sources": {
+    "e2/trajectories.jsonl": "c561ac450bd899eacbcbc44bd11a501263ae945db0285beb1790d03c36400a92"
+  },
+  "pairs": [
+    {
+      "id": "natural-01",
+      "kind": "natural",
+      "relation": "merge",
+      "rationale": "同样要求将现有预订从商务舱降至经济舱；省钱动机不改变操作范围。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_1059",
+          "trial": 0,
+          "through_message_index": 1,
+          "prefix_sha256": "32bff4e425357f1930f19f4985a792c270e1abd3cd542e095d7e42ac49b94913"
+        },
+        {
+          "arm": "e2",
+          "task_id": "airline_1059",
+          "trial": 3,
+          "through_message_index": 1,
+          "prefix_sha256": "c271ddf52c4ce72b4f01c90931620d145031bf6c98d261654bbec82725b00bc2"
+        }
+      ],
+      "a": {
+        "task_id": "airline_1059",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1059",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, I’d like to modify my existing reservation. I want to downgrade my cabin class from business to economy to save some money.",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_1059",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1059",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, I’d like to change my flight reservation from business class to economy class. Can you help me with that?",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "natural-02",
+      "kind": "natural",
+      "relation": "merge",
+      "rationale": "相同的商务舱到经济舱降舱请求与省钱动机。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_1060",
+          "trial": 0,
+          "through_message_index": 1,
+          "prefix_sha256": "f3d2749359e5aa0cfb4562fa17578fd829cd146d4a8119e62f7f1e1f0556f4dd"
+        },
+        {
+          "arm": "e2",
+          "task_id": "airline_1060",
+          "trial": 2,
+          "through_message_index": 1,
+          "prefix_sha256": "266f17c41880d235a1f0bc340f8435dabc8c575484233b245b65b3fac51d3ebb"
+        }
+      ],
+      "a": {
+        "task_id": "airline_1060",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1060",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, I’d like to change the cabin class on my existing reservation. I want to switch from business to economy to save some money.",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_1060",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1060",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, I'd like to modify my existing reservation. I want to downgrade from business class to economy class to save some money.",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "natural-03",
+      "kind": "natural",
+      "relation": "merge",
+      "rationale": "相同舱位变更，后者只是重述当前商务舱。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_1060",
+          "trial": 0,
+          "through_message_index": 1,
+          "prefix_sha256": "f3d2749359e5aa0cfb4562fa17578fd829cd146d4a8119e62f7f1e1f0556f4dd"
+        },
+        {
+          "arm": "e2",
+          "task_id": "airline_1060",
+          "trial": 3,
+          "through_message_index": 1,
+          "prefix_sha256": "5197a6f0c59860c720f76601398b17b9e39c98b0f02bf1b1409a67eeb1ea3f42"
+        }
+      ],
+      "a": {
+        "task_id": "airline_1060",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1060",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, I’d like to change the cabin class on my existing reservation. I want to switch from business to economy to save some money.",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_1060",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1060",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, I’d like to change the cabin class on my existing reservation. I currently have a business class ticket, but I’d like to downgrade it to economy to save some money.",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "natural-04",
+      "kind": "natural",
+      "relation": "merge",
+      "rationale": "同为 HKEG34 改日期、加两件托运行李、先查询完整预订。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_1106",
+          "trial": 0,
+          "through_message_index": 1,
+          "prefix_sha256": "715f78f19596c2ffe05885185967f25b5d67c09846d4742a5740ba426bc3b586"
+        },
+        {
+          "arm": "e2",
+          "task_id": "airline_1106",
+          "trial": 2,
+          "through_message_index": 1,
+          "prefix_sha256": "54e50127fbb6f704df4fe29a7e579f21c570ad95d949ba4e0dde9c4905a978f8"
+        }
+      ],
+      "a": {
+        "task_id": "airline_1106",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1106",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi! I’d like to change the flight date on my reservation HKEG34 and add two checked bags to it. Could you please pull up the full details of that reservation for me first?",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_1106",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1106",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi there. I need to change the flight date on my reservation HKEG34 and add 2 checked bags to it. Could you please pull up the full details of that reservation for me first?",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "natural-05",
+      "kind": "natural",
+      "relation": "merge",
+      "rationale": "订单、日期变更、两件行李及先查询要求完全相同。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_1106",
+          "trial": 2,
+          "through_message_index": 1,
+          "prefix_sha256": "54e50127fbb6f704df4fe29a7e579f21c570ad95d949ba4e0dde9c4905a978f8"
+        },
+        {
+          "arm": "e2",
+          "task_id": "airline_1106",
+          "trial": 3,
+          "through_message_index": 1,
+          "prefix_sha256": "b8862c59a01fd16c64084539c5d1fbc207facd346295c7a0ea9b8a929e60b673"
+        }
+      ],
+      "a": {
+        "task_id": "airline_1106",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1106",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi there. I need to change the flight date on my reservation HKEG34 and add 2 checked bags to it. Could you please pull up the full details of that reservation for me first?",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_1106",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1106",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, I’d like to change the flight date on reservation HKEG34 and add 2 checked bags to it. Could you please pull up the full details of that reservation for me first?",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "natural-06",
+      "kind": "natural",
+      "relation": "merge",
+      "rationale": "HKEG34、DEN-LAS、次日、最佳直飞、8am-9pm 相同；机场缩写与城市名称同义。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_126",
+          "trial": 0,
+          "through_message_index": 1,
+          "prefix_sha256": "8748a219758b37c75ac18344361b9d89cfaf7284642a1b5a057b731a40c56a11"
+        },
+        {
+          "arm": "e2",
+          "task_id": "airline_126",
+          "trial": 1,
+          "through_message_index": 1,
+          "prefix_sha256": "40433abe953def5e734d159387c32a1fc645c6d79552d1ca5f6207384e0b0ae4"
+        }
+      ],
+      "a": {
+        "task_id": "airline_126",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_126",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi! I’d like to change the flight date on my reservation HKEG34. I need to move the DEN to LAS flight to the best nonstop option the following day, between 8am and 9pm.",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_126",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_126",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, I need help with my reservation HKEG34. I'd like to change the flight date for my Denver to Las Vegas trip. I need to move it to the best available nonstop option for the next day, between 8 AM and 9 PM.",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "natural-07",
+      "kind": "natural",
+      "relation": "merge",
+      "rationale": "同一订单、航线、次日直飞和时间窗口。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_126",
+          "trial": 1,
+          "through_message_index": 1,
+          "prefix_sha256": "40433abe953def5e734d159387c32a1fc645c6d79552d1ca5f6207384e0b0ae4"
+        },
+        {
+          "arm": "e2",
+          "task_id": "airline_126",
+          "trial": 2,
+          "through_message_index": 1,
+          "prefix_sha256": "18c43095ea30a7e070f547e4edc13a528ada4b6c4b37e5b7806a8b1a327ef655"
+        }
+      ],
+      "a": {
+        "task_id": "airline_126",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_126",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, I need help with my reservation HKEG34. I'd like to change the flight date for my Denver to Las Vegas trip. I need to move it to the best available nonstop option for the next day, between 8 AM and 9 PM.",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_126",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_126",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, I'd like to change the flight date on my reservation HKEG34. I need to move my Denver to Las Vegas flight to the best nonstop option the next day, between 8 AM and 9 PM.",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "natural-08",
+      "kind": "natural",
+      "relation": "merge",
+      "rationale": "同为 HKEG34 先改日期再加两件行李；请求帮助/查询不增加修改权限。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_14",
+          "trial": 0,
+          "through_message_index": 1,
+          "prefix_sha256": "09699c549fd94be15e4bc649862275336aa8cab441b22705934e82841e844030"
+        },
+        {
+          "arm": "e2",
+          "task_id": "airline_14",
+          "trial": 2,
+          "through_message_index": 1,
+          "prefix_sha256": "1835e412af7beeb8ad8a68a97ba21fe88c51bc6c24bfd49ca7164ba5f66ddb56"
+        }
+      ],
+      "a": {
+        "task_id": "airline_14",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_14",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi! I’d like to change the flight date on my reservation HKEG34 and then add 2 checked bags. Could you please look up that reservation for me?",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_14",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_14",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, I'd like to change the flight date on my reservation HKEG34 and then add 2 checked bags. Can you help me with that?",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "natural-09",
+      "kind": "natural",
+      "relation": "merge",
+      "rationale": "订单及改日期再加两件行李的目标一致。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_14",
+          "trial": 2,
+          "through_message_index": 1,
+          "prefix_sha256": "1835e412af7beeb8ad8a68a97ba21fe88c51bc6c24bfd49ca7164ba5f66ddb56"
+        },
+        {
+          "arm": "e2",
+          "task_id": "airline_14",
+          "trial": 3,
+          "through_message_index": 1,
+          "prefix_sha256": "8cf1210f8f4d2079c7cd77eff3ebf3c5472fa17496816d4971882c6699007e10"
+        }
+      ],
+      "a": {
+        "task_id": "airline_14",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_14",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, I'd like to change the flight date on my reservation HKEG34 and then add 2 checked bags. Can you help me with that?",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_14",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_14",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, I’d like to change the flight date on reservation HKEG34 and then add 2 checked bags.",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "natural-10",
+      "kind": "natural",
+      "relation": "merge",
+      "rationale": "相同身份和订单、出发航班取消/返程延误事实、原因查询与补偿请求；情绪措辞不同。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_1143",
+          "trial": 1,
+          "through_message_index": 1,
+          "prefix_sha256": "d75b221a14c4f1c64670a485bf1188edb83dbd669b49477f1ad701d06c69cfc0"
+        },
+        {
+          "arm": "e2",
+          "task_id": "airline_1143",
+          "trial": 2,
+          "through_message_index": 1,
+          "prefix_sha256": "88207e01d78f10e2faf419bc0105e47817e84c7b75efbdae2d4c6ae7dd6bbc85"
+        }
+      ],
+      "a": {
+        "task_id": "airline_1143",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1143",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi. My name is Lucas Sanchez, and my user ID is lucas_sanchez_1853. I’m calling to complain about the disruptions on my reservation GCZ58I. Specifically, my outbound flight from SFO to LAX on May 11, 2024, was cancelled, and my return flight on May 15 is delayed. I’d like to know exactly why this happened and I’m requesting compensation for the inconvenience.",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_1143",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1143",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, my name is Lucas Sanchez. My user ID is lucas_sanchez_1853. I’m calling about reservation GCZ58I. I have two serious issues: the SFO to LAX flight on May 11th, 2024, was cancelled, and the return flight on May 15th, 2024, is currently delayed. I’m very frustrated by this disruption. Can you tell me exactly why this happened, and I’d like to request compensation for the inconvenience.",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "natural-11",
+      "kind": "natural",
+      "relation": "merge",
+      "rationale": "相同身份、订单、航线日期、扰动事实和补偿诉求。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_1143",
+          "trial": 2,
+          "through_message_index": 1,
+          "prefix_sha256": "88207e01d78f10e2faf419bc0105e47817e84c7b75efbdae2d4c6ae7dd6bbc85"
+        },
+        {
+          "arm": "e2",
+          "task_id": "airline_1143",
+          "trial": 3,
+          "through_message_index": 1,
+          "prefix_sha256": "109014092e45f85156730ad178a9ce692014bdbdbfd8f7eaddf455f36ae052db"
+        }
+      ],
+      "a": {
+        "task_id": "airline_1143",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1143",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, my name is Lucas Sanchez. My user ID is lucas_sanchez_1853. I’m calling about reservation GCZ58I. I have two serious issues: the SFO to LAX flight on May 11th, 2024, was cancelled, and the return flight on May 15th, 2024, is currently delayed. I’m very frustrated by this disruption. Can you tell me exactly why this happened, and I’d like to request compensation for the inconvenience.",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_1143",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1143",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, I’m Lucas Sanchez. My user ID is lucas_sanchez_1853. I’m calling because I’m very frustrated with the disruption on my reservation GCZ58I. The outbound flight from SFO to LAX on May 11, 2024, was cancelled, and the return segment on May 15 is currently delayed. I need to know why this happened, and I’m requesting compensation for the inconvenience.",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "natural-12",
+      "kind": "natural",
+      "relation": "merge",
+      "rationale": "同一姓名、ORD-ATL、May25、三次重复预订；保留一个取消两个，overlapping 不增加独立选择约束。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_162",
+          "trial": 0,
+          "through_message_index": 1,
+          "prefix_sha256": "0fae86ae835c9c43a54fdf86ad635e21ea3078863a620b1839140799a677b1d5"
+        },
+        {
+          "arm": "e2",
+          "task_id": "airline_162",
+          "trial": 2,
+          "through_message_index": 1,
+          "prefix_sha256": "e5daea5c6631ca939d6799cbf06045a93072624047f87f9226e18d9eb82caa4c"
+        }
+      ],
+      "a": {
+        "task_id": "airline_162",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_162",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, I’m Richard Perez. I think I’ve made a booking mistake — I accidentally booked three overlapping flights from Chicago O'Hare to Atlanta on May 25th. I only need one of those flights, so I’d like to cancel the extra duplicates and keep just one. Could you help me sort that out?",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_162",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_162",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, my name is Richard Perez. I think I made a mistake and accidentally booked three flights from Chicago O'Hare to Atlanta on May 25th. I only want to keep one of them and cancel the other two. Could you help me sort that out?",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "natural-13",
+      "kind": "natural",
+      "relation": "separate",
+      "rationale": "明确 business→economy 的请求与仅说修改预订，已知操作目标不同。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_1035",
+          "trial": 0,
+          "through_message_index": 1,
+          "prefix_sha256": "238d92ddc61ae89914ba9e56b6939bf5ef0bf16fbe96105ce46495d0648e446e"
+        },
+        {
+          "arm": "e2",
+          "task_id": "airline_1035",
+          "trial": 2,
+          "through_message_index": 1,
+          "prefix_sha256": "153b46782ee372badbacab9efdd0df5b2c81d22ea3188199c4869c0e75a67d71"
+        }
+      ],
+      "a": {
+        "task_id": "airline_1035",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1035",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, I’d like to downgrade my business class flight to economy to save some costs. My user ID is sofia_brown_9485.",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_1035",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1035",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi there! I'd like to make a change to my booking. My user ID is sofia_brown_9485.",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "natural-14",
+      "kind": "natural",
+      "relation": "separate",
+      "rationale": "前者明确两种舱位，后者仅表达省钱，不能凭隐藏任务补齐。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_1059",
+          "trial": 0,
+          "through_message_index": 1,
+          "prefix_sha256": "32bff4e425357f1930f19f4985a792c270e1abd3cd542e095d7e42ac49b94913"
+        },
+        {
+          "arm": "e2",
+          "task_id": "airline_1059",
+          "trial": 1,
+          "through_message_index": 1,
+          "prefix_sha256": "e8e83f69045866703dc468f2ad652b6f081c0c190744b4b863fd60ce406f2e4b"
+        }
+      ],
+      "a": {
+        "task_id": "airline_1059",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1059",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, I’d like to modify my existing reservation. I want to downgrade my cabin class from business to economy to save some money.",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_1059",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1059",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, I'm calling about my flight reservation. I'd like to modify my booking to save some money. Could you help me with that?",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "natural-15",
+      "kind": "natural",
+      "relation": "separate",
+      "rationale": "后者额外暴露 round-trip，已知预订范围不同。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_1059",
+          "trial": 0,
+          "through_message_index": 1,
+          "prefix_sha256": "32bff4e425357f1930f19f4985a792c270e1abd3cd542e095d7e42ac49b94913"
+        },
+        {
+          "arm": "e2",
+          "task_id": "airline_1059",
+          "trial": 2,
+          "through_message_index": 1,
+          "prefix_sha256": "5e144b4c5cbb4f7e9eef407a6525570f379768e2fee008528c262192ff912643"
+        }
+      ],
+      "a": {
+        "task_id": "airline_1059",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1059",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, I’d like to modify my existing reservation. I want to downgrade my cabin class from business to economy to save some money.",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_1059",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1059",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, I'd like to modify my reservation. I want to downgrade my cabin class from business to economy for a round-trip flight.",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "natural-16",
+      "kind": "natural",
+      "relation": "separate",
+      "rationale": "后者明确只保留成年人，前者未说明保留哪些乘客。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_1073",
+          "trial": 0,
+          "through_message_index": 1,
+          "prefix_sha256": "6a39673e4a2a2affb022b5bd68356cc10372012be5f65357580cb8888f3e9348"
+        },
+        {
+          "arm": "e2",
+          "task_id": "airline_1073",
+          "trial": 2,
+          "through_message_index": 1,
+          "prefix_sha256": "160c3ed27bc4081d151248faebc44d5d5b6efc680f9dd0c07747fa73167c811e"
+        }
+      ],
+      "a": {
+        "task_id": "airline_1073",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1073",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, my name is Ella Garcia. I’m calling because I need to make some changes to my flights for May 22. Specifically, I need to adjust which family members are listed on my afternoon flights.",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_1073",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1073",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hello, my name is Ella Garcia. I’m calling because I need to make some adjustments to my flights for May 22. Specifically, I need to update the passenger lists on my afternoon flights so that only the adult passengers remain listed.",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "natural-17",
+      "kind": "natural",
+      "relation": "separate",
+      "rationale": "前者还有取消行程问题；后者只说 May22 的航班变更。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_1073",
+          "trial": 1,
+          "through_message_index": 1,
+          "prefix_sha256": "1aae487cdfd60fba6ca21e1bdd66ab04c10adc9c6df3b6c496dce370d18bc348"
+        },
+        {
+          "arm": "e2",
+          "task_id": "airline_1073",
+          "trial": 3,
+          "through_message_index": 1,
+          "prefix_sha256": "4cda28716c2b7987dac907e15bbbd2be0359c85c541cfeb3e472e1d6018ba61c"
+        }
+      ],
+      "a": {
+        "task_id": "airline_1073",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1073",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, my name is Ella Garcia. I need to make a few changes to my upcoming flights and also have a question about a trip cancellation.",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_1073",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1073",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, my name is Ella Garcia. I’m calling because I need to make some changes to my flights for May 22nd.",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "natural-18",
+      "kind": "natural",
+      "relation": "separate",
+      "rationale": "明确升级舱位与泛化修改预订的目标不同。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_109",
+          "trial": 0,
+          "through_message_index": 1,
+          "prefix_sha256": "7cd38895e514a08c66d1f16b130cebfad5aa9ff4e108532007ed4aa718bdde47"
+        },
+        {
+          "arm": "e2",
+          "task_id": "airline_109",
+          "trial": 1,
+          "through_message_index": 1,
+          "prefix_sha256": "02b0d81b9c7b912e1e21d1908affa5edb657b0d9a46931cbd04df538854a6afd"
+        }
+      ],
+      "a": {
+        "task_id": "airline_109",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_109",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hey! I'm Amelia Hernandez. I need to upgrade my cabin class on my upcoming reservation.",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_109",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_109",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi there! I'm Amelia Hernandez. I'm calling because I need to make a change to my upcoming reservation. Could you help me with that?",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "natural-19",
+      "kind": "natural",
+      "relation": "separate",
+      "rationale": "前者提供姓名，后者提供 basic economy→economy；身份及舱位信息均不同。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_109",
+          "trial": 0,
+          "through_message_index": 1,
+          "prefix_sha256": "7cd38895e514a08c66d1f16b130cebfad5aa9ff4e108532007ed4aa718bdde47"
+        },
+        {
+          "arm": "e2",
+          "task_id": "airline_109",
+          "trial": 2,
+          "through_message_index": 1,
+          "prefix_sha256": "b21dd3d3085003c8577ad35098c33e41b3fb0dc4284ba831589f45a42c2276e6"
+        }
+      ],
+      "a": {
+        "task_id": "airline_109",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_109",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hey! I'm Amelia Hernandez. I need to upgrade my cabin class on my upcoming reservation.",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_109",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_109",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi there! I'd like to upgrade my cabin class for an upcoming trip. I have a reservation in basic economy and I'd like to move up to regular economy.",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "natural-20",
+      "kind": "natural",
+      "relation": "separate",
+      "rationale": "后者提供姓名但没有改日期/两件行李，不能因订单相同就合并。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_1106",
+          "trial": 0,
+          "through_message_index": 1,
+          "prefix_sha256": "715f78f19596c2ffe05885185967f25b5d67c09846d4742a5740ba426bc3b586"
+        },
+        {
+          "arm": "e2",
+          "task_id": "airline_1106",
+          "trial": 1,
+          "through_message_index": 1,
+          "prefix_sha256": "498bc5e61bee1094ee6543d1b167304426f7715f6eed1a20132ba89820d49f22"
+        }
+      ],
+      "a": {
+        "task_id": "airline_1106",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1106",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi! I’d like to change the flight date on my reservation HKEG34 and add two checked bags to it. Could you please pull up the full details of that reservation for me first?",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_1106",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1106",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, my name is Mia Li. I need to make a few changes to my existing reservation, HKEG34. Could you please pull up the full details for me first?",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "natural-21",
+      "kind": "natural",
+      "relation": "separate",
+      "rationale": "前者明确保留晚班且取消晨班，后者没有保留晚班约束。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_1113",
+          "trial": 0,
+          "through_message_index": 1,
+          "prefix_sha256": "ed50782d05c1ead8c7991122662882f06a6febff5511698106fa63e3b3604886"
+        },
+        {
+          "arm": "e2",
+          "task_id": "airline_1113",
+          "trial": 1,
+          "through_message_index": 1,
+          "prefix_sha256": "324216a9e3c91abafbaa040f9e09a94376a21055f52fe75b971175e8a3a044d4"
+        }
+      ],
+      "a": {
+        "task_id": "airline_1113",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1113",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hey there. I think I made a mistake and double-booked my flights for May 20th. I need to cancel the morning ones, but I want to keep the evening flight. Can you help me figure out which ones to cancel?",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_1113",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1113",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, I need to cancel some flights. I think I accidentally double-booked for May 20th morning. Can you help me sort that out?",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "natural-22",
+      "kind": "natural",
+      "relation": "separate",
+      "rationale": "后者增加两名乘客这一已知事实。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_112",
+          "trial": 0,
+          "through_message_index": 1,
+          "prefix_sha256": "9a64272838ebdb997b2d3deb4604cc4e04984e4944d1fef256ca84cf9e685eaf"
+        },
+        {
+          "arm": "e2",
+          "task_id": "airline_112",
+          "trial": 2,
+          "through_message_index": 1,
+          "prefix_sha256": "c46834b7ae14c08b5a952aea44b33c9aa9ab36b677360bd834a5e7d7961bfb5c"
+        }
+      ],
+      "a": {
+        "task_id": "airline_112",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_112",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi! I’d like to change the cabin class for my existing reservation. I want to upgrade from economy to business class for more comfort on my upcoming trip.",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_112",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_112",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, I'd like to upgrade my existing reservation from economy to business class. I have two passengers on the booking.",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "natural-23",
+      "kind": "natural",
+      "relation": "separate",
+      "rationale": "前者明确 Gold 身份，涉及补偿资格，不能忽略。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_1143",
+          "trial": 0,
+          "through_message_index": 1,
+          "prefix_sha256": "dd9800174e66bf17896b287f23a14ada226f21751b2ec31899341ad5a7f743ba"
+        },
+        {
+          "arm": "e2",
+          "task_id": "airline_1143",
+          "trial": 1,
+          "through_message_index": 1,
+          "prefix_sha256": "d75b221a14c4f1c64670a485bf1188edb83dbd669b49477f1ad701d06c69cfc0"
+        }
+      ],
+      "a": {
+        "task_id": "airline_1143",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1143",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, my name is Lucas Sanchez, and my user ID is lucas_sanchez_1853. I’m calling to complain about serious disruptions on my reservation GCZ58I. My outbound flight from SFO to LAX on May 11, 2024, was completely cancelled, and my return flight on May 15 is delayed. I need to know exactly why this happened and I’d like to request compensation for the inconvenience, especially given my Gold status.",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_1143",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1143",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi. My name is Lucas Sanchez, and my user ID is lucas_sanchez_1853. I’m calling to complain about the disruptions on my reservation GCZ58I. Specifically, my outbound flight from SFO to LAX on May 11, 2024, was cancelled, and my return flight on May 15 is delayed. I’d like to know exactly why this happened and I’m requesting compensation for the inconvenience.",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "natural-24",
+      "kind": "natural",
+      "relation": "separate",
+      "rationale": "同一订单，但后者尚未要求加两件行李。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_14",
+          "trial": 0,
+          "through_message_index": 1,
+          "prefix_sha256": "09699c549fd94be15e4bc649862275336aa8cab441b22705934e82841e844030"
+        },
+        {
+          "arm": "e2",
+          "task_id": "airline_14",
+          "trial": 1,
+          "through_message_index": 1,
+          "prefix_sha256": "3d31851836227b6cbd5960f5e7664e527838c5fdcfbacc6e8fde2fb95448122e"
+        }
+      ],
+      "a": {
+        "task_id": "airline_14",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_14",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi! I’d like to change the flight date on my reservation HKEG34 and then add 2 checked bags. Could you please look up that reservation for me?",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_14",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_14",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, I need help with my reservation. Could you please review reservation HKEG34 for me? I need to change the flight date.",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "natural-25",
+      "kind": "natural",
+      "relation": "uncertain",
+      "rationale": "同一 user ID，但一侧额外提供姓名；是否可将姓名作为冗余信息需身份知识规则。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_1035",
+          "trial": 1,
+          "through_message_index": 1,
+          "prefix_sha256": "8a58b49b6906e9819a9accf283ccf40fe21c108c28ec5202a047508327372b0b"
+        },
+        {
+          "arm": "e2",
+          "task_id": "airline_1035",
+          "trial": 2,
+          "through_message_index": 1,
+          "prefix_sha256": "153b46782ee372badbacab9efdd0df5b2c81d22ea3188199c4869c0e75a67d71"
+        }
+      ],
+      "a": {
+        "task_id": "airline_1035",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1035",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, my name is Sofia Brown. I’d like to make a change to my reservation. My user ID is sofia_brown_9485.",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_1035",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1035",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi there! I'd like to make a change to my booking. My user ID is sofia_brown_9485.",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "natural-26",
+      "kind": "natural",
+      "relation": "uncertain",
+      "rationale": "一侧明确 tomorrow；缺少可靠参考时间，不能自动判断与 May20 完全等价。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_1113",
+          "trial": 1,
+          "through_message_index": 1,
+          "prefix_sha256": "324216a9e3c91abafbaa040f9e09a94376a21055f52fe75b971175e8a3a044d4"
+        },
+        {
+          "arm": "e2",
+          "task_id": "airline_1113",
+          "trial": 3,
+          "through_message_index": 1,
+          "prefix_sha256": "10bf1e35dde9a2c22341d354db374df20377981a8d7599238624952a87c1a140"
+        }
+      ],
+      "a": {
+        "task_id": "airline_1113",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1113",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, I need to cancel some flights. I think I accidentally double-booked for May 20th morning. Can you help me sort that out?",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_1113",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1113",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, I’d like to cancel some flights. I think I might have double-booked myself for tomorrow morning, May 20th. Can you help me sort that out?",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "natural-27",
+      "kind": "natural",
+      "relation": "uncertain",
+      "rationale": "一侧明确 departure window，另一侧只说 between 8am-9pm，需核验是否约束出发或整个行程。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_126",
+          "trial": 0,
+          "through_message_index": 1,
+          "prefix_sha256": "8748a219758b37c75ac18344361b9d89cfaf7284642a1b5a057b731a40c56a11"
+        },
+        {
+          "arm": "e2",
+          "task_id": "airline_126",
+          "trial": 3,
+          "through_message_index": 1,
+          "prefix_sha256": "ea9a2f8b8efae4854639f6119dd79fd7dd7d7893e34d451d062a7d543725e580"
+        }
+      ],
+      "a": {
+        "task_id": "airline_126",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_126",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi! I’d like to change the flight date on my reservation HKEG34. I need to move the DEN to LAS flight to the best nonstop option the following day, between 8am and 9pm.",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_126",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_126",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, I’d like to change the flight date on reservation HKEG34. I need to move the Denver to Las Vegas flight to the best nonstop option the following day, with a departure between 8 AM and 9 PM.",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "natural-28",
+      "kind": "natural",
+      "relation": "uncertain",
+      "rationale": "一侧为明确 ORD，另一侧仅 Chicago，多机场城市不能未经核验视为同一出发机场。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_162",
+          "trial": 0,
+          "through_message_index": 1,
+          "prefix_sha256": "0fae86ae835c9c43a54fdf86ad635e21ea3078863a620b1839140799a677b1d5"
+        },
+        {
+          "arm": "e2",
+          "task_id": "airline_162",
+          "trial": 3,
+          "through_message_index": 1,
+          "prefix_sha256": "5f6e2652bcdbf6a9866292d811969901c85800dc6b6e220777e2eee9ece1edc2"
+        }
+      ],
+      "a": {
+        "task_id": "airline_162",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_162",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, I’m Richard Perez. I think I’ve made a booking mistake — I accidentally booked three overlapping flights from Chicago O'Hare to Atlanta on May 25th. I only need one of those flights, so I’d like to cancel the extra duplicates and keep just one. Could you help me sort that out?",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_162",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_162",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, I’m Richard Perez. I think I made a mistake with my bookings. I accidentally booked three overlapping flights from Chicago to Atlanta on May 25th. I need to cancel the extras but keep just one of them.",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "real_prefix_counterfactual-01",
+      "kind": "real_prefix_counterfactual",
+      "relation": "merge",
+      "rationale": "查询许可同义改写；改写未增加修改许可。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_1035",
+          "trial": 0,
+          "through_message_index": 9,
+          "prefix_sha256": "c4aecb7746806f4ffb3fa84dfd40391197f5a3c940df3b3df196594630b91799"
+        },
+        {
+          "modified_last_user_message": true,
+          "observed_trajectory": false
+        }
+      ],
+      "a": {
+        "task_id": "airline_1035",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1035",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, I’d like to downgrade my business class flight to economy to save some costs. My user ID is sofia_brown_9485.",
+            "tool_calls": null
+          },
+          {
+            "role": "assistant",
+            "content": null,
+            "tool_calls": [
+              {
+                "arguments": {
+                  "user_id": "sofia_brown_9485"
+                },
+                "id": "chatcmpl-tool-81a3fbf7416b202e",
+                "name": "get_user_details",
+                "requestor": "assistant"
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "{\"user_id\": \"sofia_brown_9485\", \"name\": {\"first_name\": \"Sofia\", \"last_name\": \"Brown\"}, \"address\": {\"address1\": \"400 Hillcrest Drive\", \"address2\": \"Suite 132\", \"city\": \"Washington\", \"country\": \"USA\", \"state\": \"DC\", \"zip\": \"20314\"}, \"email\": \"sofia.brown9418@example.com\", \"dob\": \"1968-12-25\", \"payment_methods\": {\"credit_card_5332048\": {\"source\": \"credit_card\", \"id\": \"credit_card_5332048\", \"brand\": \"mastercard\", \"last_four\": \"2734\"}, \"certificate_4444665\": {\"source\": \"certificate\", \"id\": \"certificate_4444665\", \"amount\": 150.0}}, \"saved_passengers\": [{\"first_name\": \"Sophia\", \"last_name\": \"Moore\", \"dob\": \"1961-10-17\"}], \"membership\": \"silver\", \"reservations\": [\"GAST7Q\", \"103VYQ\", \"YPNCGY\", \"A8VNF1\", \"6NJYTZ\", \"JMGNLU\", \"YMNSP4\"]}",
+            "id": "chatcmpl-tool-81a3fbf7416b202e",
+            "error": false
+          },
+          {
+            "role": "assistant",
+            "content": "I found your profile, Sofia. You're a silver member with 7 reservations. Which reservation would you like to downgrade from business class to economy? Here are your options:\n\n1. **GAST7Q**\n2. **103VYQ**\n3. **YPNCGY**\n4. **A8VNF1**\n5. **6NJYTZ**\n6. **JMGNLU**\n7. **YMNSP4**\n\nPlease let me know which one, and I'll show you the details.",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "It’s the reservation with ID GAST7Q.",
+            "tool_calls": null
+          },
+          {
+            "role": "assistant",
+            "content": null,
+            "tool_calls": [
+              {
+                "arguments": {
+                  "reservation_id": "GAST7Q"
+                },
+                "id": "chatcmpl-tool-ac58a68e0a321a3b",
+                "name": "get_reservation_details",
+                "requestor": "assistant"
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "{\"reservation_id\": \"GAST7Q\", \"user_id\": \"sofia_brown_9485\", \"origin\": \"CLT\", \"destination\": \"BOS\", \"flight_type\": \"one_way\", \"cabin\": \"business\", \"flights\": [{\"flight_number\": \"HAT216\", \"origin\": \"CLT\", \"destination\": \"BOS\", \"date\": \"2024-05-21\", \"price\": 824}], \"passengers\": [{\"first_name\": \"Sofia\", \"last_name\": \"Brown\", \"dob\": \"1968-12-25\"}], \"payment_history\": [{\"payment_id\": \"credit_card_5332048\", \"amount\": 824}], \"created_at\": \"2024-05-01T16:42:49\", \"total_baggages\": 1, \"nonfree_baggages\": 0, \"insurance\": \"no\", \"status\": null}",
+            "id": "chatcmpl-tool-ac58a68e0a321a3b",
+            "error": false
+          },
+          {
+            "role": "assistant",
+            "content": "Here are the details for reservation **GAST7Q**:\n\n| Detail | Value |\n|--------|-------|\n| **Route** | CLT → BOS (Charlotte → Boston) |\n| **Flight** | HAT216 on May 21, 2024 |\n| **Current Cabin** | Business ($824) |\n| **Passenger** | Sofia Brown |\n| **Total Paid** | $824 |\n\nTo proceed with the downgrade, I need to check the current price of this flight in economy class. Would you like me to search for the flight to see the economy price and calculate the refund you'd receive?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Yes, please go ahead and search for the economy price for that flight so we can see the refund amount.",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_1035",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1035",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, I’d like to downgrade my business class flight to economy to save some costs. My user ID is sofia_brown_9485.",
+            "tool_calls": null
+          },
+          {
+            "role": "assistant",
+            "content": null,
+            "tool_calls": [
+              {
+                "arguments": {
+                  "user_id": "sofia_brown_9485"
+                },
+                "id": "chatcmpl-tool-81a3fbf7416b202e",
+                "name": "get_user_details",
+                "requestor": "assistant"
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "{\"user_id\": \"sofia_brown_9485\", \"name\": {\"first_name\": \"Sofia\", \"last_name\": \"Brown\"}, \"address\": {\"address1\": \"400 Hillcrest Drive\", \"address2\": \"Suite 132\", \"city\": \"Washington\", \"country\": \"USA\", \"state\": \"DC\", \"zip\": \"20314\"}, \"email\": \"sofia.brown9418@example.com\", \"dob\": \"1968-12-25\", \"payment_methods\": {\"credit_card_5332048\": {\"source\": \"credit_card\", \"id\": \"credit_card_5332048\", \"brand\": \"mastercard\", \"last_four\": \"2734\"}, \"certificate_4444665\": {\"source\": \"certificate\", \"id\": \"certificate_4444665\", \"amount\": 150.0}}, \"saved_passengers\": [{\"first_name\": \"Sophia\", \"last_name\": \"Moore\", \"dob\": \"1961-10-17\"}], \"membership\": \"silver\", \"reservations\": [\"GAST7Q\", \"103VYQ\", \"YPNCGY\", \"A8VNF1\", \"6NJYTZ\", \"JMGNLU\", \"YMNSP4\"]}",
+            "id": "chatcmpl-tool-81a3fbf7416b202e",
+            "error": false
+          },
+          {
+            "role": "assistant",
+            "content": "I found your profile, Sofia. You're a silver member with 7 reservations. Which reservation would you like to downgrade from business class to economy? Here are your options:\n\n1. **GAST7Q**\n2. **103VYQ**\n3. **YPNCGY**\n4. **A8VNF1**\n5. **6NJYTZ**\n6. **JMGNLU**\n7. **YMNSP4**\n\nPlease let me know which one, and I'll show you the details.",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "It’s the reservation with ID GAST7Q.",
+            "tool_calls": null
+          },
+          {
+            "role": "assistant",
+            "content": null,
+            "tool_calls": [
+              {
+                "arguments": {
+                  "reservation_id": "GAST7Q"
+                },
+                "id": "chatcmpl-tool-ac58a68e0a321a3b",
+                "name": "get_reservation_details",
+                "requestor": "assistant"
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "{\"reservation_id\": \"GAST7Q\", \"user_id\": \"sofia_brown_9485\", \"origin\": \"CLT\", \"destination\": \"BOS\", \"flight_type\": \"one_way\", \"cabin\": \"business\", \"flights\": [{\"flight_number\": \"HAT216\", \"origin\": \"CLT\", \"destination\": \"BOS\", \"date\": \"2024-05-21\", \"price\": 824}], \"passengers\": [{\"first_name\": \"Sofia\", \"last_name\": \"Brown\", \"dob\": \"1968-12-25\"}], \"payment_history\": [{\"payment_id\": \"credit_card_5332048\", \"amount\": 824}], \"created_at\": \"2024-05-01T16:42:49\", \"total_baggages\": 1, \"nonfree_baggages\": 0, \"insurance\": \"no\", \"status\": null}",
+            "id": "chatcmpl-tool-ac58a68e0a321a3b",
+            "error": false
+          },
+          {
+            "role": "assistant",
+            "content": "Here are the details for reservation **GAST7Q**:\n\n| Detail | Value |\n|--------|-------|\n| **Route** | CLT → BOS (Charlotte → Boston) |\n| **Flight** | HAT216 on May 21, 2024 |\n| **Current Cabin** | Business ($824) |\n| **Passenger** | Sofia Brown |\n| **Total Paid** | $824 |\n\nTo proceed with the downgrade, I need to check the current price of this flight in economy class. Would you like me to search for the flight to see the economy price and calculate the refund you'd receive?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Yes, check the economy price for the flight.",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "real_prefix_counterfactual-02",
+      "kind": "real_prefix_counterfactual",
+      "relation": "separate",
+      "rationale": "查询价格许可与立即修改舱位许可必须区分。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_1035",
+          "trial": 0,
+          "through_message_index": 9,
+          "prefix_sha256": "c4aecb7746806f4ffb3fa84dfd40391197f5a3c940df3b3df196594630b91799"
+        },
+        {
+          "modified_last_user_message": true,
+          "observed_trajectory": false
+        }
+      ],
+      "a": {
+        "task_id": "airline_1035",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1035",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, I’d like to downgrade my business class flight to economy to save some costs. My user ID is sofia_brown_9485.",
+            "tool_calls": null
+          },
+          {
+            "role": "assistant",
+            "content": null,
+            "tool_calls": [
+              {
+                "arguments": {
+                  "user_id": "sofia_brown_9485"
+                },
+                "id": "chatcmpl-tool-81a3fbf7416b202e",
+                "name": "get_user_details",
+                "requestor": "assistant"
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "{\"user_id\": \"sofia_brown_9485\", \"name\": {\"first_name\": \"Sofia\", \"last_name\": \"Brown\"}, \"address\": {\"address1\": \"400 Hillcrest Drive\", \"address2\": \"Suite 132\", \"city\": \"Washington\", \"country\": \"USA\", \"state\": \"DC\", \"zip\": \"20314\"}, \"email\": \"sofia.brown9418@example.com\", \"dob\": \"1968-12-25\", \"payment_methods\": {\"credit_card_5332048\": {\"source\": \"credit_card\", \"id\": \"credit_card_5332048\", \"brand\": \"mastercard\", \"last_four\": \"2734\"}, \"certificate_4444665\": {\"source\": \"certificate\", \"id\": \"certificate_4444665\", \"amount\": 150.0}}, \"saved_passengers\": [{\"first_name\": \"Sophia\", \"last_name\": \"Moore\", \"dob\": \"1961-10-17\"}], \"membership\": \"silver\", \"reservations\": [\"GAST7Q\", \"103VYQ\", \"YPNCGY\", \"A8VNF1\", \"6NJYTZ\", \"JMGNLU\", \"YMNSP4\"]}",
+            "id": "chatcmpl-tool-81a3fbf7416b202e",
+            "error": false
+          },
+          {
+            "role": "assistant",
+            "content": "I found your profile, Sofia. You're a silver member with 7 reservations. Which reservation would you like to downgrade from business class to economy? Here are your options:\n\n1. **GAST7Q**\n2. **103VYQ**\n3. **YPNCGY**\n4. **A8VNF1**\n5. **6NJYTZ**\n6. **JMGNLU**\n7. **YMNSP4**\n\nPlease let me know which one, and I'll show you the details.",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "It’s the reservation with ID GAST7Q.",
+            "tool_calls": null
+          },
+          {
+            "role": "assistant",
+            "content": null,
+            "tool_calls": [
+              {
+                "arguments": {
+                  "reservation_id": "GAST7Q"
+                },
+                "id": "chatcmpl-tool-ac58a68e0a321a3b",
+                "name": "get_reservation_details",
+                "requestor": "assistant"
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "{\"reservation_id\": \"GAST7Q\", \"user_id\": \"sofia_brown_9485\", \"origin\": \"CLT\", \"destination\": \"BOS\", \"flight_type\": \"one_way\", \"cabin\": \"business\", \"flights\": [{\"flight_number\": \"HAT216\", \"origin\": \"CLT\", \"destination\": \"BOS\", \"date\": \"2024-05-21\", \"price\": 824}], \"passengers\": [{\"first_name\": \"Sofia\", \"last_name\": \"Brown\", \"dob\": \"1968-12-25\"}], \"payment_history\": [{\"payment_id\": \"credit_card_5332048\", \"amount\": 824}], \"created_at\": \"2024-05-01T16:42:49\", \"total_baggages\": 1, \"nonfree_baggages\": 0, \"insurance\": \"no\", \"status\": null}",
+            "id": "chatcmpl-tool-ac58a68e0a321a3b",
+            "error": false
+          },
+          {
+            "role": "assistant",
+            "content": "Here are the details for reservation **GAST7Q**:\n\n| Detail | Value |\n|--------|-------|\n| **Route** | CLT → BOS (Charlotte → Boston) |\n| **Flight** | HAT216 on May 21, 2024 |\n| **Current Cabin** | Business ($824) |\n| **Passenger** | Sofia Brown |\n| **Total Paid** | $824 |\n\nTo proceed with the downgrade, I need to check the current price of this flight in economy class. Would you like me to search for the flight to see the economy price and calculate the refund you'd receive?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Yes, please go ahead and search for the economy price for that flight so we can see the refund amount.",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_1035",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1035",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, I’d like to downgrade my business class flight to economy to save some costs. My user ID is sofia_brown_9485.",
+            "tool_calls": null
+          },
+          {
+            "role": "assistant",
+            "content": null,
+            "tool_calls": [
+              {
+                "arguments": {
+                  "user_id": "sofia_brown_9485"
+                },
+                "id": "chatcmpl-tool-81a3fbf7416b202e",
+                "name": "get_user_details",
+                "requestor": "assistant"
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "{\"user_id\": \"sofia_brown_9485\", \"name\": {\"first_name\": \"Sofia\", \"last_name\": \"Brown\"}, \"address\": {\"address1\": \"400 Hillcrest Drive\", \"address2\": \"Suite 132\", \"city\": \"Washington\", \"country\": \"USA\", \"state\": \"DC\", \"zip\": \"20314\"}, \"email\": \"sofia.brown9418@example.com\", \"dob\": \"1968-12-25\", \"payment_methods\": {\"credit_card_5332048\": {\"source\": \"credit_card\", \"id\": \"credit_card_5332048\", \"brand\": \"mastercard\", \"last_four\": \"2734\"}, \"certificate_4444665\": {\"source\": \"certificate\", \"id\": \"certificate_4444665\", \"amount\": 150.0}}, \"saved_passengers\": [{\"first_name\": \"Sophia\", \"last_name\": \"Moore\", \"dob\": \"1961-10-17\"}], \"membership\": \"silver\", \"reservations\": [\"GAST7Q\", \"103VYQ\", \"YPNCGY\", \"A8VNF1\", \"6NJYTZ\", \"JMGNLU\", \"YMNSP4\"]}",
+            "id": "chatcmpl-tool-81a3fbf7416b202e",
+            "error": false
+          },
+          {
+            "role": "assistant",
+            "content": "I found your profile, Sofia. You're a silver member with 7 reservations. Which reservation would you like to downgrade from business class to economy? Here are your options:\n\n1. **GAST7Q**\n2. **103VYQ**\n3. **YPNCGY**\n4. **A8VNF1**\n5. **6NJYTZ**\n6. **JMGNLU**\n7. **YMNSP4**\n\nPlease let me know which one, and I'll show you the details.",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "It’s the reservation with ID GAST7Q.",
+            "tool_calls": null
+          },
+          {
+            "role": "assistant",
+            "content": null,
+            "tool_calls": [
+              {
+                "arguments": {
+                  "reservation_id": "GAST7Q"
+                },
+                "id": "chatcmpl-tool-ac58a68e0a321a3b",
+                "name": "get_reservation_details",
+                "requestor": "assistant"
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "{\"reservation_id\": \"GAST7Q\", \"user_id\": \"sofia_brown_9485\", \"origin\": \"CLT\", \"destination\": \"BOS\", \"flight_type\": \"one_way\", \"cabin\": \"business\", \"flights\": [{\"flight_number\": \"HAT216\", \"origin\": \"CLT\", \"destination\": \"BOS\", \"date\": \"2024-05-21\", \"price\": 824}], \"passengers\": [{\"first_name\": \"Sofia\", \"last_name\": \"Brown\", \"dob\": \"1968-12-25\"}], \"payment_history\": [{\"payment_id\": \"credit_card_5332048\", \"amount\": 824}], \"created_at\": \"2024-05-01T16:42:49\", \"total_baggages\": 1, \"nonfree_baggages\": 0, \"insurance\": \"no\", \"status\": null}",
+            "id": "chatcmpl-tool-ac58a68e0a321a3b",
+            "error": false
+          },
+          {
+            "role": "assistant",
+            "content": "Here are the details for reservation **GAST7Q**:\n\n| Detail | Value |\n|--------|-------|\n| **Route** | CLT → BOS (Charlotte → Boston) |\n| **Flight** | HAT216 on May 21, 2024 |\n| **Current Cabin** | Business ($824) |\n| **Passenger** | Sofia Brown |\n| **Total Paid** | $824 |\n\nTo proceed with the downgrade, I need to check the current price of this flight in economy class. Would you like me to search for the flight to see the economy price and calculate the refund you'd receive?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Yes, please proceed with the downgrade now.",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "real_prefix_counterfactual-03",
+      "kind": "real_prefix_counterfactual",
+      "relation": "merge",
+      "rationale": "仅将开头 Wait 换为 Please pause，保留全部退款卡更正条件。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_1060",
+          "trial": 1,
+          "through_message_index": 13,
+          "prefix_sha256": "cdc9c1b32b69afaad1d80cd1124dd5fbd078712719186cf4fedc20c691a3ce56"
+        },
+        {
+          "modified_last_user_message": true,
+          "observed_trajectory": false
+        }
+      ],
+      "a": {
+        "task_id": "airline_1060",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1060",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, my name is Chen Gonzalez. I’m calling because I’d like to make a change to my upcoming reservation. I currently have a business class ticket, but I’d like to downgrade it to economy to save some money.",
+            "tool_calls": null
+          },
+          {
+            "role": "assistant",
+            "content": "Hello Chen Gonzalez! I'd be happy to help you with changing your reservation from business class to economy.\n\nTo get started, I'll need a couple of pieces of information:\n\n1. Your user ID\n2. Your reservation ID\n\nOnce I have those, I can look up your reservation and help you with the downgrade.",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Sure. My user ID is chen_gonzalez_5516, and my reservation ID is SNB279.",
+            "tool_calls": null
+          },
+          {
+            "role": "assistant",
+            "content": null,
+            "tool_calls": [
+              {
+                "arguments": {
+                  "reservation_id": "SNB279"
+                },
+                "id": "chatcmpl-tool-b4ea09826dc40752",
+                "name": "get_reservation_details",
+                "requestor": "assistant"
+              },
+              {
+                "arguments": {
+                  "user_id": "chen_gonzalez_5516"
+                },
+                "id": "chatcmpl-tool-8d1b8a9ae5ef7fd3",
+                "name": "get_user_details",
+                "requestor": "assistant"
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "{\"reservation_id\": \"SNB279\", \"user_id\": \"chen_gonzalez_5516\", \"origin\": \"MIA\", \"destination\": \"SEA\", \"flight_type\": \"one_way\", \"cabin\": \"business\", \"flights\": [{\"flight_number\": \"HAT198\", \"origin\": \"MIA\", \"destination\": \"JFK\", \"date\": \"2024-05-18\", \"price\": 1658}, {\"flight_number\": \"HAT069\", \"origin\": \"JFK\", \"destination\": \"SEA\", \"date\": \"2024-05-18\", \"price\": 993}], \"passengers\": [{\"first_name\": \"Chen\", \"last_name\": \"Gonzalez\", \"dob\": \"1961-08-10\"}], \"payment_history\": [{\"payment_id\": \"credit_card_2870431\", \"amount\": 2651}], \"created_at\": \"2024-05-05T00:25:23\", \"total_baggages\": 0, \"nonfree_baggages\": 0, \"insurance\": \"no\", \"status\": null}",
+            "id": "chatcmpl-tool-b4ea09826dc40752",
+            "error": false
+          },
+          {
+            "role": "tool",
+            "content": "{\"user_id\": \"chen_gonzalez_5516\", \"name\": {\"first_name\": \"Chen\", \"last_name\": \"Gonzalez\"}, \"address\": {\"address1\": \"262 Lakeview Drive\", \"address2\": \"Suite 629\", \"city\": \"Dallas\", \"country\": \"USA\", \"state\": \"TX\", \"zip\": \"75209\"}, \"email\": \"chen.gonzalez3972@example.com\", \"dob\": \"1961-08-10\", \"payment_methods\": {\"credit_card_9588108\": {\"source\": \"credit_card\", \"id\": \"credit_card_9588108\", \"brand\": \"visa\", \"last_four\": \"6589\"}, \"certificate_9371471\": {\"source\": \"certificate\", \"id\": \"certificate_9371471\", \"amount\": 250.0}, \"credit_card_2870431\": {\"source\": \"credit_card\", \"id\": \"credit_card_2870431\", \"brand\": \"visa\", \"last_four\": \"7388\"}, \"credit_card_2191342\": {\"source\": \"credit_card\", \"id\": \"credit_card_2191342\", \"brand\": \"mastercard\", \"last_four\": \"1323\"}, \"credit_card_2231237\": {\"source\": \"credit_card\", \"id\": \"credit_card_2231237\", \"brand\": \"mastercard\", \"last_four\": \"2477\"}, \"credit_card_9615868\": {\"source\": \"credit_card\", \"id\": \"credit_card_9615868\", \"brand\": \"mastercard\", \"last_four\": \"5038\"}}, \"saved_passengers\": [{\"first_name\": \"Mia\", \"last_name\": \"Davis\", \"dob\": \"1951-05-23\"}, {\"first_name\": \"Raj\", \"last_name\": \"Li\", \"dob\": \"1972-04-19\"}], \"membership\": \"regular\", \"reservations\": [\"SNB279\", \"RFIG45\", \"5OY9I3\", \"RDYIPN\"]}",
+            "id": "chatcmpl-tool-8d1b8a9ae5ef7fd3",
+            "error": false
+          },
+          {
+            "role": "assistant",
+            "content": "Thank you for the information, Chen. I found your reservation **SNB279**. Here are the details:\n\n**Current Reservation:**\n- **Route:** MIA → JFK → SEA (May 18, 2024)\n- **Cabin:** Business Class\n- **Passenger:** Chen Gonzalez\n- **Total Paid:** $2,651\n\n**Flights:**\n1. HAT198: MIA → JFK on May 18, 2024 ($1,658)\n2. HAT069: JFK → SEA on May 18, 2024 ($993)\n\nBefore I can proceed with the downgrade, I need to search for the current economy class prices on these same flights to calculate the price difference. Would you like me to do that, and if so, which credit card would you like to use for any potential refund? I see you have the following credit cards on file:\n- Visa ending in 6589\n- Visa ending in 7388\n- Mastercard ending in 1323\n- Mastercard ending in 2477\n- Mastercard ending in 5038",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Yes, please go ahead and calculate the price difference for the economy class upgrade. I understand that I'll receive a refund of the difference to my original payment method. I'm not sure of the exact card number, but I believe it's the one ending in 2870431.",
+            "tool_calls": null
+          },
+          {
+            "role": "assistant",
+            "content": "I'd be happy to calculate the price difference for you. Let me search for the current economy class prices on both flights.\n\n",
+            "tool_calls": [
+              {
+                "arguments": {
+                  "date": "2024-05-18",
+                  "destination": "JFK",
+                  "origin": "MIA"
+                },
+                "id": "chatcmpl-tool-93c2ac364611e7ef",
+                "name": "search_direct_flight",
+                "requestor": "assistant"
+              },
+              {
+                "arguments": {
+                  "date": "2024-05-18",
+                  "destination": "SEA",
+                  "origin": "JFK"
+                },
+                "id": "chatcmpl-tool-bf371563c0586891",
+                "name": "search_direct_flight",
+                "requestor": "assistant"
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "[{\"flight_number\": \"HAT198\", \"origin\": \"MIA\", \"destination\": \"JFK\", \"status\": \"available\", \"scheduled_departure_time_est\": \"02:00:00\", \"scheduled_arrival_time_est\": \"05:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 16, \"economy\": 20, \"business\": 7}, \"prices\": {\"basic_economy\": 84, \"economy\": 181, \"business\": 348}}, {\"flight_number\": \"HAT224\", \"origin\": \"MIA\", \"destination\": \"JFK\", \"status\": \"available\", \"scheduled_departure_time_est\": \"15:00:00\", \"scheduled_arrival_time_est\": \"18:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 15, \"economy\": 9, \"business\": 2}, \"prices\": {\"basic_economy\": 72, \"economy\": 167, \"business\": 222}}, {\"flight_number\": \"HAT292\", \"origin\": \"MIA\", \"destination\": \"JFK\", \"status\": \"available\", \"scheduled_departure_time_est\": \"01:00:00\", \"scheduled_arrival_time_est\": \"04:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 11, \"economy\": 17, \"business\": 11}, \"prices\": {\"basic_economy\": 60, \"economy\": 153, \"business\": 200}}]",
+            "id": "chatcmpl-tool-93c2ac364611e7ef",
+            "error": false
+          },
+          {
+            "role": "tool",
+            "content": "[{\"flight_number\": \"HAT069\", \"origin\": \"JFK\", \"destination\": \"SEA\", \"status\": \"available\", \"scheduled_departure_time_est\": \"06:00:00\", \"scheduled_arrival_time_est\": \"12:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 13, \"economy\": 3, \"business\": 6}, \"prices\": {\"basic_economy\": 90, \"economy\": 139, \"business\": 244}}, {\"flight_number\": \"HAT083\", \"origin\": \"JFK\", \"destination\": \"SEA\", \"status\": \"available\", \"scheduled_departure_time_est\": \"01:00:00\", \"scheduled_arrival_time_est\": \"07:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 12, \"economy\": 1, \"business\": 6}, \"prices\": {\"basic_economy\": 84, \"economy\": 105, \"business\": 338}}]",
+            "id": "chatcmpl-tool-bf371563c0586891",
+            "error": false
+          },
+          {
+            "role": "assistant",
+            "content": "Here's the price breakdown for your downgrade from business class to economy class:\n\n**Flight 1 - HAT198: MIA → JFK**\n- Original Business Class: $1,658\n- Current Economy Class: $181\n- **Difference: -$1,477**\n\n**Flight 2 - HAT069: JFK → SEA**\n- Original Business Class: $993\n- Current Economy Class: $139\n- **Difference: -$854**\n\n**Total Refund: $2,331**\n\nThe refund will be processed to your original payment method (credit card ending in 7388) within 5-7 business days.\n\n**Summary of Change:**\n- Downgrade from Business Class → Economy Class\n- Flights remain the same (HAT198 and HAT069 on May 18, 2024)\n- Total refund: $2,331\n\nWould you like me to proceed with this change? Please confirm with **yes** to proceed.",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Wait, you mentioned the refund is going to the card ending in 7388? I thought I specified a different card for the refund. I need to use credit_card_2870431 for this refund, not the one you have on file. Can you adjust the refund method before we proceed?",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_1060",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1060",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, my name is Chen Gonzalez. I’m calling because I’d like to make a change to my upcoming reservation. I currently have a business class ticket, but I’d like to downgrade it to economy to save some money.",
+            "tool_calls": null
+          },
+          {
+            "role": "assistant",
+            "content": "Hello Chen Gonzalez! I'd be happy to help you with changing your reservation from business class to economy.\n\nTo get started, I'll need a couple of pieces of information:\n\n1. Your user ID\n2. Your reservation ID\n\nOnce I have those, I can look up your reservation and help you with the downgrade.",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Sure. My user ID is chen_gonzalez_5516, and my reservation ID is SNB279.",
+            "tool_calls": null
+          },
+          {
+            "role": "assistant",
+            "content": null,
+            "tool_calls": [
+              {
+                "arguments": {
+                  "reservation_id": "SNB279"
+                },
+                "id": "chatcmpl-tool-b4ea09826dc40752",
+                "name": "get_reservation_details",
+                "requestor": "assistant"
+              },
+              {
+                "arguments": {
+                  "user_id": "chen_gonzalez_5516"
+                },
+                "id": "chatcmpl-tool-8d1b8a9ae5ef7fd3",
+                "name": "get_user_details",
+                "requestor": "assistant"
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "{\"reservation_id\": \"SNB279\", \"user_id\": \"chen_gonzalez_5516\", \"origin\": \"MIA\", \"destination\": \"SEA\", \"flight_type\": \"one_way\", \"cabin\": \"business\", \"flights\": [{\"flight_number\": \"HAT198\", \"origin\": \"MIA\", \"destination\": \"JFK\", \"date\": \"2024-05-18\", \"price\": 1658}, {\"flight_number\": \"HAT069\", \"origin\": \"JFK\", \"destination\": \"SEA\", \"date\": \"2024-05-18\", \"price\": 993}], \"passengers\": [{\"first_name\": \"Chen\", \"last_name\": \"Gonzalez\", \"dob\": \"1961-08-10\"}], \"payment_history\": [{\"payment_id\": \"credit_card_2870431\", \"amount\": 2651}], \"created_at\": \"2024-05-05T00:25:23\", \"total_baggages\": 0, \"nonfree_baggages\": 0, \"insurance\": \"no\", \"status\": null}",
+            "id": "chatcmpl-tool-b4ea09826dc40752",
+            "error": false
+          },
+          {
+            "role": "tool",
+            "content": "{\"user_id\": \"chen_gonzalez_5516\", \"name\": {\"first_name\": \"Chen\", \"last_name\": \"Gonzalez\"}, \"address\": {\"address1\": \"262 Lakeview Drive\", \"address2\": \"Suite 629\", \"city\": \"Dallas\", \"country\": \"USA\", \"state\": \"TX\", \"zip\": \"75209\"}, \"email\": \"chen.gonzalez3972@example.com\", \"dob\": \"1961-08-10\", \"payment_methods\": {\"credit_card_9588108\": {\"source\": \"credit_card\", \"id\": \"credit_card_9588108\", \"brand\": \"visa\", \"last_four\": \"6589\"}, \"certificate_9371471\": {\"source\": \"certificate\", \"id\": \"certificate_9371471\", \"amount\": 250.0}, \"credit_card_2870431\": {\"source\": \"credit_card\", \"id\": \"credit_card_2870431\", \"brand\": \"visa\", \"last_four\": \"7388\"}, \"credit_card_2191342\": {\"source\": \"credit_card\", \"id\": \"credit_card_2191342\", \"brand\": \"mastercard\", \"last_four\": \"1323\"}, \"credit_card_2231237\": {\"source\": \"credit_card\", \"id\": \"credit_card_2231237\", \"brand\": \"mastercard\", \"last_four\": \"2477\"}, \"credit_card_9615868\": {\"source\": \"credit_card\", \"id\": \"credit_card_9615868\", \"brand\": \"mastercard\", \"last_four\": \"5038\"}}, \"saved_passengers\": [{\"first_name\": \"Mia\", \"last_name\": \"Davis\", \"dob\": \"1951-05-23\"}, {\"first_name\": \"Raj\", \"last_name\": \"Li\", \"dob\": \"1972-04-19\"}], \"membership\": \"regular\", \"reservations\": [\"SNB279\", \"RFIG45\", \"5OY9I3\", \"RDYIPN\"]}",
+            "id": "chatcmpl-tool-8d1b8a9ae5ef7fd3",
+            "error": false
+          },
+          {
+            "role": "assistant",
+            "content": "Thank you for the information, Chen. I found your reservation **SNB279**. Here are the details:\n\n**Current Reservation:**\n- **Route:** MIA → JFK → SEA (May 18, 2024)\n- **Cabin:** Business Class\n- **Passenger:** Chen Gonzalez\n- **Total Paid:** $2,651\n\n**Flights:**\n1. HAT198: MIA → JFK on May 18, 2024 ($1,658)\n2. HAT069: JFK → SEA on May 18, 2024 ($993)\n\nBefore I can proceed with the downgrade, I need to search for the current economy class prices on these same flights to calculate the price difference. Would you like me to do that, and if so, which credit card would you like to use for any potential refund? I see you have the following credit cards on file:\n- Visa ending in 6589\n- Visa ending in 7388\n- Mastercard ending in 1323\n- Mastercard ending in 2477\n- Mastercard ending in 5038",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Yes, please go ahead and calculate the price difference for the economy class upgrade. I understand that I'll receive a refund of the difference to my original payment method. I'm not sure of the exact card number, but I believe it's the one ending in 2870431.",
+            "tool_calls": null
+          },
+          {
+            "role": "assistant",
+            "content": "I'd be happy to calculate the price difference for you. Let me search for the current economy class prices on both flights.\n\n",
+            "tool_calls": [
+              {
+                "arguments": {
+                  "date": "2024-05-18",
+                  "destination": "JFK",
+                  "origin": "MIA"
+                },
+                "id": "chatcmpl-tool-93c2ac364611e7ef",
+                "name": "search_direct_flight",
+                "requestor": "assistant"
+              },
+              {
+                "arguments": {
+                  "date": "2024-05-18",
+                  "destination": "SEA",
+                  "origin": "JFK"
+                },
+                "id": "chatcmpl-tool-bf371563c0586891",
+                "name": "search_direct_flight",
+                "requestor": "assistant"
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "[{\"flight_number\": \"HAT198\", \"origin\": \"MIA\", \"destination\": \"JFK\", \"status\": \"available\", \"scheduled_departure_time_est\": \"02:00:00\", \"scheduled_arrival_time_est\": \"05:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 16, \"economy\": 20, \"business\": 7}, \"prices\": {\"basic_economy\": 84, \"economy\": 181, \"business\": 348}}, {\"flight_number\": \"HAT224\", \"origin\": \"MIA\", \"destination\": \"JFK\", \"status\": \"available\", \"scheduled_departure_time_est\": \"15:00:00\", \"scheduled_arrival_time_est\": \"18:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 15, \"economy\": 9, \"business\": 2}, \"prices\": {\"basic_economy\": 72, \"economy\": 167, \"business\": 222}}, {\"flight_number\": \"HAT292\", \"origin\": \"MIA\", \"destination\": \"JFK\", \"status\": \"available\", \"scheduled_departure_time_est\": \"01:00:00\", \"scheduled_arrival_time_est\": \"04:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 11, \"economy\": 17, \"business\": 11}, \"prices\": {\"basic_economy\": 60, \"economy\": 153, \"business\": 200}}]",
+            "id": "chatcmpl-tool-93c2ac364611e7ef",
+            "error": false
+          },
+          {
+            "role": "tool",
+            "content": "[{\"flight_number\": \"HAT069\", \"origin\": \"JFK\", \"destination\": \"SEA\", \"status\": \"available\", \"scheduled_departure_time_est\": \"06:00:00\", \"scheduled_arrival_time_est\": \"12:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 13, \"economy\": 3, \"business\": 6}, \"prices\": {\"basic_economy\": 90, \"economy\": 139, \"business\": 244}}, {\"flight_number\": \"HAT083\", \"origin\": \"JFK\", \"destination\": \"SEA\", \"status\": \"available\", \"scheduled_departure_time_est\": \"01:00:00\", \"scheduled_arrival_time_est\": \"07:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 12, \"economy\": 1, \"business\": 6}, \"prices\": {\"basic_economy\": 84, \"economy\": 105, \"business\": 338}}]",
+            "id": "chatcmpl-tool-bf371563c0586891",
+            "error": false
+          },
+          {
+            "role": "assistant",
+            "content": "Here's the price breakdown for your downgrade from business class to economy class:\n\n**Flight 1 - HAT198: MIA → JFK**\n- Original Business Class: $1,658\n- Current Economy Class: $181\n- **Difference: -$1,477**\n\n**Flight 2 - HAT069: JFK → SEA**\n- Original Business Class: $993\n- Current Economy Class: $139\n- **Difference: -$854**\n\n**Total Refund: $2,331**\n\nThe refund will be processed to your original payment method (credit card ending in 7388) within 5-7 business days.\n\n**Summary of Change:**\n- Downgrade from Business Class → Economy Class\n- Flights remain the same (HAT198 and HAT069 on May 18, 2024)\n- Total refund: $2,331\n\nWould you like me to proceed with this change? Please confirm with **yes** to proceed.",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Please pause, you mentioned the refund is going to the card ending in 7388? I thought I specified a different card for the refund. I need to use credit_card_2870431 for this refund, not the one you have on file. Can you adjust the refund method before we proceed?",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "real_prefix_counterfactual-04",
+      "kind": "real_prefix_counterfactual",
+      "relation": "separate",
+      "rationale": "更正退款卡并暂停，与接受原卡退款不同。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_1060",
+          "trial": 1,
+          "through_message_index": 13,
+          "prefix_sha256": "cdc9c1b32b69afaad1d80cd1124dd5fbd078712719186cf4fedc20c691a3ce56"
+        },
+        {
+          "modified_last_user_message": true,
+          "observed_trajectory": false
+        }
+      ],
+      "a": {
+        "task_id": "airline_1060",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1060",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, my name is Chen Gonzalez. I’m calling because I’d like to make a change to my upcoming reservation. I currently have a business class ticket, but I’d like to downgrade it to economy to save some money.",
+            "tool_calls": null
+          },
+          {
+            "role": "assistant",
+            "content": "Hello Chen Gonzalez! I'd be happy to help you with changing your reservation from business class to economy.\n\nTo get started, I'll need a couple of pieces of information:\n\n1. Your user ID\n2. Your reservation ID\n\nOnce I have those, I can look up your reservation and help you with the downgrade.",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Sure. My user ID is chen_gonzalez_5516, and my reservation ID is SNB279.",
+            "tool_calls": null
+          },
+          {
+            "role": "assistant",
+            "content": null,
+            "tool_calls": [
+              {
+                "arguments": {
+                  "reservation_id": "SNB279"
+                },
+                "id": "chatcmpl-tool-b4ea09826dc40752",
+                "name": "get_reservation_details",
+                "requestor": "assistant"
+              },
+              {
+                "arguments": {
+                  "user_id": "chen_gonzalez_5516"
+                },
+                "id": "chatcmpl-tool-8d1b8a9ae5ef7fd3",
+                "name": "get_user_details",
+                "requestor": "assistant"
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "{\"reservation_id\": \"SNB279\", \"user_id\": \"chen_gonzalez_5516\", \"origin\": \"MIA\", \"destination\": \"SEA\", \"flight_type\": \"one_way\", \"cabin\": \"business\", \"flights\": [{\"flight_number\": \"HAT198\", \"origin\": \"MIA\", \"destination\": \"JFK\", \"date\": \"2024-05-18\", \"price\": 1658}, {\"flight_number\": \"HAT069\", \"origin\": \"JFK\", \"destination\": \"SEA\", \"date\": \"2024-05-18\", \"price\": 993}], \"passengers\": [{\"first_name\": \"Chen\", \"last_name\": \"Gonzalez\", \"dob\": \"1961-08-10\"}], \"payment_history\": [{\"payment_id\": \"credit_card_2870431\", \"amount\": 2651}], \"created_at\": \"2024-05-05T00:25:23\", \"total_baggages\": 0, \"nonfree_baggages\": 0, \"insurance\": \"no\", \"status\": null}",
+            "id": "chatcmpl-tool-b4ea09826dc40752",
+            "error": false
+          },
+          {
+            "role": "tool",
+            "content": "{\"user_id\": \"chen_gonzalez_5516\", \"name\": {\"first_name\": \"Chen\", \"last_name\": \"Gonzalez\"}, \"address\": {\"address1\": \"262 Lakeview Drive\", \"address2\": \"Suite 629\", \"city\": \"Dallas\", \"country\": \"USA\", \"state\": \"TX\", \"zip\": \"75209\"}, \"email\": \"chen.gonzalez3972@example.com\", \"dob\": \"1961-08-10\", \"payment_methods\": {\"credit_card_9588108\": {\"source\": \"credit_card\", \"id\": \"credit_card_9588108\", \"brand\": \"visa\", \"last_four\": \"6589\"}, \"certificate_9371471\": {\"source\": \"certificate\", \"id\": \"certificate_9371471\", \"amount\": 250.0}, \"credit_card_2870431\": {\"source\": \"credit_card\", \"id\": \"credit_card_2870431\", \"brand\": \"visa\", \"last_four\": \"7388\"}, \"credit_card_2191342\": {\"source\": \"credit_card\", \"id\": \"credit_card_2191342\", \"brand\": \"mastercard\", \"last_four\": \"1323\"}, \"credit_card_2231237\": {\"source\": \"credit_card\", \"id\": \"credit_card_2231237\", \"brand\": \"mastercard\", \"last_four\": \"2477\"}, \"credit_card_9615868\": {\"source\": \"credit_card\", \"id\": \"credit_card_9615868\", \"brand\": \"mastercard\", \"last_four\": \"5038\"}}, \"saved_passengers\": [{\"first_name\": \"Mia\", \"last_name\": \"Davis\", \"dob\": \"1951-05-23\"}, {\"first_name\": \"Raj\", \"last_name\": \"Li\", \"dob\": \"1972-04-19\"}], \"membership\": \"regular\", \"reservations\": [\"SNB279\", \"RFIG45\", \"5OY9I3\", \"RDYIPN\"]}",
+            "id": "chatcmpl-tool-8d1b8a9ae5ef7fd3",
+            "error": false
+          },
+          {
+            "role": "assistant",
+            "content": "Thank you for the information, Chen. I found your reservation **SNB279**. Here are the details:\n\n**Current Reservation:**\n- **Route:** MIA → JFK → SEA (May 18, 2024)\n- **Cabin:** Business Class\n- **Passenger:** Chen Gonzalez\n- **Total Paid:** $2,651\n\n**Flights:**\n1. HAT198: MIA → JFK on May 18, 2024 ($1,658)\n2. HAT069: JFK → SEA on May 18, 2024 ($993)\n\nBefore I can proceed with the downgrade, I need to search for the current economy class prices on these same flights to calculate the price difference. Would you like me to do that, and if so, which credit card would you like to use for any potential refund? I see you have the following credit cards on file:\n- Visa ending in 6589\n- Visa ending in 7388\n- Mastercard ending in 1323\n- Mastercard ending in 2477\n- Mastercard ending in 5038",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Yes, please go ahead and calculate the price difference for the economy class upgrade. I understand that I'll receive a refund of the difference to my original payment method. I'm not sure of the exact card number, but I believe it's the one ending in 2870431.",
+            "tool_calls": null
+          },
+          {
+            "role": "assistant",
+            "content": "I'd be happy to calculate the price difference for you. Let me search for the current economy class prices on both flights.\n\n",
+            "tool_calls": [
+              {
+                "arguments": {
+                  "date": "2024-05-18",
+                  "destination": "JFK",
+                  "origin": "MIA"
+                },
+                "id": "chatcmpl-tool-93c2ac364611e7ef",
+                "name": "search_direct_flight",
+                "requestor": "assistant"
+              },
+              {
+                "arguments": {
+                  "date": "2024-05-18",
+                  "destination": "SEA",
+                  "origin": "JFK"
+                },
+                "id": "chatcmpl-tool-bf371563c0586891",
+                "name": "search_direct_flight",
+                "requestor": "assistant"
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "[{\"flight_number\": \"HAT198\", \"origin\": \"MIA\", \"destination\": \"JFK\", \"status\": \"available\", \"scheduled_departure_time_est\": \"02:00:00\", \"scheduled_arrival_time_est\": \"05:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 16, \"economy\": 20, \"business\": 7}, \"prices\": {\"basic_economy\": 84, \"economy\": 181, \"business\": 348}}, {\"flight_number\": \"HAT224\", \"origin\": \"MIA\", \"destination\": \"JFK\", \"status\": \"available\", \"scheduled_departure_time_est\": \"15:00:00\", \"scheduled_arrival_time_est\": \"18:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 15, \"economy\": 9, \"business\": 2}, \"prices\": {\"basic_economy\": 72, \"economy\": 167, \"business\": 222}}, {\"flight_number\": \"HAT292\", \"origin\": \"MIA\", \"destination\": \"JFK\", \"status\": \"available\", \"scheduled_departure_time_est\": \"01:00:00\", \"scheduled_arrival_time_est\": \"04:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 11, \"economy\": 17, \"business\": 11}, \"prices\": {\"basic_economy\": 60, \"economy\": 153, \"business\": 200}}]",
+            "id": "chatcmpl-tool-93c2ac364611e7ef",
+            "error": false
+          },
+          {
+            "role": "tool",
+            "content": "[{\"flight_number\": \"HAT069\", \"origin\": \"JFK\", \"destination\": \"SEA\", \"status\": \"available\", \"scheduled_departure_time_est\": \"06:00:00\", \"scheduled_arrival_time_est\": \"12:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 13, \"economy\": 3, \"business\": 6}, \"prices\": {\"basic_economy\": 90, \"economy\": 139, \"business\": 244}}, {\"flight_number\": \"HAT083\", \"origin\": \"JFK\", \"destination\": \"SEA\", \"status\": \"available\", \"scheduled_departure_time_est\": \"01:00:00\", \"scheduled_arrival_time_est\": \"07:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 12, \"economy\": 1, \"business\": 6}, \"prices\": {\"basic_economy\": 84, \"economy\": 105, \"business\": 338}}]",
+            "id": "chatcmpl-tool-bf371563c0586891",
+            "error": false
+          },
+          {
+            "role": "assistant",
+            "content": "Here's the price breakdown for your downgrade from business class to economy class:\n\n**Flight 1 - HAT198: MIA → JFK**\n- Original Business Class: $1,658\n- Current Economy Class: $181\n- **Difference: -$1,477**\n\n**Flight 2 - HAT069: JFK → SEA**\n- Original Business Class: $993\n- Current Economy Class: $139\n- **Difference: -$854**\n\n**Total Refund: $2,331**\n\nThe refund will be processed to your original payment method (credit card ending in 7388) within 5-7 business days.\n\n**Summary of Change:**\n- Downgrade from Business Class → Economy Class\n- Flights remain the same (HAT198 and HAT069 on May 18, 2024)\n- Total refund: $2,331\n\nWould you like me to proceed with this change? Please confirm with **yes** to proceed.",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Wait, you mentioned the refund is going to the card ending in 7388? I thought I specified a different card for the refund. I need to use credit_card_2870431 for this refund, not the one you have on file. Can you adjust the refund method before we proceed?",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_1060",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1060",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi, my name is Chen Gonzalez. I’m calling because I’d like to make a change to my upcoming reservation. I currently have a business class ticket, but I’d like to downgrade it to economy to save some money.",
+            "tool_calls": null
+          },
+          {
+            "role": "assistant",
+            "content": "Hello Chen Gonzalez! I'd be happy to help you with changing your reservation from business class to economy.\n\nTo get started, I'll need a couple of pieces of information:\n\n1. Your user ID\n2. Your reservation ID\n\nOnce I have those, I can look up your reservation and help you with the downgrade.",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Sure. My user ID is chen_gonzalez_5516, and my reservation ID is SNB279.",
+            "tool_calls": null
+          },
+          {
+            "role": "assistant",
+            "content": null,
+            "tool_calls": [
+              {
+                "arguments": {
+                  "reservation_id": "SNB279"
+                },
+                "id": "chatcmpl-tool-b4ea09826dc40752",
+                "name": "get_reservation_details",
+                "requestor": "assistant"
+              },
+              {
+                "arguments": {
+                  "user_id": "chen_gonzalez_5516"
+                },
+                "id": "chatcmpl-tool-8d1b8a9ae5ef7fd3",
+                "name": "get_user_details",
+                "requestor": "assistant"
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "{\"reservation_id\": \"SNB279\", \"user_id\": \"chen_gonzalez_5516\", \"origin\": \"MIA\", \"destination\": \"SEA\", \"flight_type\": \"one_way\", \"cabin\": \"business\", \"flights\": [{\"flight_number\": \"HAT198\", \"origin\": \"MIA\", \"destination\": \"JFK\", \"date\": \"2024-05-18\", \"price\": 1658}, {\"flight_number\": \"HAT069\", \"origin\": \"JFK\", \"destination\": \"SEA\", \"date\": \"2024-05-18\", \"price\": 993}], \"passengers\": [{\"first_name\": \"Chen\", \"last_name\": \"Gonzalez\", \"dob\": \"1961-08-10\"}], \"payment_history\": [{\"payment_id\": \"credit_card_2870431\", \"amount\": 2651}], \"created_at\": \"2024-05-05T00:25:23\", \"total_baggages\": 0, \"nonfree_baggages\": 0, \"insurance\": \"no\", \"status\": null}",
+            "id": "chatcmpl-tool-b4ea09826dc40752",
+            "error": false
+          },
+          {
+            "role": "tool",
+            "content": "{\"user_id\": \"chen_gonzalez_5516\", \"name\": {\"first_name\": \"Chen\", \"last_name\": \"Gonzalez\"}, \"address\": {\"address1\": \"262 Lakeview Drive\", \"address2\": \"Suite 629\", \"city\": \"Dallas\", \"country\": \"USA\", \"state\": \"TX\", \"zip\": \"75209\"}, \"email\": \"chen.gonzalez3972@example.com\", \"dob\": \"1961-08-10\", \"payment_methods\": {\"credit_card_9588108\": {\"source\": \"credit_card\", \"id\": \"credit_card_9588108\", \"brand\": \"visa\", \"last_four\": \"6589\"}, \"certificate_9371471\": {\"source\": \"certificate\", \"id\": \"certificate_9371471\", \"amount\": 250.0}, \"credit_card_2870431\": {\"source\": \"credit_card\", \"id\": \"credit_card_2870431\", \"brand\": \"visa\", \"last_four\": \"7388\"}, \"credit_card_2191342\": {\"source\": \"credit_card\", \"id\": \"credit_card_2191342\", \"brand\": \"mastercard\", \"last_four\": \"1323\"}, \"credit_card_2231237\": {\"source\": \"credit_card\", \"id\": \"credit_card_2231237\", \"brand\": \"mastercard\", \"last_four\": \"2477\"}, \"credit_card_9615868\": {\"source\": \"credit_card\", \"id\": \"credit_card_9615868\", \"brand\": \"mastercard\", \"last_four\": \"5038\"}}, \"saved_passengers\": [{\"first_name\": \"Mia\", \"last_name\": \"Davis\", \"dob\": \"1951-05-23\"}, {\"first_name\": \"Raj\", \"last_name\": \"Li\", \"dob\": \"1972-04-19\"}], \"membership\": \"regular\", \"reservations\": [\"SNB279\", \"RFIG45\", \"5OY9I3\", \"RDYIPN\"]}",
+            "id": "chatcmpl-tool-8d1b8a9ae5ef7fd3",
+            "error": false
+          },
+          {
+            "role": "assistant",
+            "content": "Thank you for the information, Chen. I found your reservation **SNB279**. Here are the details:\n\n**Current Reservation:**\n- **Route:** MIA → JFK → SEA (May 18, 2024)\n- **Cabin:** Business Class\n- **Passenger:** Chen Gonzalez\n- **Total Paid:** $2,651\n\n**Flights:**\n1. HAT198: MIA → JFK on May 18, 2024 ($1,658)\n2. HAT069: JFK → SEA on May 18, 2024 ($993)\n\nBefore I can proceed with the downgrade, I need to search for the current economy class prices on these same flights to calculate the price difference. Would you like me to do that, and if so, which credit card would you like to use for any potential refund? I see you have the following credit cards on file:\n- Visa ending in 6589\n- Visa ending in 7388\n- Mastercard ending in 1323\n- Mastercard ending in 2477\n- Mastercard ending in 5038",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Yes, please go ahead and calculate the price difference for the economy class upgrade. I understand that I'll receive a refund of the difference to my original payment method. I'm not sure of the exact card number, but I believe it's the one ending in 2870431.",
+            "tool_calls": null
+          },
+          {
+            "role": "assistant",
+            "content": "I'd be happy to calculate the price difference for you. Let me search for the current economy class prices on both flights.\n\n",
+            "tool_calls": [
+              {
+                "arguments": {
+                  "date": "2024-05-18",
+                  "destination": "JFK",
+                  "origin": "MIA"
+                },
+                "id": "chatcmpl-tool-93c2ac364611e7ef",
+                "name": "search_direct_flight",
+                "requestor": "assistant"
+              },
+              {
+                "arguments": {
+                  "date": "2024-05-18",
+                  "destination": "SEA",
+                  "origin": "JFK"
+                },
+                "id": "chatcmpl-tool-bf371563c0586891",
+                "name": "search_direct_flight",
+                "requestor": "assistant"
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "[{\"flight_number\": \"HAT198\", \"origin\": \"MIA\", \"destination\": \"JFK\", \"status\": \"available\", \"scheduled_departure_time_est\": \"02:00:00\", \"scheduled_arrival_time_est\": \"05:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 16, \"economy\": 20, \"business\": 7}, \"prices\": {\"basic_economy\": 84, \"economy\": 181, \"business\": 348}}, {\"flight_number\": \"HAT224\", \"origin\": \"MIA\", \"destination\": \"JFK\", \"status\": \"available\", \"scheduled_departure_time_est\": \"15:00:00\", \"scheduled_arrival_time_est\": \"18:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 15, \"economy\": 9, \"business\": 2}, \"prices\": {\"basic_economy\": 72, \"economy\": 167, \"business\": 222}}, {\"flight_number\": \"HAT292\", \"origin\": \"MIA\", \"destination\": \"JFK\", \"status\": \"available\", \"scheduled_departure_time_est\": \"01:00:00\", \"scheduled_arrival_time_est\": \"04:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 11, \"economy\": 17, \"business\": 11}, \"prices\": {\"basic_economy\": 60, \"economy\": 153, \"business\": 200}}]",
+            "id": "chatcmpl-tool-93c2ac364611e7ef",
+            "error": false
+          },
+          {
+            "role": "tool",
+            "content": "[{\"flight_number\": \"HAT069\", \"origin\": \"JFK\", \"destination\": \"SEA\", \"status\": \"available\", \"scheduled_departure_time_est\": \"06:00:00\", \"scheduled_arrival_time_est\": \"12:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 13, \"economy\": 3, \"business\": 6}, \"prices\": {\"basic_economy\": 90, \"economy\": 139, \"business\": 244}}, {\"flight_number\": \"HAT083\", \"origin\": \"JFK\", \"destination\": \"SEA\", \"status\": \"available\", \"scheduled_departure_time_est\": \"01:00:00\", \"scheduled_arrival_time_est\": \"07:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 12, \"economy\": 1, \"business\": 6}, \"prices\": {\"basic_economy\": 84, \"economy\": 105, \"business\": 338}}]",
+            "id": "chatcmpl-tool-bf371563c0586891",
+            "error": false
+          },
+          {
+            "role": "assistant",
+            "content": "Here's the price breakdown for your downgrade from business class to economy class:\n\n**Flight 1 - HAT198: MIA → JFK**\n- Original Business Class: $1,658\n- Current Economy Class: $181\n- **Difference: -$1,477**\n\n**Flight 2 - HAT069: JFK → SEA**\n- Original Business Class: $993\n- Current Economy Class: $139\n- **Difference: -$854**\n\n**Total Refund: $2,331**\n\nThe refund will be processed to your original payment method (credit card ending in 7388) within 5-7 business days.\n\n**Summary of Change:**\n- Downgrade from Business Class → Economy Class\n- Flights remain the same (HAT198 and HAT069 on May 18, 2024)\n- Total refund: $2,331\n\nWould you like me to proceed with this change? Please confirm with **yes** to proceed.",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Yes, proceed with the downgrade and refund to the original card ending in 7388.",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "real_prefix_counterfactual-05",
+      "kind": "real_prefix_counterfactual",
+      "relation": "merge",
+      "rationale": "仅将 Hold on a second 换为 Please wait a moment，全部身份、行李及付款条件原样保留。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_1106",
+          "trial": 2,
+          "through_message_index": 12,
+          "prefix_sha256": "40cd2a1bf4df0784e39bcaab43db0147831393dce80101b79d4b4e8e85a43571"
+        },
+        {
+          "modified_last_user_message": true,
+          "observed_trajectory": false
+        }
+      ],
+      "a": {
+        "task_id": "airline_1106",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1106",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi there. I need to change the flight date on my reservation HKEG34 and add 2 checked bags to it. Could you please pull up the full details of that reservation for me first?",
+            "tool_calls": null
+          },
+          {
+            "role": "assistant",
+            "content": "I'd be happy to help you with your reservation. Let me pull up the details for reservation HKEG34.\n\n",
+            "tool_calls": [
+              {
+                "arguments": {
+                  "reservation_id": "HKEG34"
+                },
+                "id": "chatcmpl-tool-af6cebd747c5aaca",
+                "name": "get_reservation_details",
+                "requestor": "assistant"
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "{\"reservation_id\": \"HKEG34\", \"user_id\": \"mia_li_3668\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"flight_type\": \"one_way\", \"cabin\": \"business\", \"flights\": [{\"flight_number\": \"HAT290\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"date\": \"2024-05-27\", \"price\": 1395}], \"passengers\": [{\"first_name\": \"Amelia\", \"last_name\": \"Ahmed\", \"dob\": \"1957-03-21\"}], \"payment_history\": [{\"payment_id\": \"credit_card_1955700\", \"amount\": 1395}], \"created_at\": \"2024-05-09T17:50:39\", \"total_baggages\": 0, \"nonfree_baggages\": 0, \"insurance\": \"no\", \"status\": null}",
+            "id": "chatcmpl-tool-af6cebd747c5aaca",
+            "error": false
+          },
+          {
+            "role": "assistant",
+            "content": "Here are the details for your reservation **HKEG34**:\n\n| Detail | Information |\n|--------|-------------|\n| **Reservation ID** | HKEG34 |\n| **Trip Type** | One-way |\n| **Route** | Denver (DEN) → Las Vegas (LAS) |\n| **Flight** | HAT290 on May 27, 2024 |\n| **Cabin** | Business |\n| **Passenger** | Amelia Ahmed |\n| **Current Baggage** | 0 checked bags |\n| **Travel Insurance** | No |\n| **Total Paid** | $1,395 |\n\n---\n\nRegarding your requests:\n\n1. **Adding 2 checked bags**: As a gold member flying business class, you're entitled to **2 free checked bags** per passenger. So adding 2 bags would cost you **$0**.\n\n2. **Changing the flight date**: I'd be happy to help with that. Would you like to see available flights on a different date? Please let me know:\n   - Which date you'd like to change to\n   - Whether you want to search for direct flights or one-stop options\n\nAlso, please note that if flights are changed, you'll need to provide a payment method (credit card or gift card) for any potential price difference.",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Thank you for pulling that up. I see the current flight is on May 27, but I’m actually looking to move it to an earlier date. I’d like to compare the best available premium direct flight options from Denver to Las Vegas on **May 16** and **May 18**.\n\nCould you show me the premium business class direct flights on those two dates? I want the best service available, so price isn’t really a concern—I’m looking for the highest quality option on those dates.",
+            "tool_calls": null
+          },
+          {
+            "role": "assistant",
+            "content": "I'd be happy to search for direct business class flights from Denver (DEN) to Las Vegas (LAS) on both May 16 and May 18, 2024.\n\n",
+            "tool_calls": [
+              {
+                "arguments": {
+                  "date": "2024-05-16",
+                  "destination": "LAS",
+                  "origin": "DEN"
+                },
+                "id": "chatcmpl-tool-996734092613d4c3",
+                "name": "search_direct_flight",
+                "requestor": "assistant"
+              },
+              {
+                "arguments": {
+                  "date": "2024-05-18",
+                  "destination": "LAS",
+                  "origin": "DEN"
+                },
+                "id": "chatcmpl-tool-b8d28f6eda63f501",
+                "name": "search_direct_flight",
+                "requestor": "assistant"
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "[{\"flight_number\": \"HAT084\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"04:00:00\", \"scheduled_arrival_time_est\": \"06:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 6, \"economy\": 2, \"business\": 14}, \"prices\": {\"basic_economy\": 85, \"economy\": 108, \"business\": 252}}, {\"flight_number\": \"HAT229\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"11:00:00\", \"scheduled_arrival_time_est\": \"13:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 16, \"economy\": 3, \"business\": 11}, \"prices\": {\"basic_economy\": 72, \"economy\": 192, \"business\": 405}}, {\"flight_number\": \"HAT290\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"14:00:00\", \"scheduled_arrival_time_est\": \"16:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 15, \"economy\": 7, \"business\": 0}, \"prices\": {\"basic_economy\": 53, \"economy\": 149, \"business\": 341}}]",
+            "id": "chatcmpl-tool-996734092613d4c3",
+            "error": false
+          },
+          {
+            "role": "tool",
+            "content": "[{\"flight_number\": \"HAT084\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"04:00:00\", \"scheduled_arrival_time_est\": \"06:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 19, \"economy\": 1, \"business\": 8}, \"prices\": {\"basic_economy\": 53, \"economy\": 113, \"business\": 264}}, {\"flight_number\": \"HAT229\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"11:00:00\", \"scheduled_arrival_time_est\": \"13:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 11, \"economy\": 19, \"business\": 8}, \"prices\": {\"basic_economy\": 52, \"economy\": 125, \"business\": 254}}, {\"flight_number\": \"HAT290\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"14:00:00\", \"scheduled_arrival_time_est\": \"16:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 4, \"economy\": 8, \"business\": 3}, \"prices\": {\"basic_economy\": 56, \"economy\": 150, \"business\": 293}}]",
+            "id": "chatcmpl-tool-b8d28f6eda63f501",
+            "error": false
+          },
+          {
+            "role": "assistant",
+            "content": "Here are the available direct business class flights from Denver (DEN) to Las Vegas (LAS) on both dates:\n\n---\n\n## **May 16, 2024**\n\n| Flight | Departure | Arrival | Business Seats | Price |\n|--------|-----------|---------|----------------|-------|\n| **HAT084** | 4:00 AM | 6:00 AM | 14 | $252 |\n| **HAT229** | 11:00 AM | 1:00 PM | 11 | $405 |\n| **HAT290** | 2:00 PM | 4:00 PM | 0 | $341 |\n\n---\n\n## **May 18, 2024**\n\n| Flight | Departure | Arrival | Business Seats | Price |\n|--------|-----------|---------|----------------|-------|\n| **HAT084** | 4:00 AM | 6:00 AM | 8 | $264 |\n| **HAT229** | 11:00 AM | 1:00 PM | 8 | $254 |\n| **HAT290** | 2:00 PM | 4:00 PM | 3 | $293 |\n\n---\n\n### **Summary of Your Current Reservation**\n- **Current Flight**: HAT290 on May 27, departing at 2:00 PM\n- **Current Price**: $1,395 (note: this appears to be a special rate)\n\n### **Important Notes**\n1. **Flight HAT290** is available on both dates, but with limited business class seats (0 on May 16, 3 on May 18).\n2. If you choose a different flight, the price will be based on the current fare shown above.\n3. If the new price is lower than your original, you'll receive a refund. If higher, you'll pay the difference.\n\nWhich flight would you like to switch to? Also, please let me know which payment method you'd like to use for any price adjustment (credit card or gift card from your profile).",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Thank you for those details. I want the best available premium direct option between those two dates, so I’m looking for the highest quality flight experience.\n\nI’ll choose **HAT229 on May 18** as it’s the highest-priced business class option with available seats, which aligns with my preference for premium service.\n\nBefore I proceed, could you please give me a clear calculation of the total cost? Specifically:\n1. What is the price difference for changing from my current May 27 reservation to HAT229 on May 18?\n2. What is the cost for adding 2 checked bags? (You mentioned they are free as a Gold member, but please confirm the total added cost for both the date change and the bags combined.)\n\nI want to make sure I know the exact total I’m approving before I confirm the payment.",
+            "tool_calls": null
+          },
+          {
+            "role": "assistant",
+            "content": "Here's the complete cost breakdown for your reservation change:\n\n---\n\n## **Cost Breakdown**\n\n### 1. **Flight Change (May 27 → May 18)**\n| Item | Details |\n|------|---------|\n| Current Flight | HAT290 on May 27 - **$1,395** |\n| New Flight | HAT229 on May 18 - **$254** |\n| **Price Difference** | **-$1,141** (refund to you) |\n\n### 2. **Baggage Addition**\n| Item | Details |\n|------|---------|\n| Bags Added | 2 checked bags |\n| Free Allowance (Gold + Business) | 2 free bags per passenger |\n| **Baggage Cost** | **$0** |\n\n---\n\n## **Total Cost Summary**\n\n| Description | Amount |\n|-------------|--------|\n| Flight Change | -$1,141 (refund) |\n| Baggage | $0 |\n| **Net Cost** | **-$1,141** |\n\n---\n\n### **What This Means**\n- You will receive a **refund of $1,141** to your original payment method (credit card ending in 00).\n- The refund will be processed within **5-7 business days**.\n- No additional charge for the 2 checked bags.\n\n---\n\n### **Payment Method for Refund**\nThe refund will go to your original payment method: **Credit Card ending in 00** (credit_card_1955700).\n\n---\n\n**Would you like to proceed with this change? Please confirm with \"yes\" to proceed.**",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hold on a second. I’m a little confused by the refund amount and the payment method details here.\n\nFirst, my original flight was $1,395, and the new flight is $254. That math looks correct for a $1,141 difference, but I expected to be *paying* for a premium upgrade or change, not receiving a large refund. Also, you mentioned the refund is going to a card ending in \"00,\" but I want to make sure we’re aligned on the account.\n\nI’m Mia Li, user ID **mia_li_3668**. I want to ensure this reservation is correctly linked to me and that any payments or refunds are processed against my primary card, which is **credit_card_4421486** (Visa ending in 7447).\n\nCan you verify the passenger name on the reservation matches \"Mia Li\"? The details you pulled up earlier said \"Amelia Ahmed,\" which is not me. If that’s the case, we need to correct that before proceeding.\n\nAlso, regarding the 2 checked bags: even if they are free, please confirm they are explicitly added to the reservation for May 18.\n\nOnce you confirm the passenger name is corrected to Mia Li and the 2 bags are added, I’ll approve the change and have the refund (or any net adjustment) processed via **credit_card_4421486**.",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_1106",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1106",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi there. I need to change the flight date on my reservation HKEG34 and add 2 checked bags to it. Could you please pull up the full details of that reservation for me first?",
+            "tool_calls": null
+          },
+          {
+            "role": "assistant",
+            "content": "I'd be happy to help you with your reservation. Let me pull up the details for reservation HKEG34.\n\n",
+            "tool_calls": [
+              {
+                "arguments": {
+                  "reservation_id": "HKEG34"
+                },
+                "id": "chatcmpl-tool-af6cebd747c5aaca",
+                "name": "get_reservation_details",
+                "requestor": "assistant"
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "{\"reservation_id\": \"HKEG34\", \"user_id\": \"mia_li_3668\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"flight_type\": \"one_way\", \"cabin\": \"business\", \"flights\": [{\"flight_number\": \"HAT290\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"date\": \"2024-05-27\", \"price\": 1395}], \"passengers\": [{\"first_name\": \"Amelia\", \"last_name\": \"Ahmed\", \"dob\": \"1957-03-21\"}], \"payment_history\": [{\"payment_id\": \"credit_card_1955700\", \"amount\": 1395}], \"created_at\": \"2024-05-09T17:50:39\", \"total_baggages\": 0, \"nonfree_baggages\": 0, \"insurance\": \"no\", \"status\": null}",
+            "id": "chatcmpl-tool-af6cebd747c5aaca",
+            "error": false
+          },
+          {
+            "role": "assistant",
+            "content": "Here are the details for your reservation **HKEG34**:\n\n| Detail | Information |\n|--------|-------------|\n| **Reservation ID** | HKEG34 |\n| **Trip Type** | One-way |\n| **Route** | Denver (DEN) → Las Vegas (LAS) |\n| **Flight** | HAT290 on May 27, 2024 |\n| **Cabin** | Business |\n| **Passenger** | Amelia Ahmed |\n| **Current Baggage** | 0 checked bags |\n| **Travel Insurance** | No |\n| **Total Paid** | $1,395 |\n\n---\n\nRegarding your requests:\n\n1. **Adding 2 checked bags**: As a gold member flying business class, you're entitled to **2 free checked bags** per passenger. So adding 2 bags would cost you **$0**.\n\n2. **Changing the flight date**: I'd be happy to help with that. Would you like to see available flights on a different date? Please let me know:\n   - Which date you'd like to change to\n   - Whether you want to search for direct flights or one-stop options\n\nAlso, please note that if flights are changed, you'll need to provide a payment method (credit card or gift card) for any potential price difference.",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Thank you for pulling that up. I see the current flight is on May 27, but I’m actually looking to move it to an earlier date. I’d like to compare the best available premium direct flight options from Denver to Las Vegas on **May 16** and **May 18**.\n\nCould you show me the premium business class direct flights on those two dates? I want the best service available, so price isn’t really a concern—I’m looking for the highest quality option on those dates.",
+            "tool_calls": null
+          },
+          {
+            "role": "assistant",
+            "content": "I'd be happy to search for direct business class flights from Denver (DEN) to Las Vegas (LAS) on both May 16 and May 18, 2024.\n\n",
+            "tool_calls": [
+              {
+                "arguments": {
+                  "date": "2024-05-16",
+                  "destination": "LAS",
+                  "origin": "DEN"
+                },
+                "id": "chatcmpl-tool-996734092613d4c3",
+                "name": "search_direct_flight",
+                "requestor": "assistant"
+              },
+              {
+                "arguments": {
+                  "date": "2024-05-18",
+                  "destination": "LAS",
+                  "origin": "DEN"
+                },
+                "id": "chatcmpl-tool-b8d28f6eda63f501",
+                "name": "search_direct_flight",
+                "requestor": "assistant"
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "[{\"flight_number\": \"HAT084\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"04:00:00\", \"scheduled_arrival_time_est\": \"06:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 6, \"economy\": 2, \"business\": 14}, \"prices\": {\"basic_economy\": 85, \"economy\": 108, \"business\": 252}}, {\"flight_number\": \"HAT229\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"11:00:00\", \"scheduled_arrival_time_est\": \"13:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 16, \"economy\": 3, \"business\": 11}, \"prices\": {\"basic_economy\": 72, \"economy\": 192, \"business\": 405}}, {\"flight_number\": \"HAT290\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"14:00:00\", \"scheduled_arrival_time_est\": \"16:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 15, \"economy\": 7, \"business\": 0}, \"prices\": {\"basic_economy\": 53, \"economy\": 149, \"business\": 341}}]",
+            "id": "chatcmpl-tool-996734092613d4c3",
+            "error": false
+          },
+          {
+            "role": "tool",
+            "content": "[{\"flight_number\": \"HAT084\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"04:00:00\", \"scheduled_arrival_time_est\": \"06:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 19, \"economy\": 1, \"business\": 8}, \"prices\": {\"basic_economy\": 53, \"economy\": 113, \"business\": 264}}, {\"flight_number\": \"HAT229\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"11:00:00\", \"scheduled_arrival_time_est\": \"13:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 11, \"economy\": 19, \"business\": 8}, \"prices\": {\"basic_economy\": 52, \"economy\": 125, \"business\": 254}}, {\"flight_number\": \"HAT290\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"14:00:00\", \"scheduled_arrival_time_est\": \"16:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 4, \"economy\": 8, \"business\": 3}, \"prices\": {\"basic_economy\": 56, \"economy\": 150, \"business\": 293}}]",
+            "id": "chatcmpl-tool-b8d28f6eda63f501",
+            "error": false
+          },
+          {
+            "role": "assistant",
+            "content": "Here are the available direct business class flights from Denver (DEN) to Las Vegas (LAS) on both dates:\n\n---\n\n## **May 16, 2024**\n\n| Flight | Departure | Arrival | Business Seats | Price |\n|--------|-----------|---------|----------------|-------|\n| **HAT084** | 4:00 AM | 6:00 AM | 14 | $252 |\n| **HAT229** | 11:00 AM | 1:00 PM | 11 | $405 |\n| **HAT290** | 2:00 PM | 4:00 PM | 0 | $341 |\n\n---\n\n## **May 18, 2024**\n\n| Flight | Departure | Arrival | Business Seats | Price |\n|--------|-----------|---------|----------------|-------|\n| **HAT084** | 4:00 AM | 6:00 AM | 8 | $264 |\n| **HAT229** | 11:00 AM | 1:00 PM | 8 | $254 |\n| **HAT290** | 2:00 PM | 4:00 PM | 3 | $293 |\n\n---\n\n### **Summary of Your Current Reservation**\n- **Current Flight**: HAT290 on May 27, departing at 2:00 PM\n- **Current Price**: $1,395 (note: this appears to be a special rate)\n\n### **Important Notes**\n1. **Flight HAT290** is available on both dates, but with limited business class seats (0 on May 16, 3 on May 18).\n2. If you choose a different flight, the price will be based on the current fare shown above.\n3. If the new price is lower than your original, you'll receive a refund. If higher, you'll pay the difference.\n\nWhich flight would you like to switch to? Also, please let me know which payment method you'd like to use for any price adjustment (credit card or gift card from your profile).",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Thank you for those details. I want the best available premium direct option between those two dates, so I’m looking for the highest quality flight experience.\n\nI’ll choose **HAT229 on May 18** as it’s the highest-priced business class option with available seats, which aligns with my preference for premium service.\n\nBefore I proceed, could you please give me a clear calculation of the total cost? Specifically:\n1. What is the price difference for changing from my current May 27 reservation to HAT229 on May 18?\n2. What is the cost for adding 2 checked bags? (You mentioned they are free as a Gold member, but please confirm the total added cost for both the date change and the bags combined.)\n\nI want to make sure I know the exact total I’m approving before I confirm the payment.",
+            "tool_calls": null
+          },
+          {
+            "role": "assistant",
+            "content": "Here's the complete cost breakdown for your reservation change:\n\n---\n\n## **Cost Breakdown**\n\n### 1. **Flight Change (May 27 → May 18)**\n| Item | Details |\n|------|---------|\n| Current Flight | HAT290 on May 27 - **$1,395** |\n| New Flight | HAT229 on May 18 - **$254** |\n| **Price Difference** | **-$1,141** (refund to you) |\n\n### 2. **Baggage Addition**\n| Item | Details |\n|------|---------|\n| Bags Added | 2 checked bags |\n| Free Allowance (Gold + Business) | 2 free bags per passenger |\n| **Baggage Cost** | **$0** |\n\n---\n\n## **Total Cost Summary**\n\n| Description | Amount |\n|-------------|--------|\n| Flight Change | -$1,141 (refund) |\n| Baggage | $0 |\n| **Net Cost** | **-$1,141** |\n\n---\n\n### **What This Means**\n- You will receive a **refund of $1,141** to your original payment method (credit card ending in 00).\n- The refund will be processed within **5-7 business days**.\n- No additional charge for the 2 checked bags.\n\n---\n\n### **Payment Method for Refund**\nThe refund will go to your original payment method: **Credit Card ending in 00** (credit_card_1955700).\n\n---\n\n**Would you like to proceed with this change? Please confirm with \"yes\" to proceed.**",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Please wait a moment. I’m a little confused by the refund amount and the payment method details here.\n\nFirst, my original flight was $1,395, and the new flight is $254. That math looks correct for a $1,141 difference, but I expected to be *paying* for a premium upgrade or change, not receiving a large refund. Also, you mentioned the refund is going to a card ending in \"00,\" but I want to make sure we’re aligned on the account.\n\nI’m Mia Li, user ID **mia_li_3668**. I want to ensure this reservation is correctly linked to me and that any payments or refunds are processed against my primary card, which is **credit_card_4421486** (Visa ending in 7447).\n\nCan you verify the passenger name on the reservation matches \"Mia Li\"? The details you pulled up earlier said \"Amelia Ahmed,\" which is not me. If that’s the case, we need to correct that before proceeding.\n\nAlso, regarding the 2 checked bags: even if they are free, please confirm they are explicitly added to the reservation for May 18.\n\nOnce you confirm the passenger name is corrected to Mia Li and the 2 bags are added, I’ll approve the change and have the refund (or any net adjustment) processed via **credit_card_4421486**.",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "real_prefix_counterfactual-06",
+      "kind": "real_prefix_counterfactual",
+      "relation": "separate",
+      "rationale": "有条件的未来批准与立即无条件批准不同。",
+      "source_refs": [
+        {
+          "arm": "e2",
+          "task_id": "airline_1106",
+          "trial": 2,
+          "through_message_index": 12,
+          "prefix_sha256": "40cd2a1bf4df0784e39bcaab43db0147831393dce80101b79d4b4e8e85a43571"
+        },
+        {
+          "modified_last_user_message": true,
+          "observed_trajectory": false
+        }
+      ],
+      "a": {
+        "task_id": "airline_1106",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1106",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi there. I need to change the flight date on my reservation HKEG34 and add 2 checked bags to it. Could you please pull up the full details of that reservation for me first?",
+            "tool_calls": null
+          },
+          {
+            "role": "assistant",
+            "content": "I'd be happy to help you with your reservation. Let me pull up the details for reservation HKEG34.\n\n",
+            "tool_calls": [
+              {
+                "arguments": {
+                  "reservation_id": "HKEG34"
+                },
+                "id": "chatcmpl-tool-af6cebd747c5aaca",
+                "name": "get_reservation_details",
+                "requestor": "assistant"
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "{\"reservation_id\": \"HKEG34\", \"user_id\": \"mia_li_3668\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"flight_type\": \"one_way\", \"cabin\": \"business\", \"flights\": [{\"flight_number\": \"HAT290\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"date\": \"2024-05-27\", \"price\": 1395}], \"passengers\": [{\"first_name\": \"Amelia\", \"last_name\": \"Ahmed\", \"dob\": \"1957-03-21\"}], \"payment_history\": [{\"payment_id\": \"credit_card_1955700\", \"amount\": 1395}], \"created_at\": \"2024-05-09T17:50:39\", \"total_baggages\": 0, \"nonfree_baggages\": 0, \"insurance\": \"no\", \"status\": null}",
+            "id": "chatcmpl-tool-af6cebd747c5aaca",
+            "error": false
+          },
+          {
+            "role": "assistant",
+            "content": "Here are the details for your reservation **HKEG34**:\n\n| Detail | Information |\n|--------|-------------|\n| **Reservation ID** | HKEG34 |\n| **Trip Type** | One-way |\n| **Route** | Denver (DEN) → Las Vegas (LAS) |\n| **Flight** | HAT290 on May 27, 2024 |\n| **Cabin** | Business |\n| **Passenger** | Amelia Ahmed |\n| **Current Baggage** | 0 checked bags |\n| **Travel Insurance** | No |\n| **Total Paid** | $1,395 |\n\n---\n\nRegarding your requests:\n\n1. **Adding 2 checked bags**: As a gold member flying business class, you're entitled to **2 free checked bags** per passenger. So adding 2 bags would cost you **$0**.\n\n2. **Changing the flight date**: I'd be happy to help with that. Would you like to see available flights on a different date? Please let me know:\n   - Which date you'd like to change to\n   - Whether you want to search for direct flights or one-stop options\n\nAlso, please note that if flights are changed, you'll need to provide a payment method (credit card or gift card) for any potential price difference.",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Thank you for pulling that up. I see the current flight is on May 27, but I’m actually looking to move it to an earlier date. I’d like to compare the best available premium direct flight options from Denver to Las Vegas on **May 16** and **May 18**.\n\nCould you show me the premium business class direct flights on those two dates? I want the best service available, so price isn’t really a concern—I’m looking for the highest quality option on those dates.",
+            "tool_calls": null
+          },
+          {
+            "role": "assistant",
+            "content": "I'd be happy to search for direct business class flights from Denver (DEN) to Las Vegas (LAS) on both May 16 and May 18, 2024.\n\n",
+            "tool_calls": [
+              {
+                "arguments": {
+                  "date": "2024-05-16",
+                  "destination": "LAS",
+                  "origin": "DEN"
+                },
+                "id": "chatcmpl-tool-996734092613d4c3",
+                "name": "search_direct_flight",
+                "requestor": "assistant"
+              },
+              {
+                "arguments": {
+                  "date": "2024-05-18",
+                  "destination": "LAS",
+                  "origin": "DEN"
+                },
+                "id": "chatcmpl-tool-b8d28f6eda63f501",
+                "name": "search_direct_flight",
+                "requestor": "assistant"
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "[{\"flight_number\": \"HAT084\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"04:00:00\", \"scheduled_arrival_time_est\": \"06:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 6, \"economy\": 2, \"business\": 14}, \"prices\": {\"basic_economy\": 85, \"economy\": 108, \"business\": 252}}, {\"flight_number\": \"HAT229\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"11:00:00\", \"scheduled_arrival_time_est\": \"13:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 16, \"economy\": 3, \"business\": 11}, \"prices\": {\"basic_economy\": 72, \"economy\": 192, \"business\": 405}}, {\"flight_number\": \"HAT290\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"14:00:00\", \"scheduled_arrival_time_est\": \"16:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 15, \"economy\": 7, \"business\": 0}, \"prices\": {\"basic_economy\": 53, \"economy\": 149, \"business\": 341}}]",
+            "id": "chatcmpl-tool-996734092613d4c3",
+            "error": false
+          },
+          {
+            "role": "tool",
+            "content": "[{\"flight_number\": \"HAT084\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"04:00:00\", \"scheduled_arrival_time_est\": \"06:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 19, \"economy\": 1, \"business\": 8}, \"prices\": {\"basic_economy\": 53, \"economy\": 113, \"business\": 264}}, {\"flight_number\": \"HAT229\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"11:00:00\", \"scheduled_arrival_time_est\": \"13:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 11, \"economy\": 19, \"business\": 8}, \"prices\": {\"basic_economy\": 52, \"economy\": 125, \"business\": 254}}, {\"flight_number\": \"HAT290\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"14:00:00\", \"scheduled_arrival_time_est\": \"16:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 4, \"economy\": 8, \"business\": 3}, \"prices\": {\"basic_economy\": 56, \"economy\": 150, \"business\": 293}}]",
+            "id": "chatcmpl-tool-b8d28f6eda63f501",
+            "error": false
+          },
+          {
+            "role": "assistant",
+            "content": "Here are the available direct business class flights from Denver (DEN) to Las Vegas (LAS) on both dates:\n\n---\n\n## **May 16, 2024**\n\n| Flight | Departure | Arrival | Business Seats | Price |\n|--------|-----------|---------|----------------|-------|\n| **HAT084** | 4:00 AM | 6:00 AM | 14 | $252 |\n| **HAT229** | 11:00 AM | 1:00 PM | 11 | $405 |\n| **HAT290** | 2:00 PM | 4:00 PM | 0 | $341 |\n\n---\n\n## **May 18, 2024**\n\n| Flight | Departure | Arrival | Business Seats | Price |\n|--------|-----------|---------|----------------|-------|\n| **HAT084** | 4:00 AM | 6:00 AM | 8 | $264 |\n| **HAT229** | 11:00 AM | 1:00 PM | 8 | $254 |\n| **HAT290** | 2:00 PM | 4:00 PM | 3 | $293 |\n\n---\n\n### **Summary of Your Current Reservation**\n- **Current Flight**: HAT290 on May 27, departing at 2:00 PM\n- **Current Price**: $1,395 (note: this appears to be a special rate)\n\n### **Important Notes**\n1. **Flight HAT290** is available on both dates, but with limited business class seats (0 on May 16, 3 on May 18).\n2. If you choose a different flight, the price will be based on the current fare shown above.\n3. If the new price is lower than your original, you'll receive a refund. If higher, you'll pay the difference.\n\nWhich flight would you like to switch to? Also, please let me know which payment method you'd like to use for any price adjustment (credit card or gift card from your profile).",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Thank you for those details. I want the best available premium direct option between those two dates, so I’m looking for the highest quality flight experience.\n\nI’ll choose **HAT229 on May 18** as it’s the highest-priced business class option with available seats, which aligns with my preference for premium service.\n\nBefore I proceed, could you please give me a clear calculation of the total cost? Specifically:\n1. What is the price difference for changing from my current May 27 reservation to HAT229 on May 18?\n2. What is the cost for adding 2 checked bags? (You mentioned they are free as a Gold member, but please confirm the total added cost for both the date change and the bags combined.)\n\nI want to make sure I know the exact total I’m approving before I confirm the payment.",
+            "tool_calls": null
+          },
+          {
+            "role": "assistant",
+            "content": "Here's the complete cost breakdown for your reservation change:\n\n---\n\n## **Cost Breakdown**\n\n### 1. **Flight Change (May 27 → May 18)**\n| Item | Details |\n|------|---------|\n| Current Flight | HAT290 on May 27 - **$1,395** |\n| New Flight | HAT229 on May 18 - **$254** |\n| **Price Difference** | **-$1,141** (refund to you) |\n\n### 2. **Baggage Addition**\n| Item | Details |\n|------|---------|\n| Bags Added | 2 checked bags |\n| Free Allowance (Gold + Business) | 2 free bags per passenger |\n| **Baggage Cost** | **$0** |\n\n---\n\n## **Total Cost Summary**\n\n| Description | Amount |\n|-------------|--------|\n| Flight Change | -$1,141 (refund) |\n| Baggage | $0 |\n| **Net Cost** | **-$1,141** |\n\n---\n\n### **What This Means**\n- You will receive a **refund of $1,141** to your original payment method (credit card ending in 00).\n- The refund will be processed within **5-7 business days**.\n- No additional charge for the 2 checked bags.\n\n---\n\n### **Payment Method for Refund**\nThe refund will go to your original payment method: **Credit Card ending in 00** (credit_card_1955700).\n\n---\n\n**Would you like to proceed with this change? Please confirm with \"yes\" to proceed.**",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hold on a second. I’m a little confused by the refund amount and the payment method details here.\n\nFirst, my original flight was $1,395, and the new flight is $254. That math looks correct for a $1,141 difference, but I expected to be *paying* for a premium upgrade or change, not receiving a large refund. Also, you mentioned the refund is going to a card ending in \"00,\" but I want to make sure we’re aligned on the account.\n\nI’m Mia Li, user ID **mia_li_3668**. I want to ensure this reservation is correctly linked to me and that any payments or refunds are processed against my primary card, which is **credit_card_4421486** (Visa ending in 7447).\n\nCan you verify the passenger name on the reservation matches \"Mia Li\"? The details you pulled up earlier said \"Amelia Ahmed,\" which is not me. If that’s the case, we need to correct that before proceeding.\n\nAlso, regarding the 2 checked bags: even if they are free, please confirm they are explicitly added to the reservation for May 18.\n\nOnce you confirm the passenger name is corrected to Mia Li and the 2 bags are added, I’ll approve the change and have the refund (or any net adjustment) processed via **credit_card_4421486**.",
+            "tool_calls": null
+          }
+        ]
+      },
+      "b": {
+        "task_id": "airline_1106",
+        "db_hash": "MATCHED_DB_ASSUMPTION:airline_1106",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Hi! How can I help you today?",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Hi there. I need to change the flight date on my reservation HKEG34 and add 2 checked bags to it. Could you please pull up the full details of that reservation for me first?",
+            "tool_calls": null
+          },
+          {
+            "role": "assistant",
+            "content": "I'd be happy to help you with your reservation. Let me pull up the details for reservation HKEG34.\n\n",
+            "tool_calls": [
+              {
+                "arguments": {
+                  "reservation_id": "HKEG34"
+                },
+                "id": "chatcmpl-tool-af6cebd747c5aaca",
+                "name": "get_reservation_details",
+                "requestor": "assistant"
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "{\"reservation_id\": \"HKEG34\", \"user_id\": \"mia_li_3668\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"flight_type\": \"one_way\", \"cabin\": \"business\", \"flights\": [{\"flight_number\": \"HAT290\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"date\": \"2024-05-27\", \"price\": 1395}], \"passengers\": [{\"first_name\": \"Amelia\", \"last_name\": \"Ahmed\", \"dob\": \"1957-03-21\"}], \"payment_history\": [{\"payment_id\": \"credit_card_1955700\", \"amount\": 1395}], \"created_at\": \"2024-05-09T17:50:39\", \"total_baggages\": 0, \"nonfree_baggages\": 0, \"insurance\": \"no\", \"status\": null}",
+            "id": "chatcmpl-tool-af6cebd747c5aaca",
+            "error": false
+          },
+          {
+            "role": "assistant",
+            "content": "Here are the details for your reservation **HKEG34**:\n\n| Detail | Information |\n|--------|-------------|\n| **Reservation ID** | HKEG34 |\n| **Trip Type** | One-way |\n| **Route** | Denver (DEN) → Las Vegas (LAS) |\n| **Flight** | HAT290 on May 27, 2024 |\n| **Cabin** | Business |\n| **Passenger** | Amelia Ahmed |\n| **Current Baggage** | 0 checked bags |\n| **Travel Insurance** | No |\n| **Total Paid** | $1,395 |\n\n---\n\nRegarding your requests:\n\n1. **Adding 2 checked bags**: As a gold member flying business class, you're entitled to **2 free checked bags** per passenger. So adding 2 bags would cost you **$0**.\n\n2. **Changing the flight date**: I'd be happy to help with that. Would you like to see available flights on a different date? Please let me know:\n   - Which date you'd like to change to\n   - Whether you want to search for direct flights or one-stop options\n\nAlso, please note that if flights are changed, you'll need to provide a payment method (credit card or gift card) for any potential price difference.",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Thank you for pulling that up. I see the current flight is on May 27, but I’m actually looking to move it to an earlier date. I’d like to compare the best available premium direct flight options from Denver to Las Vegas on **May 16** and **May 18**.\n\nCould you show me the premium business class direct flights on those two dates? I want the best service available, so price isn’t really a concern—I’m looking for the highest quality option on those dates.",
+            "tool_calls": null
+          },
+          {
+            "role": "assistant",
+            "content": "I'd be happy to search for direct business class flights from Denver (DEN) to Las Vegas (LAS) on both May 16 and May 18, 2024.\n\n",
+            "tool_calls": [
+              {
+                "arguments": {
+                  "date": "2024-05-16",
+                  "destination": "LAS",
+                  "origin": "DEN"
+                },
+                "id": "chatcmpl-tool-996734092613d4c3",
+                "name": "search_direct_flight",
+                "requestor": "assistant"
+              },
+              {
+                "arguments": {
+                  "date": "2024-05-18",
+                  "destination": "LAS",
+                  "origin": "DEN"
+                },
+                "id": "chatcmpl-tool-b8d28f6eda63f501",
+                "name": "search_direct_flight",
+                "requestor": "assistant"
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "[{\"flight_number\": \"HAT084\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"04:00:00\", \"scheduled_arrival_time_est\": \"06:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 6, \"economy\": 2, \"business\": 14}, \"prices\": {\"basic_economy\": 85, \"economy\": 108, \"business\": 252}}, {\"flight_number\": \"HAT229\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"11:00:00\", \"scheduled_arrival_time_est\": \"13:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 16, \"economy\": 3, \"business\": 11}, \"prices\": {\"basic_economy\": 72, \"economy\": 192, \"business\": 405}}, {\"flight_number\": \"HAT290\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"14:00:00\", \"scheduled_arrival_time_est\": \"16:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 15, \"economy\": 7, \"business\": 0}, \"prices\": {\"basic_economy\": 53, \"economy\": 149, \"business\": 341}}]",
+            "id": "chatcmpl-tool-996734092613d4c3",
+            "error": false
+          },
+          {
+            "role": "tool",
+            "content": "[{\"flight_number\": \"HAT084\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"04:00:00\", \"scheduled_arrival_time_est\": \"06:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 19, \"economy\": 1, \"business\": 8}, \"prices\": {\"basic_economy\": 53, \"economy\": 113, \"business\": 264}}, {\"flight_number\": \"HAT229\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"11:00:00\", \"scheduled_arrival_time_est\": \"13:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 11, \"economy\": 19, \"business\": 8}, \"prices\": {\"basic_economy\": 52, \"economy\": 125, \"business\": 254}}, {\"flight_number\": \"HAT290\", \"origin\": \"DEN\", \"destination\": \"LAS\", \"status\": \"available\", \"scheduled_departure_time_est\": \"14:00:00\", \"scheduled_arrival_time_est\": \"16:00:00\", \"date\": null, \"available_seats\": {\"basic_economy\": 4, \"economy\": 8, \"business\": 3}, \"prices\": {\"basic_economy\": 56, \"economy\": 150, \"business\": 293}}]",
+            "id": "chatcmpl-tool-b8d28f6eda63f501",
+            "error": false
+          },
+          {
+            "role": "assistant",
+            "content": "Here are the available direct business class flights from Denver (DEN) to Las Vegas (LAS) on both dates:\n\n---\n\n## **May 16, 2024**\n\n| Flight | Departure | Arrival | Business Seats | Price |\n|--------|-----------|---------|----------------|-------|\n| **HAT084** | 4:00 AM | 6:00 AM | 14 | $252 |\n| **HAT229** | 11:00 AM | 1:00 PM | 11 | $405 |\n| **HAT290** | 2:00 PM | 4:00 PM | 0 | $341 |\n\n---\n\n## **May 18, 2024**\n\n| Flight | Departure | Arrival | Business Seats | Price |\n|--------|-----------|---------|----------------|-------|\n| **HAT084** | 4:00 AM | 6:00 AM | 8 | $264 |\n| **HAT229** | 11:00 AM | 1:00 PM | 8 | $254 |\n| **HAT290** | 2:00 PM | 4:00 PM | 3 | $293 |\n\n---\n\n### **Summary of Your Current Reservation**\n- **Current Flight**: HAT290 on May 27, departing at 2:00 PM\n- **Current Price**: $1,395 (note: this appears to be a special rate)\n\n### **Important Notes**\n1. **Flight HAT290** is available on both dates, but with limited business class seats (0 on May 16, 3 on May 18).\n2. If you choose a different flight, the price will be based on the current fare shown above.\n3. If the new price is lower than your original, you'll receive a refund. If higher, you'll pay the difference.\n\nWhich flight would you like to switch to? Also, please let me know which payment method you'd like to use for any price adjustment (credit card or gift card from your profile).",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Thank you for those details. I want the best available premium direct option between those two dates, so I’m looking for the highest quality flight experience.\n\nI’ll choose **HAT229 on May 18** as it’s the highest-priced business class option with available seats, which aligns with my preference for premium service.\n\nBefore I proceed, could you please give me a clear calculation of the total cost? Specifically:\n1. What is the price difference for changing from my current May 27 reservation to HAT229 on May 18?\n2. What is the cost for adding 2 checked bags? (You mentioned they are free as a Gold member, but please confirm the total added cost for both the date change and the bags combined.)\n\nI want to make sure I know the exact total I’m approving before I confirm the payment.",
+            "tool_calls": null
+          },
+          {
+            "role": "assistant",
+            "content": "Here's the complete cost breakdown for your reservation change:\n\n---\n\n## **Cost Breakdown**\n\n### 1. **Flight Change (May 27 → May 18)**\n| Item | Details |\n|------|---------|\n| Current Flight | HAT290 on May 27 - **$1,395** |\n| New Flight | HAT229 on May 18 - **$254** |\n| **Price Difference** | **-$1,141** (refund to you) |\n\n### 2. **Baggage Addition**\n| Item | Details |\n|------|---------|\n| Bags Added | 2 checked bags |\n| Free Allowance (Gold + Business) | 2 free bags per passenger |\n| **Baggage Cost** | **$0** |\n\n---\n\n## **Total Cost Summary**\n\n| Description | Amount |\n|-------------|--------|\n| Flight Change | -$1,141 (refund) |\n| Baggage | $0 |\n| **Net Cost** | **-$1,141** |\n\n---\n\n### **What This Means**\n- You will receive a **refund of $1,141** to your original payment method (credit card ending in 00).\n- The refund will be processed within **5-7 business days**.\n- No additional charge for the 2 checked bags.\n\n---\n\n### **Payment Method for Refund**\nThe refund will go to your original payment method: **Credit Card ending in 00** (credit_card_1955700).\n\n---\n\n**Would you like to proceed with this change? Please confirm with \"yes\" to proceed.**",
+            "tool_calls": null
+          },
+          {
+            "role": "user",
+            "content": "Yes, I approve the flight change now and accept the proposed refund to credit_card_1955700.",
+            "tool_calls": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "controlled-01",
+      "kind": "controlled",
+      "relation": "merge",
+      "rationale": "相同完整方案下的两种明确批准表述。",
+      "source_refs": [],
+      "a": {
+        "task_id": "synthetic_task",
+        "db_hash": "CONTROLLED_EQUAL_DB",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Cancel reservation ABC123 for a $100 refund to card card_1. Do you confirm?"
+          },
+          {
+            "role": "user",
+            "content": "Yes, please proceed."
+          }
+        ]
+      },
+      "b": {
+        "task_id": "synthetic_task",
+        "db_hash": "CONTROLLED_EQUAL_DB",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Cancel reservation ABC123 for a $100 refund to card card_1. Do you confirm?"
+          },
+          {
+            "role": "user",
+            "content": "I approve."
+          }
+        ]
+      }
+    },
+    {
+      "id": "controlled-02",
+      "kind": "controlled",
+      "relation": "separate",
+      "rationale": "退款目的卡不同，同一句 yes 不能合并。",
+      "source_refs": [],
+      "a": {
+        "task_id": "synthetic_task",
+        "db_hash": "CONTROLLED_EQUAL_DB",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Cancel reservation ABC123 for a $100 refund to card card_1. Do you confirm?"
+          },
+          {
+            "role": "user",
+            "content": "Yes, please proceed."
+          }
+        ]
+      },
+      "b": {
+        "task_id": "synthetic_task",
+        "db_hash": "CONTROLLED_EQUAL_DB",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Cancel reservation ABC123 for a $100 refund to card card_2. Do you confirm?"
+          },
+          {
+            "role": "user",
+            "content": "Yes, please proceed."
+          }
+        ]
+      }
+    },
+    {
+      "id": "controlled-03",
+      "kind": "controlled",
+      "relation": "separate",
+      "rationale": "退款金额不同，同一句 yes 不能合并。",
+      "source_refs": [],
+      "a": {
+        "task_id": "synthetic_task",
+        "db_hash": "CONTROLLED_EQUAL_DB",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Cancel reservation ABC123 for a $100 refund to card card_1. Do you confirm?"
+          },
+          {
+            "role": "user",
+            "content": "Yes, please proceed."
+          }
+        ]
+      },
+      "b": {
+        "task_id": "synthetic_task",
+        "db_hash": "CONTROLLED_EQUAL_DB",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Cancel reservation ABC123 for a $200 refund to card card_1. Do you confirm?"
+          },
+          {
+            "role": "user",
+            "content": "Yes, please proceed."
+          }
+        ]
+      }
+    },
+    {
+      "id": "controlled-04",
+      "kind": "controlled",
+      "relation": "separate",
+      "rationale": "订单对象不同，同一句 yes 不能合并。",
+      "source_refs": [],
+      "a": {
+        "task_id": "synthetic_task",
+        "db_hash": "CONTROLLED_EQUAL_DB",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Cancel reservation ABC123 for a $100 refund to card card_1. Do you confirm?"
+          },
+          {
+            "role": "user",
+            "content": "Yes, please proceed."
+          }
+        ]
+      },
+      "b": {
+        "task_id": "synthetic_task",
+        "db_hash": "CONTROLLED_EQUAL_DB",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Cancel reservation ABC124 for a $100 refund to card card_1. Do you confirm?"
+          },
+          {
+            "role": "user",
+            "content": "Yes, please proceed."
+          }
+        ]
+      }
+    },
+    {
+      "id": "controlled-05",
+      "kind": "controlled",
+      "relation": "separate",
+      "rationale": "带条件批准不能当作无条件批准。",
+      "source_refs": [],
+      "a": {
+        "task_id": "synthetic_task",
+        "db_hash": "CONTROLLED_EQUAL_DB",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Cancel reservation ABC123 for a $100 refund to card card_1. Do you confirm?"
+          },
+          {
+            "role": "user",
+            "content": "Yes, please proceed."
+          },
+          {
+            "role": "assistant",
+            "content": "Cancel reservation ABC123 for a $100 refund to card card_1. Do you confirm?"
+          },
+          {
+            "role": "user",
+            "content": "Yes, please proceed."
+          }
+        ]
+      },
+      "b": {
+        "task_id": "synthetic_task",
+        "db_hash": "CONTROLLED_EQUAL_DB",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Cancel reservation ABC123 for a $100 refund to card card_1. Do you confirm?"
+          },
+          {
+            "role": "user",
+            "content": "Yes, please proceed."
+          },
+          {
+            "role": "assistant",
+            "content": "Cancel reservation ABC123 for a $100 refund to card card_1. Do you confirm?"
+          },
+          {
+            "role": "user",
+            "content": "Yes, but only if there is no fee."
+          }
+        ]
+      }
+    },
+    {
+      "id": "controlled-06",
+      "kind": "controlled",
+      "relation": "separate",
+      "rationale": "拒绝与批准不同。",
+      "source_refs": [],
+      "a": {
+        "task_id": "synthetic_task",
+        "db_hash": "CONTROLLED_EQUAL_DB",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Cancel reservation ABC123 for a $100 refund to card card_1. Do you confirm?"
+          },
+          {
+            "role": "user",
+            "content": "Yes, please proceed."
+          },
+          {
+            "role": "assistant",
+            "content": "Cancel reservation ABC123 for a $100 refund to card card_1. Do you confirm?"
+          },
+          {
+            "role": "user",
+            "content": "Yes, please proceed."
+          }
+        ]
+      },
+      "b": {
+        "task_id": "synthetic_task",
+        "db_hash": "CONTROLLED_EQUAL_DB",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Cancel reservation ABC123 for a $100 refund to card card_1. Do you confirm?"
+          },
+          {
+            "role": "user",
+            "content": "Yes, please proceed."
+          },
+          {
+            "role": "assistant",
+            "content": "Cancel reservation ABC123 for a $100 refund to card card_1. Do you confirm?"
+          },
+          {
+            "role": "user",
+            "content": "No, do not proceed."
+          }
+        ]
+      }
+    },
+    {
+      "id": "controlled-07",
+      "kind": "controlled",
+      "relation": "separate",
+      "rationale": "撤回历史批准必须更新当前状态。",
+      "source_refs": [],
+      "a": {
+        "task_id": "synthetic_task",
+        "db_hash": "CONTROLLED_EQUAL_DB",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Cancel reservation ABC123 for a $100 refund to card card_1. Do you confirm?"
+          },
+          {
+            "role": "user",
+            "content": "Yes, please proceed."
+          },
+          {
+            "role": "assistant",
+            "content": "Cancel reservation ABC123 for a $100 refund to card card_1. Do you confirm?"
+          },
+          {
+            "role": "user",
+            "content": "Yes, please proceed."
+          }
+        ]
+      },
+      "b": {
+        "task_id": "synthetic_task",
+        "db_hash": "CONTROLLED_EQUAL_DB",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Cancel reservation ABC123 for a $100 refund to card card_1. Do you confirm?"
+          },
+          {
+            "role": "user",
+            "content": "Yes, please proceed."
+          },
+          {
+            "role": "assistant",
+            "content": "Cancel reservation ABC123 for a $100 refund to card card_1. Do you confirm?"
+          },
+          {
+            "role": "user",
+            "content": "I revoke my approval."
+          }
+        ]
+      }
+    },
+    {
+      "id": "controlled-08",
+      "kind": "controlled",
+      "relation": "merge",
+      "rationale": "工具调用 ID 仅用于配对，不是环境状态。",
+      "source_refs": [],
+      "a": {
+        "task_id": "synthetic_task",
+        "db_hash": "CONTROLLED_EQUAL_DB",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": null,
+            "tool_calls": [
+              {
+                "id": "call_1",
+                "name": "get_reservation_details",
+                "arguments": {
+                  "reservation_id": "ABC123"
+                }
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "{\"reservation_id\":\"ABC123\",\"cabin\":\"business\"}",
+            "id": "call_1",
+            "error": false
+          }
+        ]
+      },
+      "b": {
+        "task_id": "synthetic_task",
+        "db_hash": "CONTROLLED_EQUAL_DB",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": null,
+            "tool_calls": [
+              {
+                "id": "other_id",
+                "name": "get_reservation_details",
+                "arguments": {
+                  "reservation_id": "ABC123"
+                }
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "{\"reservation_id\":\"ABC123\",\"cabin\":\"business\"}",
+            "id": "other_id",
+            "error": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "controlled-09",
+      "kind": "controlled",
+      "relation": "merge",
+      "rationale": "JSON 键顺序与空白不改变读到的事实。",
+      "source_refs": [],
+      "a": {
+        "task_id": "synthetic_task",
+        "db_hash": "CONTROLLED_EQUAL_DB",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": null,
+            "tool_calls": [
+              {
+                "id": "call_1",
+                "name": "get_reservation_details",
+                "arguments": {
+                  "reservation_id": "ABC123"
+                }
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "{\"reservation_id\":\"ABC123\",\"cabin\":\"business\"}",
+            "id": "call_1",
+            "error": false
+          }
+        ]
+      },
+      "b": {
+        "task_id": "synthetic_task",
+        "db_hash": "CONTROLLED_EQUAL_DB",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": null,
+            "tool_calls": [
+              {
+                "id": "call_1",
+                "name": "get_reservation_details",
+                "arguments": {
+                  "reservation_id": "ABC123"
+                }
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "{ \"cabin\": \"business\", \"reservation_id\": \"ABC123\" }",
+            "id": "call_1",
+            "error": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "controlled-10",
+      "kind": "controlled",
+      "relation": "separate",
+      "rationale": "DB 相同假设下，两条轨迹已知读事实不同。",
+      "source_refs": [],
+      "a": {
+        "task_id": "synthetic_task",
+        "db_hash": "CONTROLLED_EQUAL_DB",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": null,
+            "tool_calls": [
+              {
+                "id": "call_1",
+                "name": "get_reservation_details",
+                "arguments": {
+                  "reservation_id": "ABC123"
+                }
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "{\"reservation_id\":\"ABC123\",\"cabin\":\"business\"}",
+            "id": "call_1",
+            "error": false
+          }
+        ]
+      },
+      "b": {
+        "task_id": "synthetic_task",
+        "db_hash": "CONTROLLED_EQUAL_DB",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": null,
+            "tool_calls": [
+              {
+                "id": "call_1",
+                "name": "get_reservation_details",
+                "arguments": {
+                  "reservation_id": "ABC123"
+                }
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "{\"reservation_id\":\"ABC123\",\"cabin\":\"economy\"}",
+            "id": "call_1",
+            "error": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "controlled-11",
+      "kind": "controlled",
+      "relation": "separate",
+      "rationale": "数据库状态不同。",
+      "source_refs": [],
+      "a": {
+        "task_id": "synthetic_task",
+        "db_hash": "CONTROLLED_EQUAL_DB",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Cancel reservation ABC123 for a $100 refund to card card_1. Do you confirm?"
+          },
+          {
+            "role": "user",
+            "content": "Yes, please proceed."
+          }
+        ]
+      },
+      "b": {
+        "task_id": "synthetic_task",
+        "db_hash": "DIFFERENT_DB",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Cancel reservation ABC123 for a $100 refund to card card_1. Do you confirm?"
+          },
+          {
+            "role": "user",
+            "content": "Yes, please proceed."
+          }
+        ]
+      }
+    },
+    {
+      "id": "controlled-12",
+      "kind": "controlled",
+      "relation": "separate",
+      "rationale": "任务不同，不属于同一 episode 比较范围。",
+      "source_refs": [],
+      "a": {
+        "task_id": "synthetic_task",
+        "db_hash": "CONTROLLED_EQUAL_DB",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Cancel reservation ABC123 for a $100 refund to card card_1. Do you confirm?"
+          },
+          {
+            "role": "user",
+            "content": "Yes, please proceed."
+          }
+        ]
+      },
+      "b": {
+        "task_id": "other_task",
+        "db_hash": "CONTROLLED_EQUAL_DB",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Cancel reservation ABC123 for a $100 refund to card card_1. Do you confirm?"
+          },
+          {
+            "role": "user",
+            "content": "Yes, please proceed."
+          }
+        ]
+      }
+    },
+    {
+      "id": "external_budget-01",
+      "kind": "external_budget",
+      "relation": "uncertain",
+      "rationale": "同样对话但剩余行动预算为 12 与 1；有限时域价值可能不同，但论文允许跨时间重复状态。是否按预算拆组是建模选择，不判作算法错误。",
+      "source_refs": [],
+      "a": {
+        "task_id": "synthetic_task",
+        "db_hash": "CONTROLLED_EQUAL_DB",
+        "remaining_assistant_turns": 12,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Cancel reservation ABC123 for a $100 refund to card card_1. Do you confirm?"
+          },
+          {
+            "role": "user",
+            "content": "Yes, please proceed."
+          }
+        ]
+      },
+      "b": {
+        "task_id": "synthetic_task",
+        "db_hash": "CONTROLLED_EQUAL_DB",
+        "remaining_assistant_turns": 1,
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "Cancel reservation ABC123 for a $100 refund to card card_1. Do you confirm?"
+          },
+          {
+            "role": "user",
+            "content": "Yes, please proceed."
+          }
+        ]
+      }
+    }
+  ]
+}

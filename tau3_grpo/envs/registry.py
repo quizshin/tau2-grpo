@@ -32,6 +32,8 @@ class SessionEntry:
     terminated: bool = False
     termination_reason: Optional[str] = None
     tool_error_count: int = 0
+    # Pinned per session; never mutable process-wide rollout state.
+    anchor_version: str = "v1"
 
     def record_segment(
         self, anchor_id: Optional[str], span: Optional[tuple[int, int]]

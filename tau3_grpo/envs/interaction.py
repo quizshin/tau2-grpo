@@ -21,6 +21,7 @@ from typing import Any, Optional
 from verl.interactions.base import BaseInteraction
 
 from tau3_grpo.algorithms.anchors.encoder import AnchorMode
+from tau3_grpo.algorithms.anchors.evidence import validate_version
 from tau3_grpo.data.official import assert_trainable_source
 from tau3_grpo.data.parquet_builder import INTERACTION_NAME as _PARQUET_INTERACTION_NAME
 from tau3_grpo.data.schema import ArealTaskRecord, DataSource
@@ -152,6 +153,10 @@ class Tau3AirlineInteraction(BaseInteraction):
         source = kwargs.get("source", DataSource.AREAL_TAU2_AIRLINE.value)
         assert_trainable_source(source, context="Tau3AirlineInteraction.start_interaction")
 
+        anchor_version = validate_version(
+            os.environ.get("TAU3_GRPO_ANCHOR_VERSION") or kwargs.get("anchor_version", "v1")
+        )
+
         session = self._create_session(
             str(task_id),
             kwargs,
@@ -172,6 +177,7 @@ class Tau3AirlineInteraction(BaseInteraction):
                 session=session,
                 anchor_mode=AnchorMode(anchor_mode),
                 similarity_threshold=float(similarity_threshold),
+                anchor_version=anchor_version,
             ),
         )
         return str(request_id)

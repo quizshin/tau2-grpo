@@ -119,13 +119,21 @@ ADV_ESTIMATOR="${TAU3_GRPO_CONFIG_ESTIMATOR:-${ADV_ESTIMATOR}}"
 DF_ENABLE="${TAU3_GRPO_CONFIG_DF_ENABLE:-${DF_ENABLE}}"
 ANCHOR_MODE="${TAU3_GRPO_CONFIG_ANCHOR_MODE:-${ANCHOR_MODE}}"
 
+export TAU3_GRPO_ANCHOR_VERSION="${TAU3_GRPO_ANCHOR_VERSION:-v1}"
+case "${TAU3_GRPO_ANCHOR_VERSION}" in
+  v1|v2|v3) ;;
+  *) echo "error: unsupported anchor version ${TAU3_GRPO_ANCHOR_VERSION}" >&2; exit 2 ;;
+esac
+
 ROLLOUT_BACKEND=vllm
 
-echo "arm=${ARM} seed=${SEED} estimator=${ADV_ESTIMATOR} df=${DF_ENABLE} anchors=${ANCHOR_MODE}"
+echo "arm=${ARM} seed=${SEED} estimator=${ADV_ESTIMATOR} df=${DF_ENABLE} anchors=${ANCHOR_MODE}/${TAU3_GRPO_ANCHOR_VERSION}"
 echo "backend=${ROLLOUT_BACKEND} updates=${TOTAL_UPDATES} results=${RESULTS_DIR}"
 
 if [[ "${TAU3_DRY_RUN:-0}" != "1" ]]; then
 mkdir -p "${RESULTS_DIR}"
+python -m tau3_grpo.algorithms.anchors.protocol \
+  --results-dir "${RESULTS_DIR}" --version "${TAU3_GRPO_ANCHOR_VERSION}"
 
 # Materialise and verify the exact non-shuffled task order documented by the
 # experiment manifest. A caller may provide TRAIN_PARQUET explicitly only for a
@@ -163,11 +171,12 @@ export TAU3_GRPO_ARM="${ARM}"
 export TAU3_GRPO_POLICY_BATCH_DIVISOR="${POLICY_BATCH_DIVISOR}"
 TRAIN_COMMAND=(python -m tau3_grpo.training.rl.train \
   algorithm.adv_estimator="${ADV_ESTIMATOR}" \
+  "++ray_kwargs.ray_init.runtime_env.env_vars.TAU3_GRPO_ANCHOR_VERSION=${TAU3_GRPO_ANCHOR_VERSION}" \
   algorithm.gamma=1.0 \
   algorithm.use_kl_in_reward=false \
   algorithm.kl_ctrl.kl_coef="${KL_COEF}" \
   "+algorithm.dynamic_filter={enable:${DF_ENABLE},mode:fixed_rollout,group_size:${GROUP_SIZE},max_reward:1.0}" \
-  "+algorithm.gigpo={omega:1.0,gamma:0.95,fnorm:1.0,min_anchor_group_size:2,similarity_threshold:0.9}" \
+  "+algorithm.gigpo={omega:1.0,gamma:0.95,fnorm:1.0,min_anchor_group_size:2,similarity_threshold:0.9,anchor_version:${TAU3_GRPO_ANCHOR_VERSION}}" \
   data.train_files="${TRAIN_PARQUET}" \
   data.val_files="${VAL_PARQUET}" \
   data.train_batch_size="${GROUPS_PER_UPDATE}" \

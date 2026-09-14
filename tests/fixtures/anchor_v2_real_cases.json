@@ -1,0 +1,29 @@
+[
+  {
+    "source": "/root/autodl-fs/tau3-core-20260912/runs/post-rl-selection-recovery-20260914/selection/e2/trajectories.jsonl",
+    "task_id": "airline_1035",
+    "trial": 0,
+    "turn": 9,
+    "user": "Yes, please go ahead and search for the economy price for that flight so we can see the refund amount.",
+    "previous_assistant": "Here are the details for reservation **GAST7Q**:\n\n| Detail | Value |\n|--------|-------|\n| **Route** | CLT → BOS (Charlotte → Boston) |\n| **Flight** | HAT216 on May 21, 2024 |\n| **Current Cabin** | Business ($824) |\n| **Passenger** | Sofia Brown |\n| **Total Paid** | $824 |\n\nTo proceed with the downgrade, I need to check the current price of this flight in economy class. Would you like me to search for the flight to see the economy price and calculate the refund you'd receive?",
+    "review_label": "permission_to_search_only"
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core-20260912/runs/post-rl-selection-recovery-20260914/selection/e2/trajectories.jsonl",
+    "task_id": "airline_1060",
+    "trial": 1,
+    "turn": 13,
+    "user": "Wait, you mentioned the refund is going to the card ending in 7388? I thought I specified a different card for the refund. I need to use credit_card_2870431 for this refund, not the one you have on file. Can you adjust the refund method before we proceed?",
+    "previous_assistant": "Here's the price breakdown for your downgrade from business class to economy class:\n\n**Flight 1 - HAT198: MIA → JFK**\n- Original Business Class: $1,658\n- Current Economy Class: $181\n- **Difference: -$1,477**\n\n**Flight 2 - HAT069: JFK → SEA**\n- Original Business Class: $993\n- Current Economy Class: $139\n- **Difference: -$854**\n\n**Total Refund: $2,331**\n\nThe refund will be processed to your original payment method (credit card ending in 7388) within 5-7 business days.\n\n**Summary of Change:**\n- Downgrade from Business Class → Economy Class\n- Flights remain the same (HAT198 and HAT069 on May 18, 2024)\n- Total refund: $2,331\n\nWould you like me to proceed with this change? Please confirm with **yes** to proceed.",
+    "review_label": "correct_payment_before_proceeding"
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core-20260912/runs/post-rl-selection-recovery-20260914/selection/e2/trajectories.jsonl",
+    "task_id": "airline_1106",
+    "trial": 2,
+    "turn": 12,
+    "user": "Hold on a second. I’m a little confused by the refund amount and the payment method details here.\n\nFirst, my original flight was $1,395, and the new flight is $254. That math looks correct for a $1,141 difference, but I expected to be *paying* for a premium upgrade or change, not receiving a large refund. Also, you mentioned the refund is going to a card ending in \"00,\" but I want to make sure we’re aligned on the account.\n\nI’m Mia Li, user ID **mia_li_3668**. I want to ensure this reservation is correctly linked to me and that any payments or refunds are processed against my primary card, which is **credit_card_4421486** (Visa ending in 7447).\n\nCan you verify the passenger name on the reservation matches \"Mia Li\"? The details you pulled up earlier said \"Amelia Ahmed,\" which is not me. If that’s the case, we need to correct that before proceeding.\n\nAlso, regarding the 2 checked bags: even if they are free, please confirm they are explicitly added to the reservation for May 18.\n\nOnce you confirm the passenger name is corrected to Mia Li and the 2 bags are added, I’ll approve the change and have the refund (or any net adjustment) processed via **credit_card_4421486**.",
+    "previous_assistant": "Here's the complete cost breakdown for your reservation change:\n\n---\n\n## **Cost Breakdown**\n\n### 1. **Flight Change (May 27 → May 18)**\n| Item | Details |\n|------|---------|\n| Current Flight | HAT290 on May 27 - **$1,395** |\n| New Flight | HAT229 on May 18 - **$254** |\n| **Price Difference** | **-$1,141** (refund to you) |\n\n### 2. **Baggage Addition**\n| Item | Details |\n|------|---------|\n| Bags Added | 2 checked bags |\n| Free Allowance (Gold + Business) | 2 free bags per passenger |\n| **Baggage Cost** | **$0** |\n\n---\n\n## **Total Cost Summary**\n\n| Description | Amount |\n|-------------|--------|\n| Flight Change | -$1,141 (refund) |\n| Baggage | $0 |\n| **Net Cost** | **-$1,141** |\n\n---\n\n### **What This Means**\n- You will receive a **refund of $1,141** to your original payment method (credit card ending in 00).\n- The refund will be processed within **5-7 business days**.\n- No additional charge for the 2 checked bags.\n\n---\n\n### **Payment Method for Refund**\nThe refund will go to your original payment method: **Credit Card ending in 00** (credit_card_1955700).\n\n---\n\n**Would you like to proceed with this change? Please confirm with \"yes\" to proceed.**",
+    "review_label": "conditional_future_approval"
+  }
+]

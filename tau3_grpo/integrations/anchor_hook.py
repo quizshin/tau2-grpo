@@ -28,6 +28,7 @@ from tau3_grpo.algorithms.anchors.features import (
     policy_precondition_flags,
 )
 from tau3_grpo.envs.registry import SESSIONS
+from tau3_grpo.algorithms.anchors.evidence import decision_evidence, validate_version
 
 logger = logging.getLogger(__name__)
 
@@ -51,13 +52,18 @@ def current_anchor(agent_data: Any, segment_kind: str) -> Optional[str]:
 
     session = entry.session
     messages = session.messages
+    version = validate_version(entry.anchor_version)
+    evidence = decision_evidence(messages, version=version) if version in ("v2", "v3") else None
     state = AnchorState(
         task_id=session.task_id,
         db_hash=session.db_hash(),
         known_info_mask=known_info_mask(messages),
-        confirmation_flags=confirmation_flags(messages),
+        confirmation_flags=(tuple(f"committed:{name}" for name in evidence.committed_tools)
+                            if evidence else confirmation_flags(messages)),
         policy_precondition_flags=policy_precondition_flags(messages),
         last_observation=last_observation_type(messages),
+        anchor_version=version,
+        decision_evidence_hash=evidence.digest if evidence else None,
     )
     mode = entry.anchor_mode
     if mode is AnchorMode.SIMILARITY:

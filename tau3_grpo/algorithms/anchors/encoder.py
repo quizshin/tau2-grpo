@@ -1,5 +1,8 @@
 """Structured anchor encoder for Tau-GiGPO step grouping.
 
+Live rollout and AnchorState default to v1 for compatibility; v2 adds a hard evidence guard, including in
+similarity mode. DB-only deliberately excludes that guard for its ablation.
+
 Milestone D6–D7, D12. Three modes:
 
 - ``structured``  (default): task_id + canonical mutable DB hash +
@@ -52,9 +55,11 @@ class AnchorState:
     confirmation_flags: tuple[str, ...] = ()
     policy_precondition_flags: tuple[str, ...] = ()
     last_observation: ObservationType = ObservationType.NONE
+    anchor_version: str = "v1"
+    decision_evidence_hash: Optional[str] = None
 
     def structured_payload(self) -> dict[str, Any]:
-        return {
+        payload = {
             "task_id": self.task_id,
             "db_hash": self.db_hash,
             "known_info_mask": [bool(bit) for bit in self.known_info_mask],
@@ -62,6 +67,13 @@ class AnchorState:
             "policy_precondition_flags": sorted(self.policy_precondition_flags),
             "last_observation": self.last_observation.value,
         }
+        if self.anchor_version in ("v2", "v3"):
+            if not self.decision_evidence_hash:
+                raise ValueError("v2 anchors require decision evidence")
+            payload.update(anchor_version=self.anchor_version, decision_evidence_hash=self.decision_evidence_hash)
+        elif self.anchor_version != "v1":
+            raise ValueError(f"unsupported anchor version: {self.anchor_version}")
+        return payload
 
     def db_hash_payload(self) -> dict[str, Any]:
         return {"task_id": self.task_id, "db_hash": self.db_hash}
@@ -80,6 +92,9 @@ class AnchorState:
             features.add(f"confirm:{flag}")
         for flag in self.policy_precondition_flags:
             features.add(f"precond:{flag}")
+        if self.anchor_version in ("v2", "v3"):
+            self.structured_payload()  # validate evidence before serialization
+            features.update((f"protocol:{self.anchor_version}", f"evidence:{self.decision_evidence_hash}"))
         return frozenset(features)
 
 
@@ -144,7 +159,16 @@ def encode_anchor(state: AnchorState, mode: AnchorMode | str = AnchorMode.STRUCT
         # SIMILARITY starts from the structured id; grouping merges afterwards.
         payload = state.structured_payload()
     digest = sha256_text(canonical_json(payload))
-    return f"{resolved.value}:{digest[:ANCHOR_ID_LENGTH]}"
+    version = f"{state.anchor_version}:" if state.anchor_version in ("v2", "v3") and resolved is not AnchorMode.DB_HASH_ONLY else ""
+    return f"{resolved.value}:{version}{digest[:ANCHOR_ID_LENGTH]}"
+
+
+def _compatible_evidence(left: frozenset[str], right: frozenset[str]) -> bool:
+    prefixes = ("task:",)
+    if {"protocol:v2", "protocol:v3"} & (left | right):
+        # Approximate grouping must never erase v2's scope/observation guard.
+        prefixes = ("task:", "db:", "protocol:", "evidence:")
+    return {x for x in left if x.startswith(prefixes)} == {x for x in right if x.startswith(prefixes)}
 
 
 def encode_similarity_candidate(state: AnchorState) -> str:
@@ -186,12 +210,10 @@ def resolve_similarity_candidates(
     for index in order:
         features = parsed[index]
         assert features is not None
-        task_features = {item for item in features if item.startswith("task:")}
         for rep in representatives:
             rep_features = parsed[rep]
             assert rep_features is not None
-            rep_tasks = {item for item in rep_features if item.startswith("task:")}
-            if task_features != rep_tasks:
+            if not _compatible_evidence(features, rep_features):
                 continue
             if jaccard(rep_features, features) >= threshold:
                 assignment[index] = rep
@@ -263,7 +285,7 @@ def _similarity_anchors(states: list[AnchorState], *, threshold: float) -> list[
     for index in order:
         for rep in representatives:
             # Same task only: merging across tasks would mix unrelated states.
-            if states[rep].task_id != states[index].task_id:
+            if not _compatible_evidence(features[rep], features[index]):
                 continue
             if jaccard(features[rep], features[index]) >= threshold:
                 assignment[index] = rep

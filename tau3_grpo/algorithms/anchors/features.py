@@ -70,7 +70,10 @@ def known_info_mask(messages: Iterable[Any]) -> tuple[bool, ...]:
 
 
 def confirmation_flags(messages: Iterable[Any]) -> tuple[str, ...]:
-    """Write tools that have committed, plus explicit user confirmation."""
+    """Legacy v1 keyword flags, retained only for historical replay.
+
+    Live v2 anchors use scoped dialogue evidence instead of user_confirmed.
+    """
 
     flags: set[str] = set()
     pending: dict[str, str] = {}

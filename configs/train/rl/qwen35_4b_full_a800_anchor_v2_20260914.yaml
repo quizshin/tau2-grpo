@@ -1,0 +1,16 @@
+# Anchor-only candidate: retains the inherited advantage normalization.
+# This configuration is not launched by installing it.
+includes:
+- qwen35_4b_full_a800_c50_matched6h_common_20260912.yaml
+launch:
+  environment:
+    TAU3_GRPO_ANCHOR_VERSION: v2
+    RESULTS_DIR: ${TAU3_RUN_ROOT}/anchor-v2-20260914/e2_seed42
+    TOTAL_UPDATES: '2'
+    SWANLAB_EXPERIMENT_NAME: Anchor-v2-candidate-e2-s42
+  overrides:
+  - trainer.total_training_steps=2
+  - trainer.resume_mode=disable
+  - trainer.test_freq=-1
+  - trainer.save_freq=-1
+  - trainer.val_before_train=false
