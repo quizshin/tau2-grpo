@@ -1,0 +1,38 @@
+{
+  "deleted_paths": [
+    "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/selection/code",
+    "/root/autodl-tmp/tau3-local-20260915",
+    "/root/autodl-tmp/tau3-perf-20260912",
+    "/root/autodl-tmp/tau3-gdn-diagnosis-20260912",
+    "/root/autodl-tmp/tau3-5xa800-20260911",
+    "/root/autodl-tmp/tau3-models-20260912",
+    "/root/autodl-tmp/tau3-sft-archive-20260913",
+    "/root/autodl-tmp/tau3",
+    "/root/tau3-sft-archive-20260913",
+    "/root/tau3-models-5xa800",
+    "/root/autodl-tmp/dialogue_anchor_audit_20260914.py",
+    "/root/autodl-tmp/dialogue_anchor_audit_20260914_v2.py",
+    "/root/autodl-tmp/validate_gigpo_integration_20260914.py",
+    "/root/autodl-tmp/dialogue_anchor_audit_20260914_v3.py",
+    "/root/autodl-tmp/tau3-cpu-signal-20260914.bundle",
+    "/root/autodl-tmp/tau3-gigpo-integration-20260914.bundle",
+    "/root/autodl-tmp/tau3-gigpo-audit-report-20260914.bundle",
+    "/root/autodl-tmp/tau3-anchor-v2-20260914.bundle",
+    "/root/autodl-tmp/tau3-anchor-v2-report-20260914.bundle",
+    "/root/autodl-tmp/tau3-semantic-v3-20260914.bundle",
+    "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sync/source.bundle",
+    "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sync/test-fix.bundle",
+    "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sync/code-before-sync.tar.gz",
+    "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sync/source.tar",
+    "/root/autodl-fs/tau3-core/migration/20260915/local-head.bundle",
+    "/root/autodl-fs/tau3-core-20260912 (replaced by compatibility symlink)"
+  ],
+  "standalone_scripts_verified_in_git": 24,
+  "canonical_code": "/root/autodl-fs/tau3-core/code",
+  "compatibility_alias": "/root/autodl-fs/tau3-core-20260912",
+  "model_choice": "remote complete model only; tokenizer-only 4B provenance removed",
+  "removed_incomplete_git_pack": {
+    "path": "/root/autodl-fs/tau3-core/code/.git/objects/pack/tmp_pack_kV8Sfa",
+    "bytes": 169345036
+  }
+}

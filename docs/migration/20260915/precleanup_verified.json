@@ -1,0 +1,7 @@
+{
+  "source_files_verified": 9880,
+  "source_snapshots": 7,
+  "independent_git_objects": true,
+  "model_and_sft_content_verification": true,
+  "regression": "929 passed + 3 corrected default-env tests passed; 15 GPU checks skipped"
+}

@@ -1,0 +1,34 @@
+[
+  {
+    "source": "/root/autodl-tmp/tau3-perf-20260912/",
+    "destination": "/root/autodl-fs/tau3-core/code/results/legacy/perf-20260912/",
+    "regular_files_content_equal_except_relocated_direct_url": true,
+    "metadata_changes": []
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/",
+    "destination": "/root/autodl-fs/tau3-core/code/results/legacy/gdn-20260912/",
+    "regular_files_content_equal_except_relocated_direct_url": true,
+    "metadata_changes": []
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-5xa800-20260911/",
+    "destination": "/root/autodl-fs/tau3-core/code/results/legacy/five-a800-20260911/",
+    "regular_files_content_equal_except_relocated_direct_url": true,
+    "metadata_changes": []
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-perf-20260912/overlay/",
+    "destination": "/root/autodl-fs/tau3-core/environment/overlays/fla/",
+    "regular_files_content_equal_except_relocated_direct_url": true,
+    "metadata_changes": []
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/fa2-overlay/",
+    "destination": "/root/autodl-fs/tau3-core/environment/overlays/fa2-overlay/",
+    "regular_files_content_equal_except_relocated_direct_url": true,
+    "metadata_changes": [
+      ">fcst...... flash_attn-2.8.3+cu130torch2.11.dist-info/direct_url.json"
+    ]
+  }
+]

@@ -12,6 +12,7 @@ export PYTHONPATH="$CODE_ROOT:$CODE_ROOT/tau2-bench/src:$CODE_ROOT/verl:$TAU3_FL
 export TAU3_ENV_FILE="$CODE_ROOT/.env"
 export TAU3_MODEL_ROOT="$CODE_ROOT/models"
 export TAU3_DATA_ROOT="$CODE_ROOT/data"
+export TAU3_TEST_TOKENIZERS="$TAU3_DATA_ROOT/tokenizers"
 export TAU3_RUN_ROOT="$CODE_ROOT/results/runs"
 export TAU3_CHECKPOINT_ROOT="$CODE_ROOT/checkpoints"
 export TAU3_CACHE_ROOT="$CODE_ROOT/.cache"
@@ -19,7 +20,7 @@ export TAU3_SCRATCH_ROOT="$TAU3_CACHE_ROOT/runtime"
 export TAU3_SIM_CACHE_ROOT="$TAU3_CACHE_ROOT/qwen38-sim"
 export QWEN35_SIZE=4B
 export QWEN35_MODEL_PATH="$TAU3_MODEL_ROOT/Qwen3.5-4B"
-export MODEL_PATH="$QWEN35_MODEL_PATH"
+# RL profiles select their SFT checkpoint; do not override MODEL_PATH here.
 export SFT_MODEL_NAME_OR_PATH="$QWEN35_MODEL_PATH"
 export TAU3_USER_MODEL="$TAU3_MODEL_ROOT/Qwen3.8-27B-AWQ-INT4"
 export TAU3_USER_SERVED_MODEL_NAME=Qwen/Qwen3.8-27B-AWQ-INT4

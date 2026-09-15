@@ -527,7 +527,7 @@ def test_launcher_dry_run_preserves_grouping_and_writes_nothing(tmp_path, size, 
     assert cfg.data.apply_chat_template_kwargs.enable_thinking is False
     assert cfg.actor_rollout_ref.actor.freeze_vision_tower is True
     # The uncast FP32 embedding must fit in one real weight-transfer bucket.
-    model_config_path = PROJECT_ROOT / "models" / f"Qwen3.5-{size}" / "config.json"
+    model_config_path = Path(os.environ.get("TAU3_TEST_TOKENIZERS", PROJECT_ROOT / "models")) / f"Qwen3.5-{size}" / "config.json"
     if model_config_path.is_file():
         config = json.loads(model_config_path.read_text())["text_config"]
         embedding_bytes = config["vocab_size"] * config["hidden_size"] * 4
