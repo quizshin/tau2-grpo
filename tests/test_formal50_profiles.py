@@ -59,7 +59,7 @@ def test_matched_profile_fixed_sampling_and_ray_budget(arm, tmp_path, monkeypatc
     assert settings['data.apply_chat_template_kwargs.enable_thinking'] == 'false'
     assert settings['ray_kwargs.ray_init.runtime_env.env_vars.TAU3_GRPO_ARM'] == f"'{arm}'"
     assert ('ray_kwargs.ray_init.runtime_env.env_vars.TAU3_E0_DISCOVERY_SECONDS' in settings) == (arm == 'e0')
-    assert env['MODEL_PATH'] == str(tmp_path / 'checkpoints/sft-merged/new-off')
+    assert env['MODEL_PATH'] == str(tmp_path / 'code/checkpoints/sft-merged/new-off')
     assert env['RESULTS_DIR'].endswith(f'/{arm}_seed42')
     assert not (tmp_path / 'runs').exists()
 

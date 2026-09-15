@@ -7,7 +7,7 @@ launch:
   seed: 42
   environment:
     QWEN35_SIZE: 4B
-    MODEL_PATH: ${TAU3_ROOT}/checkpoints/sft-merged/new-off
+    MODEL_PATH: ${TAU3_ROOT}/code/checkpoints/sft-merged/new-off
     RESULTS_DIR: ${TAU3_RUN_ROOT}/rl-formal-full-20260912/formal
     TOOL_CONFIG: ${RESULTS_DIR}/tool_config.yaml
     TAU3_POLICY_CUDA_DEVICES: '0,1,2,3'

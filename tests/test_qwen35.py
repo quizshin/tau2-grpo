@@ -26,6 +26,10 @@ def tokenizer(name):
     transformers = pytest.importorskip("transformers")
     path = Path(os.environ.get("TAU3_TEST_TOKENIZERS", PROJECT_ROOT / "models")) / name
     if not (path / "tokenizer.json").is_file():
+        full_model = PROJECT_ROOT / "models" / name
+        if (full_model / "tokenizer.json").is_file():
+            path = full_model
+    if not (path / "tokenizer.json").is_file():
         pytest.skip(f"Fetch pinned tokenizer assets with download_qwen35: {path}")
     return transformers.AutoTokenizer.from_pretrained(path, local_files_only=True)
 

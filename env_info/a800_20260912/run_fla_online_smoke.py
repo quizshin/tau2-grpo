@@ -12,7 +12,7 @@ from tau3_grpo.paths import CODE_ROOT
 import run_curriculum_smoke as controller
 
 R=Path(os.environ['TAU3_ROOT'])
-W=Path(os.environ.get('TAU3_FLA_ONLINE_DIR',str(R/'runs/fla-online-20260912')))
+W=Path(os.environ.get('TAU3_FLA_ONLINE_DIR',str(R / 'code/results/runs/fla-online-20260912')))
 
 
 def resolved(stage='smoke'):
@@ -37,7 +37,7 @@ def resolved(stage='smoke'):
 
 def main(dry_run):
     W.mkdir(parents=True,exist_ok=True)
-    old=R/'runs/curriculum-speed-20260912/data-audit.json'
+    old=R / 'code/results/runs/curriculum-speed-20260912/data-audit.json'
     audit=json.loads(old.read_text())
     assert audit['candidate_manifest_sha256']=='79e317a824e8b55f7ce338c9f30a5811d83f2dce17dd896397eaffb003f5efbb'
     (W/'data-audit.json').write_text(json.dumps(audit,indent=2)+'\n')

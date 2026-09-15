@@ -17,7 +17,7 @@ from tau3_grpo.tracking.swanlab import load_tracking_env
 
 R=Path(os.environ['TAU3_ROOT'])
 C=R/'code'
-W=R/'runs/rl-formal-full-20260912'
+W=R / 'code/results/runs/rl-formal-full-20260912'
 PROFILE=C/'configs/train/rl/qwen35_4b_full_a800_formal_20260912.yaml'
 processes=[]
 
@@ -48,7 +48,7 @@ def stage_config(stage):
         env['VERL_QWEN35_WEIGHT_AUDIT_DIR']=str(W/'acceptance/weight-audits')
     env['GIT_CONFIG_COUNT']='1';env['GIT_CONFIG_KEY_0']='safe.directory';env['GIT_CONFIG_VALUE_0']=str(C)
     cmd,env,snapshot=prepare('rl',PROFILE,'e0',42,extras,env)
-    assert env['MODEL_PATH']==str(R/'checkpoints/sft-merged/new-off')
+    assert env['MODEL_PATH']==str(R / 'code/checkpoints/sft-merged/new-off')
     assert env['POLICY_GPUS']=='4' and env['ROLLOUT_TP']=='1'
     assert 'actor_rollout_ref.model.lora_rank=0' in cmd
     assert 'trainer.resume_mode=disable' in cmd
@@ -79,7 +79,7 @@ def main(dry_run):
     env=os.environ.copy()
     env.update(TAU3_USER_CUDA_DEVICES='4',TAU3_USER_MAX_NUM_SEQS='16',TAU3_USER_MAX_MODEL_LEN='16384',
                TAU3_USER_GPU_MEMORY_UTILIZATION='0.65',TAU3_USER_ENFORCE_EAGER='1',
-               TAU3_USER_MODEL=str(R/'models/Qwen3.8-27B-AWQ-INT4'),
+               TAU3_USER_MODEL=str(R / 'code/models/Qwen3.8-27B-AWQ-INT4'),
                TAU3_USER_SERVED_MODEL_NAME='Qwen/Qwen3.8-27B-AWQ-INT4',TAU3_USER_PORT='8100',
                OMP_NUM_THREADS='4',OPENBLAS_NUM_THREADS='4')
     # Fail rather than accidentally connect to somebody else's server.

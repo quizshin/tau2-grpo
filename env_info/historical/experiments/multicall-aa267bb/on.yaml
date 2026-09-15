@@ -1,11 +1,11 @@
 model:
-  name_or_path: /root/autodl-fs/tau3-core-20260912/models/Qwen3.5-4B
+  name_or_path: /root/autodl-fs/tau3-core/code/models/Qwen3.5-4B
   trust_remote_code: false
   attn_implementation: sdpa
 data:
-  train_jsonl: /root/autodl-fs/tau3-core-20260912/code/data/sft/airline_sft_train_seed42.jsonl
-  validation_jsonl: /root/autodl-fs/tau3-core-20260912/code/data/sft/airline_sft_validation_seed42.jsonl
-  tool_config: /root/autodl-fs/tau3-core-20260912/code/configs/envs/tool_config.yaml
+  train_jsonl: /root/autodl-fs/tau3-core/code/data/sft/airline_sft_train_seed42.jsonl
+  validation_jsonl: /root/autodl-fs/tau3-core/code/data/sft/airline_sft_validation_seed42.jsonl
+  tool_config: /root/autodl-fs/tau3-core/code/configs/envs/tool_config.yaml
   max_length: 24576
   enable_thinking: true
   supervise_reasoning: true
@@ -30,4 +30,4 @@ train:
   logging_steps: 1
   seed: 42
 output:
-  dir: /root/autodl-fs/tau3-core-20260912/experiments/multicall-aa267bb/sft/on
+  dir: /root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/on

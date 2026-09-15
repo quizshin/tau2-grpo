@@ -14,8 +14,8 @@ from tau3_grpo.data.manifest import read_manifest
 from tau3_grpo.evaluation.service_attestation import write_service_attestation
 from tau3_grpo.prompts import prompt_provenance
 
-R = Path('/root/autodl-fs/tau3-core-20260912')
-W = R/'experiments/multicall-aa267bb/selection'
+R = Path('/root/autodl-fs/tau3-core')
+W = R / 'code/results/legacy/experiments/multicall-aa267bb/selection'
 C = W/'code'
 M = Path('/dev/shm/tau3-multicall-aa267bb-selection')
 PY = str(R/'environment/venvs/qwen35/bin/python')
@@ -94,7 +94,7 @@ def main():
           'user_context':16384,'max_steps':30,'seed':42,'thinking_on_changes_inference_mode':True,
           'reference_thread':'01a08c2c-2828-7221-a696-8ca571971d37',
           'reference_results':str(R/'selection-dual-gpu'),'temporary_merged_models':str(M),
-          'temporary_models_lost_on_reboot':True,'adapter_source':str(R/'experiments/multicall-aa267bb/sft'),
+          'temporary_models_lost_on_reboot':True,'adapter_source':str(R / 'code/results/legacy/experiments/multicall-aa267bb/sft'),
           'manifest_sha256':hashlib.sha256(manifest.read_bytes()).hexdigest(),**prompt_provenance()}
     (W/'plan.json').write_text(json.dumps(plan,indent=2))
     with (W/'controller.started').open('x') as f:f.write(str(time.time()))
@@ -109,12 +109,12 @@ def main():
                 assert len(list(tensors.keys()))>400
             print('Reusing completed merge',mode,flush=True)
             continue
-        p=launch([PY,'-m','tau3_grpo.training.sft.merge','--base',str(R/'models/Qwen3.5-4B'),
-                  '--adapter',str(R/'experiments/multicall-aa267bb/sft'/mode),'--output',str(M/('merged-'+mode))],
+        p=launch([PY,'-m','tau3_grpo.training.sft.merge','--base',str(R / 'code/models/Qwen3.5-4B'),
+                  '--adapter',str(R / 'code/results/legacy/experiments/multicall-aa267bb/sft'/mode),'--output',str(M/('merged-'+mode))],
                  'merge-'+mode)
         assert p.wait()==0,f'Merge failed: {mode}'
         print('Merged',mode,flush=True)
-    simulator=launch(serve(SIM,R/'models/Qwen3.8-27B-AWQ-INT4','tau3-user',8300,.65,16384,False,True),
+    simulator=launch(serve(SIM,R / 'code/models/Qwen3.8-27B-AWQ-INT4','tau3-user',8300,.65,16384,False,True),
                      'simulator','simulator')
     ready(simulator,8300)
     outcomes={}

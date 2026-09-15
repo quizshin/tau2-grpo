@@ -4,7 +4,7 @@ includes:
 - qwen35_4b_full_a800_curriculum40_pilot_20260912.yaml
 launch:
   environment:
-    MODEL_PATH: ${TAU3_ROOT}/checkpoints/sft-merged/new-off
+    MODEL_PATH: ${TAU3_ROOT}/code/checkpoints/sft-merged/new-off
     RESULTS_DIR: ${TAU3_RUN_ROOT}/rl-curriculum40-fast-20260912/e0_seed42
     MAX_NUM_SEQS: '16'
     VERL_QWEN35_COMPACT_HEAD: '1'

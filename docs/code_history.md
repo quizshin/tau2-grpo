@@ -74,7 +74,7 @@ git diff history/local-20260915 history/remote-rl-20260915 -- tau3_grpo/
 | Qwen3.5-4B 与 Qwen3.8-27B 基础模型 | `models/` |
 | 冻结原始数据、训练划分、parquet、SFT 输入 | `data/` |
 | 其他型号的 tokenizer 测试数据（不含模型权重） | `data/tokenizers/` |
-| SFT 模型、旧/新 SFT 权重 | `checkpoints/`；归档权重在 `checkpoints/archived-sft/` |
+| SFT 模型、旧/新 SFT 权重 | `checkpoints/`；四份合并权重均在 `checkpoints/sft-merged/{old-off,old-on,new-off,new-on}/` 实际目录 |
 | 四次 RL 及其训练 checkpoint | `results/runs/rl-c50-matched6h-a800-20260912/` |
 | RL 后评估 | `results/runs/post-rl-selection-20260914/` 和 `post-rl-selection-recovery-20260914/` |
 | 其他持久盘历史实验结果 | `results/legacy/experiments/` |
@@ -85,13 +85,15 @@ git diff history/local-20260915 history/remote-rl-20260915 -- tau3_grpo/
 
 `models/Qwen3.5-4B/tau3_source_revision.json` 使用远程完整模型的 ModelScope 来源记录；本地同步版本仅标记 `tokenizer_only: true`。两份记录的模型名及 revision 完全一致（`851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a`），用户确认只保留远程完整模型；tokenizer-only 同步记录及其留档已删除，未复制第二套权重。
 
-E2/E3 原入口指向已失效的 `/dev/shm`。入口改为持久化的完整 checkpoint，并连接持久化模型备份中的 validation、rollouts、SwanLab 等辅助产物。检查了完成标记中的所有文件尺寸，并核对每个 arm 的 23 个小型元数据 SHA256。大分片未重复计算 SHA256；它们通过同盘移动保留。历史 launch/receipt 正文不改写。
+E2/E3 原入口指向已失效的 `/dev/shm`。完整 checkpoint 已同盘移动至 `results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/` 和 `e3_seed42/` 实际目录；validation、rollouts、SwanLab 等辅助产物也在各 arm 内实际落盘。检查了完成标记中的所有文件尺寸，并核对每个 arm 的 23 个小型元数据 SHA256。大分片未重复计算 SHA256；它们通过同盘移动保留。历史 launch/receipt 正文不改写。
 
-## 环境及旧路径兼容
+## 环境及实际路径
 
 统一入口不设置通用 MODEL_PATH，避免覆盖正式 RL 配置中的 SFT 起点。统一入口脚本模板已纳入 `env_info/autodl/activate_canonical.sh`。三个 venv 的 editable 导入均指向主代码；FLA 在 `environment/overlays/fla`，FA2 诊断依赖独立放在 `environment/overlays/fa2-overlay`，不加入默认训练路径。
 
-`tau3-core` 下的 runs/checkpoints/models/experiments 若存在，均为指向 `code/` 内实际内容的兼容软链接。旧 `tau3-core-20260912` 现仅保留到 `tau3-core` 的兼容软链接，供旧环境二进制路径和历史引用使用，不含第二份代码。
+2026-09-15 已移除项目兼容软链接：`tau3-core/{runs,checkpoints,models,experiments,migration}` 及旧 `tau3-core-20260912`。当前配置和 A800 启动工具直接使用 `code/` 内实际路径。项目目录及产物的软链接已清零（扫描排除 environment、Git 和缓存）；Python 环境内部的标准运行时链接保持原样。平台软链接 `/root/autodl-fs → /autodl-fs/data` 保留，未作修改。
+
+历史 launch/receipt、源码快照和既有迁移清单保留原文，反映当时状态。旧路径映射见 `docs/migration/20260915/remove-symlinks/path_map.json`；原日期前缀先替换为 `tau3-core`，再按最长前缀应用映射，直至路径不再变化。历史诊断脚本仍须根据其实验所需的输入、GPU 和运行条件使用，不代表本轮重新完成了历史 GPU 实验。
 
 凭据存放在被 Git 忽略的 `.env` 与 `.private/credentials/`，不会出现在本文件或源码历史中。
 
@@ -99,9 +101,11 @@ E2/E3 原入口指向已失效的 `/dev/shm`。入口改为持久化的完整 ch
 
 第一轮合并相关回归：253 passed，11 skipped（GPU 数值测试），1 warning。
 已验证在不设置 PYTHONPATH 时，tau3_grpo、verl、tau2 仍从新的主仓库导入。
-清理后的完整远程 CPU 回归：**932 passed，15 skipped**，3 warnings，耗时 402.28s (0:06:42)。原默认配置测试继承部署变量的问题已通过测试环境隔离修正。最终输出见 `migration/20260915/final-tests.txt`。
+清理后的完整远程 CPU 回归：**932 passed，15 skipped**，3 warnings，耗时 402.28s (0:06:42)。原默认配置测试继承部署变量的问题已通过测试环境隔离修正。该轮输出见 `docs/migration/20260915/final-tests.txt`。
 
-7 份源码副本已归并，26 个旧目录/文件路径已清理。扫描确认只有一份工作代码；所有产物软链接均有效且指向主仓库内部；E0–E3 的 step 20 checkpoint、优化器分片和 validation 入口均已核对。日志与完整迁移清单位于 `results/maintenance/20260915/`。
+7 份源码副本已归并，26 个旧目录/文件路径已清理。首次清理时确认只有一份工作代码、产物软链接均有效；本轮已进一步改为实际文件和目录；E0–E3 的 step 20 checkpoint、优化器分片和 validation 入口均已核对。日志与完整迁移清单位于 `results/maintenance/20260915/`。
 本次为无卡远程验证，不能据此宣称多卡 FSDP 或真实 GPU RL 已重新跑通。
 
 834 MiB 的上游完整 SFT 原始语料保留于 `data/raw/areal_tau2/tau2_sft_train.jsonl`，不提交进 Git；其 SHA256 记录在迁移产物清单中。
+
+移除项目软链接后的回归：首轮 928 passed、4 个旧路径断言失败、15 skipped；修正断言后 4 项复测全部通过，最终 932 项通过。实际目录、路径映射及验证记录见 `docs/migration/20260915/remove-symlinks/README.md`。

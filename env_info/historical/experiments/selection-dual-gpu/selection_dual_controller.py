@@ -3,7 +3,7 @@ from pathlib import Path
 import requests
 from evaluation_completion import classify_completion
 from tau3_grpo.evaluation.service_attestation import write_service_attestation
-R=Path('/root/autodl-fs/tau3-core-20260912');W=R/'experiments/selection-dual-gpu'
+R=Path('/root/autodl-fs/tau3-core');W=R / 'code/results/legacy/experiments/selection-dual-gpu'
 PY=str(R/'environment/venvs/qwen35/bin/python');SIM=str(R/'environment/venvs/qwen38-sim/bin/python')
 os.environ['CUDA_VISIBLE_DEVICES']='0'
 os.environ['OMP_NUM_THREADS']='4'
@@ -45,9 +45,9 @@ if (W/'controller.started').exists():raise RuntimeError('Controller already star
 plan={'policy_gpu':0,'simulator_gpu':1,'methods':['off','on'],'tasks':60,'trials':4,'concurrency':2,'policy_temperature':.4,'user_temperature':0,'max_new_tokens_per_turn':2048,'policy_context':24576,'user_context':16384,'max_steps':30,'thinking_on_changes_inference_mode':True}
 (W/'plan.json').write_text(json.dumps(plan,indent=2))
 try:
- sim=launch(serve(SIM,R/'models/Qwen3.8-27B-AWQ-INT4','tau3-user',8100,.65,16384,False,True),'simulator');ready(sim,8100)
+ sim=launch(serve(SIM,R / 'code/models/Qwen3.8-27B-AWQ-INT4','tau3-user',8100,.65,16384,False,True),'simulator');ready(sim,8100)
  for method in ['off','on']:
-  checkpoint=Path('/root/autodl-fs/tau3-core-20260912/selection-single-gpu')/('merged-'+method)
+  checkpoint=Path('/root/autodl-fs/tau3-core/selection-single-gpu')/('merged-'+method)
   p=launch(serve(PY,checkpoint,'tau3-policy',8000,.80,24576,method=='on'),'policy-'+method);ready(p,8000)
   att=W/('attestation-'+method+'.json')
   write_service_attestation(checkpoint_path=str(checkpoint),served_model_name='tau3-policy',base_url='http://127.0.0.1:8000/v1',pid=p.pid,output=att)

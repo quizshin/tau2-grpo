@@ -10,10 +10,10 @@ lora:
   target_modules: qwen35_language_linear
 model:
   attn_implementation: sdpa
-  name_or_path: /root/autodl-fs/tau3-core-20260912/models/Qwen3.5-4B
+  name_or_path: /root/autodl-fs/tau3-core/code/models/Qwen3.5-4B
   trust_remote_code: false
 output:
-  dir: /root/autodl-fs/tau3-core-20260912/checkpoints/sft-comparison/lora-thinking
+  dir: /root/autodl-fs/tau3-core/code/checkpoints/sft-comparison/lora-thinking
 train:
   evaluate_before_train: true
   gradient_accumulation_steps: 8

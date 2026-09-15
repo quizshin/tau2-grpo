@@ -292,7 +292,7 @@ class Controller:
                 'policy_generation_config': 'vllm', 'policy_engine_seed': 42,
                 'policy_max_model_len': 24576, 'simulator_max_model_len': 16384,
                 'simulator': self.env['TAU3_USER_MODEL'], 'root': str(self.root),
-                'sft': str(Path(self.env['TAU3_ROOT']) / 'checkpoints/sft-merged/new-off'),
+                'sft': str(Path(self.env['TAU3_ROOT']) / 'code/checkpoints/sft-merged/new-off'),
                 'no_official_final': True, 'no_shutdown': True}
         if self.reuse_sft_from:
             if self.reuse_sft_from == self.output.resolve():

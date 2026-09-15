@@ -349,9 +349,9 @@ def run(args):
 
 if __name__=='__main__':
     p=argparse.ArgumentParser()
-    p.add_argument('--model',default='/root/autodl-fs/tau3-core-20260912/checkpoints/sft-merged/new-off')
-    p.add_argument('--batch',default='/root/autodl-fs/tau3-core-20260912/runs/curriculum-speed-20260912/online-smoke/update-batches/update_000001.pkl')
-    p.add_argument('--config',default='/root/autodl-fs/tau3-core-20260912/runs/curriculum-speed-20260912/smoke.hydra.yaml')
+    p.add_argument('--model',default='/root/autodl-fs/tau3-core/code/checkpoints/sft-merged/new-off')
+    p.add_argument('--batch',default='/root/autodl-fs/tau3-core/code/results/runs/curriculum-speed-20260912/online-smoke/update-batches/update_000001.pkl')
+    p.add_argument('--config',default='/root/autodl-fs/tau3-core/code/results/runs/curriculum-speed-20260912/smoke.hydra.yaml')
     p.add_argument('--output',type=Path,required=True)
     p.add_argument('--triton-fp32',choices=['default','ieee'],default='default')
     p.add_argument('--reuse-native-scores',type=Path)
