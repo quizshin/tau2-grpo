@@ -1,0 +1,416 @@
+{
+  "changed": [
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000020.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e2_seed42/swanlab-artifacts/train-rollout_examples-step000020.jsonl",
+      "new": "../../../../../persistent-checkpoints/e2_seed42/swanlab-artifacts/train-rollout_examples-step000020.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000019.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e2_seed42/swanlab-artifacts/train-rollout_examples-step000019.jsonl",
+      "new": "../../../../../persistent-checkpoints/e2_seed42/swanlab-artifacts/train-rollout_examples-step000019.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000018.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e2_seed42/swanlab-artifacts/train-rollout_examples-step000018.jsonl",
+      "new": "../../../../../persistent-checkpoints/e2_seed42/swanlab-artifacts/train-rollout_examples-step000018.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000017.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e2_seed42/swanlab-artifacts/train-rollout_examples-step000017.jsonl",
+      "new": "../../../../../persistent-checkpoints/e2_seed42/swanlab-artifacts/train-rollout_examples-step000017.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000016.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e2_seed42/swanlab-artifacts/train-rollout_examples-step000016.jsonl",
+      "new": "../../../../../persistent-checkpoints/e2_seed42/swanlab-artifacts/train-rollout_examples-step000016.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000015.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e2_seed42/swanlab-artifacts/train-rollout_examples-step000015.jsonl",
+      "new": "../../../../../persistent-checkpoints/e2_seed42/swanlab-artifacts/train-rollout_examples-step000015.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000014.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e2_seed42/swanlab-artifacts/train-rollout_examples-step000014.jsonl",
+      "new": "../../../../../persistent-checkpoints/e2_seed42/swanlab-artifacts/train-rollout_examples-step000014.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000013.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e2_seed42/swanlab-artifacts/train-rollout_examples-step000013.jsonl",
+      "new": "../../../../../persistent-checkpoints/e2_seed42/swanlab-artifacts/train-rollout_examples-step000013.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000012.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e2_seed42/swanlab-artifacts/train-rollout_examples-step000012.jsonl",
+      "new": "../../../../../persistent-checkpoints/e2_seed42/swanlab-artifacts/train-rollout_examples-step000012.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000011.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e2_seed42/swanlab-artifacts/train-rollout_examples-step000011.jsonl",
+      "new": "../../../../../persistent-checkpoints/e2_seed42/swanlab-artifacts/train-rollout_examples-step000011.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000010.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e2_seed42/swanlab-artifacts/train-rollout_examples-step000010.jsonl",
+      "new": "../../../../../persistent-checkpoints/e2_seed42/swanlab-artifacts/train-rollout_examples-step000010.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000009.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e2_seed42/swanlab-artifacts/train-rollout_examples-step000009.jsonl",
+      "new": "../../../../../persistent-checkpoints/e2_seed42/swanlab-artifacts/train-rollout_examples-step000009.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000008.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e2_seed42/swanlab-artifacts/train-rollout_examples-step000008.jsonl",
+      "new": "../../../../../persistent-checkpoints/e2_seed42/swanlab-artifacts/train-rollout_examples-step000008.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000007.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e2_seed42/swanlab-artifacts/train-rollout_examples-step000007.jsonl",
+      "new": "../../../../../persistent-checkpoints/e2_seed42/swanlab-artifacts/train-rollout_examples-step000007.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000006.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e2_seed42/swanlab-artifacts/train-rollout_examples-step000006.jsonl",
+      "new": "../../../../../persistent-checkpoints/e2_seed42/swanlab-artifacts/train-rollout_examples-step000006.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000005.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e2_seed42/swanlab-artifacts/train-rollout_examples-step000005.jsonl",
+      "new": "../../../../../persistent-checkpoints/e2_seed42/swanlab-artifacts/train-rollout_examples-step000005.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000004.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e2_seed42/swanlab-artifacts/train-rollout_examples-step000004.jsonl",
+      "new": "../../../../../persistent-checkpoints/e2_seed42/swanlab-artifacts/train-rollout_examples-step000004.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000003.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e2_seed42/swanlab-artifacts/train-rollout_examples-step000003.jsonl",
+      "new": "../../../../../persistent-checkpoints/e2_seed42/swanlab-artifacts/train-rollout_examples-step000003.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000002.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e2_seed42/swanlab-artifacts/train-rollout_examples-step000002.jsonl",
+      "new": "../../../../../persistent-checkpoints/e2_seed42/swanlab-artifacts/train-rollout_examples-step000002.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000001.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e2_seed42/swanlab-artifacts/train-rollout_examples-step000001.jsonl",
+      "new": "../../../../../persistent-checkpoints/e2_seed42/swanlab-artifacts/train-rollout_examples-step000001.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/source-snapshot.json",
+      "old": "/dev/shm/tau3-matched50-20260913/e2_seed42/swanlab-artifacts/source-snapshot.json",
+      "new": "../../../../../persistent-checkpoints/e2_seed42/swanlab-artifacts/source-snapshot.json"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/source-sft-rl.zip",
+      "old": "/dev/shm/tau3-matched50-20260913/e2_seed42/swanlab-artifacts/source-sft-rl.zip",
+      "new": "../../../../../persistent-checkpoints/e2_seed42/swanlab-artifacts/source-sft-rl.zip"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000020.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e3_seed42/swanlab-artifacts/train-rollout_examples-step000020.jsonl",
+      "new": "../../../../../persistent-checkpoints/e3_seed42/swanlab-artifacts/train-rollout_examples-step000020.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000019.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e3_seed42/swanlab-artifacts/train-rollout_examples-step000019.jsonl",
+      "new": "../../../../../persistent-checkpoints/e3_seed42/swanlab-artifacts/train-rollout_examples-step000019.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000018.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e3_seed42/swanlab-artifacts/train-rollout_examples-step000018.jsonl",
+      "new": "../../../../../persistent-checkpoints/e3_seed42/swanlab-artifacts/train-rollout_examples-step000018.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000017.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e3_seed42/swanlab-artifacts/train-rollout_examples-step000017.jsonl",
+      "new": "../../../../../persistent-checkpoints/e3_seed42/swanlab-artifacts/train-rollout_examples-step000017.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000016.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e3_seed42/swanlab-artifacts/train-rollout_examples-step000016.jsonl",
+      "new": "../../../../../persistent-checkpoints/e3_seed42/swanlab-artifacts/train-rollout_examples-step000016.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000015.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e3_seed42/swanlab-artifacts/train-rollout_examples-step000015.jsonl",
+      "new": "../../../../../persistent-checkpoints/e3_seed42/swanlab-artifacts/train-rollout_examples-step000015.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000014.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e3_seed42/swanlab-artifacts/train-rollout_examples-step000014.jsonl",
+      "new": "../../../../../persistent-checkpoints/e3_seed42/swanlab-artifacts/train-rollout_examples-step000014.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000013.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e3_seed42/swanlab-artifacts/train-rollout_examples-step000013.jsonl",
+      "new": "../../../../../persistent-checkpoints/e3_seed42/swanlab-artifacts/train-rollout_examples-step000013.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000012.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e3_seed42/swanlab-artifacts/train-rollout_examples-step000012.jsonl",
+      "new": "../../../../../persistent-checkpoints/e3_seed42/swanlab-artifacts/train-rollout_examples-step000012.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000011.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e3_seed42/swanlab-artifacts/train-rollout_examples-step000011.jsonl",
+      "new": "../../../../../persistent-checkpoints/e3_seed42/swanlab-artifacts/train-rollout_examples-step000011.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000010.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e3_seed42/swanlab-artifacts/train-rollout_examples-step000010.jsonl",
+      "new": "../../../../../persistent-checkpoints/e3_seed42/swanlab-artifacts/train-rollout_examples-step000010.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000009.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e3_seed42/swanlab-artifacts/train-rollout_examples-step000009.jsonl",
+      "new": "../../../../../persistent-checkpoints/e3_seed42/swanlab-artifacts/train-rollout_examples-step000009.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000008.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e3_seed42/swanlab-artifacts/train-rollout_examples-step000008.jsonl",
+      "new": "../../../../../persistent-checkpoints/e3_seed42/swanlab-artifacts/train-rollout_examples-step000008.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000007.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e3_seed42/swanlab-artifacts/train-rollout_examples-step000007.jsonl",
+      "new": "../../../../../persistent-checkpoints/e3_seed42/swanlab-artifacts/train-rollout_examples-step000007.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000006.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e3_seed42/swanlab-artifacts/train-rollout_examples-step000006.jsonl",
+      "new": "../../../../../persistent-checkpoints/e3_seed42/swanlab-artifacts/train-rollout_examples-step000006.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000005.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e3_seed42/swanlab-artifacts/train-rollout_examples-step000005.jsonl",
+      "new": "../../../../../persistent-checkpoints/e3_seed42/swanlab-artifacts/train-rollout_examples-step000005.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000004.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e3_seed42/swanlab-artifacts/train-rollout_examples-step000004.jsonl",
+      "new": "../../../../../persistent-checkpoints/e3_seed42/swanlab-artifacts/train-rollout_examples-step000004.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000003.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e3_seed42/swanlab-artifacts/train-rollout_examples-step000003.jsonl",
+      "new": "../../../../../persistent-checkpoints/e3_seed42/swanlab-artifacts/train-rollout_examples-step000003.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000002.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e3_seed42/swanlab-artifacts/train-rollout_examples-step000002.jsonl",
+      "new": "../../../../../persistent-checkpoints/e3_seed42/swanlab-artifacts/train-rollout_examples-step000002.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000001.jsonl",
+      "old": "/dev/shm/tau3-matched50-20260913/e3_seed42/swanlab-artifacts/train-rollout_examples-step000001.jsonl",
+      "new": "../../../../../persistent-checkpoints/e3_seed42/swanlab-artifacts/train-rollout_examples-step000001.jsonl"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/source-snapshot.json",
+      "old": "/dev/shm/tau3-matched50-20260913/e3_seed42/swanlab-artifacts/source-snapshot.json",
+      "new": "../../../../../persistent-checkpoints/e3_seed42/swanlab-artifacts/source-snapshot.json"
+    },
+    {
+      "path": "results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/source-sft-rl.zip",
+      "old": "/dev/shm/tau3-matched50-20260913/e3_seed42/swanlab-artifacts/source-sft-rl.zip",
+      "new": "../../../../../persistent-checkpoints/e3_seed42/swanlab-artifacts/source-sft-rl.zip"
+    },
+    {
+      "path": "results/legacy/experiments/multicall-aa267bb/sft/off/swanlog/run-20260911_191922-4256cxjk/files/dataset-train_reference_dialogues-step000000.jsonl",
+      "old": "/root/autodl-fs/tau3-core-20260912/experiments/multicall-aa267bb/sft/off/swanlab-artifacts/dataset-train_reference_dialogues-step000000.jsonl",
+      "new": "../../../swanlab-artifacts/dataset-train_reference_dialogues-step000000.jsonl"
+    },
+    {
+      "path": "results/legacy/experiments/multicall-aa267bb/sft/off/swanlog/run-20260911_191922-4256cxjk/files/dataset-validation_reference_dialogues-step000000.jsonl",
+      "old": "/root/autodl-fs/tau3-core-20260912/experiments/multicall-aa267bb/sft/off/swanlab-artifacts/dataset-validation_reference_dialogues-step000000.jsonl",
+      "new": "../../../swanlab-artifacts/dataset-validation_reference_dialogues-step000000.jsonl"
+    },
+    {
+      "path": "results/legacy/experiments/multicall-aa267bb/sft/off/swanlog/run-20260911_191922-4256cxjk/files/effective_train.jsonl",
+      "old": "/root/autodl-fs/tau3-core-20260912/experiments/multicall-aa267bb/sft/off/effective_train.jsonl",
+      "new": "../../../effective_train.jsonl"
+    },
+    {
+      "path": "results/legacy/experiments/multicall-aa267bb/sft/off/swanlog/run-20260911_191922-4256cxjk/files/effective_validation.jsonl",
+      "old": "/root/autodl-fs/tau3-core-20260912/experiments/multicall-aa267bb/sft/off/effective_validation.jsonl",
+      "new": "../../../effective_validation.jsonl"
+    },
+    {
+      "path": "results/legacy/experiments/multicall-aa267bb/sft/off/swanlog/run-20260911_191922-4256cxjk/files/source-sft-rl.zip",
+      "old": "/root/autodl-fs/tau3-core-20260912/experiments/multicall-aa267bb/sft/off/swanlab-artifacts/source-sft-rl.zip",
+      "new": "../../../swanlab-artifacts/source-sft-rl.zip"
+    },
+    {
+      "path": "results/legacy/experiments/multicall-aa267bb/sft/off/swanlog/run-20260911_191922-4256cxjk/files/source-snapshot.json",
+      "old": "/root/autodl-fs/tau3-core-20260912/experiments/multicall-aa267bb/sft/off/swanlab-artifacts/source-snapshot.json",
+      "new": "../../../swanlab-artifacts/source-snapshot.json"
+    },
+    {
+      "path": "results/legacy/experiments/multicall-aa267bb/sft/off/swanlog/run-20260911_191922-4256cxjk/files/train_summary.json",
+      "old": "/root/autodl-fs/tau3-core-20260912/experiments/multicall-aa267bb/sft/off/train_summary.json",
+      "new": "../../../train_summary.json"
+    },
+    {
+      "path": "results/legacy/experiments/multicall-aa267bb/sft/off/swanlog/run-20260911_191922-4256cxjk/files/trainer_state.json",
+      "old": "/root/autodl-fs/tau3-core-20260912/experiments/multicall-aa267bb/sft/off/trainer_state.json",
+      "new": "../../../trainer_state.json"
+    },
+    {
+      "path": "results/legacy/experiments/multicall-aa267bb/sft/on/swanlog/run-20260911_191826-z6ddgwie/files/dataset-train_reference_dialogues-step000000.jsonl",
+      "old": "/root/autodl-fs/tau3-core-20260912/experiments/multicall-aa267bb/sft/on/swanlab-artifacts/dataset-train_reference_dialogues-step000000.jsonl",
+      "new": "../../../swanlab-artifacts/dataset-train_reference_dialogues-step000000.jsonl"
+    },
+    {
+      "path": "results/legacy/experiments/multicall-aa267bb/sft/on/swanlog/run-20260911_191826-z6ddgwie/files/dataset-validation_reference_dialogues-step000000.jsonl",
+      "old": "/root/autodl-fs/tau3-core-20260912/experiments/multicall-aa267bb/sft/on/swanlab-artifacts/dataset-validation_reference_dialogues-step000000.jsonl",
+      "new": "../../../swanlab-artifacts/dataset-validation_reference_dialogues-step000000.jsonl"
+    },
+    {
+      "path": "results/legacy/experiments/multicall-aa267bb/sft/on/swanlog/run-20260911_191826-z6ddgwie/files/effective_train.jsonl",
+      "old": "/root/autodl-fs/tau3-core-20260912/experiments/multicall-aa267bb/sft/on/effective_train.jsonl",
+      "new": "../../../effective_train.jsonl"
+    },
+    {
+      "path": "results/legacy/experiments/multicall-aa267bb/sft/on/swanlog/run-20260911_191826-z6ddgwie/files/effective_validation.jsonl",
+      "old": "/root/autodl-fs/tau3-core-20260912/experiments/multicall-aa267bb/sft/on/effective_validation.jsonl",
+      "new": "../../../effective_validation.jsonl"
+    },
+    {
+      "path": "results/legacy/experiments/multicall-aa267bb/sft/on/swanlog/run-20260911_191826-z6ddgwie/files/source-sft-rl.zip",
+      "old": "/root/autodl-fs/tau3-core-20260912/experiments/multicall-aa267bb/sft/on/swanlab-artifacts/source-sft-rl.zip",
+      "new": "../../../swanlab-artifacts/source-sft-rl.zip"
+    },
+    {
+      "path": "results/legacy/experiments/multicall-aa267bb/sft/on/swanlog/run-20260911_191826-z6ddgwie/files/source-snapshot.json",
+      "old": "/root/autodl-fs/tau3-core-20260912/experiments/multicall-aa267bb/sft/on/swanlab-artifacts/source-snapshot.json",
+      "new": "../../../swanlab-artifacts/source-snapshot.json"
+    },
+    {
+      "path": "results/legacy/experiments/multicall-aa267bb/sft/on/swanlog/run-20260911_191826-z6ddgwie/files/train_summary.json",
+      "old": "/root/autodl-fs/tau3-core-20260912/experiments/multicall-aa267bb/sft/on/train_summary.json",
+      "new": "../../../train_summary.json"
+    },
+    {
+      "path": "results/legacy/experiments/multicall-aa267bb/sft/on/swanlog/run-20260911_191826-z6ddgwie/files/trainer_state.json",
+      "old": "/root/autodl-fs/tau3-core-20260912/experiments/multicall-aa267bb/sft/on/trainer_state.json",
+      "new": "../../../trainer_state.json"
+    },
+    {
+      "path": "checkpoints/sft-comparison/lora-thinking/swanlog/run-20260911_170721-ladskre3/files/airline_sft_train_seed42.jsonl",
+      "old": "/root/autodl-fs/tau3-core-20260912/code/data/sft/airline_sft_train_seed42.jsonl",
+      "new": "../../../../../../data/sft/airline_sft_train_seed42.jsonl"
+    },
+    {
+      "path": "checkpoints/sft-comparison/lora-thinking/swanlog/run-20260911_170721-ladskre3/files/airline_sft_validation_seed42.jsonl",
+      "old": "/root/autodl-fs/tau3-core-20260912/code/data/sft/airline_sft_validation_seed42.jsonl",
+      "new": "../../../../../../data/sft/airline_sft_validation_seed42.jsonl"
+    },
+    {
+      "path": "checkpoints/sft-comparison/lora-thinking/swanlog/run-20260911_170721-ladskre3/files/dataset-train_reference_dialogues-step000000.jsonl",
+      "old": "/root/autodl-fs/tau3-core-20260912/checkpoints/sft-comparison/lora-thinking/swanlab-artifacts/dataset-train_reference_dialogues-step000000.jsonl",
+      "new": "../../../swanlab-artifacts/dataset-train_reference_dialogues-step000000.jsonl"
+    },
+    {
+      "path": "checkpoints/sft-comparison/lora-thinking/swanlog/run-20260911_170721-ladskre3/files/dataset-validation_reference_dialogues-step000000.jsonl",
+      "old": "/root/autodl-fs/tau3-core-20260912/checkpoints/sft-comparison/lora-thinking/swanlab-artifacts/dataset-validation_reference_dialogues-step000000.jsonl",
+      "new": "../../../swanlab-artifacts/dataset-validation_reference_dialogues-step000000.jsonl"
+    },
+    {
+      "path": "checkpoints/sft-comparison/lora-thinking/swanlog/run-20260911_170721-ladskre3/files/source-sft-rl.zip",
+      "old": "/root/autodl-fs/tau3-core-20260912/checkpoints/sft-comparison/lora-thinking/swanlab-artifacts/source-sft-rl.zip",
+      "new": "../../../swanlab-artifacts/source-sft-rl.zip"
+    },
+    {
+      "path": "checkpoints/sft-comparison/lora-thinking/swanlog/run-20260911_170721-ladskre3/files/source-snapshot.json",
+      "old": "/root/autodl-fs/tau3-core-20260912/checkpoints/sft-comparison/lora-thinking/swanlab-artifacts/source-snapshot.json",
+      "new": "../../../swanlab-artifacts/source-snapshot.json"
+    },
+    {
+      "path": "checkpoints/sft-comparison/lora-thinking/swanlog/run-20260911_170721-ladskre3/files/train_summary.json",
+      "old": "/root/autodl-fs/tau3-core-20260912/checkpoints/sft-comparison/lora-thinking/train_summary.json",
+      "new": "../../../train_summary.json"
+    },
+    {
+      "path": "checkpoints/sft-comparison/lora-thinking/swanlog/run-20260911_170721-ladskre3/files/trainer_state.json",
+      "old": "/root/autodl-fs/tau3-core-20260912/checkpoints/sft-comparison/lora-thinking/trainer_state.json",
+      "new": "../../../trainer_state.json"
+    },
+    {
+      "path": "checkpoints/sft-comparison/lora/swanlog/run-20260911_154000-ovrld9g3/files/airline_sft_train_seed42.jsonl",
+      "old": "/root/autodl-fs/tau3-core-20260912/code/data/sft/airline_sft_train_seed42.jsonl",
+      "new": "../../../../../../data/sft/airline_sft_train_seed42.jsonl"
+    },
+    {
+      "path": "checkpoints/sft-comparison/lora/swanlog/run-20260911_154000-ovrld9g3/files/airline_sft_validation_seed42.jsonl",
+      "old": "/root/autodl-fs/tau3-core-20260912/code/data/sft/airline_sft_validation_seed42.jsonl",
+      "new": "../../../../../../data/sft/airline_sft_validation_seed42.jsonl"
+    },
+    {
+      "path": "checkpoints/sft-comparison/lora/swanlog/run-20260911_154000-ovrld9g3/files/dataset-train_reference_dialogues-step000000.jsonl",
+      "old": "/root/autodl-fs/tau3-core-20260912/checkpoints/sft-comparison/lora/swanlab-artifacts/dataset-train_reference_dialogues-step000000.jsonl",
+      "new": "../../../swanlab-artifacts/dataset-train_reference_dialogues-step000000.jsonl"
+    },
+    {
+      "path": "checkpoints/sft-comparison/lora/swanlog/run-20260911_154000-ovrld9g3/files/dataset-validation_reference_dialogues-step000000.jsonl",
+      "old": "/root/autodl-fs/tau3-core-20260912/checkpoints/sft-comparison/lora/swanlab-artifacts/dataset-validation_reference_dialogues-step000000.jsonl",
+      "new": "../../../swanlab-artifacts/dataset-validation_reference_dialogues-step000000.jsonl"
+    },
+    {
+      "path": "checkpoints/sft-comparison/lora/swanlog/run-20260911_154000-ovrld9g3/files/source-sft-rl.zip",
+      "old": "/root/autodl-fs/tau3-core-20260912/checkpoints/sft-comparison/lora/swanlab-artifacts/source-sft-rl.zip",
+      "new": "../../../swanlab-artifacts/source-sft-rl.zip"
+    },
+    {
+      "path": "checkpoints/sft-comparison/lora/swanlog/run-20260911_154000-ovrld9g3/files/source-snapshot.json",
+      "old": "/root/autodl-fs/tau3-core-20260912/checkpoints/sft-comparison/lora/swanlab-artifacts/source-snapshot.json",
+      "new": "../../../swanlab-artifacts/source-snapshot.json"
+    },
+    {
+      "path": "checkpoints/sft-comparison/lora/swanlog/run-20260911_154000-ovrld9g3/files/train_summary.json",
+      "old": "/root/autodl-fs/tau3-core-20260912/checkpoints/sft-comparison/lora/train_summary.json",
+      "new": "../../../train_summary.json"
+    },
+    {
+      "path": "checkpoints/sft-comparison/lora/swanlog/run-20260911_154000-ovrld9g3/files/trainer_state.json",
+      "old": "/root/autodl-fs/tau3-core-20260912/checkpoints/sft-comparison/lora/trainer_state.json",
+      "new": "../../../trainer_state.json"
+    },
+    {
+      "path": "checkpoints/sft-merged/old-off",
+      "old": "/root/tau3-sft-archive-20260913/old-off",
+      "new": "../archived-sft/old-off"
+    },
+    {
+      "path": "checkpoints/sft-merged/old-on",
+      "old": "/root/tau3-sft-archive-20260913/old-on",
+      "new": "../archived-sft/old-on"
+    },
+    {
+      "path": "checkpoints/sft-merged/new-on",
+      "old": "/root/autodl-tmp/tau3-sft-archive-20260913/new-on",
+      "new": "../archived-sft/new-on"
+    }
+  ],
+  "remaining_broken": [],
+  "rl_persistent_backups": {
+    "e2": {
+      "checkpoint": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/persistent-checkpoints/e2_seed42/global_step_20",
+      "step": "20",
+      "complete_marker_files": 13,
+      "metadata_sha256_checked": 23,
+      "large_shards": "size checked against completion marker; same-filesystem rename retained content"
+    },
+    "e3": {
+      "checkpoint": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/persistent-checkpoints/e3_seed42/global_step_20",
+      "step": "20",
+      "complete_marker_files": 13,
+      "metadata_sha256_checked": 23,
+      "large_shards": "size checked against completion marker; same-filesystem rename retained content"
+    }
+  }
+}

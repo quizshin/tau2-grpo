@@ -51,3 +51,9 @@ experiments/**/logs/
 !/results/analysis/rl_curriculum50_20260912/manifests/
 build/
 dist/
+
+# Private deployment credentials and consolidation receipts.
+.private/
+
+# Full upstream SFT corpus is preserved on disk; inventory stores its hash.
+/data/raw/areal_tau2/tau2_sft_train.jsonl

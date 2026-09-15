@@ -90,7 +90,11 @@ class ContinuousSwanlab:
         payload = dict(data, **{'trainer/global_step': step})
         with (self.path.parent / 'metrics.jsonl').open('a') as handle:
             handle.write(json.dumps({'step': step, 'metrics': payload}, default=str) + '\n')
-        self.sdk.log(data=payload, step=step)
+        # Mode names are metadata (also retained in config and metrics.jsonl),
+        # not scalar chart values. Keep numeric types and SDK media untouched.
+        # Do not coerce text to numbers or hide non-finite training metrics.
+        cloud_payload = {key: value for key, value in payload.items() if not isinstance(value, str)}
+        self.sdk.log(data=cloud_payload, step=step)
         self.last_step = step
         self.state['last_logged_step'] = step
         atomic_json(self.path, self.state)

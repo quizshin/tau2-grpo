@@ -1,0 +1,21 @@
+# Future 2-step GPU smoke only; this file does not launch any work by itself.
+# Use --experiment e2 or e3 and distinct RESULTS_DIR for each invocation.
+# Historical profiles retain legacy_mean for reproducible resumes.
+includes:
+- qwen35_4b_full_a800_c50_matched6h_common_20260912.yaml
+launch:
+  environment:
+    TAU3_GRPO_ANCHOR_VERSION: v2
+    RESULTS_DIR: ${TAU3_RUN_ROOT}/gigpo-audit-20260914/e2_seed42
+    TOTAL_UPDATES: '2'
+    TAU3_GRPO_SIGNAL_AUDIT_DIR: ${RESULTS_DIR}/signal-audits
+    SWANLAB_EXPERIMENT_NAME: GiGPO-aligned-audit-e2-s42
+  overrides:
+  - ++algorithm.gigpo.episode_normalization=grpo
+  - algorithm.norm_adv_by_std_in_grpo=true
+  - trainer.resume_mode=disable
+  - trainer.total_training_steps=2
+  - trainer.test_freq=-1
+  - trainer.save_freq=-1
+  - trainer.val_before_train=false
+  - ++ray_kwargs.ray_init.runtime_env.env_vars.TAU3_GRPO_SIGNAL_AUDIT_DIR=${TAU3_GRPO_SIGNAL_AUDIT_DIR}

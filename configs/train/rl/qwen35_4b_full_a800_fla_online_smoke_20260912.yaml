@@ -1,0 +1,26 @@
+# One fresh online E0 step; opt-in validated FP32 FLA, no FA2 or checkpoint.
+includes:
+- qwen35_4b_full_a800_curriculum40_fast_pilot_20260912.yaml
+launch:
+  environment:
+    TOTAL_UPDATES: '1'
+    RESULTS_DIR: ${TAU3_RUN_ROOT}/fla-online-20260912/online-smoke
+    VERL_QWEN35_FLA_IEEE: '1'
+    VERL_QWEN35_TRIM_PADDING: experimental_both
+    TRITON_F32_DEFAULT: ieee
+    SWANLAB_EXPERIMENT_NAME: engineering-E0-c40-g8x8-u1-fla-ieee
+  overrides:
+  - actor_rollout_ref.actor.fsdp_config.dtype=float32
+  - actor_rollout_ref.actor.fsdp_config.model_dtype=float32
+  - actor_rollout_ref.actor.fsdp_config.param_offload=false
+  - actor_rollout_ref.actor.fsdp_config.optimizer_offload=false
+  - actor_rollout_ref.ref.fsdp_config.dtype=float32
+  - actor_rollout_ref.ref.fsdp_config.model_dtype=float32
+  - actor_rollout_ref.ref.fsdp_config.param_offload=true
+  - trainer.resume_mode=disable
+  - trainer.save_freq=-1
+  - trainer.test_freq=-1
+  - trainer.val_before_train=false
+  - "++ray_kwargs.ray_init.runtime_env.env_vars.VERL_QWEN35_FLA_IEEE='1'"
+  - ++ray_kwargs.ray_init.runtime_env.env_vars.VERL_QWEN35_TRIM_PADDING=experimental_both
+  - ++ray_kwargs.ray_init.runtime_env.env_vars.TRITON_F32_DEFAULT=ieee

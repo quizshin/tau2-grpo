@@ -204,8 +204,8 @@ def tau3_unpad_policy_batch(
 def tau3_dynamic_filter(data: DataProto, config: Optional[AlgoConfig]) -> dict[str, Any]:
     """Tau3-GRPO local patch: zero the response mask of degenerate uid groups.
 
-    Fixed-rollout Dynamic Filtering. A uid group whose rollouts all scored 0 or all
-    scored the maximum carries no gradient signal, so its response mask is zeroed
+    Fixed-rollout Dynamic Filtering. A uid group whose rollouts have equal terminal rewards has zero
+    relative episode advantage (but may have GiGPO step signal); its mask is zeroed
     before advantages are computed. Rewards, advantages and the batch layout are
     untouched, which keeps the token budget and the optimizer step count fixed and
     comparable across arms.
@@ -391,6 +391,7 @@ def compute_advantage(
         if adv_estimator == "tau_gigpo":
             adv_kwargs["non_tensor_batch"] = data.non_tensor_batch
             adv_kwargs["batch"] = data.batch
+            adv_kwargs["norm_adv_by_std_in_grpo"] = norm_adv_by_std_in_grpo
         # Add sum_pi_squared for Optimal Token Baseline
         if adv_estimator in (AdvantageEstimator.OPTIMAL_TOKEN_BASELINE, AdvantageEstimator.TIR_OPTIMAL_TOKEN_BASELINE):
             # Check if sum_pi_squared is available
@@ -1729,6 +1730,9 @@ class RayPPOTrainer:
                         # Tau3-GRPO local patch: Dynamic Filtering masks degenerate
                         # uid groups before advantages are computed (E1/E3 only;
                         # no-op unless algorithm.dynamic_filter.enable is set).
+                        from tau3_grpo.tracking.signal_audit import capture_mask, audit_update
+
+                        signal_audit_mask = capture_mask(batch, self.config.algorithm)
                         dynamic_filter_metrics = tau3_dynamic_filter(
                             batch, self.config.algorithm
                         )
@@ -1750,6 +1754,9 @@ class RayPPOTrainer:
                             norm_adv_by_std_in_grpo=norm_adv_by_std_in_grpo,
                             config=self.config.algorithm,
                         )
+                        metrics.update(audit_update(
+                            batch, signal_audit_mask, self.config.algorithm, self.global_steps,
+                        ))
 
                         # Tau3-GRPO local patch: aggregate process-local GiGPO
                         # stats plus gathered anchor/verifier fields into scalar

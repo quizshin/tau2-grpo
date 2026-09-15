@@ -1,3 +1,5 @@
+> 远程唯一主代码：`/root/autodl-fs/tau3-core/code`。模型、数据、checkpoint 和实验结果也保存在此目录的对应子目录中。环境入口为 `/root/autodl-fs/tau3-core/activate.sh`。历史副本、合并语义及迁移位置见 [代码历史](docs/code_history.md)。
+
 # Tau3-GRPO：训练、评估与实验记录
 
 **接手项目请先读：[当前实验说明](docs/CURRENT_EXPERIMENT.md)**。其中明确研究问题、50 任务四组冻结方案、当前进度快照、代码版本、唯一推荐入口与仓库之外的运行资产。历史草案不代表当前正式预算。

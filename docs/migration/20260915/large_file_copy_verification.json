@@ -1,0 +1,18 @@
+{
+  "models-verify.txt": {
+    "all_regular_files_content_equal": true,
+    "directory_metadata_only": [
+      ".d..t...... ./"
+    ]
+  },
+  "sft-root-verify.txt": {
+    "all_regular_files_content_equal": true,
+    "directory_metadata_only": [
+      ".d..t...... ./"
+    ]
+  },
+  "sft-tmp-verify.txt": {
+    "all_regular_files_content_equal": true,
+    "directory_metadata_only": []
+  }
+}

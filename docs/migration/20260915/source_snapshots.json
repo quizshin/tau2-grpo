@@ -1,0 +1,51 @@
+{
+  "persistent-dirty": {
+    "branch": "history/source-persistent-dirty-20260915",
+    "commit": "a0751abae54b8a8c7f9d07a5f04e24e567e89431",
+    "original_head": "30a68b06f4de703d4d64d3b7542f8b230e79029b",
+    "path": "/root/autodl-fs/tau3-core-20260912/code",
+    "source_files": 1386
+  },
+  "remote-rl": {
+    "branch": "history/source-remote-rl-20260915",
+    "commit": "946b75d8b5e750f68774a35760ec8dee354de323",
+    "original_head": "f0ee91ee8d40fbf566a3256faf365842f5ab8912",
+    "path": "/root/autodl-tmp/tau3-perf-20260912/code",
+    "source_files": 1454
+  },
+  "local-snapshot": {
+    "branch": "history/source-local-snapshot-20260915",
+    "commit": "adbd974478f74376fed2d004e91ff55b5b849c83",
+    "original_head": null,
+    "path": "/root/autodl-tmp/tau3-local-20260915/code",
+    "source_files": 1530
+  },
+  "gdn-diagnosis": {
+    "branch": "history/source-gdn-diagnosis-20260915",
+    "commit": "615a553f7226ab5e8c27db21aa1d9009e0bc2c4d",
+    "original_head": null,
+    "path": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/code",
+    "source_files": 1401
+  },
+  "before-thinking": {
+    "branch": "history/source-before-thinking-20260915",
+    "commit": "ea8c1e9fd0aff8154fd073b0d1e0c486b0a22115",
+    "original_head": null,
+    "path": "/root/autodl-tmp/tau3-5xa800-20260911/code-before-thinking-integration",
+    "source_files": 1375
+  },
+  "integration-test": {
+    "branch": "history/source-integration-test-20260915",
+    "commit": "8d4d5d77e8196d7612ce8e8338a0aecddd5a8f75",
+    "original_head": null,
+    "path": "/root/autodl-tmp/tau3-5xa800-20260911/integration-test",
+    "source_files": 1380
+  },
+  "multicall-selection": {
+    "branch": "history/source-multicall-selection-20260915",
+    "commit": "8aca39fcb7be2f49a4010b6ad98d85ba03353e22",
+    "original_head": null,
+    "path": "/root/autodl-fs/tau3-core-20260912/experiments/multicall-aa267bb/selection/code",
+    "source_files": 1354
+  }
+}

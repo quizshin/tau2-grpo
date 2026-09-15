@@ -493,7 +493,9 @@ def test_legacy_qwen25_model_loader_still_uses_causal_lm(tmp_path):
 
 
 @pytest.mark.parametrize("size", ["0.8B", "9B"])
-def test_launcher_dry_run_preserves_grouping_and_writes_nothing(tmp_path, size):
+def test_launcher_dry_run_preserves_grouping_and_writes_nothing(tmp_path, size, monkeypatch):
+    # Test the wrapper default, independently of an activated production profile.
+    monkeypatch.delenv("POLICY_GPUS", raising=False)
     env = dict(
         os.environ, TAU3_DRY_RUN="1", QWEN35_RUN_ROOT=str(tmp_path / "absent"), QWEN35_SIZE=size
     )
@@ -556,7 +558,10 @@ def test_qwen35_tool_observation_renders_without_a_user_turn():
     assert rendered.endswith("<|im_start|>assistant\n<think>\n\n</think>\n\n")
 
 
-def test_eval_wrapper_uses_the_existing_final_guard_cli(tmp_path):
+def test_eval_wrapper_uses_the_existing_final_guard_cli(tmp_path, monkeypatch):
+    # Production activation selects 4B/27B; this case checks the unconfigured defaults.
+    for key in ("QWEN35_SIZE", "TAU3_POLICY_MODEL", "TAU3_USER_SERVED_MODEL_NAME", "TAU3_USER_MODEL"):
+        monkeypatch.delenv(key, raising=False)
     # Capture arguments before any evaluation/data loading. The real parser
     # checks that the wrapper preserves the final target and result namespace.
     import sys

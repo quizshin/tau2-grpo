@@ -1,0 +1,14 @@
+{
+  "decision": "Keep remote full model and ModelScope provenance; remove tokenizer-only synced record per user instruction",
+  "kept": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-4B/tau3_source_revision.json",
+  "deleted": [
+    {
+      "path": "/root/autodl-fs/tau3-core/code/results/legacy/storage-conflicts/local-snapshot-models/Qwen3.5-4B/tau3_source_revision.json",
+      "sha256": "ff230f94216fbf8b32048d99529bf3eab916aa8269afaab1942b31c0f7d7863e"
+    },
+    {
+      "path": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-4B/tau3_source_revision.json",
+      "sha256": "ff230f94216fbf8b32048d99529bf3eab916aa8269afaab1942b31c0f7d7863e"
+    }
+  ]
+}

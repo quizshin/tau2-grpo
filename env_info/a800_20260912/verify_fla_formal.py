@@ -74,7 +74,7 @@ def main():
     from verl.trainer.ppo import ray_trainer
     assert Path(qwen35_fla_ieee.__file__).resolve() == CODE_ROOT / 'verl/verl/utils/qwen35_fla_ieee.py'
     assert Path(ray_trainer.__file__).resolve() == CODE_ROOT / 'verl/verl/trainer/ppo/ray_trainer.py'
-    assert Path(fla.__file__).resolve().is_relative_to('/root/autodl-tmp/tau3-perf-20260912/overlay')
+    assert Path(fla.__file__).resolve().is_relative_to('/root/autodl-fs/tau3-core/environment/overlays/fla')
     assert importlib.metadata.version('flash-linear-attention') == '0.5.2'
     qwen35_fla_ieee.prepare_fla_ieee_runtime()
     assert hf.FusedRMSNormGated is None
