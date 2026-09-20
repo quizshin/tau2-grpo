@@ -1,0 +1,44 @@
+# Active entry points and evidence status. Status does not imply future GPU permission.
+schema: tau3_experiment_catalog_v1
+formal:
+  runner: tau3_grpo.training.rl.runner
+  base_profile: configs/train/rl/formal50_a800.yaml
+  estimators: [grpo, tau_gigpo, mt_gtpo]
+  dynamic_filter: [false, true]
+  reward_profiles:
+    reference_write_v2: configs/train/rl/formal50_mt_gtpo_v2.yaml
+    reference_write_v3: configs/train/rl/formal50_mt_gtpo_v3.yaml
+    paper_v1: configs/train/rl/formal50_mt_gtpo_paper_v1.yaml
+    paper_env_v2: configs/train/rl/formal50_mt_gtpo_paper_env_v2.yaml
+    paper_env_split_v3: configs/train/rl/formal50_mt_gtpo_paper_env_split_v3.yaml
+  validation: engineering_acceptance_passed
+  gpu_evidence: docs/architecture/interface_acceptance_20260919.md
+  validation_scope: bounded_qwen35_4b_dense_text_tp1_no_lora_mt_reference_write_v3
+  formal_effects_and_candidate_profiles: require_separate_validation
+  gpu_gigpo_followup: docs/architecture/gigpo_acceptance_20260919.md
+  paper_requires: passed_frozen_recipe_and_matching_training_manifest
+  facts_schema: tau3_trajectory_facts_v1
+evaluation:
+  entry: tau3_grpo.evaluation.run
+  controller: tau3_grpo.evaluation.controller
+  comparison: tau3_grpo.evaluation.compare
+  final_policy: after_model_and_protocol_selection_only
+historical:
+  dated_profiles: configs/train/rl/*202609*.yaml
+  queue: env_info/a800_20260912/run_matched50.py
+  purpose: exact_reproduction_and_old_run_resume_inputs
+  removal: retain_until_all_compatibility_and_evidence_references_are_resolved
+  reference_audit: docs/architecture/cleanup_20260919.md
+candidates:
+  structured_v1:
+    status: historical_online_evidence
+    enabled_by_default: true
+    evidence: docs/training_signal_audit_20260914.md
+  semantic_state_v4:
+    status: development_only_no_online_benefit_claim
+    enabled_by_default: false
+    evidence: docs/semantic_independent_v4_20260916.md
+  semantic_pair_direct_v1:
+    status: development_only_no_online_benefit_claim
+    enabled_by_default: false
+    evidence: docs/semantic_pair_direct_v1_20260916.md

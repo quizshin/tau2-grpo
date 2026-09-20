@@ -173,7 +173,7 @@ def tau3_pad_policy_batch(
         uids = padded.non_tensor_batch["uid"]
         for offset, index in enumerate(range(real_size, len(padded))):
             uids.flat[index] = f"__tau3_padding_group_{offset // group_size}"
-    for key in ("anchor_ids", "anchor_spans"):
+    for key in ("anchor_ids", "anchor_spans", "turn_records"):
         if key in padded.non_tensor_batch:
             values = padded.non_tensor_batch[key]
             for index in range(real_size, len(padded)):
@@ -204,8 +204,8 @@ def tau3_unpad_policy_batch(
 def tau3_dynamic_filter(data: DataProto, config: Optional[AlgoConfig]) -> dict[str, Any]:
     """Tau3-GRPO local patch: zero the response mask of degenerate uid groups.
 
-    Fixed-rollout Dynamic Filtering. A uid group whose rollouts all scored 0 or all
-    scored the maximum carries no gradient signal, so its response mask is zeroed
+    Fixed-rollout Dynamic Filtering. A uid group whose rollouts have equal terminal rewards has zero
+    relative episode advantage (but may have GiGPO step signal); its mask is zeroed
     before advantages are computed. Rewards, advantages and the batch layout are
     untouched, which keeps the token budget and the optimizer step count fixed and
     comparable across arms.
@@ -232,6 +232,9 @@ def tau3_dynamic_filter(data: DataProto, config: Optional[AlgoConfig]) -> dict[s
         return default
 
     if not bool(pick("enable", False)):
+        return {}
+    if config.get("adv_estimator") == "mt_gtpo":
+        # Hybrid needs the complete group first; its adapter filters final advantages.
         return {}
     mode = str(pick("mode", "fixed_rollout"))
     if mode != "fixed_rollout":
@@ -298,7 +301,9 @@ def tau3_restore_candidate_mask_for_metrics(data: DataProto, *, skipped: bool) -
 
     if not skipped:
         return False
-    data.batch["response_mask"] = compute_response_mask(data)
+    data.batch["response_mask"] = (data.batch["mt_gtpo_candidate_mask"]
+                                   if "mt_gtpo_candidate_mask" in data.batch
+                                   else compute_response_mask(data))
     return True
 
 
@@ -329,6 +334,8 @@ def compute_advantage(
     Returns:
         DataProto: The updated data with computed advantages and returns.
     """
+    # Tau3: replace diagnostics for each invocation, including stock estimators.
+    data.meta_info["tau3_estimator_diagnostics"] = {"estimator": str(adv_estimator), "stats": {}}
     # Back-compatible with trainers that do not compute response mask in fit
     if "response_mask" not in data.batch.keys():
         data.batch["response_mask"] = compute_response_mask(data)
@@ -369,9 +376,13 @@ def compute_advantage(
         # TaskRunner process, whose registry is distinct from the launcher. Do
         # the idempotent registration here, in the process that consumes it.
         if adv_estimator == "tau_gigpo":
-            from tau3_grpo.algorithms.verl_estimator import register as register_tau3_gigpo
+            from tau3_grpo.integrations.verl.gigpo import register as register_tau3_gigpo
 
             register_tau3_gigpo()
+        if adv_estimator == "mt_gtpo":
+            from tau3_grpo.integrations.verl.mt_gtpo import register as register_mt_gtpo
+
+            register_mt_gtpo()
         adv_estimator_fn = core_algos.get_adv_estimator_fn(adv_estimator)
         adv_kwargs = {
             "token_level_rewards": data.batch["token_level_rewards"],
@@ -388,9 +399,12 @@ def compute_advantage(
             adv_kwargs["batch"] = data.batch
         # Tau3-GRPO local patch: tau_gigpo needs the per-segment anchor ids and token
         # spans that ToolAgentLoop published through extra_fields.
-        if adv_estimator == "tau_gigpo":
+        if adv_estimator in ("tau_gigpo", "mt_gtpo"):
+            adv_kwargs["diagnostics_out"] = data.meta_info["tau3_estimator_diagnostics"]
             adv_kwargs["non_tensor_batch"] = data.non_tensor_batch
             adv_kwargs["batch"] = data.batch
+            if adv_estimator == "tau_gigpo":
+                adv_kwargs["norm_adv_by_std_in_grpo"] = norm_adv_by_std_in_grpo
         # Add sum_pi_squared for Optimal Token Baseline
         if adv_estimator in (AdvantageEstimator.OPTIMAL_TOKEN_BASELINE, AdvantageEstimator.TIR_OPTIMAL_TOKEN_BASELINE):
             # Check if sum_pi_squared is available
@@ -1729,6 +1743,9 @@ class RayPPOTrainer:
                         # Tau3-GRPO local patch: Dynamic Filtering masks degenerate
                         # uid groups before advantages are computed (E1/E3 only;
                         # no-op unless algorithm.dynamic_filter.enable is set).
+                        from tau3_grpo.tracking.signal_audit import capture_mask, audit_update
+
+                        signal_audit_mask = capture_mask(batch, self.config.algorithm)
                         dynamic_filter_metrics = tau3_dynamic_filter(
                             batch, self.config.algorithm
                         )
@@ -1750,11 +1767,24 @@ class RayPPOTrainer:
                             norm_adv_by_std_in_grpo=norm_adv_by_std_in_grpo,
                             config=self.config.algorithm,
                         )
+                        if self.config.algorithm.adv_estimator == "mt_gtpo":
+                            dynamic_filter_metrics = batch.meta_info["tau3_estimator_diagnostics"].get("filter_stats", {})
+                            metrics.update(dynamic_filter_metrics)
+                            tau3_skip_actor_update = bool(dynamic_filter_metrics) and not (
+                                tau3_has_effective_policy_tokens(batch)
+                            )
+                            if dynamic_filter_metrics:
+                                metrics["dynamic_filter/skipped_actor_update"] = int(tau3_skip_actor_update)
+                            reward_extra_infos_dict["mt_gtpo_replay_json"] = list(
+                                batch.non_tensor_batch["mt_gtpo_replay_json"]
+                            )
+                        elif self.config.algorithm.adv_estimator == "tau_gigpo":
+                            metrics.update(audit_update(
+                                batch, signal_audit_mask, self.config.algorithm, self.global_steps,
+                            ))
 
-                        # Tau3-GRPO local patch: aggregate process-local GiGPO
-                        # stats plus gathered anchor/verifier fields into scalar
-                        # metrics.  This runs after the estimator on the trainer
-                        # driver, so last_stats() refers to this exact update.
+                        # Tau3: consume this batch's explicit estimator diagnostics
+                        # and gathered anchor/verifier facts. Legacy globals are not used.
                         from tau3_grpo.tracking.trainer_telemetry import (
                             collect_rollout_metrics,
                         )
@@ -1763,6 +1793,7 @@ class RayPPOTrainer:
                             collect_rollout_metrics(
                                 batch.non_tensor_batch,
                                 adv_estimator=self.config.algorithm.adv_estimator,
+                                estimator_diagnostics=batch.meta_info["tau3_estimator_diagnostics"],
                             )
                         )
 

@@ -4,8 +4,9 @@ includes:
 - qwen35_4b_full_a800_curriculum40_fast_pilot_20260912.yaml
 launch:
   environment:
+    # Preserve the protocol used by historical E0–E3 checkpoints.
     TAU3_GRPO_ANCHOR_VERSION: v1
-    MODEL_PATH: ${TAU3_ROOT}/checkpoints/sft-merged/new-off
+    MODEL_PATH: ${TAU3_ROOT}/code/checkpoints/sft-merged/new-off
     TRAIN_MANIFEST_DIR: ${CODE_ROOT}/results/analysis/rl_curriculum50_20260912/manifests
     RESULTS_DIR: ${TAU3_RUN_ROOT}/rl-c50-matched6h-a800-20260912/e0_seed42
     VAL_PARQUET: ${TAU3_RUN_ROOT}/formal50-preflight-20260912/selection60.parquet

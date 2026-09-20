@@ -127,6 +127,21 @@ def test_finish_and_usage_preserved_even_when_packet_rejected(finish):
                                 'finish_reason': finish,
                                 'usage': {'prompt_tokens': 12, 'completion_tokens': 8,
                                           'total_tokens': 20}}]
+    raw = client.raw_responses[request['prefix_sha256']]
+    assert raw['finish_reason'] == finish and raw['content'] == json.dumps(packet)
+    assert not raw['storage_truncated'] and 'secret' not in raw
+
+
+def test_raw_truncated_output_is_bounded_and_persisted_before_rejection():
+    request, _ = request_and_packet()
+    body = {'choices': [{'finish_reason': 'length', 'message': {'content': 'x' * 100001}}]}
+    client = model(lambda req: httpx.Response(200, json=body))
+    records = []
+    client.on_raw_response = records.append
+    with pytest.raises(SemanticAPIError, match='did not finish normally'):
+        asyncio.run(client.extract(request))
+    assert len(records) == 1 and records[0]['storage_truncated']
+    assert len(records[0]['content']) == 100000 and client.response_packets == {}
 
 
 def test_wrong_prefix_is_rejected_by_evidence_validator():

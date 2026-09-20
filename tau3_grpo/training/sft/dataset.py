@@ -13,29 +13,13 @@ import json
 from pathlib import Path
 from typing import Any, Optional, Sequence
 
-from tau3_grpo.models.compat import chat_template_kwargs, is_qwen35_tokenizer
-from tau3_grpo.models.qwen35_template import build_qwen35_example, thinking_options, token_ids
+from tau3_grpo.models.compat import is_qwen35_tokenizer
+from tau3_grpo.models.qwen35_template import build_qwen35_example, thinking_options
+from tau3_grpo.models.tokenization import render_chat_ids as _render_ids
 from tau3_grpo.prompts import prepare_agent_messages, prompt_provenance
 from tau3_grpo.utils.hashing import sha256_text
 
 IGNORE_INDEX = -100
-
-
-def _render_ids(
-    tokenizer: Any,
-    messages: Sequence[dict[str, Any]],
-    *,
-    tools: Optional[list[dict[str, Any]]],
-    add_generation_prompt: bool,
-) -> list[int]:
-    rendered = tokenizer.apply_chat_template(
-        list(messages),
-        tools=tools,
-        tokenize=True,
-        add_generation_prompt=add_generation_prompt,
-        **chat_template_kwargs(tokenizer),
-    )
-    return token_ids(rendered)
 
 
 def build_supervised_example(

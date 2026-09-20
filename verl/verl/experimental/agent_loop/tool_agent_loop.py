@@ -148,6 +148,7 @@ class AgentData:
         self.response_ids: list[int] = []
         self.response_mask: list[int] = []
         self.response_logprobs: list[float] = []
+        self.complete_generation_logprobs = True
         self.turn_scores: list[float] = []
         self.tool_rewards: list[float] = []
         self.termination_reason: Optional[str] = None
@@ -162,6 +163,8 @@ class AgentData:
         # Tau3-GRPO local patch: per-segment anchor ids and token spans.
         self.anchor_ids: list[Optional[str]] = []
         self.anchor_spans: list[Optional[tuple[int, int]]] = []
+        # Tau3-GRPO local patch: assistant turns independent of anchor availability.
+        self.turn_records: list[dict[str, Any]] = []
 
         self.routed_experts = None
 
@@ -173,6 +176,16 @@ class AgentData:
 class ToolAgentLoop(AgentLoopBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        algorithm = self.config.get("algorithm", {})
+        self.record_process_turns = algorithm.get("adv_estimator") == "mt_gtpo"
+        self.record_turn_facts = os.getenv("TAU3_RECORD_TRAJECTORY_FACTS", "0") == "1"
+        self.process_reward_config = None
+        if self.record_process_turns:
+            from tau3_grpo.integrations.verl.mt_gtpo import settings_from_config
+            from tau3_grpo.evaluation.process_reward import reward_settings
+
+            settings_from_config(algorithm)
+            self.process_reward_config = reward_settings(algorithm.get("process_reward"))
 
         # Initialize tools from config file
         self.max_user_turns = self.rollout_config.multi_turn.max_user_turns
@@ -269,14 +282,20 @@ class ToolAgentLoop(AgentLoopBase):
         # rollout worker while its private tau2 session still exists. Publishing
         # it as AgentLoopOutput.reward_score makes veRL create rm_scores directly.
         terminal_reward_score = None
+        terminal_payload = {}
         if agent_data.interaction is not None:
             finalizer = getattr(agent_data.interaction, "finalize_rollout", None)
             if callable(finalizer):
+                process_kwargs = {}
+                if getattr(self, "record_process_turns", False):
+                    process_kwargs = {"turn_records": agent_data.turn_records,
+                                      "process_reward_config": self.process_reward_config}
                 terminal_payload = await finalizer(
                     agent_data.request_id,
                     termination_reason=agent_data.termination_reason or "agent_stop",
                     anchor_ids=agent_data.anchor_ids,
                     anchor_spans=agent_data.anchor_spans,
+                    **process_kwargs,
                 )
                 terminal_reward_score = float(terminal_payload["reward"])
                 # `_postprocess` converts each reward-extra value with
@@ -307,6 +326,10 @@ class ToolAgentLoop(AgentLoopBase):
                         terminal_payload.get(source_key), sort_keys=True
                     )
                 agent_data.extra_fields["reward_extra_info"] = reward_extra_info
+                if getattr(self, "record_process_turns", False):
+                    process_json = terminal_payload["process_reward_json"]
+                    agent_data.extra_fields["process_reward_json"] = process_json
+                    reward_extra_info["process_reward_json"] = process_json
             else:
                 await agent_data.interaction.finalize_interaction(agent_data.request_id)
 
@@ -325,7 +348,8 @@ class ToolAgentLoop(AgentLoopBase):
             response_mask=agent_data.response_mask[: self.response_length],
             multi_modal_data=multi_modal_data,
             response_logprobs=agent_data.response_logprobs[: self.response_length]
-            if agent_data.response_logprobs
+            if (agent_data.response_logprobs and agent_data.complete_generation_logprobs
+                and len(agent_data.response_logprobs) == len(agent_data.response_mask))
             else None,
             reward_score=terminal_reward_score,
             num_turns=agent_data.user_turns + agent_data.assistant_turns + 1,
@@ -340,7 +364,30 @@ class ToolAgentLoop(AgentLoopBase):
         output.extra_fields.update(
             {"anchor_ids": agent_data.anchor_ids, "anchor_spans": agent_data.anchor_spans}
         )
+        if getattr(self, "record_turn_facts", False):
+            from tau3_grpo.data.trajectory import trajectory_facts
+
+            sampling_identity = kwargs.get("tau3_sampling_identity", {})
+            facts = trajectory_facts(
+                request_id=agent_data.request_id, task_id=terminal_payload.get("task_id"),
+                turns=agent_data.turn_records, response_ids=output.response_ids,
+                response_mask=output.response_mask, response_logprobs=output.response_logprobs,
+                terminal={key: terminal_payload.get(key) for key in (
+                    "reward", "scored", "termination_reason", "failure_category",
+                    "initial_db_hash", "db_hash", "reward_breakdown", "reward_basis",
+                    "execution_eligibility")},
+                sample_group_uid=sampling_identity.get("sample_group_uid"),
+                trial=sampling_identity.get("trial"), seed=sampling_identity.get("seed"),
+            )
+            if sampling_identity:
+                facts["identity"].update(sampling_identity)
+            raw = json.dumps(facts, sort_keys=True, allow_nan=False)
+            output.extra_fields["trajectory_facts_json"] = raw
+            output.extra_fields.setdefault("reward_extra_info", {})["trajectory_facts_json"] = raw
         return output
+
+    def _records_turns(self):
+        return getattr(self, "record_process_turns", False) or getattr(self, "record_turn_facts", False)
 
     async def _handle_pending_state(self, agent_data: AgentData, sampling_params: dict[str, Any]) -> AgentState:
         """Handle the pending state: prepare the prompt and start generation."""
@@ -424,15 +471,40 @@ class ToolAgentLoop(AgentLoopBase):
         # Tau3-GRPO local patch: span of this assistant generation inside the response.
         _tau3_span_start = len(agent_data.response_mask)
         agent_data.response_mask += [1] * len(agent_data.response_ids)
-        tau3_anchor_hook(agent_data, "assistant", _tau3_span_start, len(agent_data.response_mask))
-        if output.log_probs:
+        if self._records_turns():
+            agent_data.turn_records.append({
+                "schema": "tau3_turn_v1", "turn_index": len(agent_data.turn_records),
+                "token_span": [_tau3_span_start, len(agent_data.response_mask)],
+                "tool_calls": [], "parsed": False, "truncated": False,
+            })
+            if getattr(self, "record_turn_facts", False):
+                agent_data.turn_records[-1].update(
+                    finish_reason=output.extra_fields.get("finish_reason"),
+                    native_stop_reason=output.extra_fields.get("native_stop_reason"),
+                    normalized_stop_reason=getattr(output, "stop_reason", None),
+                    generated_logprobs_available=(output.log_probs is not None
+                                                 and len(output.log_probs) == len(output.token_ids)),
+                    generated_logprob_mode=output.extra_fields.get("logprobs_mode"),
+                    generation_sampling_seed=output.extra_fields.get("sampling_seed"),
+                    generation_engine_seed=output.extra_fields.get("engine_seed"),
+                    generation_sampling_parameters=output.extra_fields.get("sampling_parameters"),
+                )
+        if not getattr(self, "record_process_turns", False):
+            tau3_anchor_hook(agent_data, "assistant", _tau3_span_start, len(agent_data.response_mask))
+        if output.log_probs is not None:
+            if len(output.log_probs) != len(output.token_ids):
+                raise ValueError("Generation logprobs must align with emitted token IDs")
             agent_data.response_logprobs += output.log_probs
+        else:
+            agent_data.complete_generation_logprobs = False
 
         if output.routed_experts is not None:
             agent_data.routed_experts = output.routed_experts
 
         # Check termination conditions
         if not ignore_termination and len(agent_data.response_mask) >= self.response_length:
+            if self._records_turns():
+                agent_data.turn_records[-1]["truncated"] = True
             agent_data.termination_reason = "context_window_exceeded"
             return AgentState.TERMINATED
         # Extract tool calls
@@ -440,6 +512,8 @@ class ToolAgentLoop(AgentLoopBase):
         agent_data.assistant_content, agent_data.tool_calls = await self.tool_parser.extract_tool_calls(
             agent_data.response_ids, tools
         )
+        if self._records_turns():
+            agent_data.turn_records[-1]["parsed"] = True
 
         # Handle interaction if needed
         if self.interaction_config_file:
@@ -490,6 +564,21 @@ class ToolAgentLoop(AgentLoopBase):
                 responses = await asyncio.gather(*[
                     self._call_tool(call, agent_data.tools_kwargs, agent_data) for call in calls
                 ])
+
+        if self._records_turns():
+            if getattr(self, "record_process_turns", False) and len(calls) != len(agent_data.tool_calls):
+                raise ValueError("mt_gtpo requires complete execution of all tool calls")
+            from tau3_grpo.envs.interaction import _replay_tool_arguments
+
+            for call, recorded, (response, _, details) in zip(calls, recorded_calls, responses, strict=True):
+                agent_data.turn_records[-1]["tool_calls"].append({
+                    "id": recorded.id if recorded is not None else None,
+                    "name": call.name, "arguments": _replay_tool_arguments(call.arguments),
+                    "error": bool(details["error"]), "observation": response.text,
+                    "db_hash_after": details.get("db_hash"),
+                })
+                if getattr(self, "record_turn_facts", False):
+                    agent_data.turn_records[-1]["tool_calls"][-1]["raw_arguments"] = call.arguments
 
         # Process tool responses and update multi_modal_data
         # Removed: agent_data.new_images_this_turn = []

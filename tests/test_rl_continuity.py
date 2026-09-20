@@ -73,6 +73,31 @@ def test_different_arm_cannot_append_to_original_curve(config, monkeypatch):
         start(sdk, config)
 
 
+def test_string_metadata_stays_local_without_breaking_numeric_or_media_logging(config):
+    import numpy as np
+    class StrictSwanlab(FakeSwanlab):
+        def log(self, data, step):
+            assert not any(isinstance(value, str) for value in data.values())
+            super().log(data, step)
+    sdk = StrictSwanlab()
+    config['algorithm']['dynamic_filter'] = {'mode': 'fixed_rollout'}
+    logger = start(sdk, config)
+    media = object()
+    payload = {'dynamic_filter/mode': 'fixed_rollout',
+               'dynamic_filter/effective_groups': np.int64(2),
+               'actor/grad_norm': np.float64(0.81), 'examples': media}
+    logger.log(payload, 1)
+    logger.log({'dynamic_filter/mode': 'fixed_rollout', 'actor/grad_norm': 0.5}, 2)
+    assert payload['dynamic_filter/mode'] == 'fixed_rollout'
+    assert sdk.inits[0]['config']['algorithm']['dynamic_filter']['mode'] == 'fixed_rollout'
+    assert sdk.points[0][2]['examples'] is media
+    assert sdk.points[0][2]['dynamic_filter/effective_groups'] == 2
+    assert sdk.points[0][2]['actor/grad_norm'] == 0.81
+    assert [point[2]['trainer/global_step'] for point in sdk.points] == [1, 2]
+    rows = [json.loads(line) for line in (logger.path.parent / 'metrics.jsonl').read_text().splitlines()]
+    assert all(row['metrics']['dynamic_filter/mode'] == 'fixed_rollout' for row in rows)
+
+
 def test_abnormal_older_checkpoint_is_not_silently_mixed(config, monkeypatch):
     sdk = FakeSwanlab()
     logger = start(sdk, config)

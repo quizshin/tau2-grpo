@@ -26,6 +26,10 @@ def tokenizer(name):
     transformers = pytest.importorskip("transformers")
     path = Path(os.environ.get("TAU3_TEST_TOKENIZERS", PROJECT_ROOT / "models")) / name
     if not (path / "tokenizer.json").is_file():
+        full_model = PROJECT_ROOT / "models" / name
+        if (full_model / "tokenizer.json").is_file():
+            path = full_model
+    if not (path / "tokenizer.json").is_file():
         pytest.skip(f"Fetch pinned tokenizer assets with download_qwen35: {path}")
     return transformers.AutoTokenizer.from_pretrained(path, local_files_only=True)
 
@@ -493,7 +497,9 @@ def test_legacy_qwen25_model_loader_still_uses_causal_lm(tmp_path):
 
 
 @pytest.mark.parametrize("size", ["0.8B", "9B"])
-def test_launcher_dry_run_preserves_grouping_and_writes_nothing(tmp_path, size):
+def test_launcher_dry_run_preserves_grouping_and_writes_nothing(tmp_path, size, monkeypatch):
+    # Test the wrapper default, independently of an activated production profile.
+    monkeypatch.delenv("POLICY_GPUS", raising=False)
     env = dict(
         os.environ, TAU3_DRY_RUN="1", QWEN35_RUN_ROOT=str(tmp_path / "absent"), QWEN35_SIZE=size
     )
@@ -525,7 +531,7 @@ def test_launcher_dry_run_preserves_grouping_and_writes_nothing(tmp_path, size):
     assert cfg.data.apply_chat_template_kwargs.enable_thinking is False
     assert cfg.actor_rollout_ref.actor.freeze_vision_tower is True
     # The uncast FP32 embedding must fit in one real weight-transfer bucket.
-    model_config_path = PROJECT_ROOT / "models" / f"Qwen3.5-{size}" / "config.json"
+    model_config_path = Path(os.environ.get("TAU3_TEST_TOKENIZERS", PROJECT_ROOT / "models")) / f"Qwen3.5-{size}" / "config.json"
     if model_config_path.is_file():
         config = json.loads(model_config_path.read_text())["text_config"]
         embedding_bytes = config["vocab_size"] * config["hidden_size"] * 4
@@ -556,7 +562,10 @@ def test_qwen35_tool_observation_renders_without_a_user_turn():
     assert rendered.endswith("<|im_start|>assistant\n<think>\n\n</think>\n\n")
 
 
-def test_eval_wrapper_uses_the_existing_final_guard_cli(tmp_path):
+def test_eval_wrapper_uses_the_existing_final_guard_cli(tmp_path, monkeypatch):
+    # Production activation selects 4B/27B; this case checks the unconfigured defaults.
+    for key in ("QWEN35_SIZE", "TAU3_POLICY_MODEL", "TAU3_USER_SERVED_MODEL_NAME", "TAU3_USER_MODEL"):
+        monkeypatch.delenv(key, raising=False)
     # Capture arguments before any evaluation/data loading. The real parser
     # checks that the wrapper preserves the final target and result namespace.
     import sys

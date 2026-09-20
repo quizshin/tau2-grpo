@@ -1,0 +1,230 @@
+{
+  "verl/setup.py": {
+    "reason": "Keep Qwen3.5 dependency extra separate from the older veRL environment.",
+    "tests": [
+      "tests/test_patch_contract.py",
+      "tests/test_qwen35.py"
+    ],
+    "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
+  },
+  "verl/verl/experimental/agent_loop/tool_parser.py": {
+    "reason": "Parse structured XML arguments with literal_eval, retaining schema errors and prose.",
+    "tests": [
+      "tests/test_xml_structured_arguments.py",
+      "tests/test_rollout_boundaries.py"
+    ],
+    "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
+  },
+  "verl/verl/experimental/agent_loop/tool_agent_loop.py": {
+    "reason": "Ordered multi-call execution, private session cleanup, official terminal reward, anchors and shared trajectory facts. Add opt-in full text-weight audit, actual generation probability metadata or shared execution eligibility as applicable.",
+    "tests": [
+      "tests/test_execution_eligibility.py",
+      "tests/test_rollout_boundaries.py",
+      "tests/test_rollout_concurrency_stress.py",
+      "tests/test_sampling_identity.py",
+      "tests/test_trajectory_facts.py"
+    ],
+    "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
+  },
+  "verl/verl/trainer/ppo/ray_trainer.py": {
+    "reason": "Project estimator registration, fixed-rollout filtering, zero-loss padding, boundary checkpoints and explicit batch telemetry.",
+    "tests": [
+      "tests/test_gigpo_signal_integration.py",
+      "tests/test_mt_gtpo_verl.py",
+      "tests/test_rl_continuity.py",
+      "tests/test_trainer_telemetry.py"
+    ],
+    "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
+  },
+  "verl/verl/trainer/config/algorithm.py": {
+    "reason": "Expose estimator/filter settings and validate grouped batch padding.",
+    "tests": [
+      "tests/test_algorithm_coexistence.py",
+      "tests/test_configs.py",
+      "tests/test_integration_layer.py"
+    ],
+    "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
+  },
+  "verl/verl/utils/config.py": {
+    "reason": "Expose estimator/filter settings and validate grouped batch padding.",
+    "tests": [
+      "tests/test_algorithm_coexistence.py",
+      "tests/test_configs.py",
+      "tests/test_integration_layer.py"
+    ],
+    "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
+  },
+  "verl/verl/workers/config/rollout.py": {
+    "reason": "Make sequential multi-call execution an explicit opt-in configuration.",
+    "tests": [
+      "tests/test_patch_contract.py",
+      "tests/test_configs.py",
+      "tests/test_rollout_boundaries.py"
+    ],
+    "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
+  },
+  "verl/verl/trainer/config/rollout/rollout.yaml": {
+    "reason": "Make sequential multi-call execution an explicit opt-in configuration.",
+    "tests": [
+      "tests/test_patch_contract.py",
+      "tests/test_configs.py",
+      "tests/test_rollout_boundaries.py"
+    ],
+    "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
+  },
+  "verl/verl/model_merger/base_model_merger.py": {
+    "reason": "Preserve exact Qwen3.5 tensor names/shapes through export; validate merged state.",
+    "tests": [
+      "tests/test_qwen35_model_merger.py"
+    ],
+    "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
+  },
+  "verl/verl/utils/qwen35_checkpoint.py": {
+    "reason": "Preserve exact Qwen3.5 tensor names/shapes through export; validate merged state.",
+    "tests": [
+      "tests/test_qwen35_model_merger.py"
+    ],
+    "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
+  },
+  "verl/verl/utils/torch_functional.py": {
+    "reason": "Bound full-vocabulary inference temporaries without changing the autograd path.",
+    "tests": [
+      "tests/test_logprob_memory.py",
+      "tests/test_entropy_memory.py"
+    ],
+    "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
+  },
+  "verl/verl/utils/qwen35_loss_projection.py": {
+    "reason": "Optional loss projection for Qwen3.5 memory usage.",
+    "tests": [
+      "tests/test_qwen35_loss_projection.py"
+    ],
+    "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
+  },
+  "verl/verl/utils/qwen35_fla_ieee.py": {
+    "reason": "Opt-in FP32 IEEE FLA kernel preparation for the recorded A800 path.",
+    "tests": [
+      "tests/test_formal50_profiles.py"
+    ],
+    "validation_scope": "CPU configuration checks only; numerical kernel acceptance requires GPU"
+  },
+  "verl/verl/utils/qwen35_compact_head.py": {
+    "reason": "Compact Qwen3.5 language head computation preserving trainable projection.",
+    "tests": [
+      "tests/test_qwen35_compact_head.py"
+    ],
+    "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
+  },
+  "verl/verl/utils/qwen35_padding.py": {
+    "reason": "Trim single-trajectory padding and restore output token alignment.",
+    "tests": [
+      "tests/test_qwen35_padding.py"
+    ],
+    "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
+  },
+  "verl/verl/utils/qwen35_weight_audit.py": {
+    "reason": "Attest mapped rollout weights, including convolution tensors, after synchronization.",
+    "tests": [
+      "tests/test_formal50_profiles.py"
+    ],
+    "validation_scope": "CPU configuration coverage; actual received weights require GPU validation"
+  },
+  "verl/verl/workers/rollout/vllm_rollout/utils.py": {
+    "reason": "Attest mapped rollout weights, including convolution tensors, after synchronization. Add opt-in full text-weight audit, actual generation probability metadata or shared execution eligibility as applicable.",
+    "tests": [
+      "tests/test_formal50_profiles.py",
+      "tests/test_full_weight_audit.py"
+    ],
+    "validation_scope": "CPU configuration coverage; actual received weights require GPU validation"
+  },
+  "verl/verl/utils/fsdp_utils.py": {
+    "reason": "Qwen3.5 tied-embedding LoRA FSDP handling and guarded FP32 FLA setup.",
+    "tests": [
+      "tests/test_qwen35_fsdp.py",
+      "tests/test_formal50_profiles.py"
+    ],
+    "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
+  },
+  "verl/verl/workers/fsdp_workers.py": {
+    "reason": "Qwen3.5 tied-embedding LoRA FSDP handling and guarded FP32 FLA setup.",
+    "tests": [
+      "tests/test_qwen35_fsdp.py",
+      "tests/test_formal50_profiles.py"
+    ],
+    "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
+  },
+  "verl/verl/utils/tokenizer.py": {
+    "reason": "Text-only Qwen3.5 processor and native padded-forward guards.",
+    "tests": [
+      "tests/test_qwen35.py",
+      "tests/test_patch_contract.py"
+    ],
+    "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
+  },
+  "verl/verl/models/transformers/monkey_patch.py": {
+    "reason": "Text-only Qwen3.5 processor and native padded-forward guards.",
+    "tests": [
+      "tests/test_qwen35.py",
+      "tests/test_patch_contract.py"
+    ],
+    "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
+  },
+  "verl/verl/utils/tracking.py": {
+    "reason": "SwanLab continuity, numeric steps and explicit failure finalization in Ray.",
+    "tests": [
+      "tests/test_rl_continuity.py",
+      "tests/test_swanlab_tracking.py"
+    ],
+    "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
+  },
+  "verl/verl/trainer/main_ppo.py": {
+    "reason": "SwanLab continuity, numeric steps and explicit failure finalization in Ray.",
+    "tests": [
+      "tests/test_rl_continuity.py",
+      "tests/test_swanlab_tracking.py"
+    ],
+    "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
+  },
+  "verl/verl/workers/actor/dp_actor.py": {
+    "reason": "Empty-mask rank synchronization and Qwen3.5 compact/padding/loss paths.",
+    "tests": [
+      "tests/test_integration_layer.py",
+      "tests/test_qwen35_compact_head.py",
+      "tests/test_qwen35_padding.py"
+    ],
+    "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
+  },
+  "verl/verl/workers/rollout/vllm_rollout/vllm_async_server.py": {
+    "reason": "Qwen3.5 rollout controls and preserve native per-generation finish/stop reasons. Add opt-in full text-weight audit, actual generation probability metadata or shared execution eligibility as applicable.",
+    "tests": [
+      "tests/test_execution_eligibility.py",
+      "tests/test_qwen35.py",
+      "tests/test_rollout_boundaries.py",
+      "tests/test_sampling_identity.py"
+    ],
+    "validation_scope": "CPU loop contract; actual vLLM transport requires GPU validation"
+  },
+  "tau2-bench/src/tau2/domains/airline/environment.py": {
+    "reason": "Deep-copy injected DB so prediction and gold replay do not share mutable state.",
+    "tests": [
+      "tests/test_verifier.py",
+      "tests/test_session_isolation.py"
+    ],
+    "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
+  },
+  "verl/verl/experimental/agent_loop/agent_loop.py": {
+    "reason": "Record actual group/trial/data-seed before worker splitting; reject partially missing generation logprobs.",
+    "tests": [
+      "tests/test_sampling_identity.py",
+      "tests/test_rollout_boundaries.py"
+    ],
+    "validation_scope": "CPU contract; actual distributed transport requires engineering GPU evidence"
+  },
+  "verl/verl/utils/qwen35_full_weight_audit.py": {
+    "reason": "Independently reconstruct packed incoming actor weights and compare every active TP1 text-policy parameter; explicitly exclude vision.",
+    "tests": [
+      "tests/test_full_weight_audit.py"
+    ],
+    "validation_scope": "CPU corruption/coverage tests; real mapping requires GPU receipts"
+  }
+}

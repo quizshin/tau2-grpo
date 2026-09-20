@@ -13,6 +13,12 @@ from tau3_grpo.evaluation.rescore import rescore_run
 from tau3_grpo.evaluation.runtime import Endpoint, EvalSpec, run_evaluation
 
 
+@pytest.fixture(autouse=True)
+def isolated_provenance(monkeypatch):
+    # These tests replace real task construction; source/data capture has its own integration tests.
+    monkeypatch.setattr(eval_runtime, "evaluation_provenance", lambda jobs: {"provenance_schema": "test_fixture"})
+
+
 def test_endpoint_uses_openai_compatible_litellm_prefix():
     endpoint = Endpoint(model="Qwen/Test", base_url="http://localhost:8000/v1")
     assert endpoint.litellm_model == "openai/Qwen/Test"
@@ -90,13 +96,14 @@ def test_run_evaluation_records_individual_failures(monkeypatch, tmp_path):
     assert error["error_type"] == "RuntimeError"
 
 
-def test_official_infrastructure_error_is_not_a_scored_model_failure(monkeypatch, tmp_path):
+@pytest.mark.parametrize("reason", ["infrastructure_error", "unexpected_error"])
+def test_official_infrastructure_error_is_not_a_scored_model_failure(monkeypatch, tmp_path, reason):
     jobs = [{"task_id": "t1", "trial": 0, "seed": 42, "task": object(), "db_path": None}]
     monkeypatch.setattr(eval_runtime, "_selection_jobs", lambda *args: jobs)
     monkeypatch.setattr(eval_runtime, "_run_one", lambda **kwargs: SimpleNamespace(
         reward_info=SimpleNamespace(reward=0),
-        termination_reason=SimpleNamespace(value="infrastructure_error"),
-        model_dump=lambda mode: {"termination_reason": "infrastructure_error"},
+        termination_reason=SimpleNamespace(value=reason),
+        model_dump=lambda mode: {"termination_reason": reason},
     ))
     summary = run_evaluation(
         spec=EvalSpec(target="selection", trials=1),

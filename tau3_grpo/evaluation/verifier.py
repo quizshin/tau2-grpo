@@ -23,9 +23,9 @@ from typing import Any, Optional
 
 from tau3_grpo.envs.adapter import AIRLINE_DOMAIN, load_flight_db
 from tau3_grpo.envs.tau2_bridge import evaluator, simulation_models
+from tau3_grpo.evaluation.eligibility import SCORABLE_TERMINATIONS, execution_eligibility
 
 #: Terminations upstream is willing to score.
-SCORABLE_TERMINATIONS = frozenset({"agent_stop", "user_stop"})
 
 
 class FailureCategory(str, Enum):
@@ -74,6 +74,7 @@ class TerminalReward:
             "scored": self.scored,
             "info": self.info,
             "trajectory": self.trajectory,
+            "execution_eligibility": execution_eligibility(self.termination_reason, reward=self.reward),
         }
 
 

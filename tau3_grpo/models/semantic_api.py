@@ -49,6 +49,8 @@ class OpenAICompatibleSemanticModel:
         self.metadata = []
         self.response_packets = {}
         self.request_timings = []
+        self.raw_responses = {}
+        self.on_raw_response = None
 
     @classmethod
     def from_env(cls, config, *, transport=None):
@@ -112,6 +114,13 @@ class OpenAICompatibleSemanticModel:
         try:
             body = response.json()
             choice = body['choices'][0]
+            raw_content = choice.get('message', {}).get('content')
+            raw = {'prefix_sha256': request['prefix_sha256'], 'finish_reason': choice.get('finish_reason'),
+                   'content': raw_content[:100000] if isinstance(raw_content, str) else None,
+                   'storage_truncated': isinstance(raw_content, str) and len(raw_content) > 100000}
+            self.raw_responses[request['prefix_sha256']] = raw
+            if self.on_raw_response is not None:
+                self.on_raw_response(dict(raw))
             usage = body.get('usage')
             self.metadata.append({'prefix_sha256': request['prefix_sha256'],
                                   'finish_reason': choice.get('finish_reason') if isinstance(choice.get('finish_reason'), str) else None,

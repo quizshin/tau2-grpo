@@ -1,0 +1,5 @@
+# Current formal component; historical profiles stay available for replay.
+launch:
+  environment:
+    TRAIN_MANIFEST_DIR: ${CODE_ROOT}/results/analysis/rl_curriculum50_20260912/manifests
+    VAL_PARQUET: ${TAU3_RUN_ROOT}/formal50-preflight-20260912/selection60.parquet

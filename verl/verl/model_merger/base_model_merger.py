@@ -383,7 +383,23 @@ class BaseModelMerger(ABC):
             print(f"Saving lora adapter to {lora_path}")
 
         print(f"Saving model to {self.config.target_dir}")
-        model.save_pretrained(self.config.target_dir, state_dict=state_dict)
+        save_kwargs = {}
+        if self.model_config.model_type == "qwen3_5":
+            # FSDP already uses native HF names. Transformers 5's reverse
+            # checkpoint conversion otherwise repeats language_model prefixes.
+            save_kwargs["save_original_format"] = False
+            expected = model.state_dict()
+            if set(state_dict) != set(expected) or any(
+                value.shape != expected[key].shape for key, value in state_dict.items()
+            ):
+                raise ValueError("Qwen3.5 FSDP keys/shapes differ from the native model schema")
+        # Newer Transformers versions consume the supplied dictionary while
+        # writing shards. Keep tensor references for the equality audit.
+        model.save_pretrained(self.config.target_dir, state_dict=dict(state_dict), **save_kwargs)
+        if self.model_config.model_type == "qwen3_5":
+            from verl.utils.qwen35_checkpoint import verify_qwen35_export
+
+            verify_qwen35_export(self.config.target_dir, state_dict, self.model_config.tie_word_embeddings)
         del state_dict
         del model
 

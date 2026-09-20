@@ -1,0 +1,35 @@
+data:
+  max_length: 24576
+  tool_config: configs/envs/tool_config.yaml
+  train_jsonl: data/sft/airline_sft_train_seed42.jsonl
+  validation_jsonl: data/sft/airline_sft_validation_seed42.jsonl
+lora:
+  alpha: 32
+  dropout: 0.05
+  r: 16
+  target_modules: qwen35_language_linear
+model:
+  attn_implementation: sdpa
+  name_or_path: /root/autodl-fs/tau3-core/code/models/Qwen3.5-4B
+  trust_remote_code: false
+output:
+  dir: /root/autodl-fs/tau3-core/code/checkpoints/sft-comparison/lora-thinking
+train:
+  evaluate_before_train: true
+  gradient_accumulation_steps: 8
+  learning_rate: 0.0001
+  load_best_model_at_end: true
+  logging_steps: 1
+  lr_scheduler_type: cosine
+  max_grad_norm: 1.0
+  method: lora
+  num_epochs: 5
+  per_device_batch_size: 1
+  seed: 42
+  warmup_ratio: 0.05
+  weight_decay: 0.0
+experiment:
+  enable_thinking: true
+  reasoning_source: existing_dataset_reasoning
+  preserve_historical_reasoning: true
+  supervise_reasoning: true

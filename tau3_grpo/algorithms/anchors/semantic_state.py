@@ -73,7 +73,13 @@ def validate_packet(messages, packet, *, slot_schema=None):
     if slot_schema is not None:
         from tau3_grpo.algorithms.anchors.semantic_slots import normalize_packet
         packet = normalize_packet(packet, slot_schema, messages=messages)
-    operations = OPERATIONS | ({'remove_passenger'} if slot_schema == 'airline_slots_v2' else set())
+    v4 = slot_schema == 'airline_slots_v4'
+    v3 = slot_schema in ('airline_slots_v3', 'airline_slots_v4')
+    operations = OPERATIONS | ({'remove_passenger'} if slot_schema in ('airline_slots_v2', 'airline_slots_v3', 'airline_slots_v4') else set())
+    fields = FIELDS | ({'identity': {'values'}} if v3 else {})
+    if v4:
+        fields |= {'question': {'topic', 'proposal_id', 'focus'},
+                   'question_answer': {'question_id', 'value'}}
     _exact_fields(packet, {'schema', 'prefix_sha256', 'events'}, 'packet')
     _require(packet['schema'] == SCHEMA and packet['prefix_sha256'] == sha256_json(messages), 'prefix_mismatch')
     _require(isinstance(packet['events'], list), 'events_not_list')
@@ -84,9 +90,9 @@ def validate_packet(messages, packet, *, slot_schema=None):
         kind, at, data = event['kind'], event['at'], event['data']
         _require(isinstance(event['id'], str) and event['id'] and event['id'] not in ids, 'duplicate_event_id')
         ids.add(event['id'])
-        _require(kind in FIELDS and type(at) is int and 0 <= at < len(messages) and at >= previous, 'event_order')
+        _require(kind in fields and type(at) is int and 0 <= at < len(messages) and at >= previous, 'event_order')
         previous = at
-        _exact_fields(data, FIELDS[kind], kind)
+        _exact_fields(data, fields[kind], kind)
         _require(_json_tree(data), 'non_json_data')
         _require(isinstance(event['evidence'], list) and event['evidence'], 'missing_evidence')
         current_text_evidence = []
@@ -117,11 +123,14 @@ def validate_packet(messages, packet, *, slot_schema=None):
                 current_text_evidence.append(evidence['quote'])
         _require(current_text_evidence, 'missing_current_evidence')
         role = messages[at]['role']
-        if kind in ('goal', 'constraint', 'consent'):
+        if kind in ('goal', 'constraint', 'consent', 'identity', 'question_answer'):
             _require(role == 'user', 'event_requires_user')
         if kind in ('proposal', 'question'):
             _require(role == 'assistant', 'event_requires_assistant')
-        if kind == 'goal':
+        if kind == 'identity':
+            from tau3_grpo.algorithms.anchors.semantic_slots import check_identity_evidence
+            check_identity_evidence(event, data['values'])
+        elif kind == 'goal':
             if slot_schema is not None:
                 from tau3_grpo.algorithms.anchors.semantic_slots import check_identity_evidence
                 check_identity_evidence(event, data['target'])
@@ -161,6 +170,8 @@ def validate_packet(messages, packet, *, slot_schema=None):
                 terms = canonical_semantics(operation['terms'])
                 if slot_schema is not None:
                     from tau3_grpo.algorithms.anchors.semantic_slots import check_identity_evidence, check_money_roles
+                    if v3:
+                        from tau3_grpo.algorithms.anchors.semantic_slots_v3 import check_money_roles
                     check_identity_evidence(event, operation['target'])
                     check_identity_evidence(event, terms)
                     check_money_roles(messages, event, terms)
@@ -168,15 +179,24 @@ def validate_packet(messages, packet, *, slot_schema=None):
                     if field in terms:
                         _require({'currency': terms.get('currency'), 'amount': terms[field]} in supported_money,
                                  'unsupported_communicated_amount')
-            if slot_schema is not None:
+            if slot_schema is not None and not v3:
                 from tau3_grpo.algorithms.anchors.semantic_slots import check_proposal_money_coverage
                 check_proposal_money_coverage(messages, event)
+            # v3 preserves all monetary assistant text in financial_context.
+            # Reference fares are not forced into charge/refund slots; emitted
+            # transaction slots still require a cited amount with that role.
         elif kind == 'consent':
             indices = data['operation_indices']
             _require(isinstance(data['proposal_id'], str) and isinstance(indices, list) and indices
                      and all(type(x) is int and x >= 0 for x in indices) and len(indices) == len(set(indices))
                      and data['status'] in ('approved', 'rejected', 'paused', 'revoked', 'conditional')
                      and data['binding'] in ('reply', 'explicit'), 'invalid_consent')
+            if v4:
+                from tau3_grpo.algorithms.anchors.semantic_questions import check_consent_text
+                check_consent_text(messages, event)
+        elif kind == 'question_answer':
+            _require(isinstance(data['question_id'], str) and bool(data['question_id'])
+                     and data['value'] == messages[at]['content'], 'invalid_question_answer')
         elif kind == 'question':
             _require(isinstance(data['topic'], str) and data['topic']
                      and (data['proposal_id'] is None or isinstance(data['proposal_id'], str)), 'invalid_question')
@@ -192,11 +212,18 @@ def validate_packet(messages, packet, *, slot_schema=None):
         if message.get('role') in ('assistant', 'user') and isinstance(message.get('content'), str):
             required = {i for i, char in enumerate(message['content']) if not char.isspace()}
             _require(required <= covered.get(index, set()), f'unaccounted_text:{index}')
+    if v4:
+        from tau3_grpo.algorithms.anchors.semantic_questions import check_question_coverage
+        check_question_coverage(messages, packet['events'])
+        for at in {e['at'] for e in packet['events']}:
+            kinds = {e['kind'] for e in packet['events'] if e['at'] == at}
+            _require(not {'question_answer', 'consent'} <= kinds,
+                     'combined_answer_and_consent_unsupported')
     return True
 
 
 def compile_state(messages, packet, *, task_id, db_hash, policy_hash, remaining_turns=None,
-                  slot_schema=None):
+                  slot_schema=None, include_references=False):
     """Construct an offline candidate key; no claim of model semantic accuracy.
 
     IDs and evidence positions are local references and disappear from the key.
@@ -213,6 +240,12 @@ def compile_state(messages, packet, *, task_id, db_hash, policy_hash, remaining_
     active_goals, active_proposals, history, opaque = set(), set(), [], []
     open_question = None
     turn_at, turn_reference = None, None
+    identity_claims = {}
+    inactive_proposals = {}
+    ledger = None
+    if slot_schema == 'airline_slots_v4':
+        from tau3_grpo.algorithms.anchors.semantic_questions import QuestionLedger
+        ledger = QuestionLedger()
 
     def refs(values, pool):
         _require(all(value in pool for value in values), 'unknown_reference')
@@ -232,10 +265,25 @@ def compile_state(messages, packet, *, task_id, db_hash, policy_hash, remaining_
     for event in packet['events']:
         kind, data, eid, at = event['kind'], canonical_semantics(deepcopy(event['data'])), event['id'], event['at']
         if at != turn_at:
+            if ledger is not None:
+                ledger.next_turn()
             turn_at, turn_reference = at, deepcopy(open_question)
         if kind == 'unknown':
             raise SemanticError('unresolved_semantics:' + eid)
-        if kind == 'goal':
+        if kind == 'identity':
+            values = data['values']
+            if any(identity_claims.get(key) != value for key, value in values.items()):
+                if identity_claims:
+                    history.append({'prior_identity_claims': deepcopy(identity_claims)})
+                invalidate(list(consents), 'identity_claim_changed')
+                identity_claims.update(values)
+            # Providing identifiers is neither a new goal nor approval. It
+            # cannot make a later bare yes refer to an earlier proposal.
+            open_question = None
+            turn_reference = None
+            if ledger is not None:
+                ledger.identity_answer(values)
+        elif kind == 'goal':
             data['replaces'] = goal_refs(data['replaces'])
             _require(set(data['replaces']) <= active_goals, 'replacing_inactive_goal')
             value = {'operation': data['operation'], 'target': data['target']}
@@ -249,6 +297,9 @@ def compile_state(messages, packet, *, task_id, db_hash, policy_hash, remaining_
             for pid in sorted(affected, key=lambda pid: sha256_json(proposals[pid]['value'])):
                 history.append({'prior_proposal': proposals[pid]['value']})
             active_proposals -= affected
+            inactive_proposals.update({pid: {'reason': 'goal_replaced', 'by_event': eid} for pid in affected})
+            if ledger is not None:
+                ledger.clear()
             for old in data['replaces']:
                 history.append({'replaced_goal': goals[old]['value']})
             active_goals -= set(data['replaces'])
@@ -285,28 +336,43 @@ def compile_state(messages, packet, *, task_id, db_hash, policy_hash, remaining_
             for old in data['supersedes']:
                 history.append({'prior_proposal': proposals[old]['value']})
             active_proposals -= set(data['supersedes'])
+            inactive_proposals.update({pid: {'reason': 'proposal_replaced', 'by_event': eid}
+                                       for pid in data['supersedes']})
+            if ledger is not None:
+                ledger.remove_proposals(data['supersedes'])
             operation_goals = [goal_refs(op['goal_ids']) for op in data['operations']]
             operations = [{k: v for k, v in op.items() if k != 'goal_ids'}
                           | {'goals': goal_values(ids)} for op, ids in zip(data['operations'], operation_goals)]
             value = {'goals': goal_values(data['goal_ids']), 'operations': operations}
             proposals[eid] = {'value': value, 'goals': data['goal_ids'], 'at': at, 'operation_goals': operation_goals}
             active_proposals.add(eid); open_question = {'proposal_id': eid, 'at': at, 'topic': 'confirm_proposal'}
+            if ledger is not None:
+                # v4 requires an explicit question; an offer alone is not a
+                # confirmation request, especially during options/search.
+                open_question = None
         elif kind == 'question':
             pid = data['proposal_id']
             if pid is not None:
                 _require(pid in active_proposals, 'question_about_inactive_proposal')
             open_question = {'proposal_id': pid, 'at': at, 'topic': data['topic']}
+            if ledger is not None:
+                ledger.add(event)
+        elif kind == 'question_answer':
+            ledger.answer(event, messages)
+            invalidate(list(consents), 'question_answer_changed_context')
         elif kind == 'consent':
             pid = data['proposal_id']
             _require(pid in active_proposals, 'consent_to_inactive_proposal')
             proposal = proposals[pid]
             _require(all(i < len(proposal['value']['operations']) for i in data['operation_indices']), 'consent_scope_out_of_range')
             if data['binding'] == 'reply':
-                reference = open_question or turn_reference
-                _require(reference is not None and reference['proposal_id'] == pid, 'ambiguous_reply')
-                # No intervening question, tool, or extra conversational turn
-                # may change the referent of a bare yes.
-                _require(reference['at'] == at - 1, 'nonadjacent_reply')
+                if ledger is not None:
+                    ledger.check_reply(pid, at)
+                else:
+                    reference = open_question or turn_reference
+                    _require(reference is not None and reference['proposal_id'] == pid, 'ambiguous_reply')
+                    # No intervening turn may change the referent of a bare yes.
+                    _require(reference['at'] == at - 1, 'nonadjacent_reply')
             prior = consents.get(pid, {'proposal': proposal['value'], 'operations': []})
             operation_consents = {row['operation_index']: row for row in prior['operations']}
             for index in data['operation_indices']:
@@ -320,6 +386,8 @@ def compile_state(messages, packet, *, task_id, db_hash, policy_hash, remaining_
             consents[pid] = {'proposal': proposal['value'],
                              'operations': [operation_consents[i] for i in sorted(operation_consents)]}
             open_question = None
+            if ledger is not None:
+                ledger.remove_proposals([pid])
         elif kind == 'context':
             opaque.append({'role': messages[at]['role'], 'text': data['text']})
             if messages[at]['role'] == 'user':
@@ -327,6 +395,8 @@ def compile_state(messages, packet, *, task_id, db_hash, policy_hash, remaining_
             # Conservatively invalidate the referent after any uninterpreted turn.
             open_question = None
             turn_reference = None
+            if ledger is not None:
+                ledger.context_seen = True
     knowledge = decision_evidence(messages, version='v2')
     state = {'goals': goal_values(active_goals),
              'constraints': sorted((c['value'] for c in constraints.values()), key=sha256_json),
@@ -338,12 +408,31 @@ def compile_state(messages, packet, *, task_id, db_hash, policy_hash, remaining_
                                    if open_question['proposal_id'] else None} if open_question else None),
              'read_hash': knowledge.read_hash, 'tool_event_hash': knowledge.tool_event_hash,
              'remaining_turns': remaining_turns}
+    if slot_schema in ('airline_slots_v3', 'airline_slots_v4'):
+        from tau3_grpo.algorithms.anchors.semantic_slots_v3 import financial_context
+        state['identity_claims'] = identity_claims
+        state['financial_context'] = financial_context(messages)
+    if ledger is not None:
+        ledger.finish_turn()
+        state.pop('pending_question')
+        state['pending_questions'] = ledger.values(proposals)
+        state['question_answers'] = ledger.answers
     identity = {'task': task_id, 'db': db_hash, 'policy': policy_hash, 'state': state}
     if slot_schema is not None:
         identity['slot_schema'] = slot_schema
     key = 'semantic:v1:' + sha256_json(identity)
-    return {'key': key, 'state': state, 'evidence_valid': True,
-            'semantic_accuracy_verified': False, 'training_enabled': False}
+    result = {'key': key, 'state': state, 'evidence_valid': True,
+              'semantic_accuracy_verified': False, 'training_enabled': False}
+    if include_references:
+        # Local event IDs are an extraction aid, never part of the semantic key.
+        result['references'] = {
+            'active_goals': [{'id': gid, 'aliases': sorted(k for k, g in goals.items() if g['root'] == gid),
+                              'value': goals[gid]['value']} for gid in sorted(active_goals)],
+            'active_proposals': [{'id': pid, 'goal_ids': proposals[pid]['goals'],
+                                  'value': proposals[pid]['value']} for pid in sorted(active_proposals)],
+            'inactive_proposals': [{'id': pid, **reason} for pid, reason in sorted(inactive_proposals.items())],
+            'pending_questions': list(deepcopy(ledger.pending).values()) if ledger is not None else []}
+    return result
 
 
 def scope_candidate_key(key, episode_group_id):

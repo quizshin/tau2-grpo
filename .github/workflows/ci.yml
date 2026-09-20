@@ -1,9 +1,11 @@
 name: CPU checks
 
 on:
+  workflow_dispatch:
   pull_request:
   push:
     branches:
+      - main
       - master
       - dev
 
@@ -36,9 +38,11 @@ jobs:
           python -m pip install -e "./tau2-bench"
           python -m pip install -e ".[dev]"
 
-      - name: Lint project-owned Python
-        run: |
-          ruff check tau3_grpo tests
+      - name: Use recorded lint version
+        run: python -m pip install ruff==0.16.6
+
+      - name: Reject new lint debt
+        run: python scripts/maintenance/check_lint.py
 
       - name: Validate shell syntax
         run: |
@@ -46,20 +50,19 @@ jobs:
           find scripts -type f -name "*.sh" -print0 |
             xargs -0 -n1 bash -n
 
-      - name: Run deterministic CPU unit tests
-        run: |
-          pytest -q \
-            tests/test_anchors.py \
-            tests/test_dynamic_filtering.py \
-            tests/test_tau_gigpo.py \
-            tests/test_metrics.py \
-            tests/test_eval_scoring.py \
-            tests/test_eval_runtime.py \
-            tests/test_eval_cli.py \
-            tests/test_service_attestation.py \
-            tests/test_configs.py \
-            tests/test_multicall_prompt.py \
-            tests/test_experiment_manifest.py \
-            tests/test_leakage_audit.py \
-            tests/test_path_traversal.py \
-            tests/test_patch_contract.py
+      - name: Verify pinned vendor runtime inventory
+        run: python -m tau3_grpo.integrations.vendor_inventory
+
+      - name: Run core CPU contracts
+        run: python scripts/maintenance/check_cpu.py --suite core --junitxml=core-cpu.xml
+
+      - name: Preserve CPU test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: core-cpu
+          path: core-cpu.xml
+
+      # The benchmark and veRL suites run in the existing pinned remote environment:
+      # python scripts/maintenance/check_cpu.py --suite benchmark|verl
+      # GPU update/synchronization/resume acceptance is separately authorized.

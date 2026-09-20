@@ -21,7 +21,6 @@ fi
 if (( $# > 0 )); then
   shift
 fi
-DATA_SPLIT_SEED="${DATA_SPLIT_SEED:-42}"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
@@ -45,6 +44,11 @@ if [[ -f "${TAU3_ENV_FILE:-${CODE_ROOT}/.env}" && "${TAU3_TRACKING_ENV_LOADED:-0
   exec python -m tau3_grpo.tracking.with_env bash "${BASH_SOURCE[0]}" "${ARM}" "${SEED}" "$@"
 fi
 
+# Config-backed legacy defaults; assignment failure stops before eval/training.
+TAU3_DEFAULTS="$(python -m tau3_grpo.training.rl.runtime_defaults base)"
+eval "${TAU3_DEFAULTS}"
+unset TAU3_DEFAULTS
+
 VAL_PARQUET="${VAL_PARQUET:-${TAU3_DATA_ROOT}/parquet/airline_selection_seed${DATA_SPLIT_SEED}.parquet}"
 TOOL_CONFIG="${TOOL_CONFIG:-${PROJECT_ROOT}/configs/envs/tool_config.yaml}"
 INTERACTION_CONFIG="${INTERACTION_CONFIG:-${PROJECT_ROOT}/configs/envs/interaction_config.yaml}"
@@ -54,34 +58,9 @@ export SWANLAB_LOG_DIR="${SWANLAB_LOG_DIR:-${RESULTS_DIR}/swanlog}"
 CUSTOM_TRAIN_PARQUET="${TRAIN_PARQUET:-}"
 TRAIN_PARQUET="${CUSTOM_TRAIN_PARQUET:-${RESULTS_DIR}/train_schedule.parquet}"
 
-# v2-2 defaults. Environment overrides exist only for the dedicated one-GPU
-# smoke script; the formal E0-E3 commands use these values unchanged.
+# Derived paths/batch sizes remain runtime values, not duplicated parameters.
 MODEL_PATH="${MODEL_PATH:-${TAU3_RUN_ROOT}/sft_airline_merged_seed42}"
-GROUP_SIZE="${GROUP_SIZE:-8}"
-GROUPS_PER_UPDATE="${GROUPS_PER_UPDATE:-16}"
-LR="${LR:-1e-6}"
-KL_COEF="${KL_COEF:-0.01}"
-TRAIN_TEMP="${TRAIN_TEMP:-1.0}"
-MAX_USER_TURNS="${MAX_USER_TURNS:-15}"
-MAX_ASSISTANT_TURNS="${MAX_ASSISTANT_TURNS:-15}"
-POLICY_GPUS="${POLICY_GPUS:-6}"
-TOTAL_UPDATES="${TOTAL_UPDATES:-40}"
-MAX_PROMPT_LENGTH="${MAX_PROMPT_LENGTH:-8192}"
-MAX_RESPONSE_LENGTH="${MAX_RESPONSE_LENGTH:-16384}"
-MAX_MODEL_LENGTH="${MAX_MODEL_LENGTH:-24576}"
-MAX_TOKENS_PER_TURN="${MAX_TOKENS_PER_TURN:-1024}"
-# veRL applies this limit to Python string characters, not tokenizer tokens.
-# Its 256-character default removes reservation/payment fields from Airline JSON.
-MAX_TOOL_RESPONSE_CHARS="${MAX_TOOL_RESPONSE_CHARS:-65536}"
-ROLLOUT_TP="${ROLLOUT_TP:-2}"
-MAX_NUM_SEQS="${MAX_NUM_SEQS:-128}"
-# Verified on the 8xA800 host: a 7B embedding tensor is larger than veRL's
-# 2048 MiB default transfer bucket, and worker processes can be killed under
-# peak host-memory pressure.  Keep both settings overridable for other hosts.
-UPDATE_WEIGHTS_BUCKET_MEGABYTES="${UPDATE_WEIGHTS_BUCKET_MEGABYTES:-2560}"
-DATALOADER_NUM_WORKERS="${DATALOADER_NUM_WORKERS:-0}"
 REAL_ROLLOUTS=$((GROUP_SIZE * GROUPS_PER_UPDATE))
-PPO_MINI_GROUPS="${PPO_MINI_GROUPS:-6}"
 POLICY_BATCH_DIVISOR="${POLICY_BATCH_DIVISOR:-$((PPO_MINI_GROUPS * GROUP_SIZE))}"
 
 if [[ ! -d "${MODEL_PATH}" && "${MODEL_PATH}" != */* ]]; then
@@ -105,19 +84,9 @@ if (( POLICY_BATCH_DIVISOR % POLICY_GPUS != 0 )); then
   exit 2
 fi
 
-case "${ARM}" in
-  e0) ADV_ESTIMATOR=grpo;      DF_ENABLE=false; ANCHOR_MODE=structured ;;
-  e1) ADV_ESTIMATOR=grpo;      DF_ENABLE=true;  ANCHOR_MODE=structured ;;
-  e2) ADV_ESTIMATOR=tau_gigpo; DF_ENABLE=false; ANCHOR_MODE=structured ;;
-  e3) ADV_ESTIMATOR=tau_gigpo; DF_ENABLE=true;  ANCHOR_MODE=structured ;;
-  e2_db_hash_only) ADV_ESTIMATOR=tau_gigpo; DF_ENABLE=false; ANCHOR_MODE=db_hash_only ;;
-  e2_similarity)   ADV_ESTIMATOR=tau_gigpo; DF_ENABLE=false; ANCHOR_MODE=similarity ;;
-  *) echo "error: unknown arm '${ARM}'" >&2; exit 2 ;;
-esac
-
-ADV_ESTIMATOR="${TAU3_GRPO_CONFIG_ESTIMATOR:-${ADV_ESTIMATOR}}"
-DF_ENABLE="${TAU3_GRPO_CONFIG_DF_ENABLE:-${DF_ENABLE}}"
-ANCHOR_MODE="${TAU3_GRPO_CONFIG_ANCHOR_MODE:-${ANCHOR_MODE}}"
+TAU3_ARM_DEFAULTS="$(python -m tau3_grpo.training.rl.runtime_defaults arm --arm "${ARM}")"
+eval "${TAU3_ARM_DEFAULTS}"
+unset TAU3_ARM_DEFAULTS
 
 export TAU3_GRPO_ANCHOR_VERSION="${TAU3_GRPO_ANCHOR_VERSION:-v1}"
 case "${TAU3_GRPO_ANCHOR_VERSION}" in

@@ -1,0 +1,23 @@
+# Independent project adaptation, developed after inspecting historical selection.
+# Neutral reference reads; estimate reference DB-write, error and non-reference
+# state weights using TRAIN tasks only. No fitted or prescribed gold anchor.
+reward_version: paper_env_split_v3
+alpha: 1.0
+delta: 0.05
+eta: 0.1
+min_support: 20
+holdout_fraction: 0.2
+split_seed: 42
+alignment_tolerance: 1.0e-8
+intended_signs:
+  gold_write: 1
+  state_change: -1
+  error: -1
+fixed_weights:
+  gold_read: 0.0
+  gold_exact: 0.0
+  soft_match: 0.0
+  read_only: 0.0
+  duplicate: 0.0
+  message: 0.0
+  unknown: 0.0

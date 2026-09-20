@@ -149,6 +149,10 @@ def paired_bootstrap(
         raise ValueError(f"paired arrays must align: {base.shape} vs {treat.shape}")
     if base.size == 0:
         raise ValueError("paired bootstrap needs at least one task")
+    if not np.all(np.isfinite(base)) or not np.all(np.isfinite(treat)):
+        raise ValueError("paired bootstrap needs finite scores")
+    if not isinstance(resamples, int) or resamples <= 0:
+        raise ValueError("resamples must be a positive integer")
     if not 0.0 < confidence < 1.0:
         raise ValueError("confidence must be in (0, 1)")
 

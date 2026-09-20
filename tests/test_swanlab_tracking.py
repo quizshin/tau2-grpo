@@ -183,6 +183,31 @@ def test_sft_callback_logs_real_step_only_on_primary_process():
     assert received == [({"val/loss": 0.56, "train/global_step": 12}, 12)]
 
 
+def test_continuous_rl_logger_accepts_df_metadata_with_real_offline_sdk(tmp_path, capsys):
+    import swanlab
+    from tau3_grpo.tracking.rl_continuity import ContinuousSwanlab
+
+    run = swanlab.init(project='offline-rl-metadata', mode='offline',
+        log_dir=str(tmp_path / 'swanlog'), config={'dynamic_filter': {'mode': 'fixed_rollout'}})
+    # Offline runs have no cloud URL; only the identity wrapper needs one.
+    proxy = SimpleNamespace(id=run.id, dir=str(run.dir),
+                            url=f'https://swanlab.cn/@offline/project/runs/{run.id}')
+    logger = ContinuousSwanlab(swanlab, proxy, tmp_path / 'swanlab-run.json', {'sessions': []}, 0)
+    try:
+        for step in (1, 2):
+            logger.log({'dynamic_filter/mode': 'fixed_rollout',
+                        'dynamic_filter/effective_groups': np.int64(2),
+                        'actor/grad_norm': np.float64(0.81)}, step)
+    finally:
+        logger.finish()
+    captured = capsys.readouterr()
+    assert 'Unsupported scalar string' not in captured.out + captured.err
+    assert 'Error when parsing metric' not in captured.out + captured.err
+    rows = [json.loads(line) for line in (tmp_path / 'metrics.jsonl').read_text().splitlines()]
+    assert [row['step'] for row in rows] == [1, 2]
+    assert rows[0]['metrics']['dynamic_filter/mode'] == 'fixed_rollout'
+
+
 def test_native_verl_swanlab_backend_accepts_training_samples_offline(monkeypatch, tmp_path):
     import swanlab
     import torch

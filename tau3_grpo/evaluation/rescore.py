@@ -11,31 +11,22 @@ import json
 import sys
 from pathlib import Path
 
+from tau3_grpo.evaluation.artifacts import read_evaluation
 from tau3_grpo.evaluation.scoring import summarize_trials
 
 
 def rescore_run(
     run_dir: Path, *, ks: list[int] | None = None, include_pass_hat: bool | None = None,
 ) -> dict:
-    metadata = json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
-    if metadata.get("schema_version") != 1:
-        raise ValueError("unsupported evaluation run schema")
-
-    def read_rows(name: str) -> list[dict]:
-        # Missing files after interruption contain no completed trials. The plan
-        # keeps their denominator, so missing evidence cannot produce a score.
-        path = run_dir / name
-        if not path.exists():
-            return []
-        return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
-
+    artifact = read_evaluation(run_dir)
+    metadata = artifact.metadata
     spec = metadata["spec"]
     return {
         "target": spec["target"],
         **summarize_trials(
             planned=metadata["planned"],
-            results=read_rows("trajectories.jsonl"),
-            errors=read_rows("errors.jsonl"),
+            results=artifact.trajectories,
+            errors=artifact.errors,
             trials=spec["trials"],
             ks=ks if ks is not None else spec["ks"],
             include_pass_hat=spec["include_pass_hat"] if include_pass_hat is None else include_pass_hat,

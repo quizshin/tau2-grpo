@@ -24,6 +24,8 @@ from tau3_grpo.envs.adapter import (
     load_default_flight_db,
     load_flight_db,
 )
+from tau3_grpo.evaluation.eligibility import execution_eligibility
+from tau3_grpo.evaluation.provenance import evaluation_provenance
 from tau3_grpo.evaluation.scoring import resolve_ks, summarize_trials
 from tau3_grpo.prompts import prompt_provenance
 
@@ -181,7 +183,7 @@ def run_evaluation(
             name: {"model": endpoint.model, "temperature": endpoint.temperature}
             for name, endpoint in (("policy", policy), ("user", user))
         },
-        "provenance": {**(provenance or {}), **prompt_provenance()},
+        "provenance": {**(provenance or {}), **prompt_provenance(), **evaluation_provenance(jobs)},
     }
     out = Path(output_dir)
     out.mkdir(parents=True, exist_ok=True)
@@ -217,11 +219,14 @@ def run_evaluation(
             scored = False
             try:
                 simulation = future.result()
-                if simulation.termination_reason.value == "infrastructure_error":
+                reason = simulation.termination_reason.value
+                eligibility = execution_eligibility(reason)
+                if not eligibility["evaluation_trial_complete"]:
                     row = {
                         **identity,
                         "error_type": "InfrastructureError",
-                        "error": "official simulation reported infrastructure_error",
+                        "error": f"official simulation reported unresolved {reason}",
+                        "execution_eligibility": eligibility,
                         "simulation": simulation.model_dump(mode="json"),
                     }
                 else:
@@ -232,11 +237,13 @@ def run_evaluation(
                         **identity,
                         "reward": reward,
                         "termination_reason": simulation.termination_reason.value,
+                        "execution_eligibility": execution_eligibility(reason, reward=reward),
                         "simulation": simulation.model_dump(mode="json"),
                     }
                     scored = True
             except Exception as exc:  # retain failures without losing completed trials
-                row = {**identity, "error_type": type(exc).__name__, "error": str(exc)}
+                row = {**identity, "error_type": type(exc).__name__, "error": str(exc),
+                       "execution_eligibility": execution_eligibility(None, exception=True)}
             # Disk/serialization failures must propagate, not duplicate a trial
             # into both success and error files.
             handle = trajectory_file if scored else error_file

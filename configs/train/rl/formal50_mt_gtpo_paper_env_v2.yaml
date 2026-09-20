@@ -1,0 +1,12 @@
+includes:
+- formal50_a800.yaml
+- ../../algorithms/mt_gtpo.yaml
+- ../../rewards/paper_env_v2.yaml
+launch:
+  environment:
+    RESULTS_DIR: ${CODE_ROOT}/results/runs/mt_gtpo_paper_env_v2/formal_s42
+    TOTAL_UPDATES: '20'
+    TAU3_GRPO_DEBUG_BATCH_DIR: ${RESULTS_DIR}/update-batches
+    TRAINER_LOGGERS: '[console,swanlab]'
+    SWANLAB_MODE: online
+    SWANLAB_EXPERIMENT_NAME: MT-GTPO-Qwen35-4B-full-c50-g8x8-u20-paper-env-v2-df-off-s42

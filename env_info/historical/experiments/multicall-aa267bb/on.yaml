@@ -1,0 +1,33 @@
+model:
+  name_or_path: /root/autodl-fs/tau3-core/code/models/Qwen3.5-4B
+  trust_remote_code: false
+  attn_implementation: sdpa
+data:
+  train_jsonl: /root/autodl-fs/tau3-core/code/data/sft/airline_sft_train_seed42.jsonl
+  validation_jsonl: /root/autodl-fs/tau3-core/code/data/sft/airline_sft_validation_seed42.jsonl
+  tool_config: /root/autodl-fs/tau3-core/code/configs/envs/tool_config.yaml
+  max_length: 24576
+  enable_thinking: true
+  supervise_reasoning: true
+  preserve_historical_reasoning: true
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules: qwen35_language_linear
+train:
+  method: lora
+  evaluate_before_train: true
+  load_best_model_at_end: true
+  num_epochs: 5
+  per_device_batch_size: 1
+  gradient_accumulation_steps: 8
+  learning_rate: 0.0001
+  lr_scheduler_type: cosine
+  warmup_ratio: 0.05
+  weight_decay: 0.0
+  max_grad_norm: 1.0
+  logging_steps: 1
+  seed: 42
+output:
+  dir: /root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/on

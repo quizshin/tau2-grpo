@@ -1,0 +1,7 @@
+# Current formal component; historical profiles stay available for replay.
+launch:
+  environment:
+    TAU3_USER_MODEL: ${TAU3_MODEL_ROOT}/Qwen3.8-27B-AWQ-INT4
+    TAU3_USER_SERVED_MODEL_NAME: Qwen/Qwen3.8-27B-AWQ-INT4
+    TAU3_USER_BASE_URL: http://127.0.0.1:8100/v1
+    TAU3_USER_THINKING: 'off'

@@ -13,7 +13,7 @@ from tau3_grpo.experiments.manifest import read_manifest, flatten_schedule, veri
 
 
 R=Path(os.environ['TAU3_ROOT'])
-W=R/'runs/curriculum-speed-20260912'
+W=R / 'code/results/runs/curriculum-speed-20260912'
 C=CODE_ROOT/'results/analysis/rl_curriculum_20260912'
 
 
@@ -47,7 +47,7 @@ def resolved(stage='smoke'):
         VERL_QWEN35_WEIGHT_AUDIT_DIR=str(result/'weight-audits'))
     command,env,snapshot=prepare('rl',profile,'e0',42,extra,env)
     assert int(env['GROUP_SIZE'])*int(env['GROUPS_PER_UPDATE'])==64
-    assert env['MODEL_PATH']==str(R/'checkpoints/sft-merged/new-off')
+    assert env['MODEL_PATH']==str(R / 'code/checkpoints/sft-merged/new-off')
     assert Path(env['TRAIN_MANIFEST_DIR']).resolve()==(C/'manifests').resolve()
     return command,env,snapshot
 
@@ -65,7 +65,7 @@ def main():
         assert sha(DATA_ROOT/'raw/areal_tau2'/db)==digest,db
     actual_sft=read_jsonl(DATA_ROOT/'sft/airline_sft_train_seed42.jsonl')
     actual_ids={x['metadata']['source_dialog_id'] for x in actual_sft}
-    preflight=json.loads((R/'experiments/multicall-aa267bb/preflight.json').read_text())
+    preflight=json.loads((R / 'code/results/legacy/experiments/multicall-aa267bb/preflight.json').read_text())
     recorded=[v for k,v in preflight['sha256'].items() if k.endswith('airline_sft_train_seed42.jsonl')]
     assert recorded==[sha(DATA_ROOT/'sft/airline_sft_train_seed42.jsonl')]
     # Original classification remains unchanged. Confirm each selected SFT link

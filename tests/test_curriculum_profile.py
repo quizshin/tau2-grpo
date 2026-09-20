@@ -56,7 +56,7 @@ def test_fast_curriculum_keeps_resume_state_and_safe_kernels(phase, updates):
     assert int(env['TOTAL_UPDATES']) == updates
     assert int(env['GROUPS_PER_UPDATE']) * int(env['GROUP_SIZE']) == 64
     assert env['RESULTS_DIR'] == '${TAU3_RUN_ROOT}/rl-curriculum40-fast-20260912/e0_seed42'
-    assert env['MODEL_PATH'] == '${TAU3_ROOT}/checkpoints/sft-merged/new-off'
+    assert env['MODEL_PATH'] == '${TAU3_ROOT}/code/checkpoints/sft-merged/new-off'
     assert env['VERL_QWEN35_FIX_PADDING'] == '1'
     assert env['VERL_QWEN35_COMPACT_HEAD'] == '1'
     assert env['VERL_QWEN35_COMPACT_BACKEND'] == 'checkpoint'

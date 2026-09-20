@@ -7,14 +7,14 @@ from pathlib import Path
 from typing import Protocol
 
 from tau3_grpo.algorithms.anchors.semantic_state import SCHEMA, validate_packet
-from tau3_grpo.analysis.replay_decisions import visible_message
+from tau3_grpo.data.messages import visible_message
 from tau3_grpo.utils.hashing import sha256_json, sha256_file
 
 PROMPT_PATH = Path(__file__).resolve().parents[2] / 'configs/prompts/semantic_events_v1.txt'
 
 
 def slot_prompt_path(version):
-    if version not in ('airline_slots_v1', 'airline_slots_v2'):
+    if version not in ('airline_slots_v1', 'airline_slots_v2', 'airline_slots_v3', 'airline_slots_v4'):
         raise ValueError('Unsupported slot schema')
     return PROMPT_PATH.with_name('semantic_' + version + '.txt')
 

@@ -9,6 +9,7 @@ from tau3_grpo.evaluation import run, runtime
 
 
 def test_cli_runs_and_persists_the_report_it_prints(monkeypatch, tmp_path, capsys):
+    monkeypatch.setattr(runtime, "evaluation_provenance", lambda jobs: {"provenance_schema": "test_fixture"})
     monkeypatch.setattr(run, "read_manifest", lambda path: [SimpleNamespace(task_id="a")])
     monkeypatch.setattr(run, "assert_service_matches_checkpoint", lambda **kwargs: SimpleNamespace(
         attestation_hash="attested-service", checkpoint_hash="exact-checkpoint-bytes",

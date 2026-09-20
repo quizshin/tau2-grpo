@@ -291,6 +291,8 @@ class Tau3AirlineInteraction(BaseInteraction):
         duration: float = 0.0,
         anchor_ids: Optional[list[Optional[str]]] = None,
         anchor_spans: Optional[list[Optional[tuple[int, int]]]] = None,
+        turn_records: Optional[list[dict[str, Any]]] = None,
+        process_reward_config: Optional[dict[str, Any]] = None,
         **kwargs: Any,
     ) -> dict[str, Any]:
         """Score the terminal trajectory, then release its private session."""
@@ -306,6 +308,8 @@ class Tau3AirlineInteraction(BaseInteraction):
                 duration=duration,
                 anchor_ids=anchor_ids,
                 anchor_spans=anchor_spans,
+                turn_records=turn_records,
+                process_reward_config=process_reward_config,
             )
         finally:
             SESSIONS.pop(str(instance_id))
@@ -320,6 +324,8 @@ class Tau3AirlineInteraction(BaseInteraction):
         duration: float = 0.0,
         anchor_ids: Optional[list[Optional[str]]] = None,
         anchor_spans: Optional[list[Optional[tuple[int, int]]]] = None,
+        turn_records: Optional[list[dict[str, Any]]] = None,
+        process_reward_config: Optional[dict[str, Any]] = None,
     ) -> dict[str, Any]:
         """Run the official verifier for a finished rollout.
 
@@ -337,11 +343,25 @@ class Tau3AirlineInteraction(BaseInteraction):
             tool_error_count=entry.tool_error_count,
         )
         payload = result.to_dict()
+        if not payload["execution_eligibility"]["training_candidate_eligible"]:
+            raise RuntimeError(f"Unresolved execution cannot enter a training batch: {reason}")
         payload.update(prompt_provenance())
         payload["anchor_ids"] = list(anchor_ids if anchor_ids is not None else entry.anchor_ids)
         payload["anchor_spans"] = list(
             anchor_spans if anchor_spans is not None else entry.anchor_spans
         )
+        if turn_records is not None:
+            from tau3_grpo.evaluation.process_reward import payload_json, score_turns
+
+            criteria = entry.session.adapted.task.evaluation_criteria
+            gold = [action.model_dump(mode="json") for action in (criteria.actions or [])] if criteria else []
+            basis = [getattr(b, "value", str(b)) for b in (criteria.reward_basis or [])] if criteria else []
+            process = score_turns(
+                turn_records, gold, basis, process_reward_config, official_outcome=result.reward
+            )
+            process["termination_reason"] = reason
+            process["trajectory_id"] = str(instance_id)
+            payload["process_reward_json"] = payload_json(process)
         return payload
 
 

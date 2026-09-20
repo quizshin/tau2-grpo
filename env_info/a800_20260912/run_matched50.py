@@ -17,6 +17,7 @@ import requests
 
 from prepare_formal50 import CODE_ROOT, R, W as PREFLIGHT, resolved
 from tau3_grpo.experiments.manifest import read_manifest
+from tau3_grpo.training.services import launch_process, stop_process
 
 W = Path(os.environ['TAU3_RUN_ROOT']) / 'rl-c50-matched6h-a800-20260912'
 owned = []
@@ -73,22 +74,14 @@ def stage_config(arm, updates, started_at=None, resume_from=None):
 
 
 def launch(command, env, name):
-    with (W / f'{name}.log').open('x') as log:
-        process = subprocess.Popen(command, cwd=CODE_ROOT, env=env, stdout=log,
-                                   stderr=subprocess.STDOUT, start_new_session=True)
+    process = launch_process(command, cwd=CODE_ROOT, env=env,
+                             log_path=W / f'{name}.log', pid_path=W / f'{name}.pid')
     owned.append(process)
-    (W / f'{name}.pid').write_text(str(process.pid))
     return process
 
 
 def stop(process):
-    if process.poll() is None:
-        os.killpg(process.pid, signal.SIGTERM)
-        try:
-            process.wait(timeout=30)
-        except subprocess.TimeoutExpired:
-            os.killpg(process.pid, signal.SIGKILL)
-            process.wait()
+    stop_process(process)
 
 
 def active_pids(devices):

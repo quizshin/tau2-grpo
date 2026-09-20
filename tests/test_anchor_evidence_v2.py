@@ -161,7 +161,7 @@ def test_profile_versions_are_explicit_and_forwarded():
     from tau3_grpo.launch import prepare
     from tau3_grpo.paths import CODE_ROOT
     env={'TAU3_ROOT':'/test','TAU3_RUN_ROOT':'/test/runs'}
-    for name,version in [('qwen35_4b_full_a800_c50_matched6h_e2_20260912.yaml','v1'),('qwen35_4b_full_a800_anchor_v2_20260914.yaml','v2')]:
+    for name,version in [('qwen35_4b_full_a800_c50_matched6h_e2_20260912.yaml','v1'),('qwen35_4b_full_a800_anchor_v2_20260914.yaml','v2'),('qwen35_4b_full_a800_gigpo_audit_20260914.yaml','v2'),('qwen35_4b_full_a800_gigpo_semantic_20260914.yaml','v3')]:
         _,values,_=prepare('rl',CODE_ROOT/'configs/train/rl'/name,'e2',42,[],env)
         assert values['TAU3_GRPO_ANCHOR_VERSION']==version
 

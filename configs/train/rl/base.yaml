@@ -72,3 +72,17 @@ dynamic_filter:
   mode: fixed_rollout
   group_size: 8
   max_reward: 1.0
+
+# Legacy direct-shell fallback values. Formal defaults live in protocols/formal50.
+# Shared algorithm/protocol values above are read through the runtime adapter.
+runtime:
+  environment:
+    MAX_PROMPT_LENGTH: '8192'
+    MAX_RESPONSE_LENGTH: '16384'
+    MAX_MODEL_LENGTH: '24576'
+    MAX_TOKENS_PER_TURN: '1024'
+    # veRL counts characters, not tokenizer tokens, for tool observations.
+    MAX_TOOL_RESPONSE_CHARS: '65536'
+    MAX_NUM_SEQS: '128'
+    UPDATE_WEIGHTS_BUCKET_MEGABYTES: '2560'
+    DATALOADER_NUM_WORKERS: '0'

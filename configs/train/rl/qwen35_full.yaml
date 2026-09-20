@@ -1,4 +1,5 @@
 includes:
+- ../../runtime/rl_qwen35.yaml
 - ../../hardware/2xa800.yaml
 - ../../tracking/swanlab.yaml
 - ../../models/qwen35_policy.yaml
@@ -7,10 +8,6 @@ launch:
   entrypoint: scripts/train/rl/run_qwen35.sh
   seed: 42
   environment:
-    GROUP_SIZE: '4'
-    GROUPS_PER_UPDATE: '2'
-    PPO_MINI_GROUPS: '2'
-    TOTAL_UPDATES: '3'
     MAX_NUM_SEQS: '8'
     LR: 1e-6
     TAU3_USER_MODEL: ${TAU3_MODEL_ROOT}/Qwen3.5-4B

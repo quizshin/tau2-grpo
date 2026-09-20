@@ -1,0 +1,8 @@
+includes:
+- qwen35_4b_lora_mt_gtpo_conservative.yaml
+launch:
+  environment:
+    RESULTS_DIR: ${CODE_ROOT}/results/runs/mt_gtpo/conservative_df_smoke_s42
+    SWANLAB_EXPERIMENT_NAME: mt-gtpo-conservative-df-smoke-s42
+  overrides:
+  - algorithm.dynamic_filter.enable=true

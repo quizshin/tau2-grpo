@@ -15,9 +15,9 @@ def main():
     p=argparse.ArgumentParser()
     p.add_argument('--max-seqs',type=int,required=True)
     p.add_argument('--output',type=Path,required=True)
-    p.add_argument('--model',default='/root/autodl-fs/tau3-core-20260912/checkpoints/sft-merged/new-off')
+    p.add_argument('--model',default='/root/autodl-fs/tau3-core/code/checkpoints/sft-merged/new-off')
     a=p.parse_args()
-    root=Path('/root/autodl-fs/tau3-core-20260912/runs/rl-formal-full-20260912/acceptance/update-batches')
+    root=Path('/root/autodl-fs/tau3-core/code/results/runs/rl-formal-full-20260912/acceptance/update-batches')
     prefixes=[]
     for path in sorted(root.glob('update_*.pkl')):
         batch=DataProto.load_from_disk(str(path)).batch

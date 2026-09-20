@@ -800,7 +800,10 @@ class AgentLoopWorker:
         input_ids = torch.cat([input.input_ids for input in inputs], dim=0)
         position_ids = torch.cat([input.position_ids for input in inputs], dim=0)
         optional_outputs = {}
-        if inputs[0].response_logprobs is not None:
+        present_logprobs = [input.response_logprobs is not None for input in inputs]
+        if any(present_logprobs) and not all(present_logprobs):
+            raise ValueError("Mixed missing/generated logprobs in one rollout batch")
+        if all(present_logprobs):
             optional_outputs["rollout_log_probs"] = torch.cat([input.response_logprobs for input in inputs], dim=0)
         if inputs[0].routed_experts is not None:
             optional_outputs["routed_experts"] = torch.cat([input.routed_experts for input in inputs], dim=0)
@@ -1037,6 +1040,19 @@ class AgentLoopManager:
             DataProto: Output batch.
         """
 
+        # Assign trial indices before chunking: one group may span workers.
+        # Use the estimator's actual UID; never infer membership from task IDs.
+        if os.getenv("TAU3_RECORD_TRAJECTORY_FACTS", "0") == "1":
+            from tau3_grpo.data.sampling import sampling_identities
+
+            if "uid" not in prompts.non_tensor_batch:
+                raise ValueError("Recorded tau rollout requires actual sampling group UIDs")
+            identities = sampling_identities(
+                prompts.non_tensor_batch["uid"], data_seed=self.config.data.seed,
+                step=prompts.meta_info.get("global_steps", -1),
+                validation=prompts.meta_info.get("validate", False),
+            )
+            prompts.non_tensor_batch["tau3_sampling_identity"] = np.array(identities, dtype=object)
         chunkes = prompts.chunk(len(self.agent_loop_workers))
         outputs = await asyncio.gather(
             *[
