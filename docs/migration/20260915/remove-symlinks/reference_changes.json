@@ -1,0 +1,35 @@
+{
+  "changed_source_files": [
+    "configs/train/rl/qwen35_4b_full_a800_c50_matched6h_common_20260912.yaml",
+    "configs/train/rl/qwen35_4b_full_a800_curriculum40_fast_pilot_20260912.yaml",
+    "configs/train/rl/qwen35_4b_full_a800_formal_20260912.yaml",
+    "env_info/a800_20260912/launch_fla_online_smoke.sh",
+    "env_info/a800_20260912/prepare_curriculum_speed.py",
+    "env_info/a800_20260912/run_fla_online_smoke.py",
+    "env_info/a800_20260912/run_full_formal.py",
+    "env_info/a800_20260912/run_post_rl_eval.py",
+    "env_info/historical/experiments/multicall-aa267bb/off.yaml",
+    "env_info/historical/experiments/multicall-aa267bb/on.yaml",
+    "env_info/historical/experiments/multicall-aa267bb/selection/controller.py",
+    "env_info/historical/experiments/selection-dual-gpu/selection_dual_controller.py",
+    "env_info/historical/experiments/selection-thinking-gpu01/selection_thinking_controller.py",
+    "env_info/historical/experiments/thinking-experiment/config.yaml",
+    "env_info/historical/gdn-20260912/rl64-fa2-replay-fixed/replay_rl64_gdn.py",
+    "env_info/historical/gdn-20260912/rl64-fa2-replay/replay_rl64_gdn.py",
+    "env_info/historical/gdn-20260912/rl64-ieee-warm-fixed/replay_rl64_gdn.py",
+    "env_info/historical/gdn-20260912/rl64-ieee-warm/replay_rl64_gdn.py",
+    "tests/test_curriculum_profile.py",
+    "tests/test_qwen35.py"
+  ],
+  "environment_build_config": [],
+  "removed_top_level_aliases": [
+    "runs",
+    "checkpoints",
+    "models",
+    "experiments",
+    "migration",
+    "../tau3-core-20260912"
+  ],
+  "platform_symlink_unchanged": true,
+  "historical_receipts": "Preserved verbatim; path_map.json maps previous storage locations to current paths."
+}

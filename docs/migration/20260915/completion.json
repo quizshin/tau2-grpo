@@ -1,0 +1,155 @@
+{
+  "date": "2026-09-15",
+  "main_code": "/root/autodl-fs/tau3-core/code",
+  "main_branch": "main",
+  "both_development_histories_merged": true,
+  "tests": {
+    "passed": 932,
+    "skipped": 15,
+    "warnings": 3,
+    "duration": "402.28s (0:06:42)",
+    "scope": "Remote CPU complete tests/ suite after cleanup. GPU numerical tests skipped. FSDP checks are CPU world_size=1 NO_SHARD."
+  },
+  "layout": {
+    "canonical_code_roots": [
+      "/root/autodl-fs/tau3-core/code"
+    ],
+    "artifact_summary": {
+      "data": {
+        "regular_files": 43,
+        "bytes": 1034823466,
+        "symlinks": 1
+      },
+      "models": {
+        "regular_files": 31,
+        "bytes": 30384085690,
+        "symlinks": 0
+      },
+      "checkpoints": {
+        "regular_files": 118,
+        "bytes": 38343056182,
+        "symlinks": 19
+      },
+      "results": {
+        "regular_files": 2300,
+        "bytes": 262184347929,
+        "symlinks": 124
+      }
+    },
+    "broken_artifact_symlinks": [],
+    "artifact_links_outside_repository": [],
+    "rl_arms": {
+      "e0": {
+        "step": 20,
+        "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42",
+        "resolved": "/autodl-fs/data/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42",
+        "complete_marker_files": 13,
+        "validation_files": 2
+      },
+      "e1": {
+        "step": 20,
+        "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42",
+        "resolved": "/autodl-fs/data/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42",
+        "complete_marker_files": 13,
+        "validation_files": 2
+      },
+      "e2": {
+        "step": 20,
+        "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42",
+        "resolved": "/autodl-fs/data/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/persistent-checkpoints/e2_seed42",
+        "complete_marker_files": 13,
+        "validation_files": 2
+      },
+      "e3": {
+        "step": 20,
+        "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42",
+        "resolved": "/autodl-fs/data/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/persistent-checkpoints/e3_seed42",
+        "complete_marker_files": 13,
+        "validation_files": 2
+      }
+    },
+    "venvs": {
+      "qwen35": {
+        "prefix": "/root/autodl-fs/tau3-core/environment/venvs/qwen35",
+        "imports": {
+          "tau3_grpo": "/root/autodl-fs/tau3-core/code/tau3_grpo/__init__.py",
+          "verl": "/root/autodl-fs/tau3-core/code/verl/verl/__init__.py",
+          "tau2": "/root/autodl-fs/tau3-core/code/tau2-bench/src/tau2/__init__.py"
+        }
+      },
+      "qwen38-sim": {
+        "prefix": "/root/autodl-fs/tau3-core/environment/venvs/qwen38-sim",
+        "imports": {
+          "tau3_grpo": "/root/autodl-fs/tau3-core/code/tau3_grpo/__init__.py",
+          "verl": "/root/autodl-fs/tau3-core/code/verl/verl/__init__.py",
+          "tau2": "/root/autodl-fs/tau3-core/code/tau2-bench/src/tau2/__init__.py"
+        }
+      },
+      "tools": {
+        "prefix": "/root/autodl-fs/tau3-core/environment/venvs/tools",
+        "imports": {
+          "tau3_grpo": "/root/autodl-fs/tau3-core/code/tau3_grpo/__init__.py",
+          "verl": "/root/autodl-fs/tau3-core/code/verl/verl/__init__.py",
+          "tau2": "/root/autodl-fs/tau3-core/code/tau2-bench/src/tau2/__init__.py"
+        }
+      }
+    },
+    "model_directories": [
+      "Qwen3.5-4B",
+      "Qwen3.8-27B-AWQ-INT4"
+    ],
+    "legacy_root_is_symlink": true
+  },
+  "cleanup": {
+    "deleted_paths": [
+      "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/selection/code",
+      "/root/autodl-tmp/tau3-local-20260915",
+      "/root/autodl-tmp/tau3-perf-20260912",
+      "/root/autodl-tmp/tau3-gdn-diagnosis-20260912",
+      "/root/autodl-tmp/tau3-5xa800-20260911",
+      "/root/autodl-tmp/tau3-models-20260912",
+      "/root/autodl-tmp/tau3-sft-archive-20260913",
+      "/root/autodl-tmp/tau3",
+      "/root/tau3-sft-archive-20260913",
+      "/root/tau3-models-5xa800",
+      "/root/autodl-tmp/dialogue_anchor_audit_20260914.py",
+      "/root/autodl-tmp/dialogue_anchor_audit_20260914_v2.py",
+      "/root/autodl-tmp/validate_gigpo_integration_20260914.py",
+      "/root/autodl-tmp/dialogue_anchor_audit_20260914_v3.py",
+      "/root/autodl-tmp/tau3-cpu-signal-20260914.bundle",
+      "/root/autodl-tmp/tau3-gigpo-integration-20260914.bundle",
+      "/root/autodl-tmp/tau3-gigpo-audit-report-20260914.bundle",
+      "/root/autodl-tmp/tau3-anchor-v2-20260914.bundle",
+      "/root/autodl-tmp/tau3-anchor-v2-report-20260914.bundle",
+      "/root/autodl-tmp/tau3-semantic-v3-20260914.bundle",
+      "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sync/source.bundle",
+      "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sync/test-fix.bundle",
+      "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sync/code-before-sync.tar.gz",
+      "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sync/source.tar",
+      "/root/autodl-fs/tau3-core/migration/20260915/local-head.bundle",
+      "/root/autodl-fs/tau3-core-20260912 (replaced by compatibility symlink)"
+    ],
+    "standalone_scripts_verified_in_git": 24,
+    "canonical_code": "/root/autodl-fs/tau3-core/code",
+    "compatibility_alias": "/root/autodl-fs/tau3-core-20260912",
+    "model_choice": "remote complete model only; tokenizer-only 4B provenance removed",
+    "removed_incomplete_git_pack": {
+      "path": "/root/autodl-fs/tau3-core/code/.git/objects/pack/tmp_pack_kV8Sfa",
+      "bytes": 169345036
+    }
+  },
+  "model_choice": {
+    "decision": "Keep remote full model and ModelScope provenance; remove tokenizer-only synced record per user instruction",
+    "kept": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-4B/tau3_source_revision.json",
+    "deleted": [
+      {
+        "path": "/root/autodl-fs/tau3-core/code/results/legacy/storage-conflicts/local-snapshot-models/Qwen3.5-4B/tau3_source_revision.json",
+        "sha256": "ff230f94216fbf8b32048d99529bf3eab916aa8269afaab1942b31c0f7d7863e"
+      },
+      {
+        "path": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-4B/tau3_source_revision.json",
+        "sha256": "ff230f94216fbf8b32048d99529bf3eab916aa8269afaab1942b31c0f7d7863e"
+      }
+    ]
+  }
+}

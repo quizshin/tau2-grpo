@@ -1,0 +1,1105 @@
+{
+  "moves": [
+    {
+      "source": "/root/autodl-fs/tau3-core-20260912/environment",
+      "destination": "/root/autodl-fs/tau3-core/environment",
+      "method": "same-filesystem-rename",
+      "inode": 4737
+    },
+    {
+      "source": "/root/autodl-fs/tau3-core-20260912/runs",
+      "destination": "/root/autodl-fs/tau3-core/code/results/runs",
+      "method": "same-filesystem-rename",
+      "inode": 103112
+    },
+    {
+      "source": "/root/autodl-fs/tau3-core-20260912/checkpoints",
+      "destination": "/root/autodl-fs/tau3-core/code/checkpoints",
+      "method": "same-filesystem-rename",
+      "inode": 2307
+    },
+    {
+      "source": "/root/autodl-fs/tau3-core-20260912/experiments",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/experiments",
+      "method": "same-filesystem-rename",
+      "inode": 2439
+    }
+  ],
+  "copied": [
+    {
+      "source": "/root/autodl-fs/tau3-core-20260912/code/data/parquet/airline_selection_seed42.parquet",
+      "destination": "/root/autodl-fs/tau3-core/code/data/parquet/airline_selection_seed42.parquet",
+      "bytes": 125166,
+      "sha256": "f349287b7ca978091fafb19494cb6b2849224d37281e978fa7a9ee9e23b6cc91"
+    },
+    {
+      "source": "/root/autodl-fs/tau3-core-20260912/code/data/parquet/airline_train_seed42.parquet",
+      "destination": "/root/autodl-fs/tau3-core/code/data/parquet/airline_train_seed42.parquet",
+      "bytes": 359849,
+      "sha256": "b2832a8d64d1727fa5a983462b336eb7d1b507a7d002711e42db6d13739bea4e"
+    },
+    {
+      "source": "/root/autodl-fs/tau3-core-20260912/code/data/raw/areal_tau2/.cache/huggingface/.gitignore",
+      "destination": "/root/autodl-fs/tau3-core/code/data/raw/areal_tau2/.cache/huggingface/.gitignore",
+      "bytes": 1,
+      "sha256": "684888c0ebb17f374298b65ee2807526c066094c701bcc7ebbe1c1095f494fc1"
+    },
+    {
+      "source": "/root/autodl-fs/tau3-core-20260912/code/data/raw/areal_tau2/.cache/huggingface/CACHEDIR.TAG",
+      "destination": "/root/autodl-fs/tau3-core/code/data/raw/areal_tau2/.cache/huggingface/CACHEDIR.TAG",
+      "bytes": 191,
+      "sha256": "f6572428f6d5e1575e73a1502895a8731f10757dfbb634909c6e154b849af91d"
+    },
+    {
+      "source": "/root/autodl-fs/tau3-core-20260912/code/data/raw/areal_tau2/.cache/huggingface/download/tau2_sft_train.jsonl.lock",
+      "destination": "/root/autodl-fs/tau3-core/code/data/raw/areal_tau2/.cache/huggingface/download/tau2_sft_train.jsonl.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/root/autodl-fs/tau3-core-20260912/code/data/raw/areal_tau2/.cache/huggingface/download/tau2_sft_train.jsonl.metadata",
+      "destination": "/root/autodl-fs/tau3-core/code/data/raw/areal_tau2/.cache/huggingface/download/tau2_sft_train.jsonl.metadata",
+      "bytes": 125,
+      "sha256": "16f2c4a55ccf4a854aad9954097212b3baba35256a7872750aa2a9942d81f97a"
+    },
+    {
+      "source": "/root/autodl-fs/tau3-core-20260912/code/data/raw/areal_tau2/tau2_sft_train.jsonl",
+      "destination": "/root/autodl-fs/tau3-core/code/data/raw/areal_tau2/tau2_sft_train.jsonl",
+      "bytes": 874041865,
+      "sha256": "24bc4d479799ef5d5efec7a5388ea2de6bf5dc5ab7c2c83e9b5ee26fa5813804"
+    },
+    {
+      "source": "/root/autodl-fs/tau3-core-20260912/code/outputs/2026-09-12/10-13-23/.hydra/config.yaml",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-persistent-dirty/outputs/2026-09-12/10-13-23/.hydra/config.yaml",
+      "bytes": 23043,
+      "sha256": "5b368bc61e4020ac1016182d2d696d13f460941df16a4bd58d3250668aea26a7"
+    },
+    {
+      "source": "/root/autodl-fs/tau3-core-20260912/code/outputs/2026-09-12/10-13-23/.hydra/hydra.yaml",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-persistent-dirty/outputs/2026-09-12/10-13-23/.hydra/hydra.yaml",
+      "bytes": 13493,
+      "sha256": "cf592ae85b9da0be347cc301de19a23ace70079ea9b4ce065555b57d85c118cd"
+    },
+    {
+      "source": "/root/autodl-fs/tau3-core-20260912/code/outputs/2026-09-12/10-13-23/.hydra/overrides.yaml",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-persistent-dirty/outputs/2026-09-12/10-13-23/.hydra/overrides.yaml",
+      "bytes": 4697,
+      "sha256": "2a666cb3c67bbedf1d7d1d5d57588c8cec6ba22947ad116ff063fb21bb4fbf08"
+    },
+    {
+      "source": "/root/autodl-fs/tau3-core-20260912/code/outputs/2026-09-12/10-13-23/main_ppo.log",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-persistent-dirty/outputs/2026-09-12/10-13-23/main_ppo.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/root/autodl-fs/tau3-core-20260912/code/outputs/2026-09-12/10-30-19/.hydra/config.yaml",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-persistent-dirty/outputs/2026-09-12/10-30-19/.hydra/config.yaml",
+      "bytes": 23043,
+      "sha256": "5b368bc61e4020ac1016182d2d696d13f460941df16a4bd58d3250668aea26a7"
+    },
+    {
+      "source": "/root/autodl-fs/tau3-core-20260912/code/outputs/2026-09-12/10-30-19/.hydra/hydra.yaml",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-persistent-dirty/outputs/2026-09-12/10-30-19/.hydra/hydra.yaml",
+      "bytes": 13493,
+      "sha256": "1729718dbd6d25882e763d94555b6fb7e89afe2b23318b64a45c216fe4c70786"
+    },
+    {
+      "source": "/root/autodl-fs/tau3-core-20260912/code/outputs/2026-09-12/10-30-19/.hydra/overrides.yaml",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-persistent-dirty/outputs/2026-09-12/10-30-19/.hydra/overrides.yaml",
+      "bytes": 4697,
+      "sha256": "2a666cb3c67bbedf1d7d1d5d57588c8cec6ba22947ad116ff063fb21bb4fbf08"
+    },
+    {
+      "source": "/root/autodl-fs/tau3-core-20260912/code/outputs/2026-09-12/10-30-19/main_ppo.log",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-persistent-dirty/outputs/2026-09-12/10-30-19/main_ppo.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/anchor_v2_20260914/dialogue_partitions.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/anchor_v2_20260914/dialogue_partitions.json",
+      "bytes": 995558,
+      "sha256": "9449b604b53bddfa7f7f596dbb0c8586e744288c34a7dd4e59affb31739ee1e2"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/anchor_v2_20260914/execution.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/anchor_v2_20260914/execution.json",
+      "bytes": 766,
+      "sha256": "bd68856028278c3fb7df01469eb826b70bb011027cbff1e96f79c4dd61cc378e"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/anchor_v2_20260914/pytest.log",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/anchor_v2_20260914/pytest.log",
+      "bytes": 1247,
+      "sha256": "a2feffcc1178903f9a428c136c3a8a90797ac33f1b1b4b450e9f2e4914258351"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/anchor_v2_20260914/report.md",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/anchor_v2_20260914/report.md",
+      "bytes": 5991,
+      "sha256": "be192fa5a11df125eb78daa4f9706dff7c0d44509180c5be05357704ec2f2eeb"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/cpu_signal_validation_20260914/execution.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/cpu_signal_validation_20260914/execution.json",
+      "bytes": 1184,
+      "sha256": "6c4fd7fd6b0753c0bb7e9fd3bc8b38624e9806427332848943c1cecdde146f89"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/cpu_signal_validation_20260914/historical_snapshot.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/cpu_signal_validation_20260914/historical_snapshot.json",
+      "bytes": 4824561,
+      "sha256": "2dbdb750fba853b2b37d7593cf5fa83065a2bb9c1688dbfaf518f0ab62c2b48a"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/cpu_signal_validation_20260914/pytest.log",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/cpu_signal_validation_20260914/pytest.log",
+      "bytes": 648,
+      "sha256": "68b26b6a9a226e9d7197b83e0ffaab25163caa70b86ffecb033d9744082966bc"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/cpu_signal_validation_20260914/report.md",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/cpu_signal_validation_20260914/report.md",
+      "bytes": 7014,
+      "sha256": "c47df332e6aee1394b22443e12c6300ccfc506662a622cb3c0ab37407e12ab66"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/cpu_signal_validation_20260914/validation.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/cpu_signal_validation_20260914/validation.json",
+      "bytes": 19470,
+      "sha256": "a3986b0c316cc8022293e2e6ba1e6afc22f5cc604fe7dc254e406798be505491"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/cpu_signal_validation_20260914/validation.log",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/cpu_signal_validation_20260914/validation.log",
+      "bytes": 3385,
+      "sha256": "dec3bb0c65a1d0e7208b3ea89bd7ae7139ec9c80f9cd3a0813be1e3a1ca99126"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/decision_pairs_20260914/execution.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/decision_pairs_20260914/execution.json",
+      "bytes": 137,
+      "sha256": "37b8ef171aab6ccd7fc74f67ac418b4c967ac0da990ed2045065e1636661b6f4"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/decision_pairs_20260914/fixture_rebuilt.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/decision_pairs_20260914/fixture_rebuilt.json",
+      "bytes": 181172,
+      "sha256": "753693972304dfc265b5c5d54f5ae5a6cf67e7cdedd3fcecba8dee2a4f377d21"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/decision_pairs_20260914/pair_audit.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/decision_pairs_20260914/pair_audit.json",
+      "bytes": 68941,
+      "sha256": "4b0f74faab34c3e222c6be6c26d11d36fe46aaa491fc94fbc4a72fddc3fff531"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/decision_pairs_20260914/pair_audit.md",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/decision_pairs_20260914/pair_audit.md",
+      "bytes": 6375,
+      "sha256": "86db0d025aff1342affad0b9ad0d5be20752e8ad5279ffd8480fca829936cee0"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/decision_pairs_20260914/post_label_outcomes.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/decision_pairs_20260914/post_label_outcomes.json",
+      "bytes": 3088,
+      "sha256": "863b167a33189ca0b9636034687bc9b0430c0f8b79323bd46d967952b48ff97b"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/decision_pairs_20260914/report.md",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/decision_pairs_20260914/report.md",
+      "bytes": 8776,
+      "sha256": "11fca1935b091783290fdc7ce2965a3bf3ea8d990781f8dea6dc6b61d95d8b5b"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/decision_pairs_20260914/server_pytest.log",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/decision_pairs_20260914/server_pytest.log",
+      "bytes": 685,
+      "sha256": "114f180a8b12a0c2ee7d73b78ad94820e8f0448b98125f74daf326b4248470dc"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/gigpo_integration_20260914/dialogues.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/gigpo_integration_20260914/dialogues.json",
+      "bytes": 84725,
+      "sha256": "15c7d4e6e677b04bfee35a0db7f6d0d314a0b2994e2f9c4fa47a63bb32f3d95b"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/gigpo_integration_20260914/dialogues_v2.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/gigpo_integration_20260914/dialogues_v2.json",
+      "bytes": 95333,
+      "sha256": "b3144d8aa2da113f639ea8969e054c0939822f451f67d214830e097a3e07625c"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/gigpo_integration_20260914/dialogues_v3.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/gigpo_integration_20260914/dialogues_v3.json",
+      "bytes": 97477,
+      "sha256": "e06a2411e0cd4b919f00e601170385288cf8c695177a955581f9012deb50feff"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/gigpo_integration_20260914/execution.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/gigpo_integration_20260914/execution.json",
+      "bytes": 606,
+      "sha256": "28e50623e16f1ee381388b716a19a5442b3dc0c9d6db6cc8942cf17890b79784"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/gigpo_integration_20260914/production_normalization.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/gigpo_integration_20260914/production_normalization.json",
+      "bytes": 10217,
+      "sha256": "87667b01a22571538e4a1f8044b2057a905868e94cb64547282d52c87dd37baf"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/gigpo_integration_20260914/pytest.log",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/gigpo_integration_20260914/pytest.log",
+      "bytes": 1167,
+      "sha256": "b739ad3e042d9ff5856983e53737eb931529825a42fdbc20d9d2c204edc597f8"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/gigpo_integration_20260914/report.md",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/gigpo_integration_20260914/report.md",
+      "bytes": 6871,
+      "sha256": "a56cca9f1978d833562035311eead25afb00e44510a27cf6d6662e81c60b422f"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/rl_curriculum50_20260912/audit.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/rl_curriculum50_20260912/audit.json",
+      "bytes": 1680,
+      "sha256": "6bb553be575225e16606d56539cd1ebe8fd977fda022a0b54e1d926421afdece"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/rl_curriculum50_20260912/manifests/areal_airline_split_seed42.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/rl_curriculum50_20260912/manifests/areal_airline_split_seed42.json",
+      "bytes": 272,
+      "sha256": "97457389679a7c78d28c08034dd38217f01c20c607dc2cb67923a9ca5763d8b7"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/rl_curriculum50_20260912/manifests/areal_airline_train_seed42.jsonl",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/rl_curriculum50_20260912/manifests/areal_airline_train_seed42.jsonl",
+      "bytes": 230913,
+      "sha256": "641bde73c1495c59b5c0a87cfc84b9e00c0b5ffd2f86d10fd2205aaf2143adae"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/rl_curriculum50_20260912/new_combinations.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/rl_curriculum50_20260912/new_combinations.json",
+      "bytes": 7107,
+      "sha256": "162125b6ec4a2768ca207ad2b6a36a63e18af88ce44f61f10baca6e2cd4de21e"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/rl_curriculum50_20260912/schedule_preview.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/rl_curriculum50_20260912/schedule_preview.json",
+      "bytes": 65149,
+      "sha256": "4b627e6be43815b025b3577c257ecb8e81d8f4a082e0e451f8e1fe41af33ab9d"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/rl_curriculum_20260912/all_200_classified.jsonl",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/rl_curriculum_20260912/all_200_classified.jsonl",
+      "bytes": 298381,
+      "sha256": "df1fa9d3abd9c0b985411b148d2820409005fdd740699036013a42584796a098"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/rl_curriculum_20260912/audit.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/rl_curriculum_20260912/audit.json",
+      "bytes": 3709,
+      "sha256": "e978705d2edae3a998b0bc0f3ab00812730d6ff9784e8b05adec9fa55f21f519"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/rl_curriculum_20260912/candidate_40_manifest.jsonl",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/rl_curriculum_20260912/candidate_40_manifest.jsonl",
+      "bytes": 165405,
+      "sha256": "79e317a824e8b55f7ce338c9f30a5811d83f2dce17dd896397eaffb003f5efbb"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/rl_curriculum_20260912/manifests/areal_airline_split_seed42.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/rl_curriculum_20260912/manifests/areal_airline_split_seed42.json",
+      "bytes": 386,
+      "sha256": "e67447171c385168a01618082bfc08652afdf571b8cf98b22f197a9512dd41db"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/rl_curriculum_20260912/manifests/areal_airline_train_seed42.jsonl",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/rl_curriculum_20260912/manifests/areal_airline_train_seed42.jsonl",
+      "bytes": 165405,
+      "sha256": "79e317a824e8b55f7ce338c9f30a5811d83f2dce17dd896397eaffb003f5efbb"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/rl_curriculum_20260912/report.md",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/rl_curriculum_20260912/report.md",
+      "bytes": 10238,
+      "sha256": "cbd29ec1772828581663db97b5366938696096df16a7e9bfcca4ba7b6965ac0d"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/rl_curriculum_20260912/sft_45_classified.jsonl",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/rl_curriculum_20260912/sft_45_classified.jsonl",
+      "bytes": 20761,
+      "sha256": "c368c50340ae8ea17e1ee1efe6879532ca5f3ea936bb234af658e0c83d0ae5f4"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/semantic_v3_20260914/dialogue_partitions.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/semantic_v3_20260914/dialogue_partitions.json",
+      "bytes": 1232473,
+      "sha256": "176064353074e27afe698f4e992e6590d15d24987815e0cfa109d6a269bdddf1"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/semantic_v3_20260914/execution.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/semantic_v3_20260914/execution.json",
+      "bytes": 625,
+      "sha256": "faa973461ce174aff6fdcd33f0377fe01f8513354e88516a82448279336ab0ad"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/semantic_v3_20260914/launcher_dry_run.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/semantic_v3_20260914/launcher_dry_run.json",
+      "bytes": 12097,
+      "sha256": "e5e0eb6e9db3c65ca4049c3591f17872c3528d55ec4496297849609a2a4ca472"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/semantic_v3_20260914/pytest.log",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/semantic_v3_20260914/pytest.log",
+      "bytes": 1327,
+      "sha256": "59fde905ac0357e3858b0954cfc7aef2255e4454d2630baa0b3db1574efc2da5"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/semantic_v3_20260914/report.md",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/semantic_v3_20260914/report.md",
+      "bytes": 9877,
+      "sha256": "156e6e7bc37da66ee020c78bb3681d1e5cf85a04c98a5b0e2009c00a50a7ee2d"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/results/analysis/semantic_v3_20260914/shell_dry_run.log",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/results/analysis/semantic_v3_20260914/shell_dry_run.log",
+      "bytes": 7185,
+      "sha256": "8aa9217ce8756274319753a6945414d10160edafe246384050da4a88cc464866"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/outputs/2026-09-12/12-49-37/.hydra/config.yaml",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/outputs/2026-09-12/12-49-37/.hydra/config.yaml",
+      "bytes": 23275,
+      "sha256": "28ae52913e8c5d318075d8eb8fba43c22cb0b80be62176c470f33a092412b981"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/outputs/2026-09-12/12-49-37/.hydra/hydra.yaml",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/outputs/2026-09-12/12-49-37/.hydra/hydra.yaml",
+      "bytes": 14880,
+      "sha256": "5ded0a46d94368b5058a966c91df19a19c9811b9becefd795c7de036c05ebf99"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/outputs/2026-09-12/12-49-37/.hydra/overrides.yaml",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/outputs/2026-09-12/12-49-37/.hydra/overrides.yaml",
+      "bytes": 5376,
+      "sha256": "c0c2bf14dd013a8be1a841f8445b15325452843c71410bb667aefa68234b5c62"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/outputs/2026-09-12/12-49-37/main_ppo.log",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/outputs/2026-09-12/12-49-37/main_ppo.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/outputs/2026-09-12/19-05-16/.hydra/config.yaml",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/outputs/2026-09-12/19-05-16/.hydra/config.yaml",
+      "bytes": 24182,
+      "sha256": "17b447155c8e2f6bdb8220c5a6b750650b172567c416bda3e51f4179c56e697d"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/outputs/2026-09-12/19-05-16/.hydra/hydra.yaml",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/outputs/2026-09-12/19-05-16/.hydra/hydra.yaml",
+      "bytes": 20014,
+      "sha256": "93f339a0f4b9fe110ec8e2452894311d63e6348170e1ee6c8232a4078bf5303d"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/outputs/2026-09-12/19-05-16/.hydra/overrides.yaml",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/outputs/2026-09-12/19-05-16/.hydra/overrides.yaml",
+      "bytes": 7907,
+      "sha256": "bc07bd84ae6fa552c4092fad210764c7d5a682e02ea85291922b8d3bdd5f98d2"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/outputs/2026-09-12/19-05-16/main_ppo.log",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/outputs/2026-09-12/19-05-16/main_ppo.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/outputs/2026-09-13/09-09-56/.hydra/config.yaml",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/outputs/2026-09-13/09-09-56/.hydra/config.yaml",
+      "bytes": 24086,
+      "sha256": "8450fbd184e002dd3c58f4250dc5c0f9a4c268f19ddde8e7c325d8b16ff8e71e"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/outputs/2026-09-13/09-09-56/.hydra/hydra.yaml",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/outputs/2026-09-13/09-09-56/.hydra/hydra.yaml",
+      "bytes": 19674,
+      "sha256": "5b3da62bd74f66799d40a5689ced9b142d64a0d0bd246d8241b7689cd0e65a85"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/outputs/2026-09-13/09-09-56/.hydra/overrides.yaml",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/outputs/2026-09-13/09-09-56/.hydra/overrides.yaml",
+      "bytes": 7739,
+      "sha256": "6a2a565148eec92686df7b85caa02a0c8ae821baaf27f184a3398f9f380f4d45"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/outputs/2026-09-13/09-09-56/main_ppo.log",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/outputs/2026-09-13/09-09-56/main_ppo.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/outputs/2026-09-13/15-59-13/.hydra/config.yaml",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/outputs/2026-09-13/15-59-13/.hydra/config.yaml",
+      "bytes": 24092,
+      "sha256": "75a8711218632441fd39372eef32e20ff2180b0fc3d11691be5f1d18826a25b6"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/outputs/2026-09-13/15-59-13/.hydra/hydra.yaml",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/outputs/2026-09-13/15-59-13/.hydra/hydra.yaml",
+      "bytes": 19964,
+      "sha256": "171c905d7233125789096c8b8a29f9e22f137e07f3de6cfc07274be8b960ea04"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/outputs/2026-09-13/15-59-13/.hydra/overrides.yaml",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/outputs/2026-09-13/15-59-13/.hydra/overrides.yaml",
+      "bytes": 7880,
+      "sha256": "b11658e9e3e3dc4c4038ffeab451673305fb4fa77972382ab72e22986a8f07a2"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/outputs/2026-09-13/15-59-13/main_ppo.log",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/outputs/2026-09-13/15-59-13/main_ppo.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/outputs/2026-09-13/22-41-05/.hydra/config.yaml",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/outputs/2026-09-13/22-41-05/.hydra/config.yaml",
+      "bytes": 24091,
+      "sha256": "734e8a10f31be5ba314e2209ceeba36d016a0ee2711fedbdc4cdc09c5e47146f"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/outputs/2026-09-13/22-41-05/.hydra/hydra.yaml",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/outputs/2026-09-13/22-41-05/.hydra/hydra.yaml",
+      "bytes": 19962,
+      "sha256": "b9816d9a32fef45903f77742f27031729111b92ec7001ed508f994a89d4761cd"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/outputs/2026-09-13/22-41-05/.hydra/overrides.yaml",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/outputs/2026-09-13/22-41-05/.hydra/overrides.yaml",
+      "bytes": 7879,
+      "sha256": "f4f166c02d753c6693d1b189a5acd444846133ed3f2789ee6a380cedfcd7eae8"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-perf-20260912/code/outputs/2026-09-13/22-41-05/main_ppo.log",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-remote-rl/outputs/2026-09-13/22-41-05/main_ppo.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/outputs/paratera-5090-20260910/batch-summary.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-local-snapshot/outputs/paratera-5090-20260910/batch-summary.json",
+      "bytes": 2736,
+      "sha256": "dbadfac527f2d5a4119921436d4ac0b7e8dd2e54c2bb65c2ee80d247f50738bf"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/outputs/paratera-5090-20260910/rl-memory-unchunked.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-local-snapshot/outputs/paratera-5090-20260910/rl-memory-unchunked.json",
+      "bytes": 473,
+      "sha256": "a34b7ad87406df70256e9dfc3d2da3d1e12b7a32ca3f1f6527550b171f46990d"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/outputs/paratera-5090-20260910/rl-memory.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-local-snapshot/outputs/paratera-5090-20260910/rl-memory.json",
+      "bytes": 473,
+      "sha256": "510bd789072d74ad09fbbb71a26a4dea9f40687cc75c7ddc8a27d8a945b11192"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/outputs/paratera-5090-20260910/rl-smoke.log",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-local-snapshot/outputs/paratera-5090-20260910/rl-smoke.log",
+      "bytes": 336898,
+      "sha256": "9767cfd656437c9a2dc6f80c2f68f65e0d4642fc0c07e0aff1135e9ae59a6614"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/outputs/paratera-5090-20260910/sft-completed/adapter/SHA256SUMS",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-local-snapshot/outputs/paratera-5090-20260910/sft-completed/adapter/SHA256SUMS",
+      "bytes": 763,
+      "sha256": "f68c9ebcfccc1181e69c69d0988040e84aa13f2bab39ebb684b11fb6c8c86c4e"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/outputs/paratera-5090-20260910/sft-completed/adapter/train_summary.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-local-snapshot/outputs/paratera-5090-20260910/sft-completed/adapter/train_summary.json",
+      "bytes": 1778,
+      "sha256": "ba4fa4b7c4dd1f5f98b52f22fc0e3bf0cbd4544f862a0e758c1bdf6e6cb22d9d"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/outputs/paratera-5090-20260910/sft-completed/adapter/trainer_state.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-local-snapshot/outputs/paratera-5090-20260910/sft-completed/adapter/trainer_state.json",
+      "bytes": 7943,
+      "sha256": "4a124ed75405156f12276dd4f9e015986f19d674240307d508fe07da852ab565"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/outputs/paratera-5090-20260910/sft-completed/export_verification.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-local-snapshot/outputs/paratera-5090-20260910/sft-completed/export_verification.json",
+      "bytes": 699,
+      "sha256": "24d383150e09b68835c5db175c10078df9c158f4110ee2819f622e878f806ad9"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/outputs/paratera-5090-20260910/sft-completed/sft_config.yaml",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-local-snapshot/outputs/paratera-5090-20260910/sft-completed/sft_config.yaml",
+      "bytes": 1409,
+      "sha256": "4c7ee912e737b67c00fd94266361c3f850b07ebea68cb0fdb5cb5aca10b5bcd0"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/outputs/paratera-5090-20260910/sft-completed/sft_merged_seed42/SHA256SUMS",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-local-snapshot/outputs/paratera-5090-20260910/sft-completed/sft_merged_seed42/SHA256SUMS",
+      "bytes": 592,
+      "sha256": "d2f4f71ddfe344b2616155ed291bfb3192b56c109e42c3ab9ce2c5a92c4391b3"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/outputs/paratera-5090-20260910/sft-completed/sft_merged_seed42/sft_provenance.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-local-snapshot/outputs/paratera-5090-20260910/sft-completed/sft_merged_seed42/sft_provenance.json",
+      "bytes": 2769,
+      "sha256": "c67060605137f96085d47c9b3bf480cc81143e2917cd4817996a6a306809b003"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/outputs/paratera-5090-20260910/sft-memory.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-local-snapshot/outputs/paratera-5090-20260910/sft-memory.json",
+      "bytes": 791,
+      "sha256": "2a7af298ce7ab6e8d2bd12623833478d936bf7f7a0956b4aa96693b47abf8f69"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/outputs/paratera-5090-20260910/simulator-api.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-local-snapshot/outputs/paratera-5090-20260910/simulator-api.json",
+      "bytes": 1244,
+      "sha256": "6085bdc2765a0f853e2da91d5049adfbc529d07a4cf14ce3f3b7a3394df87ab5"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/outputs/paratera-5090-20260910/smoke-summary.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-local-snapshot/outputs/paratera-5090-20260910/smoke-summary.json",
+      "bytes": 7770,
+      "sha256": "6a0352be6dab33bd98430d39e00012d0662ce44abf7ac262011617a5a5136ca4"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen2.5-7B-Instruct/.cache/huggingface/.gitignore",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen2.5-7B-Instruct/.cache/huggingface/.gitignore",
+      "bytes": 1,
+      "sha256": "684888c0ebb17f374298b65ee2807526c066094c701bcc7ebbe1c1095f494fc1"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen2.5-7B-Instruct/.cache/huggingface/CACHEDIR.TAG",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen2.5-7B-Instruct/.cache/huggingface/CACHEDIR.TAG",
+      "bytes": 191,
+      "sha256": "f6572428f6d5e1575e73a1502895a8731f10757dfbb634909c6e154b849af91d"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen2.5-7B-Instruct/.cache/huggingface/download/config.json.lock",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen2.5-7B-Instruct/.cache/huggingface/download/config.json.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen2.5-7B-Instruct/.cache/huggingface/download/config.json.metadata",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen2.5-7B-Instruct/.cache/huggingface/download/config.json.metadata",
+      "bytes": 101,
+      "sha256": "9b930c9a2774b8930f90112148f42228c1f0d557a342288b95f1f60137323848"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen2.5-7B-Instruct/.cache/huggingface/download/generation_config.json.lock",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen2.5-7B-Instruct/.cache/huggingface/download/generation_config.json.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen2.5-7B-Instruct/.cache/huggingface/download/generation_config.json.metadata",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen2.5-7B-Instruct/.cache/huggingface/download/generation_config.json.metadata",
+      "bytes": 100,
+      "sha256": "7d98dbd20b6632ed36f72515d833c3ed22147969a419f7f7a9ab448054320df4"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen2.5-7B-Instruct/.cache/huggingface/download/merges.txt.lock",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen2.5-7B-Instruct/.cache/huggingface/download/merges.txt.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen2.5-7B-Instruct/.cache/huggingface/download/merges.txt.metadata",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen2.5-7B-Instruct/.cache/huggingface/download/merges.txt.metadata",
+      "bytes": 100,
+      "sha256": "b4047a3fcf3ffc9f5d6b14085c3da6ab0a339d8d25e78eb730e012f456c3a8f9"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen2.5-7B-Instruct/.cache/huggingface/download/tokenizer.json.lock",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen2.5-7B-Instruct/.cache/huggingface/download/tokenizer.json.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen2.5-7B-Instruct/.cache/huggingface/download/tokenizer.json.metadata",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen2.5-7B-Instruct/.cache/huggingface/download/tokenizer.json.metadata",
+      "bytes": 101,
+      "sha256": "6b963a8747050c24a981804b316ba43ef1db926ee335a98fbae551cc9901e7ad"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen2.5-7B-Instruct/.cache/huggingface/download/tokenizer_config.json.lock",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen2.5-7B-Instruct/.cache/huggingface/download/tokenizer_config.json.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen2.5-7B-Instruct/.cache/huggingface/download/tokenizer_config.json.metadata",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen2.5-7B-Instruct/.cache/huggingface/download/tokenizer_config.json.metadata",
+      "bytes": 101,
+      "sha256": "5feac3a5c4e21fe7fc093bf721ed742bf5db96b2f0b40321fa4c6398827d09c3"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen2.5-7B-Instruct/.cache/huggingface/download/vocab.json.lock",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen2.5-7B-Instruct/.cache/huggingface/download/vocab.json.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen2.5-7B-Instruct/.cache/huggingface/download/vocab.json.metadata",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen2.5-7B-Instruct/.cache/huggingface/download/vocab.json.metadata",
+      "bytes": 100,
+      "sha256": "89f6d00af5a16b87455dda0e501f375b6d99d1392f0d8d2b064910c486195ee0"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen2.5-7B-Instruct/.cache/huggingface/trees/a09a35458c702b33eeacc393d103063234e8bc28.json",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen2.5-7B-Instruct/.cache/huggingface/trees/a09a35458c702b33eeacc393d103063234e8bc28.json",
+      "bytes": 2344,
+      "sha256": "3ef1b137ecabe56a171959fcbf1a27be49ba2d2f9c7769706e86651d94d4de94"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen2.5-7B-Instruct/config.json",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen2.5-7B-Instruct/config.json",
+      "bytes": 663,
+      "sha256": "7463bb0ea78315365e6c6b74de4e73bbcc8359dfb0c5a737584e077d42c0b03c"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen2.5-7B-Instruct/generation_config.json",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen2.5-7B-Instruct/generation_config.json",
+      "bytes": 243,
+      "sha256": "3a8f9087e486054c8a4a08dae2e5a3ba62e23da212b5b8c08bc42cb983c3459f"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen2.5-7B-Instruct/merges.txt",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen2.5-7B-Instruct/merges.txt",
+      "bytes": 1671839,
+      "sha256": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen2.5-7B-Instruct/tau3_source_revision.json",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen2.5-7B-Instruct/tau3_source_revision.json",
+      "bytes": 126,
+      "sha256": "dda6b2997c4458ed2afb5d310cef3819c923d0519f239439e816e5ba78300d17"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen2.5-7B-Instruct/tokenizer.json",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen2.5-7B-Instruct/tokenizer.json",
+      "bytes": 7031645,
+      "sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen2.5-7B-Instruct/tokenizer_config.json",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen2.5-7B-Instruct/tokenizer_config.json",
+      "bytes": 7305,
+      "sha256": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen2.5-7B-Instruct/vocab.json",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen2.5-7B-Instruct/vocab.json",
+      "bytes": 2776833,
+      "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-0.8B/.cache/huggingface/.gitignore",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-0.8B/.cache/huggingface/.gitignore",
+      "bytes": 1,
+      "sha256": "684888c0ebb17f374298b65ee2807526c066094c701bcc7ebbe1c1095f494fc1"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-0.8B/.cache/huggingface/CACHEDIR.TAG",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-0.8B/.cache/huggingface/CACHEDIR.TAG",
+      "bytes": 191,
+      "sha256": "f6572428f6d5e1575e73a1502895a8731f10757dfbb634909c6e154b849af91d"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-0.8B/.cache/huggingface/download/chat_template.jinja.lock",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-0.8B/.cache/huggingface/download/chat_template.jinja.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-0.8B/.cache/huggingface/download/chat_template.jinja.metadata",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-0.8B/.cache/huggingface/download/chat_template.jinja.metadata",
+      "bytes": 101,
+      "sha256": "d9d106326c019f334a3913c4ef28031db55a5c1da047c62b875cf84afb94a9c5"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-0.8B/.cache/huggingface/download/config.json.lock",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-0.8B/.cache/huggingface/download/config.json.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-0.8B/.cache/huggingface/download/config.json.metadata",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-0.8B/.cache/huggingface/download/config.json.metadata",
+      "bytes": 99,
+      "sha256": "2e25ad62289d619a5fa8e94e62255aa3e97ad491d938916d1497ce331d90cda1"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-0.8B/.cache/huggingface/download/merges.txt.lock",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-0.8B/.cache/huggingface/download/merges.txt.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-0.8B/.cache/huggingface/download/merges.txt.metadata",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-0.8B/.cache/huggingface/download/merges.txt.metadata",
+      "bytes": 100,
+      "sha256": "b2f56c742dec034bdea24c7750cfc12c7c1321a4cc989ed06e08a465671b3bb2"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-0.8B/.cache/huggingface/download/tokenizer.json.lock",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-0.8B/.cache/huggingface/download/tokenizer.json.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-0.8B/.cache/huggingface/download/tokenizer.json.metadata",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-0.8B/.cache/huggingface/download/tokenizer.json.metadata",
+      "bytes": 124,
+      "sha256": "ccffa2edf4f36103e47dbf483e86af717ae8df64b31206290b68c225b498e449"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-0.8B/.cache/huggingface/download/tokenizer_config.json.lock",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-0.8B/.cache/huggingface/download/tokenizer_config.json.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-0.8B/.cache/huggingface/download/tokenizer_config.json.metadata",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-0.8B/.cache/huggingface/download/tokenizer_config.json.metadata",
+      "bytes": 100,
+      "sha256": "afdce87b8ab2745207c83b124b44965435861c3db0faaea0947bc284c356456e"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-0.8B/.cache/huggingface/download/vocab.json.lock",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-0.8B/.cache/huggingface/download/vocab.json.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-0.8B/.cache/huggingface/download/vocab.json.metadata",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-0.8B/.cache/huggingface/download/vocab.json.metadata",
+      "bytes": 100,
+      "sha256": "080278d5636ea732aebda8c6cf975636845f9e6b831f9990e7e0ec4475b70135"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-0.8B/.cache/huggingface/trees/2fc06364715b967f1860aea9cf38778875588b17.json",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-0.8B/.cache/huggingface/trees/2fc06364715b967f1860aea9cf38778875588b17.json",
+      "bytes": 1817,
+      "sha256": "efe9695c24374d609e74bf7a847062321f821c045a09fe36dedfcfb54c04ef5b"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-0.8B/chat_template.jinja",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-0.8B/chat_template.jinja",
+      "bytes": 7755,
+      "sha256": "273d8e0e683b885071fb17e08d71e5f2a5ddfb5309756181681de4f5a1822d80"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-0.8B/config.json",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-0.8B/config.json",
+      "bytes": 2907,
+      "sha256": "b90b86f35c8e6925ef74ee04d0e758f0a845c83a42089ad82bbaa948de9b4204"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-0.8B/merges.txt",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-0.8B/merges.txt",
+      "bytes": 3353259,
+      "sha256": "a9d356d7bdf1ef4949e3e748e95b8e10ad9d4e2e838eddc38a0a7b6b94d1db8d"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-0.8B/tau3_source_revision.json",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-0.8B/tau3_source_revision.json",
+      "bytes": 119,
+      "sha256": "b1d65dcd1ed3f45dd2506ed55091088a89e99ece2a15744e081ba1d7e8495dee"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-0.8B/tokenizer.json",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-0.8B/tokenizer.json",
+      "bytes": 12807982,
+      "sha256": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-0.8B/tokenizer_config.json",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-0.8B/tokenizer_config.json",
+      "bytes": 16709,
+      "sha256": "49e2b6e395f959f077f1e992b338919c0d4a9732fc6e613995e06557f843500c"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-0.8B/vocab.json",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-0.8B/vocab.json",
+      "bytes": 6722759,
+      "sha256": "ce99b4cb2983d118806ce0a8b777a35b093e2000a503ebde25853284c9dfa003"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-4B/.cache/huggingface/.gitignore",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-4B/.cache/huggingface/.gitignore",
+      "bytes": 1,
+      "sha256": "684888c0ebb17f374298b65ee2807526c066094c701bcc7ebbe1c1095f494fc1"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-4B/.cache/huggingface/CACHEDIR.TAG",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-4B/.cache/huggingface/CACHEDIR.TAG",
+      "bytes": 191,
+      "sha256": "f6572428f6d5e1575e73a1502895a8731f10757dfbb634909c6e154b849af91d"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-4B/.cache/huggingface/download/chat_template.jinja.lock",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-4B/.cache/huggingface/download/chat_template.jinja.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-4B/.cache/huggingface/download/chat_template.jinja.metadata",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-4B/.cache/huggingface/download/chat_template.jinja.metadata",
+      "bytes": 100,
+      "sha256": "9cb579557227f9f58fc10200fbcbe4e0bb321196d18cecdb065d89d48ad15bb9"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-4B/.cache/huggingface/download/config.json.lock",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-4B/.cache/huggingface/download/config.json.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-4B/.cache/huggingface/download/config.json.metadata",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-4B/.cache/huggingface/download/config.json.metadata",
+      "bytes": 99,
+      "sha256": "bb41d6771e07b06107ec59226bc3272ec3fc62aa24507ff1a64a475c572b35f9"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-4B/.cache/huggingface/download/merges.txt.lock",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-4B/.cache/huggingface/download/merges.txt.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-4B/.cache/huggingface/download/merges.txt.metadata",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-4B/.cache/huggingface/download/merges.txt.metadata",
+      "bytes": 100,
+      "sha256": "e4b7a4efaf8194ec2a60ef0fa570bb7324b9890e60b1ce0e8bba5e46f390b4e4"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-4B/.cache/huggingface/download/tokenizer.json.lock",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-4B/.cache/huggingface/download/tokenizer.json.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-4B/.cache/huggingface/download/tokenizer.json.metadata",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-4B/.cache/huggingface/download/tokenizer.json.metadata",
+      "bytes": 124,
+      "sha256": "29fdbf414837903cb343a486fd31906e11596602fc817369124de1b11366ad75"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-4B/.cache/huggingface/download/tokenizer_config.json.lock",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-4B/.cache/huggingface/download/tokenizer_config.json.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-4B/.cache/huggingface/download/tokenizer_config.json.metadata",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-4B/.cache/huggingface/download/tokenizer_config.json.metadata",
+      "bytes": 100,
+      "sha256": "010026c1ba4c64e51836383777e901a8cac5e644fbe538c4655f15ecddc17bf8"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-4B/.cache/huggingface/download/vocab.json.lock",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-4B/.cache/huggingface/download/vocab.json.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-4B/.cache/huggingface/download/vocab.json.metadata",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-4B/.cache/huggingface/download/vocab.json.metadata",
+      "bytes": 100,
+      "sha256": "34a0089c60d98be4c2481739485fd1f21fc585aec47f177b6dc662221f0945a6"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-4B/.cache/huggingface/trees/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a.json",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-4B/.cache/huggingface/trees/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a.json",
+      "bytes": 2149,
+      "sha256": "f141d0f96caf196996c62775e725b6ad713e8c7e967121090668693e6b852908"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-9B/.cache/huggingface/.gitignore",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-9B/.cache/huggingface/.gitignore",
+      "bytes": 1,
+      "sha256": "684888c0ebb17f374298b65ee2807526c066094c701bcc7ebbe1c1095f494fc1"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-9B/.cache/huggingface/CACHEDIR.TAG",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-9B/.cache/huggingface/CACHEDIR.TAG",
+      "bytes": 191,
+      "sha256": "f6572428f6d5e1575e73a1502895a8731f10757dfbb634909c6e154b849af91d"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-9B/.cache/huggingface/download/chat_template.jinja.lock",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-9B/.cache/huggingface/download/chat_template.jinja.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-9B/.cache/huggingface/download/chat_template.jinja.metadata",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-9B/.cache/huggingface/download/chat_template.jinja.metadata",
+      "bytes": 100,
+      "sha256": "2e30a9dad1c0a2b9e67893a298c0b9bd5f287e3606d49177ab136ff1712b1a8d"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-9B/.cache/huggingface/download/config.json.lock",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-9B/.cache/huggingface/download/config.json.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-9B/.cache/huggingface/download/config.json.metadata",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-9B/.cache/huggingface/download/config.json.metadata",
+      "bytes": 100,
+      "sha256": "31aaf8b3bbe074ed472987396abaa0a69e21a8b92e81310ff8691c328534984d"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-9B/.cache/huggingface/download/merges.txt.lock",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-9B/.cache/huggingface/download/merges.txt.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-9B/.cache/huggingface/download/merges.txt.metadata",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-9B/.cache/huggingface/download/merges.txt.metadata",
+      "bytes": 100,
+      "sha256": "d1068bf6c6d7b178eca1eece2806decb530f0804067cbe9c5ce1618df7c7c696"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-9B/.cache/huggingface/download/tokenizer.json.lock",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-9B/.cache/huggingface/download/tokenizer.json.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-9B/.cache/huggingface/download/tokenizer.json.metadata",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-9B/.cache/huggingface/download/tokenizer.json.metadata",
+      "bytes": 124,
+      "sha256": "4833b672d11a1b684684d2c5c91cd1c9383e4fcc8490f05f2cba73ef0521c60f"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-9B/.cache/huggingface/download/tokenizer_config.json.lock",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-9B/.cache/huggingface/download/tokenizer_config.json.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-9B/.cache/huggingface/download/tokenizer_config.json.metadata",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-9B/.cache/huggingface/download/tokenizer_config.json.metadata",
+      "bytes": 100,
+      "sha256": "a46a753c02228f599b206c6eb032a73eb7808a632c15bcbe42d94584530e9858"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-9B/.cache/huggingface/download/vocab.json.lock",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-9B/.cache/huggingface/download/vocab.json.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-9B/.cache/huggingface/download/vocab.json.metadata",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-9B/.cache/huggingface/download/vocab.json.metadata",
+      "bytes": 101,
+      "sha256": "7567dc83c06098575a75f5e213aab580643814f9de38bd1853cf12c64c7d9339"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-9B/.cache/huggingface/trees/c202236235762e1c871ad0ccb60c8ee5ba337b9a.json",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-9B/.cache/huggingface/trees/c202236235762e1c871ad0ccb60c8ee5ba337b9a.json",
+      "bytes": 2813,
+      "sha256": "d7ad40636720ea7238027ab0d27df4ae4214320d59478ff8e44260c62a21d57d"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-9B/chat_template.jinja",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-9B/chat_template.jinja",
+      "bytes": 7756,
+      "sha256": "a4aee8afcf2e0711942cf848899be66016f8d14a889ff9ede07bca099c28f715"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-9B/config.json",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-9B/config.json",
+      "bytes": 3126,
+      "sha256": "d0883072e01861ed0b2d47be3c16c36a8e81c224c7ffaa310c6558fb3f932b05"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-9B/merges.txt",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-9B/merges.txt",
+      "bytes": 3353259,
+      "sha256": "a9d356d7bdf1ef4949e3e748e95b8e10ad9d4e2e838eddc38a0a7b6b94d1db8d"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-9B/tau3_source_revision.json",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-9B/tau3_source_revision.json",
+      "bytes": 117,
+      "sha256": "c4baa4c00adacece93885c9c1c2c88a76c2ab7d7eb6e2acd26883afbffc578c8"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-9B/tokenizer.json",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-9B/tokenizer.json",
+      "bytes": 12807982,
+      "sha256": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-9B/tokenizer_config.json",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-9B/tokenizer_config.json",
+      "bytes": 16710,
+      "sha256": "316230d6a809701f4db5ea8f8fc862bc3a6f3229c937c174e674ff3ca0a64ac8"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-9B/vocab.json",
+      "destination": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-9B/vocab.json",
+      "bytes": 6722759,
+      "sha256": "ce99b4cb2983d118806ce0a8b777a35b093e2000a503ebde25853284c9dfa003"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/code/results/analysis/rl_curriculum_20260912/manifests/areal_airline_split_seed42.json",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-gdn-diagnosis/results/analysis/rl_curriculum_20260912/manifests/areal_airline_split_seed42.json",
+      "bytes": 386,
+      "sha256": "e67447171c385168a01618082bfc08652afdf571b8cf98b22f197a9512dd41db"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/code/results/analysis/rl_curriculum_20260912/manifests/areal_airline_train_seed42.jsonl",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-gdn-diagnosis/results/analysis/rl_curriculum_20260912/manifests/areal_airline_train_seed42.jsonl",
+      "bytes": 165405,
+      "sha256": "79e317a824e8b55f7ce338c9f30a5811d83f2dce17dd896397eaffb003f5efbb"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/code/outputs/2026-09-12/17-50-15/.hydra/config.yaml",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-gdn-diagnosis/outputs/2026-09-12/17-50-15/.hydra/config.yaml",
+      "bytes": 23322,
+      "sha256": "a0fcbf173c477228d7ee721cdcbce45a7ee34c6d0ce11008a8846f409cf790c8"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/code/outputs/2026-09-12/17-50-15/.hydra/hydra.yaml",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-gdn-diagnosis/outputs/2026-09-12/17-50-15/.hydra/hydra.yaml",
+      "bytes": 16215,
+      "sha256": "9cb0fcde496d04e7572a3cbd28b2bffcfb1368edb5827c7d977b776e7c2fd015"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/code/outputs/2026-09-12/17-50-15/.hydra/overrides.yaml",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-gdn-diagnosis/outputs/2026-09-12/17-50-15/.hydra/overrides.yaml",
+      "bytes": 6018,
+      "sha256": "f0ff31ca85dbd81343f54c19032ba107d977bb7123b8bd6135a5f72491dcacfa"
+    },
+    {
+      "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/code/outputs/2026-09-12/17-50-15/main_ppo.log",
+      "destination": "/root/autodl-fs/tau3-core/code/results/legacy/source-gdn-diagnosis/outputs/2026-09-12/17-50-15/main_ppo.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "conflicts": [
+    {
+      "source": "/root/autodl-tmp/tau3-local-20260915/code/models/Qwen3.5-4B/tau3_source_revision.json",
+      "kept_canonical": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-4B/tau3_source_revision.json",
+      "preserved_alternative": "/root/autodl-fs/tau3-core/code/results/legacy/storage-conflicts/local-snapshot-models/Qwen3.5-4B/tau3_source_revision.json"
+    }
+  ]
+}

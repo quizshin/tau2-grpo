@@ -1,0 +1,106 @@
+[
+  {
+    "source": "/root/autodl-tmp/tau3-cpu-signal-20260914.bundle",
+    "ref": "history/bundle-tau3-cpu-signal-20260914",
+    "commit": "7ec39e7e4a273c8ebf6bc09996096dae65c21fa6",
+    "kind": "bundle",
+    "sha256": "b97155a7ac697bc33d896516bb7444b52efda6beaa2a3cf10c99a3ff69ae08b5"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-gigpo-integration-20260914.bundle",
+    "ref": "history/bundle-tau3-gigpo-integration-20260914",
+    "commit": "b1723977ca0e00464309556c89aa5870ad89156b",
+    "kind": "bundle",
+    "sha256": "4da0bc0b9cf6e326b431a08f51167101a24b31dff005dee9559d0ea954fff1ea"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-gigpo-audit-report-20260914.bundle",
+    "ref": "history/bundle-tau3-gigpo-audit-report-20260914",
+    "commit": "fe4ab6b2c459484325c1b7cd2255791b20834b82",
+    "kind": "bundle",
+    "sha256": "3dcb3df1e209e1b5b193038c5e641f0ebe3712f12a37ed80e4309823c347603f"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-anchor-v2-20260914.bundle",
+    "ref": "history/bundle-tau3-anchor-v2-20260914",
+    "commit": "6189636ed973b8641c258cec0791e920959b6daf",
+    "kind": "bundle",
+    "sha256": "0fe27e68b182936eb21e24ef86bd349d728c17a894fe61e6a486ae53c89b92e0"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-anchor-v2-report-20260914.bundle",
+    "ref": "history/bundle-tau3-anchor-v2-report-20260914",
+    "commit": "c224f8bae1edba157521bd4e1a529fcda7025665",
+    "kind": "bundle",
+    "sha256": "12d85af83d0b94e70e0a4f5bcbfdb2a8de7d5522c3d44845d1e6aaea5ac950c7"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-semantic-v3-20260914.bundle",
+    "ref": "history/bundle-tau3-semantic-v3-20260914",
+    "commit": "72fc81341debed3ac64f2aee9a646cb00c7c0743",
+    "kind": "bundle",
+    "sha256": "e387365bbc3056c465328f0a1940e5cec68fd3cff3aa3c8207be71c3e4e2546d"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-perf-20260912/tau3-perf-20260912.bundle",
+    "ref": "history/bundle-tau3-perf-20260912",
+    "commit": "3a6f7c3dc26edfb693ff1a90d387141130d1aee1",
+    "kind": "bundle",
+    "sha256": "091ce28fe037e3581559c1e5db43a800ebe1c9a85cd3ba939830884a559b06ef"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-perf-20260912/tau3-matched50-sync.bundle",
+    "ref": "history/bundle-tau3-matched50-sync",
+    "commit": "1e4ae80ca2ab6da07fc3fd3c85c4048efd5c715b",
+    "kind": "bundle",
+    "sha256": "81668f49798705bc05e1e2958742fd4c2e22b2399660e78f75fefe8061491681"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-perf-20260912/tau3-swanlab-sync.bundle",
+    "ref": "history/bundle-tau3-swanlab-sync",
+    "commit": "d3d129e7c5cec9ec069666d7aea94e6d13677840",
+    "kind": "bundle",
+    "sha256": "1dd827bbd033d36b5ed7b75b4f523217a21e446ec3fcd04ae649c7c28b5dfac0"
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sync/source.bundle",
+    "ref": "history/bundle-source",
+    "commit": "aa267bba7f581a607f5ed4fed88668f9ecda9b55",
+    "kind": "bundle",
+    "sha256": "e4ab94d1f1dfa67f316fd23ebc74e9de8ba40a1d84139d682ec7f6dbae9ff416"
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sync/test-fix.bundle",
+    "ref": "history/bundle-test-fix",
+    "commit": "d2dcfcdb1dc03a5ba47fc6913f11c0a33d4d8ff5",
+    "kind": "bundle",
+    "sha256": "4eb7bee35eed3c45d14e71a3abcac7fa4606363a16cb8ffe190fa707199ca111"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/baseline.tar.gz",
+    "ref": "history/archive-gdn-baseline-20260915",
+    "commit": "cab42dcb6d88fc4e39e8089273674db9f4bc5c12",
+    "kind": "tar-source",
+    "sha256": "e37f942b5d57e8cb4a520e41f1ac3931cc4773548de0b230d7898d731cf63f9a",
+    "source_files": 1384,
+    "new_blobs": 0
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sync/code-before-sync.tar.gz",
+    "ref": "history/archive-multicall-before-sync-20260915",
+    "commit": "3042ed0202fbe8420907b52c926052aab04a7f40",
+    "kind": "tar-source",
+    "sha256": "9b068f51b71fe30041b21a99a457c85a1a1bac81dc9c96b3a3eb6631b51fe968",
+    "source_files": 1350,
+    "new_blobs": 0
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sync/source.tar",
+    "ref": "history/archive-multicall-source-20260915",
+    "commit": "646245422b0a7269d3ef9274e93beccd3dbc237f",
+    "kind": "tar-source",
+    "sha256": "973b633a0f28df1b314d907d878d05947041d575df70e34b4160f72eed8d0989",
+    "source_files": 1354,
+    "new_blobs": 0
+  }
+]

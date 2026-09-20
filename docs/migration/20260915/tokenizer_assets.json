@@ -1,0 +1,17 @@
+[
+  {
+    "source": "/root/autodl-fs/tau3-core/code/models/Qwen2.5-7B-Instruct",
+    "destination": "/root/autodl-fs/tau3-core/code/data/tokenizers/Qwen2.5-7B-Instruct",
+    "type": "tokenizer test assets, no model weights"
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-0.8B",
+    "destination": "/root/autodl-fs/tau3-core/code/data/tokenizers/Qwen3.5-0.8B",
+    "type": "tokenizer test assets, no model weights"
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-9B",
+    "destination": "/root/autodl-fs/tau3-core/code/data/tokenizers/Qwen3.5-9B",
+    "type": "tokenizer test assets, no model weights"
+  }
+]

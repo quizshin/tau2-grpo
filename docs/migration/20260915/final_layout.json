@@ -1,0 +1,90 @@
+{
+  "canonical_code_roots": [
+    "/root/autodl-fs/tau3-core/code"
+  ],
+  "artifact_summary": {
+    "data": {
+      "regular_files": 43,
+      "bytes": 1034823466,
+      "symlinks": 1
+    },
+    "models": {
+      "regular_files": 31,
+      "bytes": 30384085690,
+      "symlinks": 0
+    },
+    "checkpoints": {
+      "regular_files": 118,
+      "bytes": 38343056182,
+      "symlinks": 19
+    },
+    "results": {
+      "regular_files": 2300,
+      "bytes": 262184347929,
+      "symlinks": 124
+    }
+  },
+  "broken_artifact_symlinks": [],
+  "artifact_links_outside_repository": [],
+  "rl_arms": {
+    "e0": {
+      "step": 20,
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42",
+      "resolved": "/autodl-fs/data/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42",
+      "complete_marker_files": 13,
+      "validation_files": 2
+    },
+    "e1": {
+      "step": 20,
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42",
+      "resolved": "/autodl-fs/data/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42",
+      "complete_marker_files": 13,
+      "validation_files": 2
+    },
+    "e2": {
+      "step": 20,
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42",
+      "resolved": "/autodl-fs/data/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/persistent-checkpoints/e2_seed42",
+      "complete_marker_files": 13,
+      "validation_files": 2
+    },
+    "e3": {
+      "step": 20,
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42",
+      "resolved": "/autodl-fs/data/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/persistent-checkpoints/e3_seed42",
+      "complete_marker_files": 13,
+      "validation_files": 2
+    }
+  },
+  "venvs": {
+    "qwen35": {
+      "prefix": "/root/autodl-fs/tau3-core/environment/venvs/qwen35",
+      "imports": {
+        "tau3_grpo": "/root/autodl-fs/tau3-core/code/tau3_grpo/__init__.py",
+        "verl": "/root/autodl-fs/tau3-core/code/verl/verl/__init__.py",
+        "tau2": "/root/autodl-fs/tau3-core/code/tau2-bench/src/tau2/__init__.py"
+      }
+    },
+    "qwen38-sim": {
+      "prefix": "/root/autodl-fs/tau3-core/environment/venvs/qwen38-sim",
+      "imports": {
+        "tau3_grpo": "/root/autodl-fs/tau3-core/code/tau3_grpo/__init__.py",
+        "verl": "/root/autodl-fs/tau3-core/code/verl/verl/__init__.py",
+        "tau2": "/root/autodl-fs/tau3-core/code/tau2-bench/src/tau2/__init__.py"
+      }
+    },
+    "tools": {
+      "prefix": "/root/autodl-fs/tau3-core/environment/venvs/tools",
+      "imports": {
+        "tau3_grpo": "/root/autodl-fs/tau3-core/code/tau3_grpo/__init__.py",
+        "verl": "/root/autodl-fs/tau3-core/code/verl/verl/__init__.py",
+        "tau2": "/root/autodl-fs/tau3-core/code/tau2-bench/src/tau2/__init__.py"
+      }
+    }
+  },
+  "model_directories": [
+    "Qwen3.5-4B",
+    "Qwen3.8-27B-AWQ-INT4"
+  ],
+  "legacy_root_is_symlink": true
+}

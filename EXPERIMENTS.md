@@ -1,5 +1,151 @@
 # 实验记录
 
+导航：[当前实验](docs/CURRENT_EXPERIMENT.md) · [错误回顾](ERRORS.md) · [新增代码与实验标准](docs/architecture/development_standard.md) · [消融计划](docs/architecture/ablation_plan_20260918.md)。本文件为唯一实验索引，旧报告保留原文。
+
+## 2026-09-20：三份工程 step2 检查点已退役
+
+按用户明确授权，已删除 GRPO 工程 step2 和 MT-GTPO DF off/on 各自 step2，共三份。释放 163,104,264,192 字节实际分配空间（151.90 GiB），持久盘清理后可用 219.31 / 500 GiB。五份正式 E0–E3/MT-v3 step20 检查点在清理前后均通过结构校验；78份轨迹、指标、权重审计和配置证据 hash 未变。三份工程节点不再支持精确续训；原 checkpoint 完成收据和数据进度已归档，失效的 latest 指针已移除，各 run 写入退役记录。历史验收通过结论仍有效，不代表文件仍保留。
+
+本次未启动 GPU 实验。删除回执：`results/maintenance/engineering-checkpoint-retirement-20260920/receipt.json`。清理后、文档更新前实测本地与远程 1,912 份源码/配置/测试/文档文件 hash 全部一致；本次文档同步另保留前像及 hash 回执，模型、数据、环境和运行产物不属于源码一致性范围。
+
+## 2026-09-20：本轮架构工程与接口验收完成
+
+三算法增强A、GRPO/GiGPO两步更新、GiGPO真实恢复、724张量导出和独立8/8评测、MT-GTPO DF off/on各两步更新/完整保存/云端回读/过程奖励优势过滤重放全部通过；GPU作业结束。两组MT均有三套活动文本权重精确映射证据，vision排除。DF on两批无零信号组，不能称实际筛除收益。远程CPU1302、GPU-only17及控制器15项通过，测试集合不相加。正式效果研究、Git提交、托管CI和旧lint债另列。证据已归档并逐文件hash核验；关机UI结果见本地维护目录`shutdown-015.json`，不能用工程通过替代关机确认。[最终接口报告](docs/architecture/interface_acceptance_20260919.md)。
+
+## 2026-09-20：MT-GTPO DF off两步工程验收通过
+
+128候选、两次非零更新、完整checkpoint2、SwanLab云端1/2、两批过程奖励/优势/DF重放通过。93官方评分、35预算截断分别记录；12份×331活动文本参数精确审计覆盖三套更新状态。GPU阶段约70.83分钟、五卡预留5.903 GPU-hours。51份小型证据已下载并校验。v3已进入DF on；最终汇总及015关机尚未完成，不作算法增幅结论。[接口报告](docs/architecture/interface_acceptance_20260919.md)。
+
+## 2026-09-20：三算法增强接口验收全部通过
+
+GRPO/GiGPO/MT-GTPO各4条真实轨迹，全部完成官方评分及身份、生成logprob、工具事件、token/mask核验；各4份权重回执×331个活动文本参数逐值一致，vision排除，A无参数更新。A约61.42分钟、五卡预留上界5.119 GPU-hours。52份小型证据已下载并独立核查；v3自动进入MT-GTPO DF off/on各两步更新，仍待两组B和最终关机收尾。详见[接口报告](docs/architecture/interface_acceptance_20260919.md)。
+
+## 2026-09-19：恢复、独立评测与接口补验（执行中）
+
+用户已批准全套有界工程GPU验收，并要求完成后关闭015实例。GiGPO step2→3真实恢复通过：非零更新、四rank状态加载、同SwanLab run 1/2/3、数据指针16→24和下一批任务一致；恢复阶段上界4.263 GPU-hours。新增接口远程CPU1302 passed、15GPU用例单列，lint零新增。D已通过724/724导出张量验证及8/8独立评测，GPU-only数值17项通过；增强A和MT-GTPO DF off/on两步验收继续进行，不作算法增幅结论。详见[本轮接口验收](docs/architecture/interface_acceptance_20260919.md)。
+
+## 2026-09-19：GiGPO 独立两步 GPU 工程验收
+
+用户批准上限 90 分钟 / 5 张 A800 / 7.5 GPU-hours，仅 GiGPO DF off。北京时间 20:06:41–21:15:00 完成 2 step、128 候选、两次有效更新、完整 step2、SwanLab 1/2 回读与 12 份 GDN 卷积精确同步审计。5 卡已释放，预留预算口径约 5.69 GPU-hours；未续训、未独立评测、不作模型增幅结论。
+
+轨迹 1,302 回合含 3 个真实 length，token/mask/span 对齐。98 条完成官方评分，30 条早停使用训练 fallback 0，分开记录。修正本批控制器重复检查已接受边界的问题，保留原 GPU 进程与原截止时间，CPU 回归 9 passed。输出 `results/runs/architecture_gpu_acceptance/20260919_gigpo_s42/`；详见 [本次报告](docs/architecture/gigpo_acceptance_20260919.md)。
+
+## 2026-09-19：配置与实验记录 CPU 收尾
+
+实验 ID：`architecture-cleanup-20260919`，工程维护，无新训练或模型成绩。统一基础/Qwen3.5 兼容默认和 arm 解析，新增回执草稿工具，审计 33 个历史入口/profile 并保留仍有依赖的文件，补 CI 的 main 分支和手动触发。71 组旧/新实际训练命令逐 token 相同；定向 CPU 130 passed / 7 缺 tokenizer 资产 skipped；核心 CPU 364 passed，二者不相加。lint 新增 0、历史 382 项；vendor 清单通过。源码按前像、备份和哈希核验同步到远程。本批 GPU 使用为 0，托管 CI 尚未执行。详见 [收尾报告](docs/architecture/cleanup_20260919.md)。
+
+## 2026-09-19：架构 GPU 工程验收
+
+用户已授权，上限 3 小时、5 张 A800（15 GPU-hours）。北京时间 16:20:03–18:46:27 完成 A 的三算法 12 条无更新轨迹，以及 B 中 GRPO 的 2 步 / 128 条候选；两步均有有效更新，最新完整 step 2、卷积同步审计和 SwanLab 1/2 回读通过。剩余约 34 分钟低于下一组约 56 分钟的实测推算，在完整组边界主动收尾；5 卡已释放。总状态为部分验收，GiGPO/MT-GTPO 更新、C 续训、D 独立评测未完成。耗时 2 小时 26 分 23 秒，按 5 卡全时预留计上界 12.20 GPU-hours，并非实际 GPU 利用率积分或美元费用。不是正式训练或算法增幅实验，不使用 final50。输出 `results/runs/architecture_gpu_acceptance/20260919_s42/`，详见 [执行记录](docs/architecture/gpu_acceptance_20260919.md)。
+
+## 2026-09-18：架构后续 CPU 批次
+
+实验 ID：`architecture-stage2-20260918`，类型：工程与离线验证，不是新模型效果实验。稳定 formal50 组件与历史完整 Hydra 一致；新增事实观测是显式诊断扩展。统一检查点读写、评测控制器、任务/DB/harness 来源、配方 v2/v1 兼容及每批诊断；上游 revision 和数值奖励/优势公式保持。
+
+验证：整套 CPU 1,232 passed / 15 GPU skipped；最后代码变更的定向组 90 passed；核心层禁止导入训练框架的隔离组 343 passed。三者有重复，不相加。89 个测试模块归入 core/benchmark/verl；26 处 vendor runtime 补丁核验通过；382 项历史 lint 债务没有新增。托管 GitHub CI 尚未执行。
+
+证据与局限：[后续交付](docs/architecture/batch2_20260918.md)，原始日志/收据 `results/maintenance/architecture-20260918-stage2/`。未启动 GPU、未新增训练或独立模型推理成绩。GPU 验证计划单列 [运行验收](docs/architecture/gpu_acceptance_20260918.md)，执行由用户决定。
+
+## 2026-09-18：架构第一批与历史独立评测重算
+
+配置来源、公共正式 runner、veRL adapter 分层、公开消息/模板接口与严格离线比较器已实现。验证范围、首次失败与修正见 [本批交付](docs/architecture/batch1_20260918.md)。未启动 GPU。
+
+历史独立 selection60×4 重算：SFT pass@1=43.75%；E0=47.50%（+3.75pp，95% task-paired CI [-2.50,10.00]）；E1=48.75%（+5.00pp，[-2.08,11.67]）；E3=45.42%（+1.67pp，[-4.17,7.50]）。这些区间均包含 0；不能据此证明稳定提升。E2 原始 239/240 + 1 异常仍不可排名。全部完整组的点估计与原评分器一致，不改旧分数。
+
+这是旧轨迹的统计补充，不是重构后的新模型实验；旧 run 缺少 task DB / evaluator / harness 源码 hash，比较器明确标记 `recorded_protocol_only`。原始报告与机器 JSON：`results/analysis/architecture_20260918_comparison/`。
+
+## 2026-09-18：MT-GTPO 参考查询／写入奖励拆分修订
+
+新增独立 `paper_env_split_v3`，查询即时奖励0，精确参考数据库写入按训练集拟合为+0.559738，error=-0.352989、state_change=-0.209610，其余中性；终局／Hybrid／DF不变。
+训练拟合／原留出相关性0.577171／0.549780；固定候选在validation step10／20为0.553301／0.630459，平均优势方向检查均通过。1,679条验证／独立评测重算成功，旧配方回放数值完全不变。
+135项相关测试通过，分档telemetry追加5项复验通过（不重复计数）；DF开启的实际无卡dry-run通过。训练过程奖励非零覆盖952/1,280条轨迹，回合密度18.08%。
+已查看历史数据的开发验证，不是新模型效果；未冻结正式配方、未训练。详见[拆分修订记录](docs/mt_gtpo_split_reward_revision_20260918.md)。
+
+## 2026-09-18：奖励读取器与分层诊断修复
+
+新增严格的独立评测消息读取器和固定配方迁移审计，分开提前终止的记录0分与已完成官方评分，增加 gold 查询／写入及任务内相关性诊断。远程63项相关回归通过，1,280条训练和1,679条验证／独立评测轨迹全部重算成功。
+step20 排除未评分轨迹后相关性仍为0.068290；gold 查询分项为-0.151349，写入分项为+0.593556。查询区分度与跨任务组成值得修订，但不能据此替换原验收门槛或宣称效果改善。
+奖励公式、配方与训练保持未变；未冻结新配方。详见[修复与诊断记录](docs/mt_gtpo_reward_transfer_fix_20260918.md)。
+
+## 2026-09-18：现有训练／验证 buffer 盘点与固定配方检查
+
+额外找到 E0–E3 的 5,120 条训练轨迹，但旧格式缺少结构化逐轮过程／精确回放字段。MT-GTPO 的 480 条验证轨迹记录完整；固定上一轮候选权重重算后，step10 奖励–终局相关性 0.167933，step20 为 0.074926，后者未达到 eta=0.1。
+另核查 SFT／E0–E3 独立 selection 的 1,199 条已完成轨迹，工具 ID／返回／错误标记可对应；E2 的 1 条异常和独立补测保持分离。
+不重新拟合、不冻结、不采样、不训练；已有数据可继续诊断，候选配方尚未稳定通过。详见 [数据盘点](docs/mt_gtpo_existing_buffers_20260918.md)。
+
+## 2026-09-18：MT-GTPO 保守奖励开发校准
+
+独立配置将 gold 固定为 +1、soft/duplicate 设为 0，仅拟合 state_change=-0.209610 与 error=-0.352989。
+远程 CPU 重放 1,280 条历史轨迹，拟合集／原留出划分的奖励–终局相关性为 0.121644 / 0.238725，通过本变体的既定数值检查；45 项相关测试通过。
+因复用已查看数据，仅标记 development_checks_passed，禁止冻结正式配方；state_change 的跨划分相关方向不稳定，尚需新轨迹验证。
+未采样、未训练、未证明模型效果提升。详见 [保守校准记录](docs/mt_gtpo_conservative_calibration_20260918.md)。
+
+## 2026-09-18：MT-GTPO `paper_env_v2` 环境语义修复
+
+新增独立 `paper_env_v2`，按固定 Airline 工具的实际参数转换和数据库状态语义匹配，保留 `paper_v1` 以支持历史回放。列表顺序不再排序：远程真实数据库证明乘客顺序改变会产生不同官方 DB hash，因此 77 次历史 `gold -> soft` 属于旧排序器的误判，不能用排序恢复。远程 180 项回归、无卡 dry-run、1,280 条历史 buffer 重放通过；IRC 仍因 soft/duplicate 校准未通过，未启动训练。详见 [环境语义修复](docs/mt_gtpo_environment_fix_20260918.md)。
+
+## 2026-09-18：MT-GTPO 奖励与信用分配诊断
+
+远程无卡审计原 v3 的 1,280 条训练轨迹，新增 10 项审计测试通过；没有改变正式算法或启动训练。
+994 次 paper soft 中 291 次经工具模型转换后与参考参数相同；1,273 条轨迹均已命中参考查询，使 gold 出现性指标饱和。
+重复调用优势已精确分解，最大重构误差 7.77e-15；另发现 27 次重复查询返回内容已变化，不宜一概当作无意义重复。
+当前未通过 IRC 的配方仍未冻结。建议优先独立版本修执行语义匹配、重复查询定义及校准分层，不用 DF 掩盖这些问题。
+详见 [真实轨迹诊断](docs/mt_gtpo_paper_credit_diagnosis_20260918.md)，证据在 `results/analysis/paper_credit_audit_20260918/audit-final/`。
+
+## MT-GTPO paper_v1 远程无卡验证
+
+远程首轮 148 项 CPU 测试全部通过；真实 v3 训练的 20 批、1,280 条轨迹完成原始奖励/优势/mask 重放与 paper IRC 重算。
+发现 `get_flight_status` 只读分类遗漏，已补修 paper 分支并通过 69 项相关复验；旧奖励版本保持原义。
+修复后 unknown 归零，但 soft 负相关、gold 类别支持不足、校准集 reward–outcome 相关性与留出 duplicate 优势方向仍未满足要求。
+IRC 正确拒绝冻结；没有启动训练、模拟器或新增采样，没有效果提升结论。
+详见 [远程无卡验证](docs/mt_gtpo_paper_remote_cpu.md)，证据位于 `results/maintenance/mtgtpo-paper-cpu-1789661265079335246/`。
+
+## 2026-09-16：GiGPO / MT-GTPO 工程基线合并完成
+
+统一远程主仓库与本地源码，保留远程 GiGPO 归一化/信号审计、模型导出、日志和存储路径修复，
+合入本地 MT-GTPO 的逐轮记录、过程奖励、优势过滤与 IRC 重算。共享训练入口按 estimator 分支，
+`grpo`、`tau_gigpo`、`mt_gtpo` 独立可选；历史算法默认值保留。
+远程 379 项相关 CPU 回归全部通过，无跳过，耗时 608.60 秒；veRL 补丁与两个自定义 estimator 注册检查通过。
+未启动策略训练或 GPU/FSDP 联调，未提供效果提升结论。详见 [合并与验证记录](docs/gigpo_gtpo_merge_20260916.md)。
+快照、补丁、源码一致性清单与回执位于 `results/maintenance/merge-gigpo-gtpo-20260916_01/`。
+
+## 2026-09-16：直接语义比较 v1 独立任务盲测
+
+远程完成双向直接比较器与证据编号协议，54 项相关测试通过。开发配对 5/5 正确后冻结候选，
+另按哈希选取 3 个未参与已知语义开发的任务，12 条轨迹/24 个动作前位置，97 个工具响应重放通过。
+盲测 36 对中 30 对已标注：17 对规则过滤、3 对 ID 不变性均正确；实质语义 10 对仅 4 对正确、
+4 对误合并、2 对弃权。另 6 对预先标为 unresolved，不计准确性。38 次真实请求全部完成，无请求错误。
+误合并涉及告知航班编号、取消原因和退款到账承诺，双向一致不能保证语义正确；未接入 RL。
+详见 [直接比较实现与盲测报告](docs/semantic_pair_direct_v1_20260916.md)，证据为
+`results/runs/semantic_pair_direct_v1/`。这些已读任务后续作为开发材料，不再作为新盲测。
+
+## 2026-09-16：v4 独立任务样本测试
+
+冻结 v4，按哈希盲选 3 个未参与已知语义修复的任务，6 条轨迹/12 个动作前位置，
+58 个工具响应重放通过。远程 23 次真实请求：有效状态 5/12，step3 4/6、step6 1/6；
+1 对工具调用 ID 不变性检查通过，4 对实质语义关系全部弃权。未针对该样本修改代码或重试。
+现有表示对普通身份回答、订单指代询问及同类多问题仍不稳，未证明可用于 RL 分组。
+详见 [独立样本审查](docs/semantic_independent_v4_20260916.md)。
+
+## 2026-09-16：v3 补链与 v4 复合问题回归
+
+远程补齐 v3 两条后继：2 次新增请求、12 条复用 delta，补充汇总 19/24，后段 3/8；
+原始 17/24 保留。v4 原始真实回归 51 次请求（31 次仅供诊断），有效 11/24，后段 0/8。
+修复明确执行指令和非批准问题引用生命周期后，零新增请求重验为 12/24、后段 1/8；
+10 对语义关系仍全部弃权。最终远程 194 项测试通过，204 个旧状态输出保持一致。
+v4 暂不能替换 v3，未启动 RL。详见 [v4 修复与实际结果](docs/semantic_slots_v4_20260916.md)。
+
+## 2026-09-15：增量语义状态 v3 回归
+
+远程无卡验证完成，显式候选 `airline_slots_v3`，未接入在线 RL。155 项相关测试通过，
+153 个历史状态结果与修改前一致。真实回归 43 次 API 请求：有效位置 17/24，
+step1/3/6 为 8/8、8/8、1/8；10 对语义关系中 6 对正确、4 对弃权。
+边界修复后原样重验输出，没有追加请求或补造缺失后继。后段仍不可靠，未证明 RL 收益。
+详见 [v3 修复与证据](docs/semantic_slots_v3_20260915.md)，远程产物为
+`results/analysis/semantic_v3_20260915/`。
+
+以下保留早期实验的原始时间与状态描述，不代表当前部署或全部后续实验状态。
+
 更新时间：2026-09-09。范围：本轮 Qwen3.5-0.8B SFT/RL，以及后续4B LoRA SFT/RL + 27B INT4模拟器验证；不是仓库所有历史实验的完整目录。
 
 正在执行：用户已授权E1/E2/E3各3批×8条的短程验证，RL-010→RL-011→RL-012顺序训练和验收；均独立从SFT-003最佳合并模型建立LoRA。正式规模尚未启动，见[E1–E3验证记录](docs/4b_lora_arms_validation_20260909.md)。
@@ -172,6 +318,11 @@ RL-003 / RL-005 已验证真实非零 LoRA 更新及完整数值同步，但多�
 | 数据与预算 | 数据版本/hash、split、任务数、seed、group size、batch、step/epoch、上下文与轮数限制 |
 | 学习率、精度、硬件 | 待填写；注明 GPU 分配、offload 和并行设置 |
 | 代码与环境版本 | Git commit + 未提交改动/源码快照 hash；依赖锁定文件 |
+| 奖励 / harness 身份 | 官方 reward 与 shaping 分项、reward recipe/hash、工具/终止协议、源码 hash |
+| 完成性与增幅 | planned/completed/error/missing、pass@k/pass^k、对照 Δpp/相对变化/按任务 CI、不可比较原因 |
+| 成本与覆盖率 | 轮数、tool error、usage tokens、有效组/token、wall time/GPU hours；缺失值与分母 |
+| GPU 授权与验证范围 | 本次批准的卡数、轨迹/step 预算和停止条件；CPU/GPU 更新/续训分别填写 |
+| 错误关联 | ERR 编号、原失败证据、修复及对历史分数的影响 |
 | 复现入口 | 实际启动命令、配置快照、显式覆盖项；不写密钥 |
 | SwanLab | 项目、run ID、链接、phase/group；标记离线、补传或已删除 |
 | 本地/远程证据 | 指标 JSON、日志、轨迹、模型路径；注明保留或清理状态 |
@@ -249,3 +400,25 @@ RL-011（4B LoRA，Tau-GiGPO）3×8条完成，成功8/8、1/8、2/8，共11/24�
 RL-010/011/012均完成24条训练轨迹和3次真实actor更新，成功数8/24、11/24、9/24；完整循环耗时59.73、59.57、57.29分钟。E1有效组2/1/2，E3有效组1/1/1，没有整批跳过；E2/E3各批均验证独立GiGPO step贡献非零。三组优势重算、mask、actor/vLLM适配器映射、优化器步数、云端及持久归档审计通过，各73项本地小证据hash匹配。两张卡已无训练/模拟器显存占用。正式实验未启动，短程训练成绩不能作为独立效果排名。
 
 详情及云端链接见[最终比较](docs/4b_lora_arms_validation_20260909.md)。最终检查点已按用户授权精简，持久盘46.57GiB。23:35在AutoDL控制台核实051实例`857546be50-4fdafb0e`的SSH地址一致后，正常关机并从平台回读“已关机”，保留磁盘。无需再启动训练、精简或旧完整检查点审计。
+
+### MT-GTPO-DEV-001：本地算法接入（2026-09-16）
+
+- 状态：本地实现及 CPU 验证完成；未同步远程、未启动 GPU 训练，无训练收益结论。
+- 新增 `mt_gtpo`：逐轮折扣回报、按 uid/轮次归一化、lambda 终局优势混合；独立轮次记录，不依赖语义锚点或 LLM judge。
+- 规则奖励提供 audit / conservative 两种模式；官方终局评分不变。保守模式只对 ACTION 必需的首次成功精确参考调用给正奖励，并对工具错误给负奖励，其他类别先审计。
+- 动态过滤是可选配置。mt_gtpo 在完整优势计算后按有效优势过滤，保留终局同分但有过程信号的组；原 E1/E3 规则保持不变。
+- 新增 audit、conservative、conservative+DF LoRA smoke 配置与 full 候选配置；CLI、shell、Hydra 和 Ray estimator 接入已覆盖本地测试。
+- 保存原 uid、过程记录、算法/奖励配置及过滤前后 mask，提供离线 IRC 与奖励/优势重算 CLI。
+- 本地相关回归 270 passed（35.53 秒）；ruff、shell 语法、git diff --check、veRL 补丁契约及新旧 estimator 注册检查通过。没有真实模型前后向或跨 rank FSDP 验证。
+- 详细实现约定、使用方式与尚缺验证见 [MT-GTPO 说明](docs/mt_gtpo_20260916.md)。
+
+## MT-GTPO reference_write/v3（2026-09-17）
+
+用户确认启动正式 20 step；DF 关闭，new-off 全参数、train50、seed42、8×8 轨迹/step、SwanLab online、step10/20 完整保存与 selection60×4 评测。奖励取消终局成功门控，复用工具实际嵌套参数转换，正预算 1、错误 -0.1。配置：`configs/train/rl/qwen35_4b_full_a800_mt_gtpo_v3_20260917.yaml`；结果：`results/runs/mt_gtpo_reference_write_v3/20260917_s42_df0/`；详细状态见 `docs/mt_gtpo_v3_execution_20260917.md`。本条为运行登记，不表示训练已完成。
+
+## MT-GTPO paper_v1 本地修复（2026-09-17）
+
+新增独立论文奖励模式与离线IRC迭代/任务留出审计，保留reference_write v1/v2/v3行为和可选DF。
+正式控制器接入校准通过的冻结奖励配方，续训验证同一配方与算法配置。
+当前仅本地实现与CPU/配置验证；未上传远程、未启动训练，未产生真实训练数据的IRC通过配方或新模型效果。
+实现约定、校准和训练入口见 [本地修复说明](docs/mt_gtpo_paper_local_fix_20260917.md)。

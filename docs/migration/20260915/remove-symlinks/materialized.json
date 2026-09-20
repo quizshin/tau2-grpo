@@ -1,0 +1,996 @@
+{
+  "actions": [
+    {
+      "action": "move-real-directory",
+      "old": "/root/autodl-fs/tau3-core/code/checkpoints/archived-sft/old-off",
+      "new": "/root/autodl-fs/tau3-core/code/checkpoints/sft-merged/old-off",
+      "inode": 110645
+    },
+    {
+      "action": "move-real-directory",
+      "old": "/root/autodl-fs/tau3-core/code/checkpoints/archived-sft/old-on",
+      "new": "/root/autodl-fs/tau3-core/code/checkpoints/sft-merged/old-on",
+      "inode": 110646
+    },
+    {
+      "action": "move-real-directory",
+      "old": "/root/autodl-fs/tau3-core/code/checkpoints/archived-sft/new-on",
+      "new": "/root/autodl-fs/tau3-core/code/checkpoints/sft-merged/new-on",
+      "inode": 111192
+    },
+    {
+      "action": "move-real-directory",
+      "old": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/persistent-checkpoints/e2_seed42",
+      "new": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42",
+      "inode": 106977
+    },
+    {
+      "action": "move-real-directory",
+      "old": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/persistent-checkpoints/e3_seed42",
+      "new": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42",
+      "inode": 107364
+    },
+    {
+      "action": "move-real-directory",
+      "old": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e2_seed42/validation",
+      "new": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/validation",
+      "inode": 106600
+    },
+    {
+      "action": "move-real-directory",
+      "old": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e2_seed42/swanlab-artifacts",
+      "new": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlab-artifacts",
+      "inode": 106603
+    },
+    {
+      "action": "move-real-directory",
+      "old": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e2_seed42/rollouts",
+      "new": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/rollouts",
+      "inode": 106629
+    },
+    {
+      "action": "move-real-directory",
+      "old": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e2_seed42/weight-audits",
+      "new": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/weight-audits",
+      "inode": 106650
+    },
+    {
+      "action": "move-real-directory",
+      "old": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e2_seed42/swanlog",
+      "new": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlog",
+      "inode": 106735
+    },
+    {
+      "action": "move-real-directory",
+      "old": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e3_seed42/validation",
+      "new": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/validation",
+      "inode": 107035
+    },
+    {
+      "action": "move-real-directory",
+      "old": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e3_seed42/swanlab-artifacts",
+      "new": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlab-artifacts",
+      "inode": 107038
+    },
+    {
+      "action": "move-real-directory",
+      "old": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e3_seed42/rollouts",
+      "new": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/rollouts",
+      "inode": 107064
+    },
+    {
+      "action": "move-real-directory",
+      "old": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e3_seed42/weight-audits",
+      "new": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/weight-audits",
+      "inode": 107085
+    },
+    {
+      "action": "move-real-directory",
+      "old": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e3_seed42/swanlog",
+      "new": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlog",
+      "inode": 107170
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-formal-full-20260912/acceptance/swanlog/run-20260912_104349-rd2so2yn/files/source-sft-rl.zip",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-formal-full-20260912/acceptance/swanlab-artifacts/source-sft-rl.zip",
+      "sha256": "747336965de47c02b9ebed0eaf8c9be986281fb537e9e67a0434aa9a258ea60d",
+      "bytes": 2265910
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-formal-full-20260912/acceptance/swanlog/run-20260912_104349-rd2so2yn/files/source-snapshot.json",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-formal-full-20260912/acceptance/swanlab-artifacts/source-snapshot.json",
+      "sha256": "84f1d8140fdc482b65b794cedd8d26b44ae9ba2d427018d99195d92f7751b248",
+      "bytes": 176
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-formal-full-20260912/acceptance/swanlog/run-20260912_104349-rd2so2yn/files/train-rollout_examples-step000001.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-formal-full-20260912/acceptance/swanlab-artifacts/train-rollout_examples-step000001.jsonl",
+      "sha256": "a6f5df7a81e4887df38adac286ee985f9f300fe5d0490ef32818f3296c06a743",
+      "bytes": 125801
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-formal-full-20260912/acceptance/swanlog/run-20260912_104349-rd2so2yn/files/train-rollout_examples-step000002.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-formal-full-20260912/acceptance/swanlab-artifacts/train-rollout_examples-step000002.jsonl",
+      "sha256": "09f93500b7db86cf6cad54223cae2e637675d4731aa6dfad87eebaeb0a930532",
+      "bytes": 129980
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlog/run-20260912_191724-f7ef00e3d47b4742ba90b/files/source-sft-rl.zip",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlab-artifacts/source-sft-rl.zip",
+      "sha256": "84e6cbf3e85dec9ceae1632841a1f86194e7456040ada0df4b507f9b31cc02d9",
+      "bytes": 2267552
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlog/run-20260912_191724-f7ef00e3d47b4742ba90b/files/source-snapshot.json",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlab-artifacts/source-snapshot.json",
+      "sha256": "51bf9134196f5ffedd8d9ba066f13a04efcd2e57fd1944d675d5e49a45efd1b5",
+      "bytes": 176
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlog/run-20260912_191724-f7ef00e3d47b4742ba90b/files/train-rollout_examples-step000001.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlab-artifacts/train-rollout_examples-step000001.jsonl",
+      "sha256": "cf64c8a4d3cb9321e4b2549f79b8d1e5295af0da8b7e57a63fa9676133a5e2d3",
+      "bytes": 163047
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlog/run-20260912_191724-f7ef00e3d47b4742ba90b/files/train-rollout_examples-step000002.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlab-artifacts/train-rollout_examples-step000002.jsonl",
+      "sha256": "309a83fc39eae84e1ba9f0e4f3e9a0d2a44455605af89e8daa42a18a57625f0e",
+      "bytes": 133827
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlog/run-20260912_191724-f7ef00e3d47b4742ba90b/files/train-rollout_examples-step000003.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlab-artifacts/train-rollout_examples-step000003.jsonl",
+      "sha256": "7ef1dc05b9974aca34b6632a2d6caacb8878aea9c1920456ff2c6acd8770fdf9",
+      "bytes": 135889
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlog/run-20260912_191724-f7ef00e3d47b4742ba90b/files/train-rollout_examples-step000004.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlab-artifacts/train-rollout_examples-step000004.jsonl",
+      "sha256": "927905bc5a9d2ed9c87b8066de696ad4e2b84e83371d6c25193d03d9bf2238c9",
+      "bytes": 125017
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlog/run-20260912_191724-f7ef00e3d47b4742ba90b/files/train-rollout_examples-step000005.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlab-artifacts/train-rollout_examples-step000005.jsonl",
+      "sha256": "5d1f4153906bd738239ce059dd1596a34e60efd4b6ee60ad5ee78c2adfaa4339",
+      "bytes": 153977
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlog/run-20260912_191724-f7ef00e3d47b4742ba90b/files/train-rollout_examples-step000006.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlab-artifacts/train-rollout_examples-step000006.jsonl",
+      "sha256": "40ac7fdafd7917dff481c45e5c5af051b2d44286304461a22fcf0fb2d0929320",
+      "bytes": 153260
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlog/run-20260912_191724-f7ef00e3d47b4742ba90b/files/train-rollout_examples-step000007.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlab-artifacts/train-rollout_examples-step000007.jsonl",
+      "sha256": "161eaa2e2d46495210eb4ef16a6a48a19d2085238e33bd74f7b6c1703f33c304",
+      "bytes": 154383
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlog/run-20260912_191724-f7ef00e3d47b4742ba90b/files/train-rollout_examples-step000008.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlab-artifacts/train-rollout_examples-step000008.jsonl",
+      "sha256": "9ca0443884501d3955db0aa6967ed96869594ac671f61999eee95acbcd065bd7",
+      "bytes": 117279
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlog/run-20260912_191724-f7ef00e3d47b4742ba90b/files/train-rollout_examples-step000009.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlab-artifacts/train-rollout_examples-step000009.jsonl",
+      "sha256": "41745b7e81a3eb313fd5de20c7b1086748c75d29a5b6d3a47bb1828332cd626f",
+      "bytes": 122175
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlog/run-20260912_191724-f7ef00e3d47b4742ba90b/files/train-rollout_examples-step000010.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlab-artifacts/train-rollout_examples-step000010.jsonl",
+      "sha256": "6dd4e149c3003cd9de9d13db0b875668c4d51a712a1cdcd4fcae198ef1dc3842",
+      "bytes": 142782
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlog/run-20260912_191724-f7ef00e3d47b4742ba90b/files/train-rollout_examples-step000011.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlab-artifacts/train-rollout_examples-step000011.jsonl",
+      "sha256": "a73314624b74f1a9fb426a8f6c3c7d52928f096fbadf261a1148ae4a27dfa9d2",
+      "bytes": 157690
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlog/run-20260912_191724-f7ef00e3d47b4742ba90b/files/train-rollout_examples-step000012.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlab-artifacts/train-rollout_examples-step000012.jsonl",
+      "sha256": "1d38d10eb6007427853280ab1124e9b62c73286cf128493ac47a9cce9805398b",
+      "bytes": 152050
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlog/run-20260912_191724-f7ef00e3d47b4742ba90b/files/train-rollout_examples-step000013.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlab-artifacts/train-rollout_examples-step000013.jsonl",
+      "sha256": "83e5915374099bc4c53ba01fed9a776443a00c41b254f8f79561a2a8e9fdf14a",
+      "bytes": 158639
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlog/run-20260912_191724-f7ef00e3d47b4742ba90b/files/train-rollout_examples-step000014.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlab-artifacts/train-rollout_examples-step000014.jsonl",
+      "sha256": "1d92d756523a233bc1c7bc19342722d250936d1512a320ed99eb76f4b5456b32",
+      "bytes": 159848
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlog/run-20260912_191724-f7ef00e3d47b4742ba90b/files/train-rollout_examples-step000015.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlab-artifacts/train-rollout_examples-step000015.jsonl",
+      "sha256": "1426142a4930f8aa2087034aecdfb909f6d69d88889573a16f8a8156b8622806",
+      "bytes": 145112
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlog/run-20260912_191724-f7ef00e3d47b4742ba90b/files/train-rollout_examples-step000016.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlab-artifacts/train-rollout_examples-step000016.jsonl",
+      "sha256": "ad51dd29e26b065b5306cb49a620522757b67e5d2c151cfa89a9872bd02a5289",
+      "bytes": 158363
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlog/run-20260912_191724-f7ef00e3d47b4742ba90b/files/train-rollout_examples-step000017.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlab-artifacts/train-rollout_examples-step000017.jsonl",
+      "sha256": "5f69025a0aeb0808da5ce1a7c15c1ed61298fed52d98286411326326fb16549f",
+      "bytes": 164525
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlog/run-20260912_191724-f7ef00e3d47b4742ba90b/files/train-rollout_examples-step000018.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlab-artifacts/train-rollout_examples-step000018.jsonl",
+      "sha256": "ae39c0398eb25e529c553d9b5ec073742155f7b8f0310dc550685e313b1628da",
+      "bytes": 156869
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlog/run-20260912_191724-f7ef00e3d47b4742ba90b/files/train-rollout_examples-step000019.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlab-artifacts/train-rollout_examples-step000019.jsonl",
+      "sha256": "2c0494288a1568c4064ac79232eeb4fc007fd65b267a7bcec4888108cbce0753",
+      "bytes": 170170
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlog/run-20260912_191724-f7ef00e3d47b4742ba90b/files/train-rollout_examples-step000020.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e0_seed42/swanlab-artifacts/train-rollout_examples-step000020.jsonl",
+      "sha256": "9dfe080b395644237800610d2c9b71c486be478bd635e83a350a1d26e8533734",
+      "bytes": 170986
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlog/run-20260913_092151-21ce737d96194d05a154b/files/source-sft-rl.zip",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlab-artifacts/source-sft-rl.zip",
+      "sha256": "84e6cbf3e85dec9ceae1632841a1f86194e7456040ada0df4b507f9b31cc02d9",
+      "bytes": 2267552
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlog/run-20260913_092151-21ce737d96194d05a154b/files/source-snapshot.json",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlab-artifacts/source-snapshot.json",
+      "sha256": "51bf9134196f5ffedd8d9ba066f13a04efcd2e57fd1944d675d5e49a45efd1b5",
+      "bytes": 176
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlog/run-20260913_092151-21ce737d96194d05a154b/files/train-rollout_examples-step000001.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlab-artifacts/train-rollout_examples-step000001.jsonl",
+      "sha256": "f88e1ccf246ef756c6b1b4b0a05f8a3ff83f6b38dcfc2256cc19e54923be60b0",
+      "bytes": 138725
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlog/run-20260913_092151-21ce737d96194d05a154b/files/train-rollout_examples-step000002.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlab-artifacts/train-rollout_examples-step000002.jsonl",
+      "sha256": "70332912a027e53ee59a7cb8eb24b8be84f8ca5d90942d5807a715d6421f728b",
+      "bytes": 154390
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlog/run-20260913_092151-21ce737d96194d05a154b/files/train-rollout_examples-step000003.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlab-artifacts/train-rollout_examples-step000003.jsonl",
+      "sha256": "ba34644caa9e948b0133612598a783859e3338b010552019b07089d862c75d17",
+      "bytes": 164182
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlog/run-20260913_092151-21ce737d96194d05a154b/files/train-rollout_examples-step000004.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlab-artifacts/train-rollout_examples-step000004.jsonl",
+      "sha256": "8d2769f02fcf99735d8f869a82f3a4fdb69450b737ac87d5d38a6c6971110ed5",
+      "bytes": 129289
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlog/run-20260913_092151-21ce737d96194d05a154b/files/train-rollout_examples-step000005.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlab-artifacts/train-rollout_examples-step000005.jsonl",
+      "sha256": "588177ce3f8e2ff2d2a2b0d0caf315e9ac86aa811d145d17e4a9b13782e72e0e",
+      "bytes": 148106
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlog/run-20260913_092151-21ce737d96194d05a154b/files/train-rollout_examples-step000006.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlab-artifacts/train-rollout_examples-step000006.jsonl",
+      "sha256": "7e735eb63eae18861b3925429bd2c5bb7cc145794e865e8a41022240a5c35107",
+      "bytes": 161137
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlog/run-20260913_092151-21ce737d96194d05a154b/files/train-rollout_examples-step000007.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlab-artifacts/train-rollout_examples-step000007.jsonl",
+      "sha256": "234710685288069bceb63d1e86bff818762eb80a980c251e7756fc716421468b",
+      "bytes": 149672
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlog/run-20260913_092151-21ce737d96194d05a154b/files/train-rollout_examples-step000008.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlab-artifacts/train-rollout_examples-step000008.jsonl",
+      "sha256": "15684f24c58f6b57fd024df77315de5e0dae27cc6d0bfc4323ac3b684d2ddf33",
+      "bytes": 127697
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlog/run-20260913_092151-21ce737d96194d05a154b/files/train-rollout_examples-step000009.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlab-artifacts/train-rollout_examples-step000009.jsonl",
+      "sha256": "c4ca73096950e6a82542aa058f65ac4da436192ac5771ede7439a77935213cdd",
+      "bytes": 172229
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlog/run-20260913_092151-21ce737d96194d05a154b/files/train-rollout_examples-step000010.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlab-artifacts/train-rollout_examples-step000010.jsonl",
+      "sha256": "0f30db32088fd2f6ae183568a8ec09dd143e105b144e2cfc54f694bed75e903b",
+      "bytes": 134545
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlog/run-20260913_092151-21ce737d96194d05a154b/files/train-rollout_examples-step000011.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlab-artifacts/train-rollout_examples-step000011.jsonl",
+      "sha256": "4734f217ac54925272ae64082529c924a8182799543f855eb7c470a041967a54",
+      "bytes": 167043
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlog/run-20260913_092151-21ce737d96194d05a154b/files/train-rollout_examples-step000012.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlab-artifacts/train-rollout_examples-step000012.jsonl",
+      "sha256": "d4426a85eaa49755013be36dff2640e16fbf52153fdd1247423bfb1cbf9d4ba4",
+      "bytes": 147010
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlog/run-20260913_092151-21ce737d96194d05a154b/files/train-rollout_examples-step000013.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlab-artifacts/train-rollout_examples-step000013.jsonl",
+      "sha256": "57cd4f16a144148720ad149e498ea316b95f7fe4863f2e9b90ddd7c9981d46a5",
+      "bytes": 154512
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlog/run-20260913_092151-21ce737d96194d05a154b/files/train-rollout_examples-step000014.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlab-artifacts/train-rollout_examples-step000014.jsonl",
+      "sha256": "f673f4cad3b95c34d9853b491ca7804f170e6b29a0a9a15cf0103091c5e86674",
+      "bytes": 136181
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlog/run-20260913_092151-21ce737d96194d05a154b/files/train-rollout_examples-step000015.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlab-artifacts/train-rollout_examples-step000015.jsonl",
+      "sha256": "2bc81c2d025e5492793041baf6c9eedcd857903c339cace8772beae8d0f37ea6",
+      "bytes": 131239
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlog/run-20260913_092151-21ce737d96194d05a154b/files/train-rollout_examples-step000016.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlab-artifacts/train-rollout_examples-step000016.jsonl",
+      "sha256": "5eceb2cdedf35f96c026042147ac32e3d926a82b77b97d74c5363eddb9eaef1b",
+      "bytes": 146909
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlog/run-20260913_092151-21ce737d96194d05a154b/files/train-rollout_examples-step000017.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlab-artifacts/train-rollout_examples-step000017.jsonl",
+      "sha256": "f2d2db96ff5c818ec2e45ef1a421e6619292fdc1a813be7f5e0be81cb577e5f9",
+      "bytes": 146295
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlog/run-20260913_092151-21ce737d96194d05a154b/files/train-rollout_examples-step000018.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlab-artifacts/train-rollout_examples-step000018.jsonl",
+      "sha256": "a75d8cbed7ad621951fdffacfbae9638497e1c6347c8ae4b24f49b73ecce2186",
+      "bytes": 145092
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlog/run-20260913_092151-21ce737d96194d05a154b/files/train-rollout_examples-step000019.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlab-artifacts/train-rollout_examples-step000019.jsonl",
+      "sha256": "71f4128930572291d4c1c356184bf4df274654c4e84288a86a5984309f31c725",
+      "bytes": 155226
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlog/run-20260913_092151-21ce737d96194d05a154b/files/train-rollout_examples-step000020.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e1_seed42/swanlab-artifacts/train-rollout_examples-step000020.jsonl",
+      "sha256": "2083589330492da3c06dd1dedb6486443b105af9ad7eb23d0da891b9ce0677e3",
+      "bytes": 141820
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000020.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlab-artifacts/train-rollout_examples-step000020.jsonl",
+      "sha256": "ce0c9ae588a36beeeb7eb7d27cd2085e5b0a2e237ccd11f5fbc4c72d9c8dd4bd",
+      "bytes": 139934
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000019.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlab-artifacts/train-rollout_examples-step000019.jsonl",
+      "sha256": "314117dcc82ae3546f12d17aa3b01b19cc72da75a3fb130ba0f95f64bf288151",
+      "bytes": 165785
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000018.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlab-artifacts/train-rollout_examples-step000018.jsonl",
+      "sha256": "ebee566e6c4bb22448e81ec0067c87dfa3bafd3b75c0b424a4f2ae55597b5892",
+      "bytes": 151498
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000017.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlab-artifacts/train-rollout_examples-step000017.jsonl",
+      "sha256": "cfd32c0217e3f49756cabed592d1fd73ca432012df45d8589bf9ce47d7cbed8f",
+      "bytes": 123246
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000016.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlab-artifacts/train-rollout_examples-step000016.jsonl",
+      "sha256": "8f03bae784ee2460b6a374b5bf141956239267878fc4a2b8b405d1057b468e07",
+      "bytes": 126450
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000015.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlab-artifacts/train-rollout_examples-step000015.jsonl",
+      "sha256": "4565331bf6a108db97c2de744957b5c29d484e44746ed7a10cb4ed89b1f03c4f",
+      "bytes": 115727
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000014.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlab-artifacts/train-rollout_examples-step000014.jsonl",
+      "sha256": "373f9a21b45f4447dad256c449814325cebbd6d86c1459872cce1b21f3ecb88d",
+      "bytes": 133361
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000013.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlab-artifacts/train-rollout_examples-step000013.jsonl",
+      "sha256": "67916a7e6100cfc044edf11ca4d49911f0f3a7ee1707a8ce82b35991786f59d4",
+      "bytes": 154657
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000012.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlab-artifacts/train-rollout_examples-step000012.jsonl",
+      "sha256": "ae89046c22b66da597b2d8f976ae6a2507060ec61f5001bf75e1d5ced327863a",
+      "bytes": 155153
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000011.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlab-artifacts/train-rollout_examples-step000011.jsonl",
+      "sha256": "2089725c203a58bc1e49d4a6aeac5800140191e09f49f157436fc7d873b3a51c",
+      "bytes": 135412
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000010.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlab-artifacts/train-rollout_examples-step000010.jsonl",
+      "sha256": "f8e17a4bb118281352467cd3e326d8980d467d46026561cc1e4298e7614d5578",
+      "bytes": 136549
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000009.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlab-artifacts/train-rollout_examples-step000009.jsonl",
+      "sha256": "a3e63d44e6e4b1612ce3090aa562fb43753cf86fab39a3e9b61609498bcda96f",
+      "bytes": 169695
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000008.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlab-artifacts/train-rollout_examples-step000008.jsonl",
+      "sha256": "3525e1092cffa76345715b7717f3af47942638b08a4834763d0380ff5e1bd563",
+      "bytes": 109987
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000007.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlab-artifacts/train-rollout_examples-step000007.jsonl",
+      "sha256": "94d46789ac0239832f2d0d5443a8b798ed779043b4d101087f7fe966844eae64",
+      "bytes": 127148
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000006.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlab-artifacts/train-rollout_examples-step000006.jsonl",
+      "sha256": "16af0110a5228f04d23466b054eed1645cda74fc654ce56d96e307b5ad7735d3",
+      "bytes": 151034
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000005.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlab-artifacts/train-rollout_examples-step000005.jsonl",
+      "sha256": "50755471e0f1ba2375309b60bda80e668022c1ce14b83115e9cf08338a1c516e",
+      "bytes": 149348
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000004.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlab-artifacts/train-rollout_examples-step000004.jsonl",
+      "sha256": "0b1366c8af2f8bd1164693e2e58e709fb5b76100eb0dcb207c146e170ebd1149",
+      "bytes": 138736
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000003.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlab-artifacts/train-rollout_examples-step000003.jsonl",
+      "sha256": "304a56428521a0a54cb9e822e454c64ca58725a063117354ad2e185cd33fc5dd",
+      "bytes": 144912
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000002.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlab-artifacts/train-rollout_examples-step000002.jsonl",
+      "sha256": "8db4f63e46e11cce27d277a6ee1882645e81223a7563dda1beebb4ccac399759",
+      "bytes": 127990
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/train-rollout_examples-step000001.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlab-artifacts/train-rollout_examples-step000001.jsonl",
+      "sha256": "25cf949c0ce9a4c67879d357d72765767cc573686836da57b20a1834317f884e",
+      "bytes": 160925
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/source-snapshot.json",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlab-artifacts/source-snapshot.json",
+      "sha256": "4c1c57c9a384c0ab22a6b7c8ce1cee34a2a38625bc4c63672d94c6b70606a5dd",
+      "bytes": 176
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlog/run-20260913_161141-c0e5c648cf4c426da900b/files/source-sft-rl.zip",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/swanlab-artifacts/source-sft-rl.zip",
+      "sha256": "017bd635c80cd3a081682b472625cbf1fc4a617836e002236c0a641183328275",
+      "bytes": 2267710
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000020.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlab-artifacts/train-rollout_examples-step000020.jsonl",
+      "sha256": "22da120171d83037e2f31a33b2349b8eec60dd3f7f532dc1cfaef59194fa770f",
+      "bytes": 144788
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000019.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlab-artifacts/train-rollout_examples-step000019.jsonl",
+      "sha256": "ff636bcd9eed3ceb21e12ad73c9350fdfb8feca8351a72569ce94ec037cb6122",
+      "bytes": 149046
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000018.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlab-artifacts/train-rollout_examples-step000018.jsonl",
+      "sha256": "e29afc8ba49a0e5dbc8b0bc30bb1436de1d42798c390622f29c1306ab0b3df23",
+      "bytes": 144813
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000017.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlab-artifacts/train-rollout_examples-step000017.jsonl",
+      "sha256": "aba2bd1dc40e0508d3bcbc5c23b9ae8d229e339d21675dd6695dc005bf2a6ae8",
+      "bytes": 132023
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000016.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlab-artifacts/train-rollout_examples-step000016.jsonl",
+      "sha256": "2538571a226965d7aa0c900879da35a6a2b6772d8badf5578a6d3ffc03f2b6bd",
+      "bytes": 151936
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000015.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlab-artifacts/train-rollout_examples-step000015.jsonl",
+      "sha256": "f884d5036cda8aa930c300168dab308158d6acc322a8505cce98b513d7c2a203",
+      "bytes": 137390
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000014.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlab-artifacts/train-rollout_examples-step000014.jsonl",
+      "sha256": "896fb421be6fed9b99970a05a662439877213780fdb9473e362a4b682f808168",
+      "bytes": 133318
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000013.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlab-artifacts/train-rollout_examples-step000013.jsonl",
+      "sha256": "8ad260634b7e864e72299c014f00f78d31169351417f2439edc1b3cf4ddaa2b4",
+      "bytes": 122949
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000012.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlab-artifacts/train-rollout_examples-step000012.jsonl",
+      "sha256": "bad6d15848ba17dc013496438c8a5c1378251b6ea3bca3a49560c8a2ce895669",
+      "bytes": 139243
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000011.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlab-artifacts/train-rollout_examples-step000011.jsonl",
+      "sha256": "acb246fcc3b2dd96444b472ea03b4569084c47611a74542716a43eb4dbcf881b",
+      "bytes": 142460
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000010.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlab-artifacts/train-rollout_examples-step000010.jsonl",
+      "sha256": "0aa3e874eb6c51573474530644d81dd9cb15ac1c7f363298b402eb0ae07a2854",
+      "bytes": 157933
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000009.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlab-artifacts/train-rollout_examples-step000009.jsonl",
+      "sha256": "e78be501dbe7f7e6720583d342772a8a917df4d407a45d5a43c83e7d6194338e",
+      "bytes": 155498
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000008.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlab-artifacts/train-rollout_examples-step000008.jsonl",
+      "sha256": "34c9f6f0ae037bc3d91ad92df62dbfd152233f804f1c54ab145a44d1b650359a",
+      "bytes": 124593
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000007.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlab-artifacts/train-rollout_examples-step000007.jsonl",
+      "sha256": "02bf41d866e6da772635fad37a987e0367be97633c96ddf8fdcd79968a48ac2a",
+      "bytes": 147732
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000006.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlab-artifacts/train-rollout_examples-step000006.jsonl",
+      "sha256": "53f2e0b97894d9267e43809257019ebeee64e452dc2139737a102f9a7a5b5057",
+      "bytes": 136815
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000005.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlab-artifacts/train-rollout_examples-step000005.jsonl",
+      "sha256": "a71347d69cf4cb595880fc35e5238218f38e658fa368a17807c7d73809e2adf6",
+      "bytes": 157046
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000004.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlab-artifacts/train-rollout_examples-step000004.jsonl",
+      "sha256": "ea73c41715183b3e09854a82a953ba2a604ed99247e30f09cd1812c2e99c1d72",
+      "bytes": 114522
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000003.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlab-artifacts/train-rollout_examples-step000003.jsonl",
+      "sha256": "214bbe305edd289d72bc7ef05db30e337cf1923460ac7a8c61d98e55e385bb31",
+      "bytes": 146467
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000002.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlab-artifacts/train-rollout_examples-step000002.jsonl",
+      "sha256": "4bfa4cddc700239fa34d4e31fed9166d412db64d70c2ac6d3ed85f21292e0474",
+      "bytes": 140777
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/train-rollout_examples-step000001.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlab-artifacts/train-rollout_examples-step000001.jsonl",
+      "sha256": "bdbfa616f64d092aa8140eae4c41bad1d0e10cdbef485c8e9758dae04b79dca2",
+      "bytes": 161543
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/source-snapshot.json",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlab-artifacts/source-snapshot.json",
+      "sha256": "4c1c57c9a384c0ab22a6b7c8ce1cee34a2a38625bc4c63672d94c6b70606a5dd",
+      "bytes": 176
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlog/run-20260913_225323-0067b734577648898e2bd/files/source-sft-rl.zip",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/swanlab-artifacts/source-sft-rl.zip",
+      "sha256": "017bd635c80cd3a081682b472625cbf1fc4a617836e002236c0a641183328275",
+      "bytes": 2267710
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/archive.json",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e2_seed42/archive.json",
+      "sha256": "1df4c14fbda7e4aaf65c1a0dae4e8ad049565ab2d7ee102ecbf513419407894b",
+      "bytes": 693
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e2_seed42/model-weights-location.json",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e2_seed42/model-weights-location.json",
+      "sha256": "bff7dc58f9c132abbe2de1ee51331df9a5d7f260eb9eed1d6a4a2037a5f098a3",
+      "bytes": 414
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/archive.json",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e3_seed42/archive.json",
+      "sha256": "26f77f1a86a2f49c5ccae4ca72737c329f002ae54faf0bcfff896d3dadd02415",
+      "bytes": 693
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/e3_seed42/model-weights-location.json",
+      "source": "/root/autodl-fs/tau3-core/code/results/runs/rl-c50-matched6h-a800-20260912/persistent-models/e3_seed42/model-weights-location.json",
+      "sha256": "ac0fcd5243e8bf90ed24d45f85dfd84f4dd1638451045d29e0846635822023df",
+      "bytes": 414
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/off/swanlog/run-20260911_191922-4256cxjk/files/dataset-train_reference_dialogues-step000000.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/off/swanlab-artifacts/dataset-train_reference_dialogues-step000000.jsonl",
+      "sha256": "84b644c84f2750b1491ad3bab54e626b0d4b53d133748c06487af71b9eb436cd",
+      "bytes": 115353
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/off/swanlog/run-20260911_191922-4256cxjk/files/dataset-validation_reference_dialogues-step000000.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/off/swanlab-artifacts/dataset-validation_reference_dialogues-step000000.jsonl",
+      "sha256": "aeffbe05d301c6b27997d6b1b243a4c28f81f4ec4d06a1f327c3f184a44ab445",
+      "bytes": 104612
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/off/swanlog/run-20260911_191922-4256cxjk/files/effective_train.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/off/effective_train.jsonl",
+      "sha256": "d86651b0244e703a16639dfc6452e18feb947d2c79d87d32246595b32acb1489",
+      "bytes": 1649107
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/off/swanlog/run-20260911_191922-4256cxjk/files/effective_validation.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/off/effective_validation.jsonl",
+      "sha256": "12c87246096b9fcf38689867332c448ded48a96d436a2ada36d72b353301a7f3",
+      "bytes": 191881
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/off/swanlog/run-20260911_191922-4256cxjk/files/source-sft-rl.zip",
+      "source": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/off/swanlab-artifacts/source-sft-rl.zip",
+      "sha256": "b33b49e97e9fcf8c308ab2d9ab8daccf3eccc10ef2e548dcaf1ca6ac01eeccb9",
+      "bytes": 2264346
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/off/swanlog/run-20260911_191922-4256cxjk/files/source-snapshot.json",
+      "source": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/off/swanlab-artifacts/source-snapshot.json",
+      "sha256": "c7d3877d1ef72f620d280c3af78eac782815c1e824b113804b49fb4b847cb60e",
+      "bytes": 176
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/off/swanlog/run-20260911_191922-4256cxjk/files/train_summary.json",
+      "source": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/off/train_summary.json",
+      "sha256": "a0e7d52a4f7f7801293a181358a3b9536db7505458994be2566e4c0c2004acc1",
+      "bytes": 2061
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/off/swanlog/run-20260911_191922-4256cxjk/files/trainer_state.json",
+      "source": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/off/trainer_state.json",
+      "sha256": "f4f1718ccead2e6e9f3e6f362d6406dc0626359511cb0fff2ae48f07462b5118",
+      "bytes": 7958
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/on/swanlog/run-20260911_191826-z6ddgwie/files/dataset-train_reference_dialogues-step000000.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/on/swanlab-artifacts/dataset-train_reference_dialogues-step000000.jsonl",
+      "sha256": "668ae10b6c7c2461519b7a23499869575432a44f12a19124375b60920cccbc90",
+      "bytes": 115354
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/on/swanlog/run-20260911_191826-z6ddgwie/files/dataset-validation_reference_dialogues-step000000.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/on/swanlab-artifacts/dataset-validation_reference_dialogues-step000000.jsonl",
+      "sha256": "1ca21dc272aad22bc05b40f1ed15a2f590b313a5d7fda057eb3054f41e0bda5b",
+      "bytes": 104613
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/on/swanlog/run-20260911_191826-z6ddgwie/files/effective_train.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/on/effective_train.jsonl",
+      "sha256": "6ea4430c4d7122c7d95e360091bea127a5cfd4a8f607c903591fdf0ebb641314",
+      "bytes": 1649115
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/on/swanlog/run-20260911_191826-z6ddgwie/files/effective_validation.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/on/effective_validation.jsonl",
+      "sha256": "ba58709b322a804d718723f32234fd38615440a28f6c14f942df0e57d896b8e5",
+      "bytes": 191883
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/on/swanlog/run-20260911_191826-z6ddgwie/files/source-sft-rl.zip",
+      "source": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/on/swanlab-artifacts/source-sft-rl.zip",
+      "sha256": "b33b49e97e9fcf8c308ab2d9ab8daccf3eccc10ef2e548dcaf1ca6ac01eeccb9",
+      "bytes": 2264346
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/on/swanlog/run-20260911_191826-z6ddgwie/files/source-snapshot.json",
+      "source": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/on/swanlab-artifacts/source-snapshot.json",
+      "sha256": "c7d3877d1ef72f620d280c3af78eac782815c1e824b113804b49fb4b847cb60e",
+      "bytes": 176
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/on/swanlog/run-20260911_191826-z6ddgwie/files/train_summary.json",
+      "source": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/on/train_summary.json",
+      "sha256": "82de63a58df71f191b7c60fa2c5ab96a518882b4ae5977e9b199c16c42925551",
+      "bytes": 2075
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/on/swanlog/run-20260911_191826-z6ddgwie/files/trainer_state.json",
+      "source": "/root/autodl-fs/tau3-core/code/results/legacy/experiments/multicall-aa267bb/sft/on/trainer_state.json",
+      "sha256": "f552d10504e246b30ce10338d4ba60c8f050a85515a84153f058e4fa666ceaef",
+      "bytes": 7971
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/checkpoints/sft-comparison/lora-thinking/swanlog/run-20260911_170721-ladskre3/files/airline_sft_train_seed42.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/data/sft/airline_sft_train_seed42.jsonl",
+      "sha256": "e0aec9fb93c25f4f63e6580f6cdfcc0b95c1dfabe47bdf284745fa1759d1384b",
+      "bytes": 1633227
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/checkpoints/sft-comparison/lora-thinking/swanlog/run-20260911_170721-ladskre3/files/airline_sft_validation_seed42.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/data/sft/airline_sft_validation_seed42.jsonl",
+      "sha256": "9de13c3f1ff3f1029e7fc4599abfed19de39aa1fa2f82574d6161a1854dd4ccb",
+      "bytes": 190194
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/checkpoints/sft-comparison/lora-thinking/swanlog/run-20260911_170721-ladskre3/files/dataset-train_reference_dialogues-step000000.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/checkpoints/sft-comparison/lora-thinking/swanlab-artifacts/dataset-train_reference_dialogues-step000000.jsonl",
+      "sha256": "d465c1657ba2a373f2155ac2c02fbe7a0a97a5583633fd835911d1778dcde5d5",
+      "bytes": 114069
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/checkpoints/sft-comparison/lora-thinking/swanlog/run-20260911_170721-ladskre3/files/dataset-validation_reference_dialogues-step000000.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/checkpoints/sft-comparison/lora-thinking/swanlab-artifacts/dataset-validation_reference_dialogues-step000000.jsonl",
+      "sha256": "b4ced02d29aa6ef5e188412c56e0a9a520896a6d77cd4edfc5bc4009bbec080d",
+      "bytes": 103328
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/checkpoints/sft-comparison/lora-thinking/swanlog/run-20260911_170721-ladskre3/files/source-sft-rl.zip",
+      "source": "/root/autodl-fs/tau3-core/code/checkpoints/sft-comparison/lora-thinking/swanlab-artifacts/source-sft-rl.zip",
+      "sha256": "f1261608c6f5a6a66aea923d3076d636936e3ac5fce00a2e347507420e3839f5",
+      "bytes": 2257121
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/checkpoints/sft-comparison/lora-thinking/swanlog/run-20260911_170721-ladskre3/files/source-snapshot.json",
+      "source": "/root/autodl-fs/tau3-core/code/checkpoints/sft-comparison/lora-thinking/swanlab-artifacts/source-snapshot.json",
+      "sha256": "d03fbd21ff9b444811504e5e871e92460c6e121c904a60142d62b3134f936773",
+      "bytes": 176
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/checkpoints/sft-comparison/lora-thinking/swanlog/run-20260911_170721-ladskre3/files/train_summary.json",
+      "source": "/root/autodl-fs/tau3-core/code/checkpoints/sft-comparison/lora-thinking/train_summary.json",
+      "sha256": "96f11e5771d9c8c6399be434a5a9344f11eb6434c0ea67164222251a583964f4",
+      "bytes": 1883
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/checkpoints/sft-comparison/lora-thinking/swanlog/run-20260911_170721-ladskre3/files/trainer_state.json",
+      "source": "/root/autodl-fs/tau3-core/code/checkpoints/sft-comparison/lora-thinking/trainer_state.json",
+      "sha256": "801f3e56e2ec76f4266b29876ab6ec46bae1ac1a0b82735510bb35ddc7793e96",
+      "bytes": 7962
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/checkpoints/sft-comparison/lora/swanlog/run-20260911_154000-ovrld9g3/files/airline_sft_train_seed42.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/data/sft/airline_sft_train_seed42.jsonl",
+      "sha256": "e0aec9fb93c25f4f63e6580f6cdfcc0b95c1dfabe47bdf284745fa1759d1384b",
+      "bytes": 1633227
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/checkpoints/sft-comparison/lora/swanlog/run-20260911_154000-ovrld9g3/files/airline_sft_validation_seed42.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/data/sft/airline_sft_validation_seed42.jsonl",
+      "sha256": "9de13c3f1ff3f1029e7fc4599abfed19de39aa1fa2f82574d6161a1854dd4ccb",
+      "bytes": 190194
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/checkpoints/sft-comparison/lora/swanlog/run-20260911_154000-ovrld9g3/files/dataset-train_reference_dialogues-step000000.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/checkpoints/sft-comparison/lora/swanlab-artifacts/dataset-train_reference_dialogues-step000000.jsonl",
+      "sha256": "d465c1657ba2a373f2155ac2c02fbe7a0a97a5583633fd835911d1778dcde5d5",
+      "bytes": 114069
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/checkpoints/sft-comparison/lora/swanlog/run-20260911_154000-ovrld9g3/files/dataset-validation_reference_dialogues-step000000.jsonl",
+      "source": "/root/autodl-fs/tau3-core/code/checkpoints/sft-comparison/lora/swanlab-artifacts/dataset-validation_reference_dialogues-step000000.jsonl",
+      "sha256": "b4ced02d29aa6ef5e188412c56e0a9a520896a6d77cd4edfc5bc4009bbec080d",
+      "bytes": 103328
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/checkpoints/sft-comparison/lora/swanlog/run-20260911_154000-ovrld9g3/files/source-sft-rl.zip",
+      "source": "/root/autodl-fs/tau3-core/code/checkpoints/sft-comparison/lora/swanlab-artifacts/source-sft-rl.zip",
+      "sha256": "f1261608c6f5a6a66aea923d3076d636936e3ac5fce00a2e347507420e3839f5",
+      "bytes": 2257121
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/checkpoints/sft-comparison/lora/swanlog/run-20260911_154000-ovrld9g3/files/source-snapshot.json",
+      "source": "/root/autodl-fs/tau3-core/code/checkpoints/sft-comparison/lora/swanlab-artifacts/source-snapshot.json",
+      "sha256": "d03fbd21ff9b444811504e5e871e92460c6e121c904a60142d62b3134f936773",
+      "bytes": 176
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/checkpoints/sft-comparison/lora/swanlog/run-20260911_154000-ovrld9g3/files/train_summary.json",
+      "source": "/root/autodl-fs/tau3-core/code/checkpoints/sft-comparison/lora/train_summary.json",
+      "sha256": "2788aacc0d59f3210e7eea3eca3f271c167548bf3838d15bb60ee618774a617e",
+      "bytes": 1790
+    },
+    {
+      "action": "materialize-file",
+      "path": "/root/autodl-fs/tau3-core/code/checkpoints/sft-comparison/lora/swanlog/run-20260911_154000-ovrld9g3/files/trainer_state.json",
+      "source": "/root/autodl-fs/tau3-core/code/checkpoints/sft-comparison/lora/trainer_state.json",
+      "sha256": "6b558ee3358e9d158382d8754da07748be0790f2bf9ac6993e4e723485b6dfd4",
+      "bytes": 7941
+    },
+    {
+      "action": "remove-tokenizer-alias",
+      "old": "/root/autodl-fs/tau3-core/code/data/tokenizers/Qwen3.5-4B",
+      "actual": "/root/autodl-fs/tau3-core/code/models/Qwen3.5-4B"
+    }
+  ],
+  "original_artifacts_inode_verified": 4270
+}

@@ -1,0 +1,34 @@
+[
+  {
+    "arm": "e0",
+    "model": "/root/autodl-fs/tau3-core/code/checkpoints/sft-merged/new-off",
+    "anchor": "v1",
+    "manifest": "/autodl-fs/data/tau3-core/code/results/analysis/rl_curriculum50_20260912/manifests",
+    "validation": "/root/autodl-fs/tau3-core/code/results/runs/formal50-preflight-20260912/selection60.parquet",
+    "dry_run_exit_code": 0
+  },
+  {
+    "arm": "e1",
+    "model": "/root/autodl-fs/tau3-core/code/checkpoints/sft-merged/new-off",
+    "anchor": "v1",
+    "manifest": "/autodl-fs/data/tau3-core/code/results/analysis/rl_curriculum50_20260912/manifests",
+    "validation": "/root/autodl-fs/tau3-core/code/results/runs/formal50-preflight-20260912/selection60.parquet",
+    "dry_run_exit_code": 0
+  },
+  {
+    "arm": "e2",
+    "model": "/root/autodl-fs/tau3-core/code/checkpoints/sft-merged/new-off",
+    "anchor": "v1",
+    "manifest": "/autodl-fs/data/tau3-core/code/results/analysis/rl_curriculum50_20260912/manifests",
+    "validation": "/root/autodl-fs/tau3-core/code/results/runs/formal50-preflight-20260912/selection60.parquet",
+    "dry_run_exit_code": 0
+  },
+  {
+    "arm": "e3",
+    "model": "/root/autodl-fs/tau3-core/code/checkpoints/sft-merged/new-off",
+    "anchor": "v1",
+    "manifest": "/autodl-fs/data/tau3-core/code/results/analysis/rl_curriculum50_20260912/manifests",
+    "validation": "/root/autodl-fs/tau3-core/code/results/runs/formal50-preflight-20260912/selection60.parquet",
+    "dry_run_exit_code": 0
+  }
+]

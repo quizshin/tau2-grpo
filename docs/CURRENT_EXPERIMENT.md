@@ -1,72 +1,41 @@
-# 当前实验：50 任务上的四组工具智能体 RL 对照
+# 当前实验与开发入口
 
-此页是当前实验的统一入口。历史记录中的 40 任务、固定 50/100 step、其他硬件试验均不能替代下述协议。方案更新时应同步本页，并保留变更记录。
+更新日期：2026-09-20。这里记录已核实的实验事实与开发状态，不作为实时进程看板。原 9 月 12 日进度原文保存在 [历史快照](CURRENT_EXPERIMENT_snapshot_20260912.md)。
 
-2026-09-14 开发补充：[锚点开关与真实状态重放](anchor_switch_and_replay_20260914.md) 已迁入本目录。正式配置继续固定 v1；v2/v3 是独立候选，本轮只完成 CPU 检查，没有启动或更新正式训练成绩。
+## 当前协议
 
-## 研究问题与范围
+正式对照继续采用 Qwen3.5-4B `new-off` SFT、非 thinking、全语言参数 RL、train50、seed42、20 个外层 step，每 step 8×8 条候选轨迹，学习率 1e-6、KL 0.01。每 10 step 在 selection60×4 上评测，并保存完整续训检查点；核验新检查点后才轮换旧检查点，保留最新 1 份。SwanLab 每步在线，同一实验续训沿用原 run 和真实 step。
 
-在相同 SFT 起点、训练任务和匹配的更新步数下，动态过滤（DF）和 Tau-GiGPO 的步骤信用分配，能否改善多轮工具任务的独立评测成功率？同时观察工具错误、长对话截断、奖励有效组比例和训练成本。
+原“E0 六小时后确定共同 N”已得到 20 step 预算，不再按各算法速度重新确定 N。算法、奖励和 harness 可以继续修改；每次变化明确版本、对照和验证，不覆盖旧实验身份。官方 final50 只在模型名单及该次评测协议确定后使用。
 
-最初的长期目标包含 thinking 模型训练；**当前正式对照使用非 thinking 的 `new-off` SFT 起点**，不改变 thinking 开关，不据此回答“thinking 是否更好”。先固定现有起点检验 RL 方法，避免同时更换数据、推理模式与算法。
+## 已有结果与候选
 
-## 已确定的协议
+|项目|已核实状态|证据|
+|---|---|---|
+|E0–E3|四组各完成 20 step；共 5,120 条训练候选记录|[信号审计](training_signal_audit_20260914.md)|
+|独立 selection|SFT、E0、E1、E3 各 240 条完成；E2 原始 239 条完成 + 1 条异常，原汇总无效|[独立评测与补测规则](post_rl_selection_20260914.md)|
+|MT-GTPO reference_write v3|有 1,280 条训练记录及 step10/20 训练内评测；不能与独立 selection 混为一套成绩|[运行记录](mt_gtpo_v3_execution_20260917.md)|
+|paper_env_split_v3|历史数据开发验证通过；尚无新训练或独立效果结论|[奖励修订](mt_gtpo_split_reward_revision_20260918.md)|
+|语义 anchors|v1 是历史正式路径；后续候选尚未证明在线 RL 收益|[直接判等审计](semantic_pair_direct_v1_20260916.md)|
+|架构第一批|配置来源、公共 runner、adapter 分层、严格比较器与记录标准已实现；验证回执独立登记|[第一批交付](architecture/batch1_20260918.md)|
+|架构后续批次|稳定组件配置、统一检查点、共享轨迹事实、评测身份、配方公共接口和本批统计已落地；CPU 交付完成，GPU 状态见下一行|[后续交付](architecture/batch2_20260918.md)|
+|架构 GPU／接口验收|增强 A 三算法共 12 条；GRPO/GiGPO 两步更新、GiGPO 四 rank 恢复、724 张量导出与独立 8/8 评测、MT-GTPO DF off/on 各两步及重放全部通过。文本参数审计范围单独登记|[最终接口报告](architecture/interface_acceptance_20260919.md)|
+|架构 CPU 收尾|兼容默认与 arm 统一、历史引用审计、回执草稿生成已交付；71 组命令相同、核心 364 passed；本批无 GPU、托管 CI 未运行|[收尾记录](architecture/cleanup_20260919.md)|
+|MT-GTPO DF 对照工程验收|off/on 各 128 候选、两次非零更新、云端 1/2、过程奖励／优势／过滤重放通过。DF on 两批均有有效信号、剔除 0 组，不构成过滤增幅证据|[最终接口报告](architecture/interface_acceptance_20260919.md)|
 
-|项目|当前设置|
-|---|---|
-|策略|Qwen3.5-4B，`new-off` 合并 SFT 权重，thinking 关闭|
-|参数更新|全语言参数训练，冻结视觉分支；不是 LoRA RL|
-|任务池|冻结的 50 个 Airline 训练任务；来自原 train200，与 selection60 无任务 ID 重叠|
-|每步采样|8 个任务 × 每任务 8 条轨迹，共 64 条|
-|E0|GRPO|
-|E1|GRPO + dynamic filtering|
-|E2|Tau-GiGPO|
-|E3|Tau-GiGPO + dynamic filtering|
-|共同起点|每组都从同一个 SFT 独立初始化，不继承前一组 RL 权重|
-|执行顺序|E0 → E1 → E2 → E3|
-|学习率 / KL|1e-6 / 0.01；训练采样温度 1.0|
-|资源|5 × A800 80GB，四卡训练/策略推理，一卡 Qwen3.8-27B AWQ INT4 模拟用户|
-|加速|FLA 0.5.2 FP32/IEEE、单轨迹外部 padding 裁剪、compact head；不使用外部 FA2|
-|状态隔离|每卡 microbatch=1，轨迹独立，不复用递推状态，不做 sequence packing|
+历史数据已经被用于开发分析，不能重新命名成盲测或独立校准留出集。结果、错误、计划分别查看 [实验索引](../EXPERIMENTS.md)、[错误索引](../ERRORS.md)、[消融方案](architecture/ablation_plan_20260918.md)。
 
-50 任务 manifest SHA256：`641bde73c1495c59b5c0a87cfc84b9e00c0b5ffd2f86d10fd2205aaf2143adae`。数据 ID 隔离不等于已经证明全部任务语义无泄漏，也不代表奖励器完全覆盖业务正确性。
+## 当前源码与入口
 
-### 预算与评测
+远程唯一主仓库 `/root/autodl-fs/tau3-core/code`；环境入口 `/root/autodl-fs/tau3-core/activate.sh`。本地编辑路径 `/Users/apple/Projects/program-llm/tau3_grpo_fix/code`。每次运行的 Git HEAD、dirty patch 和源码哈希共同标识实际源码。历史验收使用当时的源码快照；后续 Git 发布不改写历史身份。
 
-E0 从模拟器启动开始观察约六小时预算，包含初始化、保存和评测。在完整 step 后观察预算，向上取整到整十步 N 并完成该节点；E1/E2/E3 使用同一个 N。六小时不是强制杀进程的截止时间，50 步不是硬目标，E0 探索上限为 100。
+- 配置驱动的一般入口：`python -m tau3_grpo.launch`；SFT 继续使用原入口。
+- 新的单实验正式控制器：`python -m tau3_grpo.training.rl.runner`，支持 `grpo/tau_gigpo/mt_gtpo` 和 DF 开关。本轮已约定工程验收完成；不同模型／奖励配方／硬件与并行模式不能自动继承该结论。
+- 旧 `scripts/train/rl/run_mt_gtpo_formal.py` 转发到同一实现；旧 E0–E3 队列保留历史预算发现逻辑，不作为新 20-step 对照的默认入口。
+- 活动配置及候选状态：`configs/experiments/catalog.yaml`；正式基础：`configs/train/rl/formal50_a800.yaml`。
+- 独立评测控制器：`python -m tau3_grpo.evaluation.controller`；旧 `env_info` 路径转发。它仍管理历史 E0–E3 队列，单模型评测使用下面的通用入口。
+- 已有独立评测：`python -m tau3_grpo.evaluation.run`；离线重评分：`evaluation.rescore`；严格比较：`evaluation.compare`。
+- 实验／错误草稿：`python -m tau3_grpo.experiments.review`，人工审核后归入现有索引，使用新的输出目录保留历史批注。
+- `configs` 保存参数，`scripts` 保存入口，二者按用途形成相似目录是有意设计；公共实现放 `tau3_grpo`，不在两个目录复制。
 
-四组匹配更新步数与配置，DF 的额外采样/过滤成本需结合实际日志比较，不能把相同 N 直接解释成相同总成本。
-
-每 10 step 评测 selection60×4（采样温度 0.4）并保存完整恢复检查点。每组保留最新完整状态，确认新状态齐全后才清理旧状态。正常主动停止在整十节点完成保存与评测后停止队列。SwanLab 每 step 记录，续训使用原 run ID 和实际 global step。
-
-效果判断以固定 selection 的独立评测及成本为依据；训练 batch 的 reward 仅作为训练诊断。官方 final50 留到模型锁定后再评估，不参与本次训练或选型。
-
-## 当前进度快照
-
-**核对时间：2026-09-12 20:41（Asia/Shanghai）。本节是快照，不是实时状态。**
-
-- E0 正在运行，日志已有 5 个完整 step，SwanLab 最后记录 step=5；训练进程仍存活。
-- 第 4/5 步完整耗时分别约 14.42 / 17.41 分钟。尚未到第 10 步评测节点，不能宣布训练后成功率提升。
-- E1/E2/E3 尚无本次对照结果，最终匹配预算 N 尚待 E0 确定。
-- [E0 SwanLab 实时监控](https://swanlab.cn/@quizshin/tau3-grpo-pytrio/runs/f7ef00e3d47b4742ba90b)。访问权限取决于 SwanLab 设置，GitHub 私有仓库权限不自动授予看板权限。
-
-已验证的工程结论：先前独立单步实验完成 64 条新轨迹，完整 step 18.83 分钟、actor 更新 6.74 分钟，相比旧在线批次 32.15 / 19.97 分钟明显缩短；数值、有效梯度、会话隔离及权重同步检查通过。新旧在线批次不同，不能将全部提速归因于 FLA 单项，也不能将该单批速度当作每批保证。详见 [FLA 在线验证](fla_online_validation_20260912.md)。
-
-仍未确定：四种 RL 方法的效果排序、稳定收益、最终 N 和所有组的实际总成本。长轨迹显存余量有限，完整检查点占用较大；后续组可能因存储空间不足暂停，不能据队列配置宣称四组已经跑完。
-
-## 代码版本与唯一推荐入口
-
-- **服务器当前训练版本：`792d70db61c7e905dfda27d231d54c0ecfc5a74c`。**
-- GitHub 交接版基于本地合并提交 `458d649`，整合上述训练版本并保留 5090/Paratera 功能；后续说明文档提交不代表服务器训练代码已更新。
-- 正式配置：`configs/train/rl/qwen35_4b_full_a800_c50_matched6h_{e0,e1,e2,e3}_20260912.yaml`，共用 `c50_matched6h_common`。
-- 控制器：`env_info/a800_20260912/run_matched50.py`。
-- 启动入口：`bash env_info/a800_20260912/launch_matched50.sh dry-run`；完成数据、环境及资源预检后才使用 `run`。
-- [正式执行细节](formal50_fla_execution_20260912.md)、[本地合并与测试记录](local_training_merge_20260912.md)。本地合并版回归 112 项通过，15 项 CUDA 测试跳过；未在当前占用的训练卡上重跑合并版本。
-
-## 接手运行前必须准备的资产
-
-Git 仓库现在包含源码、配置、测试、原始 AReaL 数据、train/selection/reserve 划分、服务器实际 SFT 输入以及 40/50 任务课程 manifest 和 sidecar。见 [数据说明与 SHA256 校验](../data/README.md)。当前 50 任务 manifest 保留在 `results/analysis/rl_curriculum50_20260912/manifests/`，已通过精确例外规则纳入 Git；clone 后先校验哈希。**模型权重、完整 checkpoint、虚拟环境和凭据仍不包含在仓库中**，需要另行准备。
-
-正式服务器使用 Python 3.12、Torch 2.11/cu130、Transformers 5.5.1、vLLM 0.20.0 和 FLA 0.5.2；启动脚本依赖服务器激活脚本、FLA overlay 及模型路径。迁移到新机器需重建环境并配置路径，不能复制 Mac 虚拟环境到 Linux。凭据在目标机器单独设置。
-
-运行目录：`/root/autodl-fs/tau3-core-20260912/runs/rl-c50-matched6h-a800-20260912`。GitHub 不自动同步其中的实时日志、状态或 checkpoint；进度以带时间戳的服务器记录和 SwanLab 为准。
+本轮工程验收已结束。后续 GPU 实验仍需先明确目的、预算与停止条件；本次 Git 发布不启动实验。2026-09-20 按用户授权退役 GRPO 工程 step2、MT-GTPO DF off/on 各自 step2，共释放 151.90 GiB，清理后持久盘可用 219.31 GiB；五份正式 E0–E3/MT-v3 step20 检查点保留。容量是该次维护快照，不是实时读数。删除节点明确放弃精确续训，轨迹和验收证据继续保留。完成范围与正式研究待办见 [剩余工作](architecture/remaining_work_20260919.md)。

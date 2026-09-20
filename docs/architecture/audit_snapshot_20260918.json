@@ -1,0 +1,34 @@
+{
+  "scope": "tau3_grpo, configs, scripts, tests, env_info, docs, verl, tau2-bench, .github and 9 root source/docs files; excluded assets, caches, secrets, symlinks",
+  "local": {
+    "head": "08c05411fb4582e80236a1daa6f19a85bea3850c",
+    "status_entries": 165,
+    "modified_entries": 44,
+    "untracked_entries": 121
+  },
+  "remote": {
+    "head": "1f58472f7961f760938ed8ceb3126fe4a9cb938a",
+    "status_entries": 92,
+    "modified_entries": 23,
+    "untracked_entries": 69
+  },
+  "local_count": 1834,
+  "remote_count": 1830,
+  "same": 1828,
+  "different": [],
+  "local_only": [
+    "docs/mt_gtpo_formal_scope_20260917.md",
+    "verl/verl.egg-info/PKG-INFO",
+    "verl/verl.egg-info/SOURCES.txt",
+    "verl/verl.egg-info/dependency_links.txt",
+    "verl/verl.egg-info/requires.txt",
+    "verl/verl.egg-info/top_level.txt"
+  ],
+  "remote_only": [
+    "env_info/historical/experiments/multicall-aa267bb/sft/off/swanlog/run-20260911_191922-4256cxjk/files/config.yaml",
+    "env_info/historical/experiments/multicall-aa267bb/sft/on/swanlog/run-20260911_191826-z6ddgwie/files/config.yaml"
+  ],
+  "snapshot_date": "2026-09-18",
+  "timezone": "Asia/Shanghai",
+  "scope_note": "Before adding this plan and snapshot. Read-only comparison, not a deployment receipt or model integrity check."
+}

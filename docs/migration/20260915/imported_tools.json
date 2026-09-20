@@ -1,0 +1,277 @@
+[
+  {
+    "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/code/configs/train/rl/qwen35_4b_full_a800_fla_online_smoke_20260912.yaml",
+    "destination": "configs/train/rl/qwen35_4b_full_a800_fla_online_smoke_20260912.yaml",
+    "sha256": "e18597365730d1457a37c1e74e7a6a11c5b2d72f4a925a20e61d22dba564b916"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/code/env_info/a800_20260912/benchmark_gdn_model.py",
+    "destination": "env_info/a800_20260912/benchmark_gdn_model.py",
+    "sha256": "3d876b2a3a0f7253a82e556db63f0dc6537451b849f78030c8d3ba49d304d067"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/code/env_info/a800_20260912/diagnose_gdn.py",
+    "destination": "env_info/a800_20260912/diagnose_gdn.py",
+    "sha256": "afeb966a61940376098eb4c71254758b70c011aef707178d06abdc5c1aa992be"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/code/env_info/a800_20260912/diagnose_gdn_gradients.py",
+    "destination": "env_info/a800_20260912/diagnose_gdn_gradients.py",
+    "sha256": "8296b3082706029a96b55fff9b7a7d04efdebd29c33168bdba5a0436ce83e463"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/code/env_info/a800_20260912/diagnose_gdn_model.py",
+    "destination": "env_info/a800_20260912/diagnose_gdn_model.py",
+    "sha256": "3a9ba55e391980502d81547dee17d645cf9be82e0b83c3c17a94d7035d5e309f"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/code/env_info/a800_20260912/diagnostic_attention.py",
+    "destination": "env_info/a800_20260912/diagnostic_attention.py",
+    "sha256": "e3f7fcbfc033940fa7c287daf5d5c619810e23e2763af35d6f5bda9d0c1c4b27"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/code/env_info/a800_20260912/install_fa2_isolated.sh",
+    "destination": "env_info/a800_20260912/install_fa2_isolated.sh",
+    "sha256": "b5d417937c937a351dadc5319ae3bbb40b958e48f58f224d246f628d1c086235"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/code/env_info/a800_20260912/launch_fla_online_smoke.sh",
+    "destination": "env_info/a800_20260912/launch_fla_online_smoke.sh",
+    "sha256": "3892e276aebeff7e13b89414f17a56ed963ba767f069a2ea5cc4e7f8306b5714"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/code/env_info/a800_20260912/probe_fa2_reference.py",
+    "destination": "env_info/a800_20260912/probe_fa2_reference.py",
+    "sha256": "2d4f483c4122f64adba204a383be6d28f043384a87382fae1457c015b1eaa5c6"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/code/env_info/a800_20260912/probe_sdpa_backend.py",
+    "destination": "env_info/a800_20260912/probe_sdpa_backend.py",
+    "sha256": "0e747c815aa78be1b3a3db55a8122e62808f96420ab1669f84e7f3c437b52723"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/code/env_info/a800_20260912/replay_rl64_gdn.py",
+    "destination": "env_info/a800_20260912/replay_rl64_gdn.py",
+    "sha256": "cab98b9f626e8278f5268ee3ed68fe45102817ea2eea9ba6f8d977ccfff8d3fc"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/code/env_info/a800_20260912/run_fla_online_smoke.py",
+    "destination": "env_info/a800_20260912/run_fla_online_smoke.py",
+    "sha256": "866235ed1e8ab26de64fdf65697616d8f633e64b277de3a2ea00f08770691495"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/code/env_info/a800_20260912/validate_fla_ieee64.py",
+    "destination": "env_info/a800_20260912/validate_fla_ieee64.py",
+    "sha256": "39ad2cf3b6be0856bd3bbce1590d8a0a323176d2d2df89ab38111e8746b595e5"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/code/env_info/a800_20260912/verify_fa2_kernel.py",
+    "destination": "env_info/a800_20260912/verify_fa2_kernel.py",
+    "sha256": "ad296f62a3a38edf314e3465af5f8f7b35c0530eac9dde90f37df5434f321626"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/code/env_info/a800_20260912/verify_fp32_sdpa_guard.py",
+    "destination": "env_info/a800_20260912/verify_fp32_sdpa_guard.py",
+    "sha256": "d797639184d0b5ac1433717d77f3de3c55d38bc156ccee12022b923b35c388e2"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/code/env_info/a800_20260912/verify_online_fla_bridge.py",
+    "destination": "env_info/a800_20260912/verify_online_fla_bridge.py",
+    "sha256": "40f4061587b286cea6eb4a5aec7635ec5ecd3412037183b447830136318c7143"
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core-20260912/code/verl/verl/experimental/vla/workers/env/env_loop_wg_test.py",
+    "destination": "verl/verl/experimental/vla/workers/env/env_loop_wg_test.py",
+    "sha256": "24674296abd60c129408a77cfb13e15dddca01be81ffac80d27012c3a13fe167"
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core-20260912/code/verl/verl/experimental/vla/workers/env/env_manager.py",
+    "destination": "verl/verl/experimental/vla/workers/env/env_manager.py",
+    "sha256": "76e077a330e9cde3f7d0e164525e654b4eb7297fb663b5da062c42def399fde1"
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core-20260912/code/verl/verl/experimental/vla/workers/env/env_worker.py",
+    "destination": "verl/verl/experimental/vla/workers/env/env_worker.py",
+    "sha256": "4386b2118f46140b197c4ba163ae21ab392a2e3822426fa9f92cbc8707a20bc5"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-5xa800-20260911/bootstrap_remote.sh",
+    "destination": "env_info/historical/five-a800-20260911/bootstrap_remote.sh",
+    "sha256": "67803576300d8af4db12b10583f7b03573d96e85cd8f447fb44fe6305305da63"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-5xa800-20260911/download_models.sh",
+    "destination": "env_info/historical/five-a800-20260911/download_models.sh",
+    "sha256": "47e4797e11f61a05bb815e77b84e682229514d195d2d943b91703ad40dd6baee"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-5xa800-20260911/bootstrap_uv.sh",
+    "destination": "env_info/historical/five-a800-20260911/bootstrap_uv.sh",
+    "sha256": "7d6651e5922242ba642e2656767023f354c6447c69c2c85dec76aa19badc9c04"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-5xa800-20260911/selection-single-gpu/selection_controller.py",
+    "destination": "env_info/historical/five-a800-20260911/selection-single-gpu/selection_controller.py",
+    "sha256": "9cfdb4fe70b0c72f187caaba380fc58d5b7619e9bcc7a0ab629550f3f366b4a9"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/diagnose_gdn.py",
+    "destination": "env_info/historical/gdn-20260912/diagnose_gdn.py",
+    "sha256": "c1c6ad9886eb1606c5b1e00f836265036b3fe40ca1c0139bffd1cd9fd2b21060"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/rl64-ieee-warm/replay_rl64_gdn.py",
+    "destination": "env_info/historical/gdn-20260912/rl64-ieee-warm/replay_rl64_gdn.py",
+    "sha256": "839c4adfe698348d0d2d8cfd35e379b93d8a7ea076e01af189256f7d8a7031ac"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/rl64-ieee-warm/diagnostic_attention.py",
+    "destination": "env_info/historical/gdn-20260912/rl64-ieee-warm/diagnostic_attention.py",
+    "sha256": "115a189d16fd83d5bf7d15782bd3c263b73ac5ff7d3b8d89fe8eadc1f406813f"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/rl64-ieee-warm-fixed/replay_rl64_gdn.py",
+    "destination": "env_info/historical/gdn-20260912/rl64-ieee-warm-fixed/replay_rl64_gdn.py",
+    "sha256": "bbf2ccad53d27db3304a259562704f91a22b2b1d957d933bfff181845cb02b07"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/rl64-fa2-replay/replay_rl64_gdn.py",
+    "destination": "env_info/historical/gdn-20260912/rl64-fa2-replay/replay_rl64_gdn.py",
+    "sha256": "f0d83ae1c88b48e08593b1c30a7418043345a55be4a0faa8bf2828e9a166341e"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/rl64-fa2-replay/diagnostic_attention.py",
+    "destination": "env_info/historical/gdn-20260912/rl64-fa2-replay/diagnostic_attention.py",
+    "sha256": "f2cf16191979ed14c463e9a8f6f4743b4a3bac7f64b976e0962f516762cdcfa8"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/rl64-fa2-replay-fixed/replay_rl64_gdn.py",
+    "destination": "env_info/historical/gdn-20260912/rl64-fa2-replay-fixed/replay_rl64_gdn.py",
+    "sha256": "b7823cd3fccceb7c5b726961894a6c1f2231190b9ef1eda7831cce1c05de16ca"
+  },
+  {
+    "source": "/root/autodl-tmp/tau3-gdn-diagnosis-20260912/rl64-fa2-replay-fixed/diagnostic_attention.py",
+    "destination": "env_info/historical/gdn-20260912/rl64-fa2-replay-fixed/diagnostic_attention.py",
+    "sha256": "78acd29064d1c5c89fce3ae27098cff70f90d442f7786cb0a894d4eb6bbe6b8c"
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core-20260912/experiments/selection-dual-gpu/evaluation_completion.py",
+    "destination": "env_info/historical/experiments/selection-dual-gpu/evaluation_completion.py",
+    "sha256": "978ebe8ec9e68fb372ed220e2e87aa56a28e5f97ccece24c468f7df98fe2e91e"
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core-20260912/experiments/selection-dual-gpu/selection_dual_controller.py",
+    "destination": "env_info/historical/experiments/selection-dual-gpu/selection_dual_controller.py",
+    "sha256": "a036ff04b6dcfc873a9b63c0e9ee09da6e28289f866b9357a6851c1e32c2ad03"
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core-20260912/experiments/selection-thinking-gpu01/selection_thinking_controller.py",
+    "destination": "env_info/historical/experiments/selection-thinking-gpu01/selection_thinking_controller.py",
+    "sha256": "f0c58f7a0294c283c51a250b90d561cb3de04a3796ed93ade7ba0c283ac96e2d"
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core-20260912/experiments/selection-thinking-gpu01/test_evaluation_completion.py",
+    "destination": "env_info/historical/experiments/selection-thinking-gpu01/test_evaluation_completion.py",
+    "sha256": "98dffe609a4416b6936e7c209e45674e297b71cbf942f1eefdb4d51f26cab041"
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core-20260912/experiments/selection-thinking-gpu01/before-completion-fix/selection_thinking_controller.py",
+    "destination": "env_info/historical/experiments/selection-thinking-gpu01/before-completion-fix/selection_thinking_controller.py",
+    "sha256": "c45a0345b34f0e82518e96dbe316b71209d8546bfc5c2b277011594602bd3f8f"
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core-20260912/experiments/thinking-experiment/answer_only_eval.py",
+    "destination": "env_info/historical/experiments/thinking-experiment/answer_only_eval.py",
+    "sha256": "f62ff1ba6f5a78c0e9fcf6fd5a1486738f121ea90934525db583c812d7a7baf7"
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core-20260912/experiments/thinking-experiment/config.yaml",
+    "destination": "env_info/historical/experiments/thinking-experiment/config.yaml",
+    "sha256": "272f601ecd780aac4c313ffb86fe7fd553db10d252de0bf64a125507119f58ea"
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core-20260912/experiments/thinking-experiment/thinking_dataset.py",
+    "destination": "env_info/historical/experiments/thinking-experiment/thinking_dataset.py",
+    "sha256": "87562d3b5a4e6bc3aa98fab1349e9fd3447414f15a2dceebc7d09007ac00c22b"
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core-20260912/experiments/thinking-experiment/thinking_run.py",
+    "destination": "env_info/historical/experiments/thinking-experiment/thinking_run.py",
+    "sha256": "d0547e33da62d277448c97bc14bef0e9550d10ec143dce004114d8b9b6baed5c"
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core-20260912/experiments/thinking-experiment/train_thinking.py",
+    "destination": "env_info/historical/experiments/thinking-experiment/train_thinking.py",
+    "sha256": "2b899bcba6b195b0d1092c863d83c4729a9c8dcaa29658c61c832a3d89e1724d"
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core-20260912/experiments/validation/base_smoke.py",
+    "destination": "env_info/historical/experiments/validation/base_smoke.py",
+    "sha256": "5e51674b2b7189512389744f4499731b1fb5a91b78d41e29b5203a656464d005"
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core-20260912/experiments/validation/four_rank_probe.py",
+    "destination": "env_info/historical/experiments/validation/four_rank_probe.py",
+    "sha256": "adb6fdb265c7ac74c10ffa2a81ad47e15ec80d970f559b7fadb0fdfa37b3100f"
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core-20260912/experiments/validation/full_sft_probe.py",
+    "destination": "env_info/historical/experiments/validation/full_sft_probe.py",
+    "sha256": "909180fbbc911b903d3a2dc7bb606574f54158460b7b6a63871d369e6bc9d4f6"
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core-20260912/experiments/validation/nccl_smoke.py",
+    "destination": "env_info/historical/experiments/validation/nccl_smoke.py",
+    "sha256": "35111acad674785b375d3c69dbf6c17ccab36b41393c27f55dcb943bd88436e7"
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core-20260912/experiments/validation/simulator_smoke.py",
+    "destination": "env_info/historical/experiments/validation/simulator_smoke.py",
+    "sha256": "ea469d5f9ccdd2f2e88083dddd9017cf70869d77cccc44dc411989b047f53385"
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core-20260912/experiments/multicall-aa267bb/off.yaml",
+    "destination": "env_info/historical/experiments/multicall-aa267bb/off.yaml",
+    "sha256": "49a344b2e11262220be87a0211668087d51abeeb22571854e6bf62765b170370"
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core-20260912/experiments/multicall-aa267bb/on.yaml",
+    "destination": "env_info/historical/experiments/multicall-aa267bb/on.yaml",
+    "sha256": "4e97046a8e41fd46d4a22716d0b0ec201e9819fb0951993e094d98a408433dcd"
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core-20260912/experiments/multicall-aa267bb/preflight.py",
+    "destination": "env_info/historical/experiments/multicall-aa267bb/preflight.py",
+    "sha256": "23ab4b4e27acf69d0015b2699e9cbd775436481f2babbdd4cb5645c75059e38f"
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core-20260912/experiments/multicall-aa267bb/run_arm.py",
+    "destination": "env_info/historical/experiments/multicall-aa267bb/run_arm.py",
+    "sha256": "06fc82537cf1a536ed5fd90a351686591b198275b495811aea0cbe6b4f194393"
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core-20260912/experiments/multicall-aa267bb/selection/controller.py",
+    "destination": "env_info/historical/experiments/multicall-aa267bb/selection/controller.py",
+    "sha256": "2c0f9ae70d64ba676b1a208ed6a50b0b81ed075b977876b86019b1129cee17a0"
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core-20260912/experiments/multicall-aa267bb/sft/off/swanlog/run-20260911_191922-4256cxjk/files/config.yaml",
+    "destination": "env_info/historical/experiments/multicall-aa267bb/sft/off/swanlog/run-20260911_191922-4256cxjk/files/config.yaml",
+    "sha256": "6c3e3be429abff1b038ba2aaf6ed1e2612c90faf9c2e9fcd7ba0b634be06ecb6"
+  },
+  {
+    "source": "/root/autodl-fs/tau3-core-20260912/experiments/multicall-aa267bb/sft/on/swanlog/run-20260911_191826-z6ddgwie/files/config.yaml",
+    "destination": "env_info/historical/experiments/multicall-aa267bb/sft/on/swanlog/run-20260911_191826-z6ddgwie/files/config.yaml",
+    "sha256": "f1bc37dde5effa0d47ccd8d40c28362a58c7ba4b944910cb8d31ae271d97984f"
+  },
+  {
+    "source": "/root/autodl-tmp/dialogue_anchor_audit_20260914.py",
+    "destination": "env_info/historical/scratch-audits/dialogue_anchor_audit_20260914.py",
+    "sha256": "52099e7464b6e4973b7c564309b2b739355173294d71e1d3046a1ce7a8766a58"
+  },
+  {
+    "source": "/root/autodl-tmp/dialogue_anchor_audit_20260914_v2.py",
+    "destination": "env_info/historical/scratch-audits/dialogue_anchor_audit_20260914_v2.py",
+    "sha256": "005e6a6e0d02748b6dc9f94ea5c5f5cbf008b2b0e4d306f8d622e81273e5b6bd"
+  }
+]

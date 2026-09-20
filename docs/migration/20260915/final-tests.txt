@@ -1,0 +1,32 @@
+........................................................................ [  7%]
+........................................................................ [ 15%]
+........................................................................ [ 22%]
+........................................................................ [ 30%]
+........................................................................ [ 38%]
+........................................................................ [ 45%]
+........................................................................ [ 53%]
+........................................................................ [ 60%]
+....................................sssssss.......ssss.......ssss....... [ 68%]
+........................................................................ [ 76%]
+........................................................................ [ 83%]
+........................................................................ [ 91%]
+........................................................................ [ 98%]
+...........                                                              [100%]
+=============================== warnings summary ===============================
+../../../../root/autodl-fs/tau3-core/environment/venvs/qwen35/lib/python3.12/site-packages/ray/util/state/util.py:55
+  /root/autodl-fs/tau3-core/environment/venvs/qwen35/lib/python3.12/site-packages/ray/util/state/util.py:55: DeprecationWarning: Ray state API is no longer experimental. Please import from `ray.util.state`. instead. Importing from `ray.experimental` will be deprecated in future releases. 
+    warnings.warn(
+
+tests/test_qwen35_fsdp.py::test_lora_fsdp_accumulates_multiple_microbatches_with_tied_embeddings[False]
+tests/test_qwen35_fsdp.py::test_lora_fsdp_accumulates_multiple_microbatches_with_tied_embeddings[True]
+  /root/autodl-fs/tau3-core/environment/venvs/qwen35/lib/python3.12/site-packages/torch/distributed/fsdp/fully_sharded_data_parallel.py:478: UserWarning: FSDP is switching to use `NO_SHARD` instead of ShardingStrategy.FULL_SHARD since the world size is 1.
+    _init_core_state(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+SKIPPED [4] tests/test_qwen35_compact_head.py:37: GPU numerical validation
+SKIPPED [2] tests/test_qwen35_compact_head.py:71: GPU numerical validation
+SKIPPED [1] tests/test_qwen35_compact_head.py:103: GPU numerical validation
+SKIPPED [4] tests/test_qwen35_loss_projection.py:31: CUDA comparison requires a remote GPU
+SKIPPED [4] tests/test_qwen35_padding.py:15: GPU numerical test
+932 passed, 15 skipped, 3 warnings in 402.28s (0:06:42)

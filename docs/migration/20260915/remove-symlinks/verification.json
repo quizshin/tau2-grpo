@@ -1,0 +1,63 @@
+{
+  "platform_symlink": "../../autodl-fs/data",
+  "project_symlinks": [],
+  "checkpoint_checks": [
+    {
+      "arm": "e0",
+      "step": 20,
+      "checkpoint_files_verified": 13,
+      "validation_jsonl": 2
+    },
+    {
+      "arm": "e1",
+      "step": 20,
+      "checkpoint_files_verified": 13,
+      "validation_jsonl": 2
+    },
+    {
+      "arm": "e2",
+      "step": 20,
+      "checkpoint_files_verified": 13,
+      "validation_jsonl": 2
+    },
+    {
+      "arm": "e3",
+      "step": 20,
+      "checkpoint_files_verified": 13,
+      "validation_jsonl": 2
+    }
+  ],
+  "materialized_files_sha256_verified": 128,
+  "venvs_without_pythonpath": [
+    {
+      "venv": "qwen35",
+      "executable": "/root/autodl-fs/tau3-core/environment/venvs/qwen35/bin/python",
+      "prefix": "/root/autodl-fs/tau3-core/environment/venvs/qwen35",
+      "packages": {
+        "tau3_grpo": "/root/autodl-fs/tau3-core/code/tau3_grpo/__init__.py",
+        "verl": "/root/autodl-fs/tau3-core/code/verl/verl/__init__.py",
+        "tau2": "/root/autodl-fs/tau3-core/code/tau2-bench/src/tau2/__init__.py"
+      }
+    },
+    {
+      "venv": "qwen38-sim",
+      "executable": "/root/autodl-fs/tau3-core/environment/venvs/qwen38-sim/bin/python",
+      "prefix": "/root/autodl-fs/tau3-core/environment/venvs/qwen38-sim",
+      "packages": {
+        "tau3_grpo": "/root/autodl-fs/tau3-core/code/tau3_grpo/__init__.py",
+        "verl": "/root/autodl-fs/tau3-core/code/verl/verl/__init__.py",
+        "tau2": "/root/autodl-fs/tau3-core/code/tau2-bench/src/tau2/__init__.py"
+      }
+    },
+    {
+      "venv": "tools",
+      "executable": "/root/autodl-fs/tau3-core/environment/venvs/tools/bin/python",
+      "prefix": "/root/autodl-fs/tau3-core/environment/venvs/tools",
+      "packages": {
+        "tau3_grpo": "/root/autodl-fs/tau3-core/code/tau3_grpo/__init__.py",
+        "verl": "/root/autodl-fs/tau3-core/code/verl/verl/__init__.py",
+        "tau2": "/root/autodl-fs/tau3-core/code/tau2-bench/src/tau2/__init__.py"
+      }
+    }
+  ]
+}
