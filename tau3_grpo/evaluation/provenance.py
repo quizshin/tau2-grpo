@@ -29,6 +29,7 @@ def evaluation_provenance(jobs):
     tasks, databases = {}, {}
     file_cache = {}
     default_db_hash = None
+    openings = {}
     for job in jobs:
         task = job["task"].model_dump(mode="json")
         task_hash = digest(task)
@@ -36,6 +37,11 @@ def evaluation_provenance(jobs):
         if task_id in tasks and tasks[task_id] != task_hash:
             raise ValueError("A task ID refers to different task definitions")
         tasks[task_id] = task_hash
+        if "initial_user_message" in job:
+            opening_hash = digest(job["initial_user_message"])
+            if task_id in openings and openings[task_id] != opening_hash:
+                raise ValueError("A task ID refers to different initial user messages")
+            openings[task_id] = opening_hash
         path = job["db_path"]
         if path is None:
             if default_db_hash is None:
@@ -52,7 +58,12 @@ def evaluation_provenance(jobs):
     # Use the installed benchmark source rather than assuming the checkout is imported.
     benchmark = Path(importlib.import_module("tau2").__file__).parent
     evaluators = source_hashes(benchmark, ["evaluator"])
-    harness = source_hashes(CODE_ROOT, ["tau3_grpo/envs", "tau3_grpo/evaluation", "tau3_grpo/prompts.py"])
+    harness = source_hashes(CODE_ROOT, ["tau3_grpo/envs", "tau3_grpo/evaluation", "tau3_grpo/prompts.py",
+                                       "tau3_grpo/data/opening.py", "tau3_grpo/models/token_budget.py",
+                                       "tau3_grpo/models/token_endpoint.py", "configs/protocols/token_budget_v1.yaml", "tau3_grpo/integrations/verl/token_budget.py",
+                                       "verl/verl/experimental/agent_loop/tool_agent_loop.py",
+                                       "verl/verl/experimental/agent_loop/tool_parser.py",
+                                       "verl/verl/utils/chat_template.py"])
     harness.update({"tau2/" + name: value for name, value in source_hashes(benchmark, [
         "orchestrator", "runner", "agent", "user", "environment", "data_model",
         "domains/airline",
@@ -61,6 +72,7 @@ def evaluation_provenance(jobs):
         "provenance_schema": "tau3_evaluation_inputs_v1",
         "task_manifest_sha256": digest(tasks), "task_definition_sha256": tasks,
         "task_manifest_representation": "canonical_task_id_to_definition_sha256_map",
+        "initial_user_message_sha256": openings,
         "task_db_sha256": databases,
         "evaluator_source_sha256": evaluators, "harness_source_sha256": harness,
         "provenance_scope": "pre_run_inputs_and_source_files_not_live_service_weights",

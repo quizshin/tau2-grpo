@@ -40,19 +40,33 @@ def test_dry_run_shows_budget_and_does_not_call_service(monkeypatch, tmp_path, c
     monkeypatch.setattr(run, "assert_service_matches_checkpoint", lambda **kwargs: pytest.fail("service check"))
     assert run.main([
         "--target", "selection", "--checkpoint", "/merged", "--output-dir", str(tmp_path / "out"),
-        "--dry-run", "--include-pass-hat",
+        "--dry-run", "--include-pass-hat", "--token-request-timeout", "600",
     ]) == 0
     payload = json.loads(capsys.readouterr().out)
     assert payload["planned_trajectories"] == 4
     assert payload["metric_ks"] == [1, 2, 4]
     assert payload["include_pass_hat"]
+    assert payload["token_request_timeout"] == 600
     assert not (tmp_path / "out").exists()
 
 
 @pytest.mark.parametrize("flags", [
     ["--ks", "5"], ["--trials", "0"], ["--max-steps", "0"],
     ["--max-concurrency", "0"], ["--policy-temperature", "nan"],
+    ["--token-request-timeout", "0"], ["--token-request-timeout", "nan"],
+    ["--token-request-timeout", "inf"],
 ])
 def test_invalid_options_fail_before_loading_data(monkeypatch, flags):
     monkeypatch.setattr(run, "read_manifest", lambda path: pytest.fail("data loaded"))
     assert run.main(["--target", "selection", "--checkpoint", "/merged", *flags]) == 2
+
+
+def test_v2_dry_run_records_effective_envelope_and_rejects_legacy_override(monkeypatch, capsys):
+    monkeypatch.setattr(run, "read_manifest", lambda path: [SimpleNamespace(task_id="a")])
+    flags = ["--target", "selection", "--checkpoint", "/merged", "--dry-run",
+             "--harness-protocol", "tau3_eval_train_control_v2"]
+    assert run.main(flags) == 0
+    protocol = json.loads(capsys.readouterr().out)["harness_protocol"]
+    assert protocol["max_errors"] is None and protocol["max_assistant_turns"] == 15
+    monkeypatch.setattr(run, "read_manifest", lambda path: pytest.fail("data loaded"))
+    assert run.main(flags + ["--max-steps", "32"]) == 2

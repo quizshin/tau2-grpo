@@ -72,6 +72,21 @@ def compare_evaluations(baseline: Path, treatment: Path, *, ks=None, resamples=1
             missing.append(name)
         elif left != right:
             mismatches.append({"field": name, "baseline": left, "treatment": right})
+    # Missing versions in old runs remain unknown. Two historical runs retain
+    # the old comparison rules, but cannot silently compare to a versioned run.
+    name = "provenance.harness_protocol"
+    left, right = _field(base.metadata, name), _field(treat.metadata, name)
+    if left is None and right is None:
+        missing.append(name)
+    elif left != right:
+        mismatches.append({"field": name, "baseline": left, "treatment": right})
+    from tau3_grpo.evaluation.harness import TOKENS_V4
+
+    if any(_field(a.metadata, "provenance.harness_protocol.version") == TOKENS_V4 for a in (base, treat)):
+        name = "provenance.tokenizer_files_sha256"
+        left, right = _field(base.metadata, name), _field(treat.metadata, name)
+        if not left or not right or left != right:
+            mismatches.append({"field": name, "reason": "token protocol requires identical tokenizer evidence"})
     for name in IDENTITY_FIELDS:
         if any(_field(a.metadata, name) is None for a in (base, treat)):
             missing.append(name)

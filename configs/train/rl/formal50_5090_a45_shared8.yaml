@@ -1,0 +1,20 @@
+# All eight GPUs train the actor. During rollout the simulator shares 4-7;
+# the native vLLM sleep API releases its weights/cache before actor updates.
+includes:
+- formal50_5090_a45.yaml
+launch:
+  environment:
+    TAU3_POLICY_CUDA_DEVICES: '0,1,2,3,4,5,6,7'
+    POLICY_GPUS: '8'
+    TAU3_SIMULATOR_COLOCATED_SLEEP: '1'
+    TAU3_USER_GPU_MEMORY_UTILIZATION: '0.30'
+    MAX_NUM_SEQS: '4'
+  overrides:
+  - actor_rollout_ref.model.enable_activation_offload=false
+  - actor_rollout_ref.model.external_lib=tau3_grpo.integrations.verl.cpu_saved_tensors
+  # 0.36 leaves only 0.58 GiB KV cache; 24,576 tokens require 0.81 GiB.
+  - actor_rollout_ref.rollout.gpu_memory_utilization=0.42
+  - +actor_rollout_ref.rollout.agent.agent_loop_manager_class=tau3_grpo.integrations.verl.sleeping_simulator.SleepingSimulatorAgentLoopManager
+  - ++ray_kwargs.ray_init._temp_dir=/tmp/tau3-grpo5090-shared8
+  - ++ray_kwargs.ray_init.runtime_env.env_vars.TAU3_SIMULATOR_COLOCATED_SLEEP='1'
+  - ++ray_kwargs.ray_init.runtime_env.env_vars.TAU3_USER_BASE_URL=http://127.0.0.1:8100/v1

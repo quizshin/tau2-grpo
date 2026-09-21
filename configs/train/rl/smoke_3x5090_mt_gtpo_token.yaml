@@ -1,0 +1,5 @@
+# Uncalibrated v4 initializer for execution validation, not a formal comparison.
+includes:
+- smoke_3x5090_token.yaml
+- ../../algorithms/mt_gtpo.yaml
+- ../../rewards/paper_env_split_v4.yaml

@@ -26,6 +26,10 @@ if [[ "${FAMILY}" == "qwen35" ]]; then
     --default-chat-template-kwargs '{"enable_thinking":false}')
 fi
 
+if [[ "${TAU3_EVAL_HARNESS_PROTOCOL:-}" == "tau3_eval_token_v4" ]]; then
+  MODEL_ARGS+=(--generation-config vllm --logprobs-mode processed_logprobs)
+fi
+
 # exec preserves this shell's PID, so evaluation can reject a stale attestation
 # after the serving process exits. The content hash binds the endpoint launch to
 # the exact merged checkpoint rather than only its display name.

@@ -30,7 +30,7 @@ class UserSimulatorConfig:
     model: str
     base_url: Optional[str] = None
     api_key_env: str = "OPENAI_API_KEY"
-    temperature: float = 0.0
+    temperature: float = 0.7
     max_tokens: Optional[int] = None
     extra_llm_args: dict[str, Any] = field(default_factory=dict)
 

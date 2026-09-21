@@ -65,7 +65,7 @@ class Tau3AirlineInteraction(BaseInteraction):
             model=config.get("user_model", "gpt-4o-mini"),
             base_url=config.get("user_base_url") or os.environ.get("TAU3_USER_BASE_URL"),
             api_key_env=config.get("user_api_key_env", "OPENAI_API_KEY"),
-            temperature=float(config.get("user_temperature", 0.0)),
+            temperature=float(config.get("user_temperature", 0.7)),
             max_tokens=config.get("user_max_tokens"),
             extra_llm_args=dict(config.get("user_llm_args", {}) or {}),
         )
@@ -204,7 +204,16 @@ class Tau3AirlineInteraction(BaseInteraction):
 
         # tau2's UserSimulator uses a synchronous LiteLLM client. Running it on
         # the rollout event loop would serialize every concurrent trajectory.
-        user_message = await asyncio.to_thread(session.user_respond, assistant_message)
+        try:
+            user_message = await asyncio.to_thread(session.user_respond, assistant_message)
+        except Exception as exc:
+            from litellm import ContextWindowExceededError
+
+            if not getattr(self, "token_budget", None) or not isinstance(exc, ContextWindowExceededError):
+                raise
+            entry.terminated = True
+            entry.termination_reason = "context_window_exceeded"
+            return True, "", 0.0, {"termination_reason": "context_window_exceeded", "budget_role": "user"}
         content = user_message.content or ""
 
         if session.user_is_stop(user_message):
@@ -234,6 +243,10 @@ class Tau3AirlineInteraction(BaseInteraction):
         if recorded:
             session.record_assistant_tool_calls(recorded, content=assistant_content)
         return recorded
+
+    def tool_state_receipt(self, instance_id: str) -> dict[str, Any]:
+        """Snapshot the live state after a recorded call, including dispatch errors."""
+        return {"db_hash": SESSIONS.require(str(instance_id)).session.db_hash()}
 
     def record_tool_failure(
         self,

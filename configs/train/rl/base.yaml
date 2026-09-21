@@ -1,4 +1,4 @@
-# v2-2 frozen configuration shared by every arm.
+# Shared configuration; sampling defaults updated to 0.7 on 2026-09-20.
 #
 # Milestone D4: values here are the agreed v2-2 defaults and must not drift
 # between arms; only the algorithm block differs per arm.
@@ -12,8 +12,8 @@ model:
 rollout:
   group_size: 8              # rollouts per uid; also the DF group size
   groups_per_update: 16      # uids per optimizer update
-  temperature_train: 1.0
-  temperature_eval: 0.4
+  temperature_train: 0.7
+  temperature_eval: 0.7
   max_user_turns: 15
   max_assistant_turns: 15
   tool_execution_mode: sequential  # one or more calls, all executed in list order
@@ -44,9 +44,8 @@ user_simulator:
   # OpenAI-compatible endpoint served on the simulator GPUs.
   model: Qwen/Qwen2.5-7B-Instruct
   base_url: http://127.0.0.1:8100/v1
-  # Training simulator is deterministic; final-eval sampling is frozen
-  # separately by run_eval.sh.
-  temperature: 0.0
+  # Unified training/evaluation sampling default, agreed 2026-09-20.
+  temperature: 0.7
   api_key_env: TAU3_USER_API_KEY
 
 data:
@@ -81,6 +80,7 @@ runtime:
     MAX_RESPONSE_LENGTH: '16384'
     MAX_MODEL_LENGTH: '24576'
     MAX_TOKENS_PER_TURN: '1024'
+    TOOL_SCHEMA_VERSION: verl_legacy_v1
     # veRL counts characters, not tokenizer tokens, for tool observations.
     MAX_TOOL_RESPONSE_CHARS: '65536'
     MAX_NUM_SEQS: '128'

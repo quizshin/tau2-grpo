@@ -23,6 +23,7 @@ BASE_FIELDS = {
     "LR": ("optim", "lr"),
     "KL_COEF": ("optim", "kl_coef"),
     "TRAIN_TEMP": ("rollout", "temperature_train"),
+    "EVAL_TEMP": ("rollout", "temperature_eval"),
     "MAX_USER_TURNS": ("rollout", "max_user_turns"),
     "MAX_ASSISTANT_TURNS": ("rollout", "max_assistant_turns"),
     "POLICY_GPUS": ("resources", "policy_gpus"),

@@ -93,6 +93,10 @@ def tau3_anchor_hook(agent_data, segment_kind, start, end):
 
     anchor_id = None
     hook = _TAU3_ANCHOR_HOOK
+    if getattr(agent_data, "tau3_evaluation_only", False):
+        agent_data.anchor_ids.append(None)
+        agent_data.anchor_spans.append(None)
+        return
     if segment_kind == "assistant" and hook is None:
         try:
             hook = _load_tau3_anchor_hook_from_env()
@@ -176,6 +180,7 @@ class AgentData:
 class ToolAgentLoop(AgentLoopBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.evaluation_only = bool(self.config.get("tau3_evaluation_only", False))
         algorithm = self.config.get("algorithm", {})
         self.record_process_turns = algorithm.get("adv_estimator") == "mt_gtpo"
         self.record_turn_facts = os.getenv("TAU3_RECORD_TRAJECTORY_FACTS", "0") == "1"
@@ -212,6 +217,11 @@ class ToolAgentLoop(AgentLoopBase):
             self.interaction_map: dict[str, BaseInteraction] = self._initialize_interactions(
                 self.interaction_config_file
             )
+
+        # The opt-in protocol shares this exact loop with standalone evaluation.
+        from tau3_grpo.integrations.verl.token_budget import configure
+
+        self.token_budget = configure(self)
 
     @rollout_trace_op
     async def run(self, sampling_params: dict[str, Any], **kwargs) -> AgentLoopOutput:
@@ -252,6 +262,8 @@ class ToolAgentLoop(AgentLoopBase):
             interaction=interaction,
             interaction_kwargs=interaction_kwargs,
         )
+
+        agent_data.tau3_evaluation_only = getattr(self, "evaluation_only", False)
 
         # State machine loop. Tau3-GRPO local patch: release the private tau2
         # session even when generation, a tool, or the simulator raises.
@@ -334,8 +346,12 @@ class ToolAgentLoop(AgentLoopBase):
                 await agent_data.interaction.finalize_interaction(agent_data.request_id)
 
         # Finalize output
-        response_ids = agent_data.prompt_ids[-len(agent_data.response_mask) :]
-        prompt_ids = agent_data.prompt_ids[: len(agent_data.prompt_ids) - len(agent_data.response_mask)]
+        from tau3_grpo.integrations.verl.token_budget import publish
+
+        publish(self, agent_data)
+        response_start = len(agent_data.prompt_ids) - len(agent_data.response_mask)
+        response_ids = agent_data.prompt_ids[response_start:]
+        prompt_ids = agent_data.prompt_ids[:response_start]
         multi_modal_data = {}
         if agent_data.image_data is not None:
             multi_modal_data["images"] = agent_data.image_data
@@ -406,6 +422,10 @@ class ToolAgentLoop(AgentLoopBase):
             videos=agent_data.video_data,
         )
         agent_data.prompt_ids = prompt_ids
+        if getattr(self, "token_budget", None):
+            from tau3_grpo.integrations.verl.token_budget import start
+
+            start(self, agent_data)
         if len(prompt_ids) > self.prompt_length:
             raise ValueError("prepared agent prompt exceeds prompt_length")
         return AgentState.GENERATING
@@ -433,6 +453,10 @@ class ToolAgentLoop(AgentLoopBase):
         # 24k context.  Copy because sampling_params is shared by concurrent loops
         # and the vLLM adapter pops max_tokens.
         remaining_tokens = self.response_length - len(agent_data.response_mask)
+        if getattr(self, "token_budget", None):
+            from tau3_grpo.integrations.verl.token_budget import generation_request
+
+            remaining_tokens = generation_request(self, agent_data)
         if remaining_tokens <= 0:
             agent_data.termination_reason = "context_window_exceeded"
             return AgentState.TERMINATED
@@ -450,6 +474,11 @@ class ToolAgentLoop(AgentLoopBase):
                 image_data=agent_data.image_data,
                 video_data=agent_data.video_data,
             )
+        token_end_reason = None
+        if getattr(self, "token_budget", None):
+            from tau3_grpo.integrations.verl.token_budget import generation_result
+
+            token_end_reason = generation_result(self, agent_data, output)
         # first time to set num_preempted
         if agent_data.metrics.get("num_preempted") is None:
             agent_data.metrics["num_preempted"] = output.num_preempted if output.num_preempted is not None else -1
@@ -502,16 +531,24 @@ class ToolAgentLoop(AgentLoopBase):
             agent_data.routed_experts = output.routed_experts
 
         # Check termination conditions
-        if not ignore_termination and len(agent_data.response_mask) >= self.response_length:
+        if token_end_reason or (not getattr(self, "token_budget", None)
+                and not ignore_termination and len(agent_data.response_mask) >= self.response_length):
             if self._records_turns():
                 agent_data.turn_records[-1]["truncated"] = True
-            agent_data.termination_reason = "context_window_exceeded"
+            agent_data.termination_reason = token_end_reason or "context_window_exceeded"
             return AgentState.TERMINATED
         # Extract tool calls
         tools = [tool.tool_schema for tool in self.tools.values()]
         agent_data.assistant_content, agent_data.tool_calls = await self.tool_parser.extract_tool_calls(
             agent_data.response_ids, tools
         )
+        if getattr(self, "token_budget", None):
+            raw_text = self.tokenizer.decode(agent_data.response_ids, skip_special_tokens=True)
+            if len(agent_data.tool_calls) != raw_text.count("<tool_call>"):
+                # The permissive parser may silently drop a malformed call.
+                # Reject the entire batch before any real environment write.
+                agent_data.termination_reason = "agent_error"
+                return AgentState.TERMINATED
         if self._records_turns():
             agent_data.turn_records[-1]["parsed"] = True
 
@@ -576,6 +613,7 @@ class ToolAgentLoop(AgentLoopBase):
                     "name": call.name, "arguments": _replay_tool_arguments(call.arguments),
                     "error": bool(details["error"]), "observation": response.text,
                     "db_hash_after": details.get("db_hash"),
+                    "observation_projection": details.get("observation_projection"),
                 })
                 if getattr(self, "record_turn_facts", False):
                     agent_data.turn_records[-1]["tool_calls"][-1]["raw_arguments"] = call.arguments
@@ -653,7 +691,13 @@ class ToolAgentLoop(AgentLoopBase):
                 remove_system_prompt=True,
             )
 
-        if len(agent_data.response_mask) + len(response_ids) >= self.response_length:
+        if getattr(self, "token_budget", None):
+            from tau3_grpo.integrations.verl.token_budget import observation
+
+            fits = observation(self, agent_data, response_ids, kind="tool")
+        else:
+            fits = len(agent_data.response_mask) + len(response_ids) < self.response_length
+        if not fits:
             agent_data.termination_reason = "context_window_exceeded"
             return AgentState.TERMINATED
         # Update prompt_ids and response_mask
@@ -687,6 +731,10 @@ class ToolAgentLoop(AgentLoopBase):
             agent_data.request_id, agent_data.messages, **agent_data.interaction_kwargs
         )
         agent_data.user_turns += 1
+        if (getattr(self, "token_budget", None) and should_terminate_sequence
+                and not interaction_responses):
+            agent_data.termination_reason = metrics.get("termination_reason", "user_stop")
+            return AgentState.TERMINATED
 
         add_messages: list[dict[str, Any]] = [{"role": "user", "content": interaction_responses}]
         agent_data.messages.extend(add_messages)
@@ -699,6 +747,14 @@ class ToolAgentLoop(AgentLoopBase):
             add_messages,
             remove_system_prompt=True,
         )
+
+        if getattr(self, "token_budget", None):
+            from tau3_grpo.integrations.verl.token_budget import observation
+
+            if not observation(self, agent_data, response_ids, kind="user", terminal=should_terminate_sequence):
+                agent_data.termination_reason = (metrics.get("termination_reason", "user_stop")
+                                                 if should_terminate_sequence else "context_window_exceeded")
+                return AgentState.TERMINATED
 
         # Update prompt_ids and response_mask
         agent_data.prompt_ids += response_ids
@@ -754,6 +810,7 @@ class ToolAgentLoop(AgentLoopBase):
             # Tau3AirlineTool can write the AssistantMessage/ToolMessage pair.
             # Let the interaction record the failed call through the live tau2
             # Environment so the official verifier replays the same no-op.
+            failure_receipt = {}
             if agent_data.interaction is not None:
                 recorder = getattr(agent_data.interaction, "record_tool_failure", None)
                 if callable(recorder):
@@ -769,6 +826,9 @@ class ToolAgentLoop(AgentLoopBase):
                             assistant_content=agent_data.assistant_content,
                             **recording_kwargs,
                         )
+                        receipt = getattr(agent_data.interaction, "tool_state_receipt", None)
+                        if callable(receipt):
+                            failure_receipt = receipt(agent_data.request_id)
                     except Exception as record_exc:  # pragma: no cover - preserve rollout
                         if recorded_tool_call is not None:
                             raise
@@ -778,21 +838,19 @@ class ToolAgentLoop(AgentLoopBase):
                     text=error_text,
                 ),
                 0.0,
-                {"tool": tool_name, "error": True, "dispatch_error": True},
+                {"tool": tool_name, "error": True, "dispatch_error": True, **failure_receipt},
             )
         finally:
             if tool and instance_id:
                 await tool.release(instance_id)
 
-        tool_response_text = tool_execution_response.text
-        if tool_response_text and len(tool_response_text) > self.max_tool_response_length:
-            if self.tool_response_truncate_side == "left":
-                tool_response_text = tool_response_text[: self.max_tool_response_length] + "...(truncated)"
-            elif self.tool_response_truncate_side == "right":
-                tool_response_text = "(truncated)..." + tool_response_text[-self.max_tool_response_length :]
-            else:
-                length = self.max_tool_response_length // 2
-                tool_response_text = tool_response_text[:length] + "...(truncated)..." + tool_response_text[-length:]
+        from tau3_grpo.envs.observations import project_tool_text
+
+        tool_response_text, observation_receipt = project_tool_text(
+            tool_execution_response.text, self.max_tool_response_length,
+            self.tool_response_truncate_side,
+        )
+        res = {**res, "observation_projection": observation_receipt}
 
         # Create ToolResponse from tool execution result
         tool_response_kwargs = {"text": tool_response_text}

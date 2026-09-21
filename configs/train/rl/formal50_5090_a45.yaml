@@ -1,0 +1,41 @@
+# 8 x 5090: preserve the historical 64-rollout / 32-rollout PPO minibatches.
+# Four actor ranks plus TP4 simulator; engineering offload changes are explicit.
+includes:
+- formal50_a800.yaml
+launch:
+  environment:
+    MODEL_PATH: ${TAU3_RUN_ROOT}/sft_coldstart_ab/20260921-AB100-v2/A/merged
+    TRAIN_MANIFEST_DIR: ${TAU3_DATA_ROOT}/manifests/formal50
+    VAL_PARQUET: ${TAU3_DATA_ROOT}/parquet/airline_selection_seed42.parquet
+    TAU3_POLICY_CUDA_DEVICES: '0,1,2,3'
+    POLICY_GPUS: '4'
+    POLICY_BATCH_DIVISOR: '32'
+    TAU3_USER_CUDA_DEVICES: '4,5,6,7'
+    TAU3_USER_TP: '4'
+    TAU3_USER_PORT: '8100'
+    TAU3_USER_MAX_NUM_SEQS: '16'
+    TAU3_USER_MAX_MODEL_LEN: '16384'
+    TAU3_USER_GPU_MEMORY_UTILIZATION: '0.80'
+    TAU3_USER_ENFORCE_EAGER: '1'
+    MAX_NUM_SEQS: '8'
+    UPDATE_WEIGHTS_BUCKET_MEGABYTES: '2560'
+    TRAINER_LOGGERS: '[console,swanlab]'
+    SWANLAB_MODE: online
+    TAU3_TRACKING_BACKEND: swanlab
+    NCCL_P2P_DISABLE: '1'
+    OMP_NUM_THREADS: '2'
+    MKL_NUM_THREADS: '2'
+    OPENBLAS_NUM_THREADS: '1'
+    LITELLM_LOCAL_MODEL_COST_MAP: 'True'
+    VERL_QWEN35_COMPACT_CHUNK: '64'
+  overrides:
+  - actor_rollout_ref.actor.fsdp_config.param_offload=true
+  - actor_rollout_ref.actor.fsdp_config.optimizer_offload=true
+  - actor_rollout_ref.model.enable_activation_offload=true
+  - actor_rollout_ref.rollout.gpu_memory_utilization=0.40
+  - ++ray_kwargs.ray_init.num_cpus=32
+  - ++ray_kwargs.ray_init.object_store_memory=4294967296
+  - ++ray_kwargs.ray_init.include_dashboard=false
+  - ++ray_kwargs.ray_init._temp_dir=/tmp/tau3-grpo5090-formal
+  - ++ray_kwargs.ray_init.runtime_env.env_vars.NCCL_P2P_DISABLE='1'
+  - ++ray_kwargs.ray_init.runtime_env.env_vars.VERL_QWEN35_COMPACT_CHUNK='64'

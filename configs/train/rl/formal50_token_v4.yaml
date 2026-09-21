@@ -1,0 +1,9 @@
+# CPU/GPU validation tracked separately; no existing profile is silently switched.
+includes:
+- formal50_full_schema_v2.yaml
+- ../../protocols/token_budget_v1.yaml
+launch:
+  environment:
+    TAU3_USER_MAX_MODEL_LEN: '16384'
+  overrides:
+  - +tau3_token_protocol=tau3_token_budget_v1

@@ -24,6 +24,7 @@ from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
+from tau3_grpo.evaluation.harness import LEGACY, PROTOCOLS, TOKENS_V4, protocol_metadata
 from tau3_grpo.training.rl.checkpoints import validate_checkpoint
 from tau3_grpo.training.services import launch_process, stop_process
 
@@ -190,13 +191,16 @@ def check_summary(directory, task_ids, trials=4):
 
 
 class Controller:
-    def __init__(self, root, output, reuse_sft_from=None):
+    def __init__(self, root, output, reuse_sft_from=None, harness_protocol=LEGACY):
+        self.harness_protocol = harness_protocol
+        protocol_metadata(harness_protocol)
         self.root, self.output = Path(root), Path(output)
         self.env = dict(os.environ)
         self.lock = threading.Lock()
         self.children = []
         self.stop_event = threading.Event()
         self.models = {}
+        self.plan = {}
         self.reuse_sft_from = Path(reuse_sft_from).resolve() if reuse_sft_from else None
         self.slots = tuple((arm,) for arm in ARMS) if self.reuse_sft_from else SLOTS
         self.pending = [] if self.reuse_sft_from else ['e2']
@@ -256,8 +260,10 @@ class Controller:
         plan = {'target': 'selection', 'target_step': 20, 'models': ['sft', 'e0', 'e3', 'e1', 'e2'],
                 'slots': [list(x) for x in self.slots], 'first_free_slot_queue': list(self.pending),
                 'trials': 4, 'seed': 42, 'data_seed': 42,
+                'harness_protocol': protocol_metadata(self.harness_protocol),
                 'task_ids': ids, 'manifest_sha256': sha(manifest), 'manifest': str(manifest),
-                'policy_temperature': .4, 'user_temperature': 1.0, 'max_steps': 30,
+                'policy_temperature': 0.7,
+                'user_temperature': 0.7, 'max_steps': 30,
                 'max_errors': 10, 'per_model_concurrency': 4, 'global_max_concurrency': 16,
                 'dtype': 'bfloat16', 'enable_thinking': False, 'tool_execution': 'sequential',
                 'policy_generation_config': 'vllm', 'policy_engine_seed': 42,
@@ -402,7 +408,10 @@ class Controller:
                 '--user-base-url', 'http://127.0.0.1:8210/v1', '--seed', '42', '--data-seed', '42',
                 '--trials', str(trials), '--ks', *(['1', '2', '4'] if trials == 4 else ['1']),
                 '--include-pass-hat', '--max-concurrency', '4', '--max-steps', '30',
-                '--policy-temperature', '.4', '--user-temperature', '1.0', '--output-dir', str(output)]
+                '--harness-protocol', self.harness_protocol,
+                '--token-request-timeout', str(self.plan.get('token_request_timeout', 120)),
+                '--policy-temperature', '0.7',
+                '--user-temperature', '0.7', '--output-dir', str(output)]
 
     def evaluate_slot(self, slot, arms, simulator):
         results = {}
@@ -427,6 +436,8 @@ class Controller:
                         '--language-model-only', '--enable-auto-tool-choice', '--tool-call-parser', 'qwen3_coder',
                         '--reasoning-parser', 'qwen3', '--default-chat-template-kwargs', '{"enable_thinking":false}',
                         '--enable-prefix-caching']
+                if self.harness_protocol == TOKENS_V4:
+                    args += ['--logprobs-mode', 'processed_logprobs']
                 env = dict(self.env, CUDA_VISIBLE_DEVICES=str(slot), VLLM_WORKER_MULTIPROC_METHOD='spawn',
                            VLLM_CACHE_ROOT=str(self.output / 'cache' / arm), PYTHONUNBUFFERED='1')
                 policy = self.launch(args, env, f'policy-{arm}')
@@ -489,13 +500,14 @@ def main(argv=None):
     parser.add_argument('--root', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--mode', choices=('dry-run', 'prepare', 'watch'), default='dry-run')
+    parser.add_argument('--harness-protocol', choices=PROTOCOLS, default=LEGACY)
     parser.add_argument('--reuse-sft-from', type=Path,
                         help='Explicit recovery of RL startup failures; reuse the completed SFT evaluation')
     args = parser.parse_args(argv)
     args.output.mkdir(parents=True, exist_ok=True)
     with (args.output / 'controller.lock').open('a') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        controller = Controller(args.root, args.output, args.reuse_sft_from)
+        controller = Controller(args.root, args.output, args.reuse_sft_from, args.harness_protocol)
         def interrupted(signum, frame):
             controller.stop_event.set()
             raise KeyboardInterrupt('Post-RL controller interrupted')

@@ -26,6 +26,9 @@ def test_direct_shell_uses_catalog_and_cli_last(arm, tmp_path):
     assert f"algorithm.adv_estimator={catalog['adv_estimator']}" in command
     assert "data.train_batch_size=3" in command
     assert "actor_rollout_ref.rollout.n=2" in command
+    assert "actor_rollout_ref.rollout.temperature=0.7" in command
+    assert "actor_rollout_ref.rollout.val_kwargs.temperature=0.7" in command
+    assert "actor_rollout_ref.rollout.val_kwargs.do_sample=true" in command
     assert "data.seed=43" in command
     assert any("airline_selection_seed47.parquet" in x for x in command)
     assert command[-1] == "trainer.save_freq=7"

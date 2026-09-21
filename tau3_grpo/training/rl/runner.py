@@ -43,11 +43,14 @@ MANIFEST_SHA = '641bde73c1495c59b5c0a87cfc84b9e00c0b5ffd2f86d10fd2205aaf2143adae
 
 
 def resolve(result, *, updates=20, dynamic_filter=False, resume_from=None, reward_version='v3',
-            reward_recipe=None, allow_uncalibrated=False, estimator='mt_gtpo'):
+            reward_recipe=None, allow_uncalibrated=False, estimator='mt_gtpo', token_protocol=None,
+            profile_override=None):
     from tau3_grpo.evaluation.process_reward import reward_settings
     from tau3_grpo.evaluation.rewards.recipe import load_frozen_recipe
     from tau3_grpo.integrations.verl.mt_gtpo import settings_from_config
 
+    if token_protocol not in {None, 'tau3_token_budget_v1'}:
+        raise ValueError(f'Unknown token protocol: {token_protocol}')
     if estimator not in {'grpo', 'tau_gigpo', 'mt_gtpo'}:
         raise ValueError(f'Unknown estimator: {estimator}')
     arm = ('mt_gtpo' if estimator == 'mt_gtpo' else
@@ -57,6 +60,8 @@ def resolve(result, *, updates=20, dynamic_filter=False, resume_from=None, rewar
         raise ValueError('A process reward recipe requires mt_gtpo')
     paper_run = estimator == 'mt_gtpo' and reward_version in PAPER_VERSIONS
     profile = PROFILES[reward_version] if estimator == 'mt_gtpo' else BASE_PROFILE
+    if profile_override is not None:
+        profile = Path(profile_override).resolve()
     frozen = None
     expected_reward = reward_settings({
         'mode': 'paper' if reward_version in PAPER_VERSIONS else 'reference_write',
@@ -103,6 +108,10 @@ def resolve(result, *, updates=20, dynamic_filter=False, resume_from=None, rewar
              'actor_rollout_ref.rollout.calculate_log_probs=true',
              'actor_rollout_ref.rollout.logprobs_mode=processed_logprobs',
              '++ray_kwargs.ray_init.address=local']
+    if token_protocol:
+        env['TOOL_SCHEMA_VERSION'] = 'tau3_full_schema_v2'
+        env['TAU3_USER_MAX_MODEL_LEN'] = '16384'
+        extra.append(f'++tau3_token_protocol={token_protocol}')
     if frozen:
         for section in ('weights', 'paper_options'):
             extra += [f'++algorithm.process_reward.{section}.{key}={value}'
@@ -111,6 +120,8 @@ def resolve(result, *, updates=20, dynamic_filter=False, resume_from=None, rewar
     extra += [f'++ray_kwargs.ray_init.runtime_env.env_vars.{k}={json.dumps(v)}' for k, v in runtime.items()]
     if resume_from:
         previous = yaml.safe_load((result / 'resolved-hydra.yaml').read_text())
+        if previous.get('tau3_token_protocol') != token_protocol:
+            raise ValueError('Resume cannot change the token/budget protocol')
         previous_algorithm = previous.get('algorithm', {})
         if (previous_algorithm.get('adv_estimator') != estimator
                 or (estimator == 'mt_gtpo' and previous_algorithm.get('process_reward', {}).get('version') != reward_version)
@@ -127,11 +138,19 @@ def resolve(result, *, updates=20, dynamic_filter=False, resume_from=None, rewar
         step = int(checkpoint.name.removeprefix('global_step_'))
         if checkpoint.parent != result or step % 10 or not 0 < step < updates:
             raise ValueError('Resume must use this run and an earlier completed ten-step checkpoint')
-        validate_checkpoint(result, step)
+        validate_checkpoint(result, step, world_size=int(env['POLICY_GPUS']))
         if not (result / 'swanlab-run.json').is_file():
             raise ValueError('Missing SwanLab identity')
         extra += ['trainer.resume_mode=resume_path', f'trainer.resume_from_path={checkpoint}']
     command, env, snapshot = prepare('rl', profile, arm, 42, extra, env)
+    if token_protocol:
+        from tau3_grpo.configuration import load_config_with_sources
+
+        budget, sources = load_config_with_sources(CODE_ROOT / 'configs/protocols/token_budget_v1.yaml')
+        snapshot['token_protocol'] = budget
+        snapshot['runtime_configuration_sources'].extend(sources)
+        snapshot['environment'].update(TOOL_SCHEMA_VERSION=env['TOOL_SCHEMA_VERSION'],
+                                       TAU3_USER_MAX_MODEL_LEN=env['TAU3_USER_MAX_MODEL_LEN'])
     snapshot['environment_sources'] = {
         key: ('formal_controller' if key in controller_environment or key in runtime else
               'formal_profile' if key in profile_environment else source)
@@ -207,6 +226,22 @@ def validate_inputs(env, result, updates, reward_version='v3', estimator='mt_gtp
 
 def snapshot_source(destination):
     destination.mkdir()
+    if not (CODE_ROOT / '.git').exists():
+        # Deployed copies have no Git database; preserve actual deployed bytes
+        # without inventing a revision or including runtime files/credentials.
+        import zipfile
+
+        from tau3_grpo.tracking.swanlab import create_source_archive
+
+        archive = create_source_archive(destination, CODE_ROOT)
+        with zipfile.ZipFile(archive) as handle:
+            hashes = {name: hashlib.sha256(handle.read(name)).hexdigest()
+                      for name in handle.namelist()}
+        atomic_json(destination / 'source-sha256.json', hashes)
+        atomic_json(destination / 'source-identity.json', {
+            'kind': 'deployed_source_without_git', 'git_revision': None,
+            'archive_sha256': hashlib.sha256(archive.read_bytes()).hexdigest()})
+        return
     names = subprocess.check_output(['git', 'ls-files', '-z', '--cached', '--others', '--exclude-standard'],
                                     cwd=CODE_ROOT).decode().split('\0')
     hashes = {}
@@ -230,12 +265,37 @@ def active_gpu_pids():
     return [int(x) for x in raw.splitlines() if x.strip()]
 
 
-def verify_completion(result, target):
+def simulator_environment(env):
+    """Keep historical defaults while allowing an explicit hardware profile."""
+    defaults = {'TAU3_USER_CUDA_DEVICES': '4', 'TAU3_USER_TP': '1',
+                'TAU3_USER_MAX_NUM_SEQS': '16', 'TAU3_USER_MAX_MODEL_LEN': '16384',
+                'TAU3_USER_GPU_MEMORY_UTILIZATION': '.65',
+                'TAU3_USER_ENFORCE_EAGER': '1', 'TAU3_USER_PORT': '8100'}
+    result = dict(env)
+    for key, value in defaults.items():
+        result.setdefault(key, value)
+    policy = set(env['TAU3_POLICY_CUDA_DEVICES'].split(','))
+    simulator = result['TAU3_USER_CUDA_DEVICES'].split(',')
+    shared = env.get('TAU3_SIMULATOR_COLOCATED_SLEEP', '0') == '1'
+    if ((policy.intersection(simulator) and not shared)
+            or len(set(simulator)) != len(simulator)):
+        raise ValueError('Policy and simulator GPUs must be distinct')
+    if shared and not set(simulator) <= policy:
+        raise ValueError('Shared simulator GPUs must belong to the policy pool')
+    if len(simulator) != int(result['TAU3_USER_TP']):
+        raise ValueError('Simulator GPU count must match tensor parallel size')
+    port = int(result['TAU3_USER_PORT'])
+    if not 1 <= port <= 65535 or env['TAU3_USER_BASE_URL'] != f'http://127.0.0.1:{port}/v1':
+        raise ValueError('Simulator endpoint differs from the local service port')
+    return result
+
+
+def verify_completion(result, target, *, world_size=4):
     latest = int((result / 'latest_checkpointed_iteration.txt').read_text())
     budget = json.loads((result / 'budget.json').read_text())
     expected = budget['target_step'] if budget.get('stop_requested') else target
     assert latest == expected
-    validate_checkpoint(result, latest)
+    validate_checkpoint(result, latest, world_size=world_size)
     scores = {}
     for step in range(10, latest + 1, 10):
         rows = [json.loads(x) for x in (result / f'validation/{step}.jsonl').read_text().splitlines()]
@@ -263,6 +323,8 @@ def main(argv=None):
     parser.add_argument('--dynamic-filter', action='store_true')
     parser.add_argument('--resume-from', type=Path)
     parser.add_argument('--dry-run', action='store_true')
+    parser.add_argument('--token-protocol', choices=['tau3_token_budget_v1'])
+    parser.add_argument('--profile', type=Path, help='Explicit composed hardware/model profile')
     parser.add_argument('--reward-version', choices=sorted(PROFILES), default='v3')
     parser.add_argument('--reward-recipe', type=Path, help='Passed frozen IRC recipe matching the paper reward version')
     args = parser.parse_args(argv)
@@ -270,7 +332,9 @@ def main(argv=None):
     result = args.result_dir.resolve()
     command, env, snapshot = resolve(result, updates=args.updates,
         dynamic_filter=args.dynamic_filter, resume_from=args.resume_from, reward_version=args.reward_version,
-        reward_recipe=args.reward_recipe, allow_uncalibrated=args.dry_run, estimator=args.estimator)
+        reward_recipe=args.reward_recipe, allow_uncalibrated=args.dry_run, estimator=args.estimator,
+        token_protocol=args.token_protocol, profile_override=args.profile)
+    simenv = simulator_environment(env)
     if (result / 'STOP_AFTER_BOUNDARY').exists():
         raise ValueError('Stop request exists; inspect and archive it before resuming')
     if not args.resume_from and ((result / 'swanlab-run.json').exists() or list(result.glob('global_step_*'))):
@@ -314,7 +378,7 @@ def main(argv=None):
     if shutil.disk_usage(result).free < 110 * 2**30:
         raise RuntimeError('Need 110 GiB free for safe complete-checkpoint rotation')
     with socket.socket() as sock:
-        sock.bind(('127.0.0.1', 8100))
+        sock.bind(('127.0.0.1', int(simenv['TAU3_USER_PORT'])))
     session = result / f'controller-session-{time.time_ns()}'
     session.mkdir()
     snapshot_source(session / 'source')
@@ -333,16 +397,13 @@ def main(argv=None):
 
     try:
         state('starting_simulator')
-        simenv = dict(env, TAU3_USER_CUDA_DEVICES='4', TAU3_USER_MAX_NUM_SEQS='16',
-                      TAU3_USER_MAX_MODEL_LEN='16384', TAU3_USER_GPU_MEMORY_UTILIZATION='.65',
-                      TAU3_USER_ENFORCE_EAGER='1', TAU3_USER_PORT='8100')
         simulator = launch(['bash', str(CODE_ROOT / 'scripts/serve/simulator_qwen38.sh')], simenv, 'simulator')
         deadline = time.monotonic() + 1200
         while True:
             if simulator.poll() is not None:
                 raise RuntimeError('Simulator exited during startup')
             try:
-                if requests.get('http://127.0.0.1:8100/health', timeout=3).status_code == 200:
+                if requests.get(f"http://127.0.0.1:{simenv['TAU3_USER_PORT']}/health", timeout=3).status_code == 200:
                     break
             except requests.RequestException:
                 pass
@@ -355,7 +416,8 @@ def main(argv=None):
         if rc:
             raise RuntimeError(f'Training exited {rc}; inspect {session}/train.log')
         state('verifying')
-        completion = verify_completion(result, args.updates)
+        completion = verify_completion(result, args.updates,
+                                       world_size=config['trainer']['n_gpus_per_node'])
         atomic_json(result / 'completion.json', completion)
         state('paused' if completion['paused'] else 'completed', **completion)
     except BaseException as exc:

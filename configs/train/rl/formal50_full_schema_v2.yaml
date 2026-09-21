@@ -1,0 +1,9 @@
+# CPU-validated candidate: changes model-visible tool schema, not reward or algorithm.
+# No GPU training has been run with this profile. Historical profiles remain unchanged.
+includes:
+- formal50_a800.yaml
+launch:
+  environment:
+    TOOL_SCHEMA_VERSION: tau3_full_schema_v2
+  overrides:
+  - actor_rollout_ref.rollout.val_kwargs.temperature=0.7

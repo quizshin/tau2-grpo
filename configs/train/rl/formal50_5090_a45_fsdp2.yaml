@@ -1,0 +1,10 @@
+# Preserve the A800 GRPO math; FSDP2 native CPU offload lowers peak memory.
+includes:
+- formal50_5090_a45_shared8.yaml
+launch:
+  overrides:
+  - actor_rollout_ref.actor.strategy=fsdp2
+  - actor_rollout_ref.actor.fsdp_config.offload_policy=true
+  - +actor_rollout_ref.actor.fsdp_config.wrap_policy.transformer_layer_cls_to_wrap=[Qwen3_5DecoderLayer,Qwen3_5VisionBlock]
+  - +actor_rollout_ref.ref.fsdp_config.wrap_policy.transformer_layer_cls_to_wrap=[Qwen3_5DecoderLayer,Qwen3_5VisionBlock]
+  - ++ray_kwargs.ray_init._temp_dir=/tmp/tau3-grpo5090-fsdp2

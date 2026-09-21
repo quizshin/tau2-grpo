@@ -30,6 +30,10 @@ ARGS=("${SIM_PYTHON}" -m vllm.entrypoints.cli.main serve "${MODEL}"
 if [[ "${TAU3_USER_ENFORCE_EAGER:-0}" == "1" ]]; then
   ARGS+=(--enforce-eager)
 fi
+if [[ "${TAU3_SIMULATOR_COLOCATED_SLEEP:-0}" == "1" ]]; then
+  export VLLM_SERVER_DEV_MODE=1
+  ARGS+=(--enable-sleep-mode)
+fi
 ARGS+=("$@")
 if [[ "${TAU3_DRY_RUN:-0}" == "1" ]]; then
   printf '%q ' "${ARGS[@]}"

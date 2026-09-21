@@ -1,0 +1,57 @@
+# Engineering only: run with the fourth spare GPU serving an isolated simulator.
+# Two updates do not establish convergence, resume correctness, or algorithm gains.
+includes:
+- formal50_token_v4.yaml
+launch:
+  environment:
+    MODEL_PATH: ${TAU3_RL_SMOKE_MODEL}
+    RESULTS_DIR: ${TAU3_RL_SMOKE_RUN}
+    TAU3_POLICY_CUDA_DEVICES: '0,1,4'
+    POLICY_GPUS: '3'
+    ROLLOUT_TP: '1'
+    TRAIN_MANIFEST_DIR: ${TAU3_DATA_ROOT}/manifests
+    # Validation is disabled; satisfy the loader with the training schedule.
+    VAL_PARQUET: ${RESULTS_DIR}/train_schedule.parquet
+    GROUP_SIZE: '4'
+    GROUPS_PER_UPDATE: '3'
+    PPO_MINI_GROUPS: '3'
+    POLICY_BATCH_DIVISOR: '12'
+    TOTAL_UPDATES: '2'
+    MAX_NUM_SEQS: '4'
+    UPDATE_WEIGHTS_BUCKET_MEGABYTES: '2560'
+    TAU3_USER_BASE_URL: http://127.0.0.1:8230/v1
+    TAU3_USER_CUDA_DEVICES: '5'
+    TAU3_USER_TP: '1'
+    TAU3_USER_PORT: '8230'
+    TAU3_USER_MAX_NUM_SEQS: '2'
+    TAU3_USER_MAX_MODEL_LEN: '16384'
+    TAU3_USER_GPU_MEMORY_UTILIZATION: '0.85'
+    TAU3_USER_ENFORCE_EAGER: '1'
+    TRAINER_LOGGERS: '[console]'
+    TAU3_TRACKING_BACKEND: none
+    TAU3_KEEP_COMPLETE_BOUNDARY: '1'
+    TAU3_RECORD_TRAJECTORY_FACTS: '1'
+    LITELLM_LOCAL_MODEL_COST_MAP: 'True'
+    NCCL_P2P_DISABLE: '1'
+    OMP_NUM_THREADS: '2'
+    MKL_NUM_THREADS: '2'
+    OPENBLAS_NUM_THREADS: '1'
+  overrides:
+  - actor_rollout_ref.actor.fsdp_config.param_offload=true
+  - actor_rollout_ref.actor.fsdp_config.optimizer_offload=true
+  - actor_rollout_ref.rollout.gpu_memory_utilization=0.50
+  - actor_rollout_ref.rollout.agent.num_workers=3
+  - actor_rollout_ref.rollout.calculate_log_probs=true
+  - actor_rollout_ref.rollout.logprobs_mode=processed_logprobs
+  - trainer.save_freq=2
+  - trainer.test_freq=-1
+  - trainer.val_before_train=false
+  - trainer.max_actor_ckpt_to_keep=1
+  - ++ray_kwargs.ray_init.address=local
+  - ray_kwargs.ray_init.num_cpus=24
+  - ++ray_kwargs.ray_init.object_store_memory=4294967296
+  - ++ray_kwargs.ray_init.include_dashboard=false
+  - ++ray_kwargs.ray_init._temp_dir=${TAU3_RL_RAY_TEMP}
+  - ++ray_kwargs.ray_init.runtime_env.env_vars.TAU3_KEEP_COMPLETE_BOUNDARY='1'
+  - ++ray_kwargs.ray_init.runtime_env.env_vars.TAU3_RECORD_TRAJECTORY_FACTS='1'
+  - ++ray_kwargs.ray_init.runtime_env.env_vars.NCCL_P2P_DISABLE='1'

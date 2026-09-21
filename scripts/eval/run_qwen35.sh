@@ -11,6 +11,7 @@ esac
 shift 2
 export TAU3_POLICY_ATTESTATION_PATH="${TAU3_POLICY_ATTESTATION_PATH:-${QWEN35_RUN_ROOT}/policy_service_attestation.json}"
 exec python -m tau3_grpo.evaluation.run \
+  --harness-protocol "${TAU3_EVAL_HARNESS_PROTOCOL:-tau3_eval_legacy_v1}" \
   --target "${TARGET}" --checkpoint "${CHECKPOINT}" \
   --results-dir "${QWEN35_RUN_ROOT}" \
   --policy-model "${TAU3_POLICY_MODEL:-Qwen/Qwen3.5-${QWEN35_SIZE}}" \

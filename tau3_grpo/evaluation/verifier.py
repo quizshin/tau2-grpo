@@ -56,6 +56,7 @@ class TerminalReward:
     scored: bool = True
     info: dict[str, Any] = field(default_factory=dict)
     trajectory: dict[str, Any] = field(default_factory=dict)
+    simulation: Any = field(default=None, repr=False)
 
     @property
     def solved(self) -> bool:
@@ -185,6 +186,7 @@ def verify_trajectory(
         env_kwargs={"db": load_flight_db(session.adapted.db_path)},
         strict_replay=strict_replay,
     )
+    simulation.reward_info = reward_info
     reason = _termination_value(termination_reason)
     reward = float(reward_info.reward)
     breakdown = {
@@ -206,4 +208,5 @@ def verify_trajectory(
         scored=reason in SCORABLE_TERMINATIONS,
         info=dict(reward_info.info or {}),
         trajectory=session.metadata(),
+        simulation=simulation,
     )

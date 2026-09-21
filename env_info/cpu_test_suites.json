@@ -45,6 +45,7 @@
       "tests/test_evaluation_provenance.py",
       "tests/test_grounded_audit.py",
       "tests/test_grounded_evidence.py",
+      "tests/test_harness_inputs.py",
       "tests/test_matched_budget.py",
       "tests/test_multicall_prompt.py",
       "tests/test_post_rl_eval.py",
@@ -72,6 +73,7 @@
       "tests/test_anchor_evidence_v2.py",
       "tests/test_architecture_boundaries.py",
       "tests/test_configs.py",
+      "tests/test_cpu_saved_tensors.py",
       "tests/test_cpu_signal_validation.py",
       "tests/test_curriculum_profile.py",
       "tests/test_decision_state_v4.py",
@@ -99,8 +101,11 @@
       "tests/test_rollout_boundaries.py",
       "tests/test_rollout_concurrency_stress.py",
       "tests/test_rollout_json_serialization.py",
+      "tests/test_simulator_sleep.py",
       "tests/test_split_reward.py",
       "tests/test_swanlab_tracking.py",
+      "tests/test_token_harness.py",
+      "tests/test_tool_schema_projection.py",
       "tests/test_xml_structured_arguments.py"
     ]
   },

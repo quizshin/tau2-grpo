@@ -51,6 +51,10 @@ unset TAU3_DEFAULTS
 
 VAL_PARQUET="${VAL_PARQUET:-${TAU3_DATA_ROOT}/parquet/airline_selection_seed${DATA_SPLIT_SEED}.parquet}"
 TOOL_CONFIG="${TOOL_CONFIG:-${PROJECT_ROOT}/configs/envs/tool_config.yaml}"
+case "${TOOL_SCHEMA_VERSION}" in
+  verl_legacy_v1|tau3_full_schema_v2) ;;
+  *) echo "error: unsupported TOOL_SCHEMA_VERSION=${TOOL_SCHEMA_VERSION}" >&2; exit 2 ;;
+esac
 INTERACTION_CONFIG="${INTERACTION_CONFIG:-${PROJECT_ROOT}/configs/envs/interaction_config.yaml}"
 RESULTS_DIR="${RESULTS_DIR:-${TAU3_RUN_ROOT}/${ARM}_seed${SEED}}"
 ROLLOUT_DATA_DIR="${ROLLOUT_DATA_DIR:-${RESULTS_DIR}/rollouts}"
@@ -124,7 +128,8 @@ elif [[ ! -f "${TRAIN_PARQUET}" ]]; then
 fi
 
 # Fail before burning GPU hours if a local veRL patch went missing.
-python -m tau3_grpo.envs.generate_tool_config --output "${TOOL_CONFIG}"
+python -m tau3_grpo.envs.generate_tool_config --output "${TOOL_CONFIG}" \
+  --schema-version "${TOOL_SCHEMA_VERSION}"
 python -m tau3_grpo.integrations.verify_patches --check-registration
 fi
 
@@ -169,6 +174,8 @@ TRAIN_COMMAND=(python -m tau3_grpo.training.rl.train \
   actor_rollout_ref.rollout.name="${ROLLOUT_BACKEND}" \
   actor_rollout_ref.rollout.n="${GROUP_SIZE}" \
   actor_rollout_ref.rollout.temperature="${TRAIN_TEMP}" \
+  actor_rollout_ref.rollout.val_kwargs.temperature="${EVAL_TEMP}" \
+  actor_rollout_ref.rollout.val_kwargs.do_sample=true \
   actor_rollout_ref.rollout.mode=async \
   actor_rollout_ref.rollout.max_model_len="${MAX_MODEL_LENGTH}" \
   actor_rollout_ref.rollout.tensor_model_parallel_size="${ROLLOUT_TP}" \

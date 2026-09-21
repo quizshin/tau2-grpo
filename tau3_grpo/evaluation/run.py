@@ -27,6 +27,13 @@ from tau3_grpo.data.official import (
     official_airline_task_ids,
 )
 from tau3_grpo.envs.tau2_bridge import Tau2Unavailable
+from tau3_grpo.evaluation.harness import (
+    LEGACY,
+    PROTOCOLS,
+    TOKENS_V4,
+    protocol_metadata,
+    validate_target,
+)
 from tau3_grpo.evaluation.runtime import Endpoint, EvalSpec, run_evaluation
 from tau3_grpo.evaluation.scoring import resolve_ks
 from tau3_grpo.evaluation.service_attestation import (
@@ -75,10 +82,15 @@ def build_parser() -> argparse.ArgumentParser:
         "--include-pass-hat", action="store_true",
         help="also report pass^k (all k attempts succeed) for the same k values",
     )
-    parser.add_argument("--policy-temperature", type=float, default=0.4)
-    parser.add_argument("--user-temperature", type=float, default=1.0)
+    parser.add_argument("--policy-temperature", type=float, default=None,
+                        help="default: 0.7 for all harness protocols")
+    parser.add_argument("--user-temperature", type=float, default=0.7)
     parser.add_argument("--max-concurrency", type=int, default=16)
     parser.add_argument("--max-steps", type=int, default=30)
+    parser.add_argument("--max-errors", type=int, default=10)
+    parser.add_argument("--token-request-timeout", type=float, default=120,
+                        help="token-v4 policy HTTP timeout in seconds; no automatic retries")
+    parser.add_argument("--harness-protocol", choices=PROTOCOLS, default=LEGACY)
     parser.add_argument("--output-dir", type=Path, default=None)
     parser.add_argument(
         "--policy-attestation",
@@ -109,9 +121,15 @@ def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     verify_layout()
     try:
+        protocol = protocol_metadata(args.harness_protocol, max_steps=args.max_steps, max_errors=args.max_errors)
+        validate_target(args.harness_protocol, args.target)
+        if args.policy_temperature is None:
+            args.policy_temperature = 0.7
         ks = resolve_ks(args.trials, args.ks)
-        if args.max_steps <= 0 or args.max_concurrency <= 0:
-            raise ValueError("max_steps and max_concurrency must be positive")
+        if args.max_steps <= 0 or args.max_errors <= 0 or args.max_concurrency <= 0:
+            raise ValueError("max_steps, max_errors and max_concurrency must be positive")
+        if not math.isfinite(args.token_request_timeout) or args.token_request_timeout <= 0:
+            raise ValueError("token-request-timeout must be finite and positive")
         if any(not math.isfinite(t) or t < 0 for t in (args.policy_temperature, args.user_temperature)):
             raise ValueError("temperatures must be finite and nonnegative")
     except ValueError as exc:
@@ -170,6 +188,10 @@ def main(argv: list[str] | None = None) -> int:
         "metric_ks": list(ks),
         "include_pass_hat": args.include_pass_hat,
         "primary_metric_family": "pass@k",
+        "harness_protocol": protocol,
+        "policy_temperature": args.policy_temperature,
+        "user_temperature": args.user_temperature,
+        "token_request_timeout": args.token_request_timeout,
     })
     if args.dry_run:
         payload["dry_run"] = True
@@ -216,6 +238,10 @@ def main(argv: list[str] | None = None) -> int:
                 trials=args.trials,
                 seed=args.seed,
                 max_steps=args.max_steps,
+                max_errors=args.max_errors,
+                harness_protocol=args.harness_protocol,
+                tokenizer_path=args.checkpoint if args.harness_protocol == TOKENS_V4 else None,
+                token_request_timeout=args.token_request_timeout,
                 max_concurrency=args.max_concurrency,
                 ks=ks,
                 include_pass_hat=args.include_pass_hat,

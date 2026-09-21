@@ -450,11 +450,13 @@ def test_dispatch_error_preserves_prose_in_replay(live_session):
     async def run():
         text = NEEDLE + '\n<tool_call>{"name":"unknown_tool","arguments":{}}</tool_call>'
         loop, data, _ = make_loop(handler, text, "hermes")
+        loop.record_turn_facts = True
         assert await loop._handle_generating_state(data, {}) == AgentState.PROCESSING_TOOLS
         await loop._handle_processing_tools_state(data)
         assert session.messages[-2].content.strip() == NEEDLE
         assert session.messages[-1].error is True
         assert SESSIONS.require("boundary").tool_error_count == 1
+        assert all(event["db_hash_after"] == session.db_hash() for event in data.turn_records[0]["tool_calls"])
 
     asyncio.run(run())
 
@@ -527,6 +529,8 @@ def test_middle_error_has_own_result_and_does_not_drop_later_calls(live_session,
             "bad_arguments": FunctionCall(name="calculate", arguments="[]"),
             "tool_error": FunctionCall(name="calculate", arguments='{"expression":"1/0"}'),
         }[failure]
+        loop.record_turn_facts = True
+        data.turn_records = [{"tool_calls": []}]
         data.tool_calls = [
             FunctionCall(name="calculate", arguments='{"expression":"1+1"}'),
             middle,
@@ -541,6 +545,7 @@ def test_middle_error_has_own_result_and_does_not_drop_later_calls(live_session,
         assert second.error is True
         assert third.content == "4.0"
         assert SESSIONS.require("boundary").tool_error_count == 1
+        assert all(event["db_hash_after"] == session.db_hash() for event in data.turn_records[0]["tool_calls"])
 
     asyncio.run(run())
 
@@ -751,3 +756,93 @@ def test_probability_diagnostics_do_not_enable_importance_or_rejection_sampling(
     assert torch.equal(output.batch["old_log_probs"], old)
     assert "rollout_is_weights" not in output.batch
     assert metrics
+
+
+@pytest.mark.parametrize("scenario", ["last_text", "ten_errors", "last_tool_batch", "user_cap", "last_user_stop", "stop_at_observation_cap"])
+@pytest.mark.parametrize("protocol", ["tau3_eval_legacy_v1", "tau3_eval_train_control_v2"])
+def test_versioned_native_harness_boundaries(live_session, monkeypatch, scenario, protocol):
+    import tau2.agent.llm_agent as agent_module
+    import tau2.user.user_simulator as user_module
+    from tau2.data_model.message import AssistantMessage, ToolCall
+
+    from tau3_grpo.evaluation.runtime import Endpoint, _run_one
+
+    _, session = live_session
+    calls = 0
+    user_calls = 0
+    if scenario in {"last_text", "last_tool_batch", "ten_errors"}:
+        rounds = {"last_text": 14, "last_tool_batch": 15, "ten_errors": 10}[scenario]
+        responses = [AssistantMessage(role="assistant", tool_calls=[ToolCall(
+            id=f"call-{i}-{j}", name="calculate", requestor="assistant",
+            arguments={"expression": "1/0" if scenario == "ten_errors" else "1+1"},
+        ) for j in range(2 if scenario == "last_tool_batch" else 1)]) for i in range(rounds)]
+        responses.append(AssistantMessage(role="assistant", content=NEEDLE))
+        users = ["Please help", "###STOP###"]
+    else:
+        responses = [AssistantMessage(role="assistant", content=NEEDLE)] * 15
+        users = ["Please help"] + ["Continue"] * 13 + [
+            "###STOP###" if scenario in {"last_user_stop", "stop_at_observation_cap"} else "Continue"]
+        if scenario == "stop_at_observation_cap":
+            responses = [AssistantMessage(role="assistant", tool_calls=[ToolCall(
+                id="initial-calc", name="calculate", requestor="assistant", arguments={"expression": "1+1"},
+            )])] + responses[:14]
+
+    def agent_generate(**kwargs):
+        nonlocal calls
+        message = responses[calls].model_copy(deep=True)
+        calls += 1
+        return message
+
+    def user_generate(**kwargs):
+        nonlocal user_calls
+        message = AssistantMessage(role="assistant", content=users[user_calls])
+        user_calls += 1
+        return message
+
+    monkeypatch.setattr(agent_module, "generate", agent_generate)
+    monkeypatch.setattr(user_module, "generate", user_generate)
+    result = _run_one(task=session.adapted.task, db_path=session.db_path,
+                      policy=Endpoint("scripted", "http://never-called"),
+                      user=Endpoint("scripted", "http://never-called"), seed=42,
+                      max_steps=30, max_errors=10, harness_protocol=protocol)
+    corrected = protocol.endswith("v2")
+    expected = "user_stop" if (corrected and scenario in {"last_text", "ten_errors", "stop_at_observation_cap"}) or scenario == "last_user_stop" else (
+        "too_many_errors" if scenario == "ten_errors" else "max_steps")
+    assert result.termination_reason.value == expected
+    assert result.reward_info.reward == float(expected == "user_stop")
+    if scenario == "last_tool_batch":
+        assert calls == 15
+        assert len([m for m in result.messages if m.role == "tool"]) == 30
+    if scenario == "user_cap":
+        assert calls == 15 and user_calls == 15
+    if corrected:
+        assert result.info["harness_protocol"]["token_context_equivalence"] == "not_established"
+
+
+def test_dispatch_failure_receipt_is_between_two_real_writes(live_session):
+    """A failure receipt must describe that call, not the initial/final batch DB."""
+    from verl.experimental.agent_loop.tool_parser import FunctionCall
+
+    handler, session = live_session
+    reservations = list(session.db.reservations)[:2]
+    initial_hash = session.db_hash()
+
+    async def run():
+        loop, data, _ = make_loop(handler, "")
+        schema = next(s for s in airline_tool_schemas() if s["function"]["name"] == "cancel_reservation")
+        loop.tools["cancel_reservation"] = Tau3AirlineTool({}, OpenAIFunctionToolSchema.model_validate(schema))
+        loop.record_turn_facts = True
+        data.turn_records = [{"tool_calls": []}]
+        data.tool_calls = [
+            FunctionCall(name="cancel_reservation", arguments=json.dumps({"reservation_id": reservations[0]})),
+            FunctionCall(name="unknown_tool", arguments="{}"),
+            FunctionCall(name="cancel_reservation", arguments=json.dumps({"reservation_id": reservations[1]})),
+        ]
+        await loop._handle_processing_tools_state(data)
+        first, failed, last = data.turn_records[0]["tool_calls"]
+        assert first["db_hash_after"] != initial_hash
+        assert failed["error"] and failed["db_hash_after"] == first["db_hash_after"]
+        assert last["db_hash_after"] != failed["db_hash_after"]
+        assert last["db_hash_after"] == session.db_hash()
+
+    asyncio.run(run())

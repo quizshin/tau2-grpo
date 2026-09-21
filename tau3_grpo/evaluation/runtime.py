@@ -10,12 +10,14 @@ from __future__ import annotations
 
 import json
 import math
+import traceback
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Sequence
 
 from tau3_grpo.data.manifest import TAU3_REVISION, ManifestEntry
+from tau3_grpo.data.opening import initial_user_message as task_opening
 from tau3_grpo.data.schema import ArealTaskRecord
 from tau3_grpo.envs.adapter import (
     AIRLINE_DOMAIN,
@@ -25,6 +27,16 @@ from tau3_grpo.envs.adapter import (
     load_flight_db,
 )
 from tau3_grpo.evaluation.eligibility import execution_eligibility
+from tau3_grpo.evaluation.harness import (
+    CONTROL_V2,
+    INPUTS_V3,
+    LEGACY,
+    TOKENS_V4,
+    protocol_metadata,
+    request_args,
+    validate_opening,
+    validate_target,
+)
 from tau3_grpo.evaluation.provenance import evaluation_provenance
 from tau3_grpo.evaluation.scoring import resolve_ks, summarize_trials
 from tau3_grpo.prompts import prompt_provenance
@@ -35,7 +47,7 @@ class Endpoint:
     model: str
     base_url: str
     api_key: str = "EMPTY"
-    temperature: float = 0.4
+    temperature: float = 0.7
 
     @property
     def litellm_model(self) -> str:
@@ -61,6 +73,15 @@ class EvalSpec:
     max_concurrency: int = 16
     ks: tuple[int, ...] | None = None
     include_pass_hat: bool = False
+    harness_protocol: str = LEGACY
+    tokenizer_path: str | None = None
+    token_request_timeout: float = 120
+
+    def __post_init__(self):
+        import math
+
+        if not math.isfinite(self.token_request_timeout) or self.token_request_timeout <= 0:
+            raise ValueError("token_request_timeout must be finite and positive")
 
 
 def _run_one(
@@ -72,14 +93,22 @@ def _run_one(
     seed: int,
     max_steps: int,
     max_errors: int,
+    harness_protocol: str = LEGACY,
+    initial_user_message: str | None = None,
 ) -> Any:
     from tau2.evaluator.evaluator import EvaluationType
-    from tau2.orchestrator.orchestrator import Orchestrator
     from tau2.runner.build import build_user
     from tau2.runner.simulation import run_simulation
 
     from tau3_grpo.envs.agent import MultiCallAirlineAgent
 
+    protocol = protocol_metadata(harness_protocol, max_steps=max_steps, max_errors=max_errors)
+    policy_args = request_args(harness_protocol, policy, role="policy")
+    user_args = request_args(harness_protocol, user, role="user")
+    if harness_protocol == INPUTS_V3:
+        if db_path is None:
+            raise ValueError("train_inputs_v3 requires a pinned AReaL task database")
+        validate_opening(task, initial_user_message)
     if db_path is None:
         environment = build_environment(load_default_flight_db())
         replay_db = load_default_flight_db()
@@ -91,16 +120,27 @@ def _run_one(
         tools=environment.get_tools(),
         domain_policy=environment.get_policy(),
         llm=policy.litellm_model,
-        llm_args=policy.llm_args(),
+        llm_args=policy_args,
+        project_observations=harness_protocol in (CONTROL_V2, INPUTS_V3),
     )
     simulated_user = build_user(
         "user_simulator",
         environment,
         task,
         llm=user.litellm_model,
-        llm_args=user.llm_args(),
+        llm_args=user_args,
     )
-    orchestrator = Orchestrator(
+    from tau3_grpo.envs.orchestrator import (
+        EvaluationOrchestrator,
+        TrainingControlOrchestrator,
+        TrainingInputOrchestrator,
+    )
+
+    orchestrator_cls = {
+        LEGACY: EvaluationOrchestrator, CONTROL_V2: TrainingControlOrchestrator,
+        INPUTS_V3: TrainingInputOrchestrator,
+    }[harness_protocol]
+    orchestrator = orchestrator_cls(
         domain=AIRLINE_DOMAIN,
         agent=agent,
         user=simulated_user,
@@ -109,12 +149,25 @@ def _run_one(
         max_steps=max_steps,
         max_errors=max_errors,
         seed=seed,
+        **({"initial_user_message": initial_user_message} if harness_protocol == INPUTS_V3 else {}),
     )
-    return run_simulation(
-        orchestrator,
-        evaluation_type=EvaluationType.ALL,
-        env_kwargs={"db": replay_db},
-    )
+    try:
+        simulation = run_simulation(
+            orchestrator,
+            evaluation_type=EvaluationType.ALL,
+            env_kwargs={"db": replay_db},
+        )
+    except Exception as error:
+        error.evaluation_evidence = orchestrator.failure_snapshot()
+        error.evaluation_evidence["harness_protocol"] = protocol
+        raise
+    simulation.info = {**(simulation.info or {}), "harness_protocol": protocol,
+                       "tool_observation_receipts": getattr(agent, "observation_receipts", [])}
+    if harness_protocol == INPUTS_V3:
+        from tau3_grpo.evaluation.provenance import digest
+
+        simulation.info["initial_user_message_sha256"] = digest(initial_user_message)
+    return simulation
 
 
 def _selection_jobs(entries: Sequence[ManifestEntry], trials: int, seed: int):
@@ -125,11 +178,13 @@ def _selection_jobs(entries: Sequence[ManifestEntry], trials: int, seed: int):
         adapted = adapt_record(record)
         for trial in range(trials):
             yield {
+                "entry": entry,
                 "task_id": entry.task_id,
                 "trial": trial,
                 "seed": seed + trial,
                 "task": adapted.task,
                 "db_path": adapted.db_path,
+                "initial_user_message": task_opening(entry.task),
             }
 
 
@@ -163,6 +218,10 @@ def run_evaluation(
 
     if spec.max_steps <= 0 or spec.max_errors <= 0 or spec.max_concurrency <= 0:
         raise ValueError("max_steps, max_errors and max_concurrency must be positive")
+    protocol = protocol_metadata(spec.harness_protocol, max_steps=spec.max_steps, max_errors=spec.max_errors)
+    validate_target(spec.harness_protocol, spec.target)
+    request_args(spec.harness_protocol, policy, role="policy")
+    request_args(spec.harness_protocol, user, role="user")
     ks = resolve_ks(spec.trials, spec.ks)
     if spec.target == "selection":
         jobs = list(_selection_jobs(selection_entries, spec.trials, spec.seed))
@@ -170,6 +229,33 @@ def run_evaluation(
         jobs = list(_official_jobs(spec.trials, spec.seed))
     else:
         raise ValueError(f"unknown evaluation target: {spec.target}")
+
+    if spec.harness_protocol in (INPUTS_V3, TOKENS_V4):
+        for job in jobs:
+            validate_opening(job["task"], job.get("initial_user_message"))
+            if job["db_path"] is None:
+                raise ValueError("train_inputs_v3 requires a pinned AReaL task database")
+    else:
+        # Legacy/v2 generate their own opening. Do not attest the parquet opening
+        # as an input to a run that never consumes it.
+        jobs = [{key: value for key, value in job.items() if key != "initial_user_message"}
+                for job in jobs]
+
+    token_runtime = None
+    tokenizer = None
+    token_provenance = {}
+    if spec.harness_protocol == TOKENS_V4:
+        from tau3_grpo.evaluation import token_runtime
+        from tau3_grpo.models.token_budget import default_budget
+
+        if not spec.tokenizer_path:
+            raise ValueError("token_v4 requires the served checkpoint tokenizer_path")
+        tokenizer = token_runtime.load_tokenizer(spec.tokenizer_path)
+        token_runtime.prepare_runtime()
+        token_provenance["tokenizer_files_sha256"] = token_runtime.tokenizer_identity(spec.tokenizer_path)
+        budget = default_budget()
+        token_runtime.check_context(policy, budget.context)
+        token_runtime.check_context(user, budget.user_context)
 
     planned = [{key: job[key] for key in ("task_id", "trial", "seed")} for job in jobs]
     # Validate the full schedule before any paid endpoint calls.
@@ -183,7 +269,8 @@ def run_evaluation(
             name: {"model": endpoint.model, "temperature": endpoint.temperature}
             for name, endpoint in (("policy", policy), ("user", user))
         },
-        "provenance": {**(provenance or {}), **prompt_provenance(), **evaluation_provenance(jobs)},
+        "provenance": {**(provenance or {}), **token_provenance, **prompt_provenance(), **evaluation_provenance(jobs),
+                       "harness_protocol": protocol},
     }
     out = Path(output_dir)
     out.mkdir(parents=True, exist_ok=True)
@@ -201,7 +288,10 @@ def run_evaluation(
         ThreadPoolExecutor(max_workers=spec.max_concurrency) as pool,
     ):
         futures = {
-            pool.submit(
+            (pool.submit(token_runtime.run_one, entry=job["entry"], policy=policy, user=user,
+                         seed=job["seed"], trial=job["trial"], tokenizer=tokenizer,
+                         request_timeout=spec.token_request_timeout)
+             if token_runtime is not None else pool.submit(
                 _run_one,
                 task=job["task"],
                 db_path=job["db_path"],
@@ -210,7 +300,10 @@ def run_evaluation(
                 seed=job["seed"],
                 max_steps=spec.max_steps,
                 max_errors=spec.max_errors,
-            ): job
+                harness_protocol=spec.harness_protocol,
+                **({"initial_user_message": job["initial_user_message"]}
+                   if spec.harness_protocol == INPUTS_V3 else {}),
+            )): job
             for job in jobs
         }
         for future in as_completed(futures):
@@ -243,6 +336,8 @@ def run_evaluation(
                     scored = True
             except Exception as exc:  # retain failures without losing completed trials
                 row = {**identity, "error_type": type(exc).__name__, "error": str(exc),
+                       "traceback": traceback.format_exc(),
+                       "execution_evidence": getattr(exc, "evaluation_evidence", None),
                        "execution_eligibility": execution_eligibility(None, exception=True)}
             # Disk/serialization failures must propagate, not duplicate a trial
             # into both success and error files.

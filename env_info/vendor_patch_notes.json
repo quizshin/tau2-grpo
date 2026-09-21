@@ -16,13 +16,14 @@
     "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
   },
   "verl/verl/experimental/agent_loop/tool_agent_loop.py": {
-    "reason": "Ordered multi-call execution, private session cleanup, official terminal reward, anchors and shared trajectory facts. Add opt-in full text-weight audit, actual generation probability metadata or shared execution eligibility as applicable.",
+    "reason": "Ordered multi-call execution, private session cleanup, official terminal reward, anchors and shared trajectory facts. Add opt-in full text-weight audit, actual generation probability metadata or shared execution eligibility as applicable. Add live DB receipts for recorded dispatch failures and shared policy-only tool observation projection metadata; retain original clipping and terminal reward semantics. Add opt-in tau3_token_budget_v1 shared training/evaluation loop accounting: exact raw generation tokens, complete XML before dispatch, terminal STOP before observation overflow, bounded observations, append-only receipts and evaluation anchor isolation. Preserve old protocol behavior.",
     "tests": [
       "tests/test_execution_eligibility.py",
       "tests/test_rollout_boundaries.py",
       "tests/test_rollout_concurrency_stress.py",
       "tests/test_sampling_identity.py",
-      "tests/test_trajectory_facts.py"
+      "tests/test_trajectory_facts.py",
+      "tests/test_token_harness.py"
     ],
     "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
   },

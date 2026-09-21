@@ -148,3 +148,27 @@ def test_bootstrap_rejects_invalid_options(kwargs):
 def test_bootstrap_rejects_nonfinite_scores():
     with pytest.raises(ValueError, match="finite"):
         paired_bootstrap([float("nan")], [0])
+
+
+@pytest.mark.parametrize("baseline_version", [None, "tau3_eval_legacy_v1", "tau3_eval_train_control_v2"])
+def test_harness_version_blocks_unmatched_comparison(tmp_path, baseline_version):
+    base, treat = artifact(tmp_path / "a"), artifact(tmp_path / "b")
+    if baseline_version:
+        change(base, lambda d: d["provenance"].update(harness_protocol={"version": baseline_version}))
+    change(treat, lambda d: d["provenance"].update(harness_protocol={"version": "tau3_eval_train_control_v2"}))
+    report = compare_evaluations(base, treat)
+    assert report["comparable"] == (baseline_version == "tau3_eval_train_control_v2")
+
+
+def test_token_protocol_requires_matching_tokenizer_identity(tmp_path):
+    from tau3_grpo.evaluation.harness import TOKENS_V4, protocol_metadata
+
+    base, treat = artifact(tmp_path / "a"), artifact(tmp_path / "b")
+    for path in (base, treat):
+        change(path, lambda d: d["provenance"].update(harness_protocol=protocol_metadata(TOKENS_V4)))
+    assert not compare_evaluations(base, treat)["comparable"]
+    for path in (base, treat):
+        change(path, lambda d: d["provenance"].update(tokenizer_files_sha256={"tokenizer.json": "same"}))
+    assert compare_evaluations(base, treat)["comparable"]
+    change(treat, lambda d: d["provenance"].update(tokenizer_files_sha256={"tokenizer.json": "changed"}))
+    assert not compare_evaluations(base, treat)["comparable"]

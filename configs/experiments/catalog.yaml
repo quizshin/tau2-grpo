@@ -1,5 +1,14 @@
 # Active entry points and evidence status. Status does not imply future GPU permission.
 schema: tau3_experiment_catalog_v1
+sampling_defaults:
+  version: sampling_t07_v1
+  agreed_on: '2026-09-20'
+  policy_train_temperature: 0.7
+  policy_eval_temperature: 0.7
+  user_train_temperature: 0.7
+  user_eval_temperature: 0.7
+  gpu_validation: pending_for_changed_sampling
+  historical_results: retain_recorded_parameters
 formal:
   runner: tau3_grpo.training.rl.runner
   base_profile: configs/train/rl/formal50_a800.yaml
@@ -23,6 +32,24 @@ evaluation:
   entry: tau3_grpo.evaluation.run
   controller: tau3_grpo.evaluation.controller
   comparison: tau3_grpo.evaluation.compare
+  selection_protocol: tau3_eval_legacy_v1
+  selection_conditions:
+    policy_temperature: 0.7
+    user_temperature: 0.7
+    max_steps: 30
+    max_errors: 10
+    stop_priority: completed_stop_before_budget_v1
+    request_max_tokens: null
+    policy_max_model_len: 24576
+    user_max_model_len: 16384
+    generation_config: vllm
+    thinking: false
+    trials: 4
+    seed: 42
+    max_concurrency_per_model: 4
+  trajectory_error_policy: preserve_observed_state_continue_other_trials_no_replacement
+  selection_status: cpu_revision_gpu_not_started
+  selection_evidence: docs/grpo_improvement_evidence_20260920.md
   final_policy: after_model_and_protocol_selection_only
 historical:
   dated_profiles: configs/train/rl/*202609*.yaml
@@ -31,6 +58,26 @@ historical:
   removal: retain_until_all_compatibility_and_evidence_references_are_resolved
   reference_audit: docs/architecture/cleanup_20260919.md
 candidates:
+  token_harness_v4:
+    purpose: optional_matched_training_diagnostic_not_mandatory_evaluation
+    enabled_by_default: false
+    status: cpu_verified
+    evidence: docs/architecture/token_harness_20260920.md
+    training_profile: configs/train/rl/formal50_token_v4.yaml
+    evaluation_protocol: tau3_eval_token_v4
+    token_protocol: tau3_token_budget_v1
+    scope: fresh_areal_selection_text_qwen35_complete_schema
+    gpu_validation: pending
+  full_tool_schema_v2:
+    status: cpu_validated_no_gpu_training
+    enabled_by_default: false
+    profile: configs/train/rl/formal50_full_schema_v2.yaml
+    evidence: docs/architecture/harness_inputs_20260920.md
+  eval_train_inputs_v3:
+    status: cpu_validated_known_multiturn_token_differences
+    enabled_by_default: false
+    protocol: tau3_eval_train_inputs_v3
+    evidence: docs/architecture/harness_inputs_20260920.md
   structured_v1:
     status: historical_online_evidence
     enabled_by_default: true

@@ -23,13 +23,13 @@ def _load(relative: str) -> dict:
     return yaml.safe_load(path.read_text(encoding="utf-8"))
 
 
-def test_base_config_has_v2_2_values():
+def test_base_config_has_current_values():
     config = _load("train/rl/base.yaml")
     assert config["model"]["path"] == "Qwen/Qwen2.5-7B-Instruct"
     assert config["rollout"]["group_size"] == 8
     assert config["rollout"]["groups_per_update"] == 16
-    assert config["rollout"]["temperature_train"] == 1.0
-    assert config["rollout"]["temperature_eval"] == 0.4
+    assert config["rollout"]["temperature_train"] == 0.7
+    assert config["rollout"]["temperature_eval"] == 0.7
     assert config["rollout"]["max_user_turns"] == 15
     assert config["rollout"]["max_assistant_turns"] == 15
     assert config["rollout"]["tensor_model_parallel_size"] == 2
@@ -120,11 +120,11 @@ def test_interaction_config_turn_caps():
     assert config["max_assistant_turns"] == 15
 
 
-def test_training_user_simulator_is_deterministic():
+def test_training_user_simulator_matches_policy_temperature():
     base = _load("train/rl/base.yaml")["user_simulator"]
     interaction = _load("envs/interaction_config.yaml")["interaction"][0]["config"]
-    assert base["temperature"] == 0.0
-    assert interaction["user_temperature"] == 0.0
+    assert base["temperature"] == 0.7
+    assert interaction["user_temperature"] == 0.7
 
 
 def test_tool_config_uses_the_live_environment_tool():
@@ -327,7 +327,7 @@ def test_train_uses_vllm_only():
 
 
 def test_eval_script_uses_eval_temperature():
-    assert "EVAL_TEMP=0.4" in _script("eval/run.sh")
+    assert "EVAL_TEMP=0.7" in _script("eval/run.sh")
 
 
 def test_eval_script_goes_through_the_guard():
