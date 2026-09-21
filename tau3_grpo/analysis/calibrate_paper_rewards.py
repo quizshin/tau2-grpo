@@ -246,7 +246,7 @@ def main(argv=None):
     parser.add_argument("--train-manifest", type=Path, required=True)
     parser.add_argument("--config", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
-    parser.add_argument("--reward-version", choices=("paper_v1", "paper_env_v2", "paper_env_split_v3"), default="paper_v1")
+    parser.add_argument("--reward-version", choices=("paper_v1", "paper_env_v2", "paper_env_split_v3", "paper_env_split_v4"), default="paper_v1")
     parser.add_argument("--development-only", action="store_true",
                         help="Previously inspected buffers/splits: diagnostics only, never freeze")
     args = parser.parse_args(argv)

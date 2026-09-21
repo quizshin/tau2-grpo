@@ -11,6 +11,7 @@ formal:
     paper_v1: configs/train/rl/formal50_mt_gtpo_paper_v1.yaml
     paper_env_v2: configs/train/rl/formal50_mt_gtpo_paper_env_v2.yaml
     paper_env_split_v3: configs/train/rl/formal50_mt_gtpo_paper_env_split_v3.yaml
+    paper_env_split_v4: configs/train/rl/formal50_mt_gtpo_paper_env_split_v4.yaml
   validation: engineering_acceptance_passed
   gpu_evidence: docs/architecture/interface_acceptance_20260919.md
   validation_scope: bounded_qwen35_4b_dense_text_tp1_no_lora_mt_reference_write_v3

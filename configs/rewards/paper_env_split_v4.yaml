@@ -1,0 +1,9 @@
+launch:
+  overrides:
+  - ++algorithm.process_reward.mode=paper
+  - ++algorithm.process_reward.version=paper_env_split_v4
+  - ++algorithm.process_reward.paper_options.normalization=execution_v1
+  - ++algorithm.process_reward.paper_options.aggregation=sum
+  - ++algorithm.process_reward.paper_options.duplicate_scope=successful_call_read_response_v1
+  - ++algorithm.process_reward.paper_options.soft_scoring=constant
+  - ++algorithm.process_reward.paper_options.precedence=error_gold_duplicate_soft_read_state

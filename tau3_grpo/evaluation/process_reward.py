@@ -48,15 +48,19 @@ DEFAULT_WEIGHTS = {
     "unknown": 0.0,
 }
 SPLIT_VERSION = "paper_env_split_v3"
-ENVIRONMENT_VERSIONS = frozenset({"paper_env_v2", SPLIT_VERSION})
+DB_SEMANTICS_VERSION = "paper_env_split_v4"
+SPLIT_VERSIONS = frozenset({SPLIT_VERSION, DB_SEMANTICS_VERSION})
+ENVIRONMENT_VERSIONS = frozenset({"paper_env_v2", *SPLIT_VERSIONS})
 
 
 def default_weights(version=None):
     """Keep legacy schemas exact; the read/write split is explicitly versioned."""
     weights = dict(DEFAULT_WEIGHTS)
-    if version == SPLIT_VERSION:
+    if version in SPLIT_VERSIONS:
         weights.update(gold_exact=0.0, gold_read=0.0, gold_write=1.0,
                        soft_match=0.0, duplicate=0.0)
+    if version == DB_SEMANTICS_VERSION:
+        weights["generic"] = 0.0
     return weights
 
 
@@ -71,7 +75,7 @@ def reward_settings(config=None):
             from tau3_grpo.evaluation.environment_reward import ENVIRONMENT_OPTIONS
 
             settings["paper_options"] = dict(ENVIRONMENT_OPTIONS)
-            if config.get("version") == SPLIT_VERSION:
+            if config.get("version") in SPLIT_VERSIONS:
                 settings["paper_options"]["soft_scoring"] = "constant"
     if config:
         if set(config) - set(settings):
@@ -90,8 +94,11 @@ def reward_settings(config=None):
         ("paper", "paper_v1"),
         ("paper", "paper_env_v2"),
         ("paper", SPLIT_VERSION),
+        ("paper", DB_SEMANTICS_VERSION),
     }:
         raise ValueError("unsupported process reward mode/version")
+    if settings["version"] == DB_SEMANTICS_VERSION and settings["weights"]["generic"] != 0:
+        raise ValueError("generic reward must remain neutral")
     if not all(math.isfinite(float(x)) for x in settings["weights"].values()):
         raise ValueError("non-finite reward weight")
     if settings["mode"] == "paper":

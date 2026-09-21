@@ -84,8 +84,9 @@ def test_split_fit_requires_write_support_and_does_not_fit_saturated_read():
         calibrate_round([update], recipe, {'a', 'b'}, {'c', 'd'}, cfg)
 
 
+@pytest.mark.parametrize('version', [VERSION, 'paper_env_split_v4'])
 @pytest.mark.parametrize('enabled', [False, True])
-def test_split_verl_roundtrip_and_filter_keep_process_only_signal(enabled):
+def test_split_verl_roundtrip_and_filter_keep_process_only_signal(enabled, version):
     import json
 
     import torch
@@ -93,7 +94,7 @@ def test_split_verl_roundtrip_and_filter_keep_process_only_signal(enabled):
     from tau3_grpo.algorithms.mt_gtpo_verl import compute_mt_gtpo_verl, last_stats
     from tau3_grpo.analysis.calibrate_process_rewards import analyze_update, summarize
 
-    processes = [score([[event(READ), event(WRITE if i == 0 else READ)]], [READ, WRITE]) for i in range(4)]
+    processes = [score([[event(READ), event(WRITE if i == 0 else READ)]], [READ, WRITE], version) for i in range(4)]
     metadata = {'uid': np.array(['a', 'a', 'b', 'b']),
                 'process_reward_json': np.array([json.dumps(p) for p in processes], dtype=object)}
     mask = torch.ones((4, 1))
@@ -113,3 +114,42 @@ def test_split_verl_roundtrip_and_filter_keep_process_only_signal(enabled):
     metadata['process_reward_json'][0] = json.dumps(bad)
     with pytest.raises(ValueError, match='outcome mismatch'):
         compute_mt_gtpo_verl(torch.zeros((4, 1)), mask, metadata['uid'], config, metadata)
+
+
+@pytest.mark.parametrize('summary', ['help', 'different wording'])
+def test_v4_handoff_neutral_exact_unmatched_repeated_and_error(summary):
+    gold = {'name': 'transfer_to_human_agents', 'arguments': {'summary': 'help'}}
+    actual = {**gold, 'arguments': {'summary': summary}}
+    calls = [[event(actual, error=True)], [event(actual)], [event(actual)],
+             [event(WRITE)], [event({**WRITE, 'arguments': {'reservation_id': 'B'}})]]
+    result = score(calls, [gold, WRITE], 'paper_env_split_v4')
+    assert [t['reward_types'] for t in result['turn_records']] == [
+        ['error'], ['generic'], ['generic'], ['gold_write'], ['state_change']]
+    assert result['turn_rewards'] == [-.1, 0, 0, 1, -.1]
+    assert score_turns(result['turn_records'], result['golden_actions'], ['DB'],
+                       result['settings'], official_outcome=0) == result
+    legacy = score(calls, [gold, WRITE])
+    assert legacy['turn_records'][1]['reward_types'] == (['gold_exact'] if summary == 'help' else ['state_change'])
+    assert legacy['turn_records'][2]['reward_types'] == ['duplicate']
+    assert all('reward_type' not in e for turn in calls for e in turn)
+
+
+def test_v4_generic_weight_cannot_be_fitted_or_overridden():
+    with pytest.raises(ValueError, match='neutral'):
+        reward_settings({'mode': 'paper', 'version': 'paper_env_split_v4', 'weights': {'generic': .1}})
+    with pytest.raises(ValueError, match='tier'):
+        reward_settings({'mode': 'paper', 'version': VERSION, 'weights': {'generic': 0}})
+    config = yaml.safe_load((CODE_ROOT / 'configs/analysis/mt_gtpo_irc_paper_split_v4.yaml').read_text())
+    validate_irc(config)
+    assert config['fixed_weights']['generic'] == 0
+    del config['fixed_weights']['generic']
+    config['intended_signs']['generic'] = -1
+    with pytest.raises(ValueError, match='fixed at zero'):
+        validate_irc(config)
+
+
+def test_v4_unknown_tool_remains_unknown_and_calculate_remains_read():
+    calls = [[event({'name': 'unknown_tool', 'arguments': {}})],
+             [event({'name': 'calculate', 'arguments': {'expression': '1+1'}})]]
+    assert [t['reward_types'] for t in score(calls, [], 'paper_env_split_v4')['turn_records']] == [
+        ['unknown'], ['read_only']]

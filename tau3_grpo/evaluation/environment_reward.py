@@ -53,11 +53,12 @@ def observation_identity(event):
 
 
 class EnvironmentMatcher:
-    def __init__(self, gold):
+    def __init__(self, gold, *, db_semantics=False):
         from tau3_grpo.evaluation.process_reward import execution_arguments
 
         self.gold = [(g["name"], execution_arguments(g["name"], g["arguments"])) for g in gold]
         self.seen = {}
+        self.db_semantics = db_semantics
 
     def classify(self, event, used):
         from tau3_grpo.evaluation.process_reward import READ_TOOLS, WRITE_TOOLS, execution_arguments
@@ -108,6 +109,10 @@ class EnvironmentMatcher:
             tier, match = "state_change", None
         else:
             tier, match = "unknown", None
+        # Successful handoff is neither DB progress nor a semantic correctness score.
+        # Preserve matching evidence, but neutralize exact, partial and duplicate payouts.
+        if self.db_semantics and event["name"] == "transfer_to_human_agents":
+            tier = "generic"
         self.seen[signature] = observation
         return tier, match, partial, {"effective_arguments": effective, "environment_match": "execution_v1",
                                      "duplicate_evidence": evidence}

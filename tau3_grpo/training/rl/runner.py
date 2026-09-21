@@ -35,10 +35,10 @@ from tau3_grpo.training.services import launch_process, stop_process
 
 PROFILES = {
     version: CODE_ROOT / f'configs/train/rl/formal50_mt_gtpo_{version}.yaml'
-    for version in ('v2', 'v3', 'paper_v1', 'paper_env_v2', 'paper_env_split_v3')
+    for version in ('v2', 'v3', 'paper_v1', 'paper_env_v2', 'paper_env_split_v3', 'paper_env_split_v4')
 }
 BASE_PROFILE = CODE_ROOT / 'configs/train/rl/formal50_a800.yaml'
-PAPER_VERSIONS = {'paper_v1', 'paper_env_v2', 'paper_env_split_v3'}
+PAPER_VERSIONS = {'paper_v1', 'paper_env_v2', 'paper_env_split_v3', 'paper_env_split_v4'}
 MANIFEST_SHA = '641bde73c1495c59b5c0a87cfc84b9e00c0b5ffd2f86d10fd2205aaf2143adae'
 
 
@@ -64,7 +64,7 @@ def resolve(result, *, updates=20, dynamic_filter=False, resume_from=None, rewar
     })
     if reward_recipe is not None:
         if reward_version not in PAPER_VERSIONS:
-            raise ValueError('Frozen IRC recipes require --reward-version paper_v1, paper_env_v2 or paper_env_split_v3')
+            raise ValueError('Frozen IRC recipes require --reward-version paper_v1, paper_env_v2, paper_env_split_v3 or paper_env_split_v4')
         frozen = load_frozen_recipe(reward_recipe, manifest_sha256=MANIFEST_SHA)
         if frozen['reward']['version'] != reward_version:
             raise ValueError('Frozen recipe reward version differs from requested version')
@@ -193,7 +193,7 @@ def validate_inputs(env, result, updates, reward_version='v3', estimator='mt_gtp
             'reward_version': reward_version if estimator == 'mt_gtpo' else None,
             'reward_scope': ('official outcome only' if estimator != 'mt_gtpo' else
                              'environment-adapted split gold-read/gold-DB-write tiers; frozen IRC weights'
-                             if reward_version == 'paper_env_split_v3' else
+                             if reward_version in {'paper_env_split_v3', 'paper_env_split_v4'} else
                              'environment-adapted paper tiers; execution inputs and response-aware read duplicates'
                              if reward_version == 'paper_env_v2' else
                              'paper-derived tiers, frozen IRC weights, no DB-write budget'

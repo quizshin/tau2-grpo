@@ -93,10 +93,11 @@ def match_arguments(call, gold):
 
 def score_paper_turns(records, golden_actions, reward_basis, settings, *, official_outcome):
     from tau3_grpo.evaluation.process_reward import (
+        DB_SEMANTICS_VERSION,
         DB_WRITE_TOOLS,
         ENVIRONMENT_VERSIONS,
         READ_TOOLS,
-        SPLIT_VERSION,
+        SPLIT_VERSIONS,
         WRITE_TOOLS,
     )
 
@@ -110,7 +111,7 @@ def score_paper_turns(records, golden_actions, reward_basis, settings, *, offici
     if settings["version"] in ENVIRONMENT_VERSIONS:
         from tau3_grpo.evaluation.environment_reward import EnvironmentMatcher
 
-        environment = EnvironmentMatcher(gold)
+        environment = EnvironmentMatcher(gold, db_semantics=settings["version"] == DB_SEMANTICS_VERSION)
     rows = []
     weights, options = settings["weights"], settings["paper_options"]
     for k, original in enumerate(records):
@@ -148,9 +149,9 @@ def score_paper_turns(records, golden_actions, reward_basis, settings, *, offici
                 tier = "state_change"
             else:
                 tier = "unknown"
-            if settings["version"] == SPLIT_VERSION and tier == "gold_exact":
-                # Matching/one-time consumption stay unchanged. Transfer-to-human
-                # and other non-DB actions retain the separate generic exact tier.
+            if settings["version"] in SPLIT_VERSIONS and tier == "gold_exact":
+                # Matching/one-time consumption stay unchanged. V3 retains the
+                # non-DB exact tier; V4 handoffs are already classified generic.
                 if event["name"] in READ_TOOLS or event["name"] == "get_flight_status":
                     tier = "gold_read"
                 elif event["name"] in DB_WRITE_TOOLS:
@@ -181,7 +182,8 @@ def score_paper_turns(records, golden_actions, reward_basis, settings, *, offici
         rows.append(row)
     return {
         "schema": "tau3_process_reward_v1", "settings": deepcopy(settings),
-        "matching": "environment_execution_split_v1" if settings["version"] == SPLIT_VERSION else
+        "matching": "environment_execution_db_split_v2" if settings["version"] == DB_SEMANTICS_VERSION else
+                    "environment_execution_split_v1" if settings["version"] in SPLIT_VERSIONS else
                     "environment_execution_v1" if environment is not None else "paper_recursive_v1",
         "official_outcome": float(official_outcome),
         "golden_actions": gold, "reward_basis": list(reward_basis), "turn_records": rows,

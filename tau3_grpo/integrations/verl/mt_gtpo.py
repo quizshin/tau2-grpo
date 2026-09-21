@@ -8,7 +8,7 @@ from collections import Counter
 import numpy as np
 
 from tau3_grpo.algorithms.mt_gtpo import compute_mt_gtpo
-from tau3_grpo.evaluation.process_reward import SPLIT_VERSION, reward_settings
+from tau3_grpo.evaluation.process_reward import SPLIT_VERSIONS, reward_settings
 
 _LAST_STATS = {}
 _LAST_FILTER_STATS = {}
@@ -80,7 +80,7 @@ def compute_mt_gtpo_verl(
         process_reward_sum=sum(sum(p["turn_rewards"]) for p in audit if p is not None),
         process_call_reward_sum=sum(e["reward"] for row in events for e in row),
     )
-    if expected_reward["version"] == SPLIT_VERSION:
+    if expected_reward["version"] in SPLIT_VERSIONS:
         # Candidate-call statistics before optional DF, uploaded by the existing
         # per-step telemetry path. Neutral reads remain visible even at weight 0.
         tier_counts = Counter(e["reward_type"] for row in events for e in row)

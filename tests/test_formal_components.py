@@ -59,3 +59,20 @@ def test_active_include_graph_has_no_historical_profiles():
         config, sources = load_config_with_sources(profile)
         assert config["launch"]["environment"]["TOTAL_UPDATES"] == "20"
         assert not any("pilot" in s["path"] or "202609" in Path(s["path"]).name for s in sources)
+
+@pytest.mark.parametrize('df', [False, True])
+def test_v4_profile_reaches_hydra_and_retains_recipe_gate(df, tmp_path, monkeypatch):
+    from tau3_grpo.evaluation.process_reward import reward_settings
+
+    for key, value in {'TAU3_ROOT': tmp_path, 'TAU3_RUN_ROOT': tmp_path / 'runs',
+                       'TAU3_MODEL_ROOT': tmp_path / 'models', 'TAU3_ENV_FILE': tmp_path / 'absent'}.items():
+        monkeypatch.setenv(key, str(value))
+    with pytest.raises(ValueError, match='passed --reward-recipe'):
+        runner.resolve(tmp_path / 'run', reward_version='paper_env_split_v4')
+    command, env, _ = runner.resolve(tmp_path / 'run', reward_version='paper_env_split_v4',
+                                     dynamic_filter=df, allow_uncalibrated=True)
+    config = resolved(command, env)
+    settings = reward_settings(config['algorithm']['process_reward'])
+    assert settings['version'] == 'paper_env_split_v4'
+    assert settings['weights']['generic'] == 0
+    assert settings['paper_options']['soft_scoring'] == 'constant'

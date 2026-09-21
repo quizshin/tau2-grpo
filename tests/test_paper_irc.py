@@ -37,11 +37,13 @@ def simple_config(version="paper_v1"):
     c = deepcopy(DEFAULT_IRC)
     c.update(min_support=2, intended_signs={"gold_exact": 1, "error": -1},
              fixed_weights={k: 0.0 for k in DEFAULT_WEIGHTS if k not in {"gold_exact", "error"}})
-    if version == "paper_env_split_v3":
+    if version in {"paper_env_split_v3", "paper_env_split_v4"}:
         c["reward_version"] = version
         c["intended_signs"] = {"gold_write": 1, "error": -1}
         c["fixed_weights"]["gold_exact"] = 0.0
         c["fixed_weights"]["gold_read"] = 0.0
+    if version == "paper_env_split_v4":
+        c["fixed_weights"]["generic"] = 0.0
     return c
 
 
@@ -163,7 +165,7 @@ def test_train_only_groups_replay_and_duplicate_round_rejection(tmp_path):
         load_round([path], {"a", "b", "c", "d"}, set())
 
 
-@pytest.mark.parametrize("version", ["paper_v1", "paper_env_v2", "paper_env_split_v3"])
+@pytest.mark.parametrize("version", ["paper_v1", "paper_env_v2", "paper_env_split_v3", "paper_env_split_v4"])
 def test_cli_reports_failure_without_freezing_and_success_with_provenance(tmp_path, version):
     manifest = tmp_path / "train.jsonl"
     manifest.write_text("\n".join(json.dumps({"task_id": t, "split": "train"}) for t in "abcd"))
@@ -284,7 +286,7 @@ def controller():
     return module
 
 
-@pytest.mark.parametrize("version", ["paper_v1", "paper_env_v2", "paper_env_split_v3"])
+@pytest.mark.parametrize("version", ["paper_v1", "paper_env_v2", "paper_env_split_v3", "paper_env_split_v4"])
 def test_formal_controller_requires_calibration_and_accepts_frozen_recipe(tmp_path, monkeypatch, version):
     m = controller()
     with pytest.raises(ValueError, match="passed --reward-recipe"):
@@ -323,7 +325,7 @@ def test_frozen_recipe_rejects_changed_checks_even_with_new_hash(tmp_path):
 
 
 @pytest.mark.parametrize("enabled", [False, True])
-@pytest.mark.parametrize("version", ["paper_v1", "paper_env_v2", "paper_env_split_v3"])
+@pytest.mark.parametrize("version", ["paper_v1", "paper_env_v2", "paper_env_split_v3", "paper_env_split_v4"])
 def test_paper_profile_shell_hydra_and_frozen_weights(enabled, version, tmp_path, monkeypatch):
     from hydra import compose, initialize_config_dir
 
@@ -353,7 +355,7 @@ def test_paper_profile_shell_hydra_and_frozen_weights(enabled, version, tmp_path
     assert "trainer.test_freq=10" in rendered
 
 
-@pytest.mark.parametrize("version", ["paper_v1", "paper_env_v2", "paper_env_split_v3"])
+@pytest.mark.parametrize("version", ["paper_v1", "paper_env_v2", "paper_env_split_v3", "paper_env_split_v4"])
 def test_resume_preserves_recipe_and_df(tmp_path, monkeypatch, version):
     m = controller()
     for key in ("TAU3_ROOT", "TAU3_MODEL_ROOT", "TAU3_RUN_ROOT"):

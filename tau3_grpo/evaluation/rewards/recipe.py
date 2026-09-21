@@ -62,6 +62,8 @@ def validate_irc(config):
         raise ValueError("intended signs must be -1, 0, or 1")
     if any(type(v) not in (int, float) or not np.isfinite(v) for v in fixed.values()):
         raise ValueError("fixed reward weights must be finite")
+    if version == "paper_env_split_v4" and fixed.get("generic") != 0.0:
+        raise ValueError("generic must be fixed at zero")
     anchor_policy = config.get("fixed_anchor_policy")
     if anchor_policy not in (None, "gold_reference_v1"):
         raise ValueError("unsupported fixed anchor policy")
