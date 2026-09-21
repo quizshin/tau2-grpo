@@ -61,6 +61,7 @@
       "tests/test_semantic_state.py",
       "tests/test_session_isolation.py",
       "tests/test_sft_data.py",
+      "tests/test_sft_expansion.py",
       "tests/test_sft_evaluate.py",
       "tests/test_sft_thinking.py",
       "tests/test_simulator_config.py",

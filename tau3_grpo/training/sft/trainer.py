@@ -43,6 +43,9 @@ class Qwen35SFTTrainer(Trainer):
         # vocabulary logits for tool observations and user/system messages.
         model_inputs = dict(inputs)
         labels = model_inputs.pop("labels")
+        if model.training:
+            self.observed_training_label_tokens = getattr(self, "observed_training_label_tokens", 0) + int((labels[:, 1:] != -100).sum().item())
+            self.observed_training_dialogues = getattr(self, "observed_training_dialogues", 0) + labels.shape[0]
         shifted = F.pad(labels, (0, 1), value=-100)[..., 1:]
         positions = torch.nonzero((shifted != -100).any(dim=0), as_tuple=True)[0]
         if positions.numel() == 0:

@@ -1,0 +1,51 @@
+# SFT cold-start A/B: fixed 30 updates, final checkpoint, non-thinking.
+# A retains the original 45 dialogues; B adds at most 55 with targeted tool coverage.
+model:
+  name_or_path: Qwen/Qwen3.5-4B
+  trust_remote_code: false
+  attn_implementation: sdpa
+
+data:
+  train_jsonl: data/sft/coldstart_ab100/A_train45.jsonl
+  validation_jsonl: data/sft/coldstart_ab100/validation5.jsonl
+  tool_config: configs/envs/tool_config.yaml
+  # Preserve full dialogues and tool schemas; do not silently truncate/resample.
+  max_length: 24576
+  expected_train_size: 45
+  expected_validation_size: 5
+  enable_thinking: false
+  supervise_reasoning: false
+  preserve_historical_reasoning: false
+
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  # Resolve all language-layer linear modules, including Gated DeltaNet.
+  # Excludes vision, embeddings and lm_head (tied in the smaller models).
+  target_modules: qwen35_language_linear
+
+train:
+  method: lora
+  evaluate_before_train: true
+  load_best_model_at_end: false
+  max_steps: 30
+  expected_optimizer_steps: 30
+  expected_effective_batch_size: 8
+  eval_strategy: steps
+  eval_steps: 10
+  save_strategy: steps
+  save_steps: 10
+  num_epochs: 5
+  per_device_batch_size: 1
+  gradient_accumulation_steps: 8
+  learning_rate: 1.0e-4
+  lr_scheduler_type: cosine
+  warmup_ratio: 0.05
+  weight_decay: 0.0
+  max_grad_norm: 1.0
+  logging_steps: 1
+  seed: 42
+
+output:
+  dir: results/runs/sft_coldstart_ab/unassigned/A/adapter

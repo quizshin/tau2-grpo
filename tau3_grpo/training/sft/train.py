@@ -1,4 +1,4 @@
-"""Train a full-parameter or LoRA warm-start on 45 complete dialogues."""
+"""Train a full-parameter or LoRA warm-start on complete dialogues."""
 
 from __future__ import annotations
 
@@ -41,6 +41,22 @@ def _require_runtime(torch: Any, family: str = "legacy") -> None:
 def _load_tools(path: Path) -> list[dict[str, Any]]:
     payload = yaml.safe_load(path.read_text(encoding="utf-8"))
     return [entry["tool_schema"] for entry in payload["tools"]]
+
+
+def training_schedule(config: dict[str, Any], size: int, batch: int, accumulation: int) -> tuple[int, int, int]:
+    """Resolve an explicit update budget while preserving the historical defaults."""
+    epochs = int(config["num_epochs"])
+    max_steps = int(config.get("max_steps", -1))
+    if min(size, batch, accumulation, epochs) <= 0 or max_steps == 0 or max_steps < -1:
+        raise ValueError("SFT sizes/epochs must be positive and max_steps must be -1 or positive")
+    expected_batch = int(config.get("expected_effective_batch_size", 8))
+    if batch * accumulation != expected_batch:
+        raise ValueError(f"SFT effective batch must be {expected_batch}, got {batch * accumulation}")
+    steps = max_steps if max_steps > 0 else math.ceil(math.ceil(size / batch) / accumulation) * epochs
+    expected = int(config.get("expected_optimizer_steps", 30))
+    if steps != expected:
+        raise ValueError(f"SFT schedule produces {steps} updates, expected {expected}")
+    return epochs, max_steps, steps
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -104,7 +120,7 @@ def main(argv: list[str] | None = None) -> int:
         tokenizer,
         tools=tools,
         max_length=max_length,
-        expected_size=45,
+        expected_size=int(config["data"].get("expected_train_size", 45)),
         **options,
     )
     validation_dataset = TrajectorySFTDataset(
@@ -112,7 +128,7 @@ def main(argv: list[str] | None = None) -> int:
         tokenizer,
         tools=tools,
         max_length=max_length,
-        expected_size=5,
+        expected_size=int(config["data"].get("expected_validation_size", 5)),
         **options,
     )
 
@@ -130,13 +146,10 @@ def main(argv: list[str] | None = None) -> int:
         if args.gradient_accumulation_steps is not None
         else int(train_config["gradient_accumulation_steps"])
     )
-    epochs = int(train_config["num_epochs"])
     effective_batch = per_device_batch * accumulation
-    if effective_batch != 8:
-        raise ValueError(f"frozen SFT effective batch is 8, got {effective_batch}")
-    expected_steps = math.ceil(math.ceil(45 / per_device_batch) / accumulation) * epochs
-    if expected_steps != 30:
-        raise ValueError(f"frozen SFT schedule must produce about 30 steps, got {expected_steps}")
+    epochs, max_steps, expected_steps = training_schedule(
+        train_config, len(train_dataset), per_device_batch, accumulation
+    )
 
     set_seed(int(train_config["seed"]))
     model = load_policy_model(
@@ -174,6 +187,7 @@ def main(argv: list[str] | None = None) -> int:
     training_args = TrainingArguments(
         output_dir=str(output_dir),
         num_train_epochs=epochs,
+        max_steps=max_steps,
         per_device_train_batch_size=per_device_batch,
         per_device_eval_batch_size=1,
         gradient_accumulation_steps=accumulation,
@@ -186,9 +200,11 @@ def main(argv: list[str] | None = None) -> int:
         gradient_checkpointing=True,
         gradient_checkpointing_kwargs={"use_reentrant": False},
         logging_steps=int(train_config.get("logging_steps", 1)),
-        save_strategy="epoch",
+        save_strategy=train_config.get("save_strategy", "epoch"),
+        save_steps=int(train_config.get("save_steps", 500)),
         save_total_limit=2,
-        eval_strategy="epoch",
+        eval_strategy=train_config.get("eval_strategy", "epoch"),
+        eval_steps=int(train_config.get("eval_steps", 500)),
         load_best_model_at_end=bool(train_config.get("load_best_model_at_end", False)),
         metric_for_best_model="eval_loss",
         greater_is_better=False,
@@ -240,6 +256,8 @@ def main(argv: list[str] | None = None) -> int:
     )
     torch.cuda.reset_peak_memory_stats()
     result = trainer.train()
+    if trainer.state.global_step != expected_steps:
+        raise RuntimeError(f"SFT stopped at {trainer.state.global_step}, expected {expected_steps} updates")
     validation_metrics = trainer.evaluate()
     if training_args.load_best_model_at_end and not math.isclose(
         validation_metrics["eval_loss"], trainer.state.best_metric, rel_tol=1e-4, abs_tol=1e-5
@@ -259,6 +277,8 @@ def main(argv: list[str] | None = None) -> int:
         **options,
         "expected_optimizer_steps": expected_steps,
         "actual_optimizer_steps": trainer.state.global_step,
+        "observed_training_label_tokens": getattr(trainer, "observed_training_label_tokens", None),
+        "observed_training_dialogues": getattr(trainer, "observed_training_dialogues", None),
         "per_device_batch_size": per_device_batch,
         "gradient_accumulation_steps": accumulation,
         "effective_batch_size": effective_batch,

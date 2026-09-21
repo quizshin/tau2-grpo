@@ -19,7 +19,7 @@ def validation_dataset(config, tokenizer):
     tools_path = resolve_project_path(config['data']['tool_config'])
     tools = [item['tool_schema'] for item in yaml.safe_load(tools_path.read_text())['tools']]
     dataset = TrajectorySFTDataset(source, tokenizer, tools=tools,
-        max_length=int(config['data']['max_length']), expected_size=5,
+        max_length=int(config['data']['max_length']), expected_size=int(config['data'].get('expected_validation_size', 5)),
         enable_thinking=False, supervise_reasoning=False,
         preserve_historical_reasoning=False)
     digest = hashlib.sha256(json.dumps(dataset.examples, sort_keys=True).encode()).hexdigest()
