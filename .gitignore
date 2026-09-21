@@ -57,3 +57,7 @@ dist/
 
 # Full upstream SFT corpus is preserved on disk; inventory stores its hash.
 /data/raw/areal_tau2/tau2_sft_train.jsonl
+
+# Local upstream archive and document rendering scratch files.
+/tau2.zip
+/tmp/

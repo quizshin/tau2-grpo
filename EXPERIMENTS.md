@@ -1,6 +1,104 @@
 # 实验记录
 
+## 2026-09-21 8×5090 A45 GRPO 30-step 启动
+
+用户授权后使用现有正式控制器，A45 起点、原 A800 固定 train50、每步 8×8、PPO minibatch 32 条、全参数 FP32 FLA/IEEE、温度 0.7、DF 关闭。四策略卡 v1 在首个 backward 失败，0 step。v2 改为策略 GPU0–7，模拟器采样时共享 GPU4–7 TP4、更新时 sleep，原生 CPU saved-tensor 卸载；真实64条batch八卡连续两轮重放通过（每轮两次optimizer更新，约140秒，仅更新耗时）。每 10 步完整保存并评测 selection60×4，新检查点完整后仅保留最新一份，SwanLab online。v2 CPU配置/生命周期等36项通过，原生卸载CPU/CUDA等价性3项通过（有重叠），30步预检通过；v2控制器PID48324已失败：策略KV cache不足（0.58 < 0.81 GiB），在线0步。v3提高策略显存配额0.36→0.42并保持24,576上下文，20项远程CPU测试及Hydra预检通过，v3控制器PID56156完成首批采样后在backward OOM，已清理，在线0步；FSDP2 CPU卸载连续两轮更新通过（约121秒/轮）；同输入第二个梯度范数与FSDP1差0.013%，不逐位等价。v4通过21项CPU测试/预检，PID69362运行；18:57首个完整在线step成功（655.86秒，grad norm=1.7137，更新后权重同步成功），进入step2。SwanLab run `2e4be2f4c0e54b4bb288e`，云端已确认step1和非零梯度，16份卷积权重同步审计全匹配；30步未完成。[配置与执行记录](docs/grpo_5090_a45_u30_20260921.md)。
+
+前11步reward只读审计：57/88组有信号，保存的优势重算误差0；step10成功率与SFT均45.83%，尚无观察到的收益。15条提前终止按协议零分计入完整240条，不是缺失。[审计](results/analysis/grpo_5090_reward_20260921/report.md)。
+
+## 2026-09-20 四模型统一selection完成（STOP修复版）
+
+四组各240条、0执行异常/0缺失，16预检单列。Base/SFT/GRPO/MT pass@1为50.00%/45.00%/41.25%/39.58%；pass@4为70.00%/71.67%/68.33%/65.00%。主对比MT−GRPO −1.67pp，95%任务配对CI[−8.33,+5.00]；未显示显著提点，历史温度条件不可混合。完整960轨迹、60题表、538条badcase索引、10条案例复核及模型/源码/服务/停止证据已双端保留和hash核验。23:00:08结束，含准备2.283h/11.416预留GPUh；本次GPU进程0，051未关机。仅提出写操作业务参数一致性作为单因素研究候选，未启动新训练。其他任务的共享服务校准另行记录，勿混入本轮轨迹或成绩。
+
+[完整报告](results/analysis/grpo_improvement_evidence_20260920/execution-stop-fixed-20260920/final-analysis/report.md)；[研究记录第12节](docs/grpo_improvement_evidence_20260920.md#12-四模型统一-selection-最终完成)。
+
+## 2026-09-20 051共享SFT服务校准采样（运行中）
+
+用户授权复用051现有SFT/用户模拟器，以并发1采train50；最多400条，原截止22:09:20不重置，不启动新模型服务或参数更新。走原生legacy训练循环，奖励paper_env_split_v4，策略/用户0.7，实际token IDs/logprobs与完整组回放记录。首请求90秒超时单独保留；单token能力探测通过，等待上限300秒的新尝试于同一预算内运行。21:19已完成2条，首条9轮/4调用/1034生成token，服务token/logprob逐项与过程奖励重放通过。仅完整8条组进入IRC，部分任务覆盖禁止冻结。400为上限，不承诺在60分钟内完成。详情及实时读取入口见[采样记录](results/analysis/v4_shared_sampling_20260920/README.md)。
+
+**20:57 核对：16/16 真实预检通过，全部 user_stop、零执行异常，108 对工具调用/返回 ID 相符；五服务模型身份及四模型协议/任务/DB/源码一致。正式 960 条已于 20:50:43 开始；核对时 55 条完成、零执行异常。截止仍为 2026-09-21 00:43:09，不重启、不补样。**
+
+**当前更新（2026-09-20 20:43）：按用户明确要求，中断上一轮、修复 STOP 优先级并从头重评。新控制器 PID 9658，截止 2026-09-21 00:43:09；当前五服务加载中。之前三次中断尝试的运行产物及本地对应副本已清理，保留原始检查点、独立目录中的两份导出及简短删除回执。下文旧尝试路径已退役，旧运行状态为历史记录。**
+
+## 2026-09-20 split v4 实际校准：未通过（CPU）
+
+按用户要求重新拟合历史1,280条训练轨迹（40任务960条拟合／10任务320条原留出），固定新权重复核256条工程轨迹。gold_write=+0.559738、error=-0.352989、state_change=-0.186239；历史拟合state_change即时proxy为+0.010071，留出支持数仅5/20，工程支持8/7；仅官方已评分工程error平均Hybrid仍+0.090683。原24份输入hash及奖励/优势/mask重放通过。未调低阈值，未生成冻结配方，未启动新采样或训练。详见[实际校准报告](docs/mt_gtpo_split_v4_calibration_20260920.md)。
+
+**最新执行：用户明确要求启动，新的 legacy 四模型评测已于北京时间 2026-09-20 20:22:51 启动。硬截止 2026-09-21 00:22:51（4 小时/最多 20 预留 GPUh）；当前为五服务加载阶段，16 预检后自动 960 正式。单条执行异常保留现场并继续其他正式 trial，不补样。**
+
+## 2026-09-20 legacy 0.7 条件调整（CPU，未启动 GPU）
+
+按用户决定复用旧开场/30 step/10 错误/原始工具返回，四模型策略与用户均 0.7，不加 1024 请求限制。补齐上下文预算终止和执行异常现场，下一轮控制器允许单条错误后继续其余正式 trial，不重试补样。本地/远程各 85 项回归及控制器 959+1 异常收集验证通过。历史 v3 失败不覆盖，新 GPU 预算未启动。[条件与证据](docs/grpo_improvement_evidence_20260920.md#9-用户确认保留旧评测行为仅统一条件并补全异常记录)。
+
+## 2026-09-20 19:41：四模型正式评测因上下文边界处理缺口停止
+
+本轮固定960正式轨迹保存186条：Base40、SFT49、GRPO48、MT49；另1条MT异常（airline_698/trial0/seed42），773条无最终回执。错误为策略端上下文请求至少23553输入+1024输出=24577，超过24576上限；typed ContextWindowExceededError外溢后被runtime统一归为infrastructure_error，触发有界控制器停止。结束时间19:41:20，清理19个本轮进程/后代，存活0；19:52再次查GPU进程为空。实例051仍开机计费，不等于平台已关机。
+
+85份失败小证据已下载逐文件hash核验；严格比较器三组均为incomplete_evaluation，differences=null，不输出排名，不把异常改零补入、不自动补样或重跑。原模型、完整checkpoint和新导出均保留，16条预检通过记录保持独立。ERRORS登记ERR-029；CPU原生循环复现并验证内存候选：策略/用户context超限保留已有工具轨迹并记预算终止，普通BadRequest仍异常、正常STOP不变，共5场景通过。未部署生产修复、未重跑GPU，没有算法收益结论。
+
+证据：`results/analysis/grpo_improvement_evidence_20260920/execution-1852/failed-attempt-1952/`；CPU记录：同级`context-boundary-cpu/verification.json`。需要完成边界修补与回归后，再另行决定新的统一评测尝试；不得重置本次预算或拼接出完整结果。
+
+## 2026-09-20 19:22：四模型16条预检通过，正式960条开始
+
+051新实例的5个服务均就绪，固定4题×4模型共16条真实预检全部正常user_stop、零执行异常；94次工具调用与返回ID逐一对应，四组均覆盖多工具消息。模型内容/PID启动回执、任务/DB/harness/evaluator哈希、trial/seed与温度0.7核验一致，四份正式run各固定240条。预检只验证链路，不用成功率择优，也不混入正式成绩。正式评测于北京时间19:18:46开始，仍执行原22:04:58硬截止，未重启或追加预算。30份小证据下载后逐文件hash通过，CPU核验见 `results/analysis/grpo_improvement_evidence_20260920/execution-1852/smoke-evidence-1922/smoke-audit.json`；正式结果未完整前不排名。
+
+## 2026-09-20：四模型统一 selection 已获准，A800 准备中
+
+用户提供新 SSH 端口 43294 继续上一轮具体预算。实测 5×A800 80GB 均空闲，cgroup 内存 600 GiB，持久盘可用约220 GiB；1021份运行源码/配置/脚本与本地哈希一致。新尝试为 `results/runs/grpo_improvement_selection/20260920_s42_t07_a800`，Base/SFT/GRPO20/MT-v3-df0-step20，960正式+16预检，温度均0.7、v3输入协议，未开始新训练。
+
+保守使用容器启动时间北京时间18:04:58作为预算起点，固定截止22:04:58，不延长。占卡期间CPU导出/加载/预检均计入4小时和20预留GPUh上限。实际平台开卡时间未独立核实，计费以平台为准。两份CPU导出均完成724张量逐值核验，迁入新运行目录后文件hash一致；控制器已启动服务加载，完整评测完成前不报告新成绩。独立运行控制器通过完成、截止、异常、跨组协议不一致四项CPU边界检查；不替代模型预检。
+
+执行计划/源码快照/日志见上述新目录，本地准备记录 `results/analysis/grpo_improvement_evidence_20260920/execution-1852/`。服务统一显式generation-config=vllm、seed42、eager推理、策略各并发4、模拟器并发16；身份或服务异常停止，不自动重试补样。
+
+## 2026-09-20：以 GRPO 为基线的四模型 CPU 证据整理
+
+用户将主比较明确为 Base、SFT new-off、GRPO step20、MT-GTPO reference_write/v3 step20（DF off）。已核对 11 个权重文件完整 SHA256；GRPO/MT 两份完整 checkpoint 的登记文件尺寸一致。复用 6,400 条训练审计并核对 40 个重叠源文件哈希，重算 SFT/GRPO 历史独立评测；GRPO 相对 SFT +3.75pp，95% task-paired CI [-2.50,10.00]pp，19题提高/12题下降/29题持平。Base、MT 缺同协议独立结果，不补零或混入训练内成绩。
+
+生成 60 题主比较表、250 行训练任务汇总、2,284 条失败/未评分索引与 11 份可读案例。MT 训练内 step10→20 为49.17%→43.33%，未评分14→9、已评分失败108→127；仅是诊断信号，不宣称确定退化或因果归因。名单顺序、支付绑定、额外写操作与政策/反馈修正分别标注。
+
+四模型统一评测计划960正式+16预检，v3输入协议、策略/用户均0.7；本地/远程四组dry-run各240条通过，无模型生成。5×A800规划预计2–3小时，4小时/20 GPUh硬上限，GPU启动仍待用户决定；远程当前无GPU设备。生产算法和历史分数未改。完整材料见 [CPU证据与下一轮计划](docs/grpo_improvement_evidence_20260920.md)。
+
+CPU 推理导出准备受资源阻断：当前远程容器内存上限仅 2 GiB，GRPO 合并进程被 SIGKILL，未生成推理权重；MT 导出未启动，原检查点未改。失败证据已保留（ERR-028），不在同资源下重试。重新导出前至少分配 64 GiB 容器内存（建议 128 GiB），完成导出核验后再启动获批的 GPU 评测。
+
+## 2026-09-20：统一采样默认温度 0.7（sampling_t07_v1）
+
+用户指定将当前策略训练、训练内评测、独立评测及对应用户模拟器温度全部统一为0.7。修改活动配置、评测控制器/CLI、程序化回退，并显式接通直接shell的评测采样温度。旧结果与日期profile保留原参数，历史重放须恢复完整run配置。没有新采样、GPU训练或效果结论；多轮harness等价仍未完成。本地与远程各120项CPU回归通过，lint零新增；22份本轮修改文件两端哈希核验一致；selection60×4 dry-run温度均0.7，无模型调用。CPU检查与部署证据：`results/maintenance/temperature-07-20260920/`；详见[温度与输入协议记录](docs/architecture/harness_inputs_20260920.md)。
+
+## 2026-09-20：MT-GTPO 预算截断状态审计
+
+历史238条/工程69条截断全部CPU重放，307条终态哈希及执行调用数与原记录一致。截断时目标状态达标分别2/238与2/69，合计4/307（1.30%）；3条曾一致后偏离（1条初始即一致），167条有状态变化但未达标，133条无状态变化。4条最终达标均为轮数上限；51条上下文预算截断无最终达标。旧正优势错误轮230/80中仅工程2轮所属轨迹最终达标。官方reward、scored及历史终止原因保持不变；不估计加预算后的成功率，无GPU/新采样/训练。远程最终状态比较、本地完整重放，保留资源限制导致的中止尝试与观测字符串差异。[完整报告](docs/mt_gtpo_truncation_state_20260920.md)。
+
+## 2026-09-20：split v4 错误轮信用分配诊断
+
+固定v4分析1,536条旧轨迹。历史/工程正优势错误轮379/136，其中最终官方成功63/33、官方失败86/23、预算截断230/80。工程23个官方失败正优势错误轮均无后续gold_write，自身未来回报≤0但高于原组均值，得到正未来贡献；不是负奖励漏扣，也不能解释为恢复成功。分解重构误差2.66e-15，10项相关CPU回归通过。未改公式、权重或训练；下一步建议独立局部错误信用与长程信用消融设计。详见[诊断报告](docs/mt_gtpo_error_credit_v4_20260920.md)。
+
+
+## 2026-09-20：split v4 分离转人工与固定权重对照
+
+新增独立 `paper_env_split_v4`：成功转人工单列 generic=0，错误惩罚保留；既有权重、Hybrid和DF不变。015远程CPU回放1,280条历史及256条工程轨迹，原奖励/优势/mask全部通过，split v3完整payload与修改前逐项相等；仅108次转人工即时奖励由负改为0。固定配方总体相关性分别0.576268→0.581518、0.614380→0.621933，不是策略成功率。历史留出state_change仅5条，工程拟合/留出8/7条；工程已评分error平均Hybrid为+0.090780，仍不满足校准。未拟合、冻结、采样或训练。详见[split v4报告](docs/mt_gtpo_split_v4_20260920.md)。
+
+
 导航：[当前实验](docs/CURRENT_EXPERIMENT.md) · [错误回顾](ERRORS.md) · [新增代码与实验标准](docs/architecture/development_standard.md) · [消融计划](docs/architecture/ablation_plan_20260918.md)。本文件为唯一实验索引，旧报告保留原文。
+
+## 2026-09-20：训练/独立评测harness差分核对完成（CPU）
+
+实验ID：`harness-step2-audit-20260920`。本地与015无卡环境各运行22个固定生成场景，使用真实ToolAgentLoop与Orchestrator、工具和官方评分；两地工具返回/逐调用DB/模型可见工具事实及结果逐项一致，相关源码/输入hash一致。两地同一组CPU回归分别61 passed，不相加。没有模型API、GPU或新训练，生产行为与历史结果未改。
+
+22个定向场景最终DB全部一致；9个刻意触发预算等边界的场景出现终止/评分差异，不能当作实际故障率。确认STOP在独立step边界被MAX_STEPS覆盖（ERR-022）、轮数/错误上限协议差（ERR-023）、长工具返回可见裁剪差（ERR-024）；airline_803真实参考写入完成后仍复现训练1、独立0。未知工具失败DB回执缺失保留。下一步优先版本化修订终止优先级，再设计训练匹配的预算/可见输入协议，不直接混用旧分数。[完整报告](docs/architecture/harness_step2_audit_20260920.md)；证据：`results/analysis/harness_step2_20260920/`。
+
+## 2026-09-20：训练分析第一步完成（CPU）
+
+实验ID：`training-step1-audit-20260920`。只读汇总6,400条正式训练记录；重放268条近期工程轨迹/2,095次调用，终局与260条过程奖励重算一致，已记录的2,094份逐调用DB hash一致。首轮63条observation差异按raw参数顺序及原harness裁剪复验后全部一致；保留原差异证据。1次未知工具失败DB回执缺失、2次真实长返回裁剪单列。独立8条官方strict重评分全部一致（5成功/3失败）；定向CPU57项通过。没有GPU、模型调用、算法修改或新训练收益。
+
+train50/selection60精确任务检查无重叠，但共享四套DB模板；6个参考DB不变任务的无工具正常终止探针均得官方1分，登记ERR-020/021。旧训练零分中31.61%–40.18%未完成官方评分，不能全算结果做错；旧记录缺新token事实，不补造。官方分数、历史文件和final50保持原状。[完整报告](docs/architecture/training_step1_audit_20260920.md)；证据：`results/analysis/training_step1_20260920/`。下一步为harness差分与奖励覆盖诊断，尚未启动。
+
+## 2026-09-20：split奖励在256条工程轨迹上的固定配方诊断
+
+015远程CPU完成旧1,280条历史复核（rounds完全相等）及DF off/on各两批共256条的原奖励／优势／mask回放与固定split重评分。187条官方已评分，69条预算截断；仅覆盖6个原拟合任务和10个原留出任务，短程覆盖与哈希调度耦合。
+
+split奖励–记录终局相关性0.614380（官方已评分0.582716），实际旧reference_write_v3分别为0.765703／0.721010；不能声称新版更优。state_change两分区支持均仅17，且36次调用中21次是GENERIC转人工；官方成功样本中8次state_change全为转人工，登记ERR-019。134次错误调用得到正Hybrid优势，官方已评分错误轮平均优势+0.065238；加法分解确认未来过程／终局贡献可抵消即时惩罚。
+
+未重新拟合这256条、未改奖励或算法、未冻结、未采样／训练。报告：[工程轨迹固定诊断](docs/mt_gtpo_engineering_reward_diagnosis_20260920.md)；产物：`results/analysis/paper_split_engineering_20260920/`。
 
 ## 2026-09-20：三份工程 step2 检查点已退役
 
@@ -422,3 +520,75 @@ RL-010/011/012均完成24条训练轨迹和3次真实actor更新，成功数8/24
 正式控制器接入校准通过的冻结奖励配方，续训验证同一配方与算法配置。
 当前仅本地实现与CPU/配置验证；未上传远程、未启动训练，未产生真实训练数据的IRC通过配方或新模型效果。
 实现约定、校准和训练入口见 [本地修复说明](docs/mt_gtpo_paper_local_fix_20260917.md)。
+
+
+## 2026-09-20 Harness 修复与新旧协议核验
+
+新增显式 `tau3_eval_train_control_v2`：修正 STOP 优先级，按当前训练轮数/错误策略控制独立评测，共享模型可见工具裁剪；保留 legacy 及原评分。派发失败现补录真实 DB hash。已完成本地/远程各 129+1=130 项 CPU 用例，新旧协议各 22 例、跨主机共 44 组诊断见证匹配；两端 lint 零新增、vendor 通过，21 文件最终哈希一致。追加远程单项首次 300 秒超时保留，独立离线诊断尝试 66.09 秒通过。尚未证明真实 token/context 等价或模型效果提升，ERR-020/021 保持开放。详见[修复与验证记录](docs/architecture/harness_fix_20260920.md)。
+
+## 2026-09-20 Harness输入v3与完整工具schema CPU修复
+
+新增显式 `tau3_eval_train_inputs_v3`：共用固定开场、每轮1024 token、显式non-thinking；按Mercor参考设策略评测默认温度1，用户模拟器评测保持1，旧legacy/v2策略0.4保留。实际注册路径发现veRL会丢嵌套schema，新增 `tau3_full_schema_v2` 和独立候选profile；不修改旧训练输入。新组合selection60首轮真实token一致，旧schema少1015 token；多轮仍有模板重渲染差异。仅CPU，不代表算法收益或GPU验收。详细证据、失败尝试与源身份见 [输入修复报告](docs/architecture/harness_inputs_20260920.md)。
+
+本轮收尾：远程主回归148 passed；训练内温度与三算法入口收尾回归两端各38 passed（集合有重叠，不相加）。两端真实tokenizer的60条首轮及多轮差异见证完全匹配；19个本轮源码/配置/测试/脚本文件hash一致，lint零新增。没有GPU或模型调用。
+
+
+## 2026-09-20 多轮 token 与预算协议 v4
+
+新增 opt-in `tau3_token_budget_v1`（训练）与 `tau3_eval_token_v4`（同条件诊断 selection），共用原生执行循环和完整 schema、保留真实 token、统一累计预算。本地/远程主要 CPU 回归各256项、收尾协议专项各42项通过（两组有重叠，不相加），两端lint零新增/vendor通过，tokenizer三文件hash及27份本轮变更文件一致；未启动 GPU，无新模型效果结论。ERR-027 的多轮重渲染/预算差异已有共享实现，真实服务 token/logprob 验收仍开放；旧版本与旧结果保留。详见 [实现与验证](docs/architecture/token_harness_20260920.md)。
+
+本次定位澄清：它不是所有评测必须与训练一致的要求；Mercor正文明确160k训练/256k评测，并进行跨harness评测。公平比较要求被比较模型使用同一评测条件，TITO主要保护训练采样与学习的token身份；独立正式评测协议仍另行确定。
+
+## 2026-09-20：MT-GTPO split-v4 四路续采
+
+用户授权评测后重启 SFT 与模拟器服务，保留先前 20 条，四路并发补采训练池 IRC 数据；两张 A800，服务加载起一小时上限。运行目录 `results/runs/v4_shared_irc/20260920_sft_c4_resume/`。部署与 CPU 回放验证见 [续采记录](docs/mt_gtpo_v4_resume_sampling_20260920.md)。实际进度以运行回执为准，未开始参数训练。
+
+
+## 2026-09-21 四模型 badcase 全量 CPU 重放
+
+960条/60题、6,430次工具返回一致，862条官方结果全部复现；98条预算只诊断DB，不改分。GRPO相对SFT补回27条、丢36条，MT相对GRPO补回29条、丢33条；净失分主要是官方DB失败增加，不是预算增加。纯乘客数组顺序失败6条单列，模拟用户偏离固定参考与真实参数错误分开标注。历史GRPO63/160组终局奖励全同；MT reference_write/v3有25条官方失败拿满正工具奖励，其中12条有中性非参考写操作。以上是单因素反馈研究假设，不是因果证明；未启动采样/训练，未修改奖励或分数。
+
+[完整诊断与复现证据](docs/selection_badcase_analysis_20260921.md)。
+
+
+## 2026-09-21 按 MT→SFT→GRPO 完成训练信号链审计
+
+实际MT reference_write/v3全部1280条、12591轮的奖励/优势/mask回放一致；独立优势分解误差4.663e-15。25条拿满正工具奖励的官方失败中，12条中性非参考写入所在轮仅3条正优势、9条负优势，三正轮都混有参考正奖励调用。59个官方失败工具错误轮为正优势，其中52轮无后续正奖励写入；同轮混合信用及相对未来贡献是已定位风险，非算错公式证明。非参考取消存在用户同意且24小时内的合法替代，不能一律负奖。
+
+实际new-off输入/远程effective messages及原生token渲染通过核对，最佳为checkpoint30、val loss0.422255，不能混用旧SFT-003的checkpoint24。E0原始20份rollout hash与前审计一致；正/负/零终局优势396/380/504，20步极值与在线日志一致，无失败轨迹正终局优势。E0缺逐token历史payload，未冒充重现优化器更新。下一步优先检查MT局部与长程信用组合，随后处理已证实SFT数据问题；不立即另起奖励/训练。仅CPU，未改任何官方分数。
+
+[完整报告与来源](docs/training_credit_chain_20260921.md)。
+
+## 2026-09-21：split-v4 新 SFT 数据校准
+
+CPU 校准 15 个完整组／120 条；从实际采样候选继续拟合，gold_write=+0.534862、error=-0.426863，state_change 支持不足保留 -0.186239。拟合／留出支持检查未通过；26 条记录未获官方评分，单独审计。未冻结配方、未启动 GPU 或训练。详见 [新数据校准](docs/mt_gtpo_v4_fresh_calibration_20260921.md)。
+
+
+## 2026-09-21 MT固定buffer离线信用对照
+
+固定v3原始1280轨迹/12591轮、奖励和原组：移除后续过程奖励并重新归一化后，正优势错误轮381→68，成功中的干净参考写入502→503、错误后首次参考写入49→49；但242个无即时奖励成功轮丢失正信号，失败中的正奖励写入正优势71→91。同轮去其他调用奖励诊断也损失118次正奖励调用正信号，不能直接作为公式。仅保留时间信用候选和混合信用证据；未改正式算法、未启动GPU或宣称提点。[完整对照](docs/mt_credit_comparison_20260921.md)。
+
+## SFT cold-start A45 / B100 — 2026-09-21
+
+状态：running（两组已产生GPU更新）。原45条 vs 含原45条的100条、14工具覆盖；共同validation5，固定30更新，non-thinking LoRA；统一selection60×4，policy/user温度均0.7。无RL。详见 [实验记录](docs/sft_coldstart_ab_20260921.md)。运行：`/root/shared-nvme/tau3/runs/sft_coldstart_ab/20260921-AB100-v1`。
+
+SFT cold-start A/B 更新（2026-09-21 13:03）：A已完成30步；B第8步后OOM，保留失败证据并在`20260921-AB100-v2`启用expandable_segments从原基座重跑。评测未开始。
+
+SFT cold-start A/B（2026-09-21 15:00）：两组30步训练及权重合并完成；初次启动smoke存在工具类并发初始化错误及端点超时，formal480未开始。修复与新评测目录见 [恢复记录](docs/sft_coldstart_ab_20260921.md)，尚无有效任务成功率。
+
+SFT cold-start A/B（15:10）：修复后CPU66+1项通过，GPU启动smoke共8条完整且零执行错误；`20260921-AB100-v2/evaluation-recovery-v1` 已进入两组正式selection60×4。尚未完成，不报告模型收益。
+
+## 2026-09-21：5090空闲四卡GRPO/MT-GTPO短测
+
+用户授权在A/B评测继续运行时使用0/1/4/5卡。两种全参数RL各2更新×12轨迹，总90分钟上限；共享独立GPU5模拟器，从A45最终SFT初始化，MT使用未校准v4默认权重，仅判断执行可行性。两组CPU实际参数检查通过，控制器已启动，尚无GPU更新结论。详见[执行记录](docs/rl_5090_feasibility_20260921.md)。
+
+
+## 2026-09-21 16:48 Final evaluation complete
+
+A completed at 16:46:42; B at 16:40:04. Recovery-v1 controller status complete, exit 0. Each arm scored all 240 selection60 trials with zero execution errors or missing trials. Policy/user temperatures both 0.7. Strict protocol/identity comparison passed. A45 pass@1=45.83% (110/240), B100=41.25% (99/240); B-A=-4.58 pp, paired-task bootstrap 95% CI [-10.83,+1.67] pp. Pass@4: 76.67% vs 68.33%; pass^4: 23.33% vs 16.67%. No cold-start benefit observed from this expansion; one training seed and the primary CI do not establish general degradation or downstream RL impact. Tool error flags: 2.58% of 1742 calls vs 8.01% of 1911 calls; these are distinct from infrastructure execution failures.
+
+Remote evidence: /root/shared-nvme/tau3/runs/sft_coldstart_ab/20260921-AB100-v2/evaluation-recovery-v1. Local comparison: results/runs/sft_coldstart_ab/20260921-prepare/final-comparison/comparison.{json,md}. Recommend retaining A45 as the present RL starting point; no formal RL launched based on this result.
+
+## 2026-09-21：调用 token 归属本地 CPU 实验
+
+实现可选原始 token→解析调用→执行 ID 归属记录，三种算法路径保留原行为。200 个构造输出与修改前 parser 一致，598 个保留/裁剪检查通过；原生航空工具与完整 loop 发布另做对照。奖励及算法未改，未用 GPU。详见 [CPU 实现与实验](docs/tool_call_token_attribution_cpu_20260921.md)。
