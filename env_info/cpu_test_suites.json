@@ -3,6 +3,7 @@
   "suites": {
     "core": [
       "tests/test_anchors.py",
+      "tests/test_call_attribution.py",
       "tests/test_dynamic_filtering.py",
       "tests/test_environment_reward.py",
       "tests/test_eval_scoring.py",

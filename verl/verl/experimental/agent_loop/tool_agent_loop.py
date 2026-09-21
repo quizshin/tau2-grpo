@@ -169,6 +169,8 @@ class AgentData:
         self.anchor_spans: list[Optional[tuple[int, int]]] = []
         # Tau3-GRPO local patch: assistant turns independent of anchor availability.
         self.turn_records: list[dict[str, Any]] = []
+        # Observations stay separate from the process reward input records.
+        self.call_attributions: list[dict[str, Any]] = []
 
         self.routed_experts = None
 
@@ -184,6 +186,8 @@ class ToolAgentLoop(AgentLoopBase):
         algorithm = self.config.get("algorithm", {})
         self.record_process_turns = algorithm.get("adv_estimator") == "mt_gtpo"
         self.record_turn_facts = os.getenv("TAU3_RECORD_TRAJECTORY_FACTS", "0") == "1"
+        self.record_call_attribution = os.getenv("TAU3_RECORD_CALL_ATTRIBUTION", "0") == "1"
+        self.record_turn_facts = self.record_turn_facts or self.record_call_attribution
         self.process_reward_config = None
         if self.record_process_turns:
             from tau3_grpo.integrations.verl.mt_gtpo import settings_from_config
@@ -394,6 +398,8 @@ class ToolAgentLoop(AgentLoopBase):
                     "execution_eligibility")},
                 sample_group_uid=sampling_identity.get("sample_group_uid"),
                 trial=sampling_identity.get("trial"), seed=sampling_identity.get("seed"),
+                call_attributions=(agent_data.call_attributions
+                                   if getattr(self, "record_call_attribution", False) else None),
             )
             if sampling_identity:
                 facts["identity"].update(sampling_identity)
@@ -403,7 +409,8 @@ class ToolAgentLoop(AgentLoopBase):
         return output
 
     def _records_turns(self):
-        return getattr(self, "record_process_turns", False) or getattr(self, "record_turn_facts", False)
+        return (getattr(self, "record_process_turns", False) or getattr(self, "record_turn_facts", False)
+                or getattr(self, "record_call_attribution", False))
 
     async def _handle_pending_state(self, agent_data: AgentData, sampling_params: dict[str, Any]) -> AgentState:
         """Handle the pending state: prepare the prompt and start generation."""
@@ -500,6 +507,11 @@ class ToolAgentLoop(AgentLoopBase):
         # Tau3-GRPO local patch: span of this assistant generation inside the response.
         _tau3_span_start = len(agent_data.response_mask)
         agent_data.response_mask += [1] * len(agent_data.response_ids)
+        if getattr(self, "record_call_attribution", False):
+            from tau3_grpo.data.call_attribution import begin_call_attribution
+
+            agent_data.call_attributions.append(begin_call_attribution(
+                output.token_ids, _tau3_span_start, self.tokenizer))
         if self._records_turns():
             agent_data.turn_records.append({
                 "schema": "tau3_turn_v1", "turn_index": len(agent_data.turn_records),
@@ -539,9 +551,20 @@ class ToolAgentLoop(AgentLoopBase):
             return AgentState.TERMINATED
         # Extract tool calls
         tools = [tool.tool_schema for tool in self.tools.values()]
-        agent_data.assistant_content, agent_data.tool_calls = await self.tool_parser.extract_tool_calls(
-            agent_data.response_ids, tools
-        )
+        source_parser = getattr(self.tool_parser, "extract_tool_calls_with_provenance", None)
+        if getattr(self, "record_call_attribution", False) and callable(source_parser):
+            agent_data.assistant_content, agent_data.tool_calls, provenance = await source_parser(
+                agent_data.response_ids, tools)
+        else:
+            agent_data.assistant_content, agent_data.tool_calls = await self.tool_parser.extract_tool_calls(
+                agent_data.response_ids, tools
+            )
+            provenance = {"status": "unsupported"}
+        if getattr(self, "record_call_attribution", False):
+            from tau3_grpo.data.call_attribution import attach_parser_sources
+
+            attach_parser_sources(agent_data.call_attributions[-1], provenance,
+                                  agent_data.tool_calls, self.tokenizer)
         if getattr(self, "token_budget", None):
             raw_text = self.tokenizer.decode(agent_data.response_ids, skip_special_tokens=True)
             if len(agent_data.tool_calls) != raw_text.count("<tool_call>"):
@@ -588,19 +611,33 @@ class ToolAgentLoop(AgentLoopBase):
             if len(recorded_calls) != len(calls):
                 raise RuntimeError("tool batch recording changed the number of calls")
 
+        attribution = (agent_data.call_attributions[-1]
+                       if getattr(self, "record_call_attribution", False) else None)
+        if attribution is not None:
+            from tau3_grpo.data.call_attribution import bind_call_ids, record_call_result, record_call_start
+
+            bind_call_ids(attribution, recorded_calls)
+
         tool_call_names = [call.name for call in calls]
         with simple_timer("tool_calls", agent_data.metrics):
             if sequential:
                 responses = []
-                for call, recorded_call in zip(calls, recorded_calls, strict=True):
+                for call_index, (call, recorded_call) in enumerate(zip(calls, recorded_calls, strict=True)):
+                    if attribution is not None:
+                        record_call_start(attribution, call_index, agent_data.interaction, agent_data.request_id)
                     responses.append(await self._call_tool(
                         call, agent_data.tools_kwargs, agent_data,
                         recorded_tool_call=recorded_call,
                     ))
+                    if attribution is not None:
+                        record_call_result(attribution, call_index, responses[-1][2])
             else:
                 responses = await asyncio.gather(*[
                     self._call_tool(call, agent_data.tools_kwargs, agent_data) for call in calls
                 ])
+                if attribution is not None:
+                    for call_index, (_, _, details) in enumerate(responses):
+                        record_call_result(attribution, call_index, details)
 
         if self._records_turns():
             if getattr(self, "record_process_turns", False) and len(calls) != len(agent_data.tool_calls):

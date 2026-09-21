@@ -539,11 +539,11 @@
         "verl/checkpoint_engine/nixl_checkpoint_engine.py": "825db00813e352c66a8b7f7503a531ce9a5c61c99043006ced28baaa5275f7f3",
         "verl/experimental/__init__.py": "e65abd77db034b4f29eb1268c24867f84919dbce22e28d1997e563ed1d94179c",
         "verl/experimental/agent_loop/__init__.py": "197b5cd75e6c43b3f1da97243f48efba8d6d5f98fa43112e89a1089e90aa7e49",
-        "verl/experimental/agent_loop/agent_loop.py": "6890f830e5be1380f700564927e4c0fab5016784c142bf7e33a209ead5114d90",
+        "verl/experimental/agent_loop/agent_loop.py": "2cc2bb3e55e8a8c022457cc67815fc1687c0d4c09b87aa9ee97ec3beda1eac5c",
         "verl/experimental/agent_loop/prometheus_utils.py": "b447c4d25179186102b17df38b7a45d79e3978edade9bcdf5cf6af4439936851",
         "verl/experimental/agent_loop/single_turn_agent_loop.py": "8d3e51085f545209da4d54d3245bce7c5e98a1e64689848cf345be035b75eb96",
-        "verl/experimental/agent_loop/tool_agent_loop.py": "ffb2fdebb6cec0468e2a65baebf94c68d7bac694c94d90e5528f071d68bc0bba",
-        "verl/experimental/agent_loop/tool_parser.py": "258c8ad79dc09d77dc52a0864e2745f142d8b86de598676679e9b80d2f7615bb",
+        "verl/experimental/agent_loop/tool_agent_loop.py": "945fe105c23e018eb2e807f2a3e25b151f66b5bef9bf7251d42e1e9e468f2f4d",
+        "verl/experimental/agent_loop/tool_parser.py": "bec2c671277024267c732214ed2f46585facd3e0c1147e716a71eca82656ff65",
         "verl/experimental/agent_loop/utils.py": "390125d2f7c03d9a42096d96fddba99a3236bcd669d119e13d6154cd85d6a3e9",
         "verl/experimental/dataset/__init__.py": "e65abd77db034b4f29eb1268c24867f84919dbce22e28d1997e563ed1d94179c",
         "verl/experimental/dataset/sampler.py": "4524187caf870f595f721157e00a2df55f13bdb8cddf47d42741a89fd676a700",
@@ -1031,41 +1031,45 @@
           "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
         },
         {
-          "local_sha256": "6890f830e5be1380f700564927e4c0fab5016784c142bf7e33a209ead5114d90",
+          "local_sha256": "2cc2bb3e55e8a8c022457cc67815fc1687c0d4c09b87aa9ee97ec3beda1eac5c",
           "path": "verl/experimental/agent_loop/agent_loop.py",
-          "reason": "Record actual group/trial/data-seed before worker splitting; reject partially missing generation logprobs.",
+          "reason": "Record actual group/trial/data-seed before worker splitting; reject partially missing generation logprobs. Preserve real group/sample identities when optional call attribution alone enables trajectory facts.",
           "status": "modified",
           "tests": [
+            "tests/test_rollout_boundaries.py",
             "tests/test_sampling_identity.py",
-            "tests/test_rollout_boundaries.py"
+            "tests/test_token_harness.py"
           ],
           "upstream_sha256": "52a0b7387c6e7474ac1a6a6cae7ac2fc02d1ab23a6ac072366605b8b96e6c171",
-          "validation_scope": "CPU contract; actual distributed transport requires engineering GPU evidence"
+          "validation_scope": "Local CPU native-loop and deterministic tool/verifier checks; GPU execution requires separate approval and validation"
         },
         {
-          "local_sha256": "ffb2fdebb6cec0468e2a65baebf94c68d7bac694c94d90e5528f071d68bc0bba",
+          "local_sha256": "945fe105c23e018eb2e807f2a3e25b151f66b5bef9bf7251d42e1e9e468f2f4d",
           "path": "verl/experimental/agent_loop/tool_agent_loop.py",
-          "reason": "Ordered multi-call execution, private session cleanup, official terminal reward, anchors and shared trajectory facts. Add opt-in full text-weight audit, actual generation probability metadata or shared execution eligibility as applicable. Add live DB receipts for recorded dispatch failures and shared policy-only tool observation projection metadata; retain original clipping and terminal reward semantics. Add opt-in tau3_token_budget_v1 shared training/evaluation loop accounting: exact raw generation tokens, complete XML before dispatch, terminal STOP before observation overflow, bounded observations, append-only receipts and evaluation anchor isolation. Preserve old protocol behavior.",
+          "reason": "Ordered multi-call execution, private session cleanup, official terminal reward, anchors and shared trajectory facts. Add opt-in full text-weight audit, actual generation probability metadata or shared execution eligibility as applicable. Add live DB receipts for recorded dispatch failures and shared policy-only tool observation projection metadata; retain original clipping and terminal reward semantics. Add opt-in tau3_token_budget_v1 shared training/evaluation loop accounting: exact raw generation tokens, complete XML before dispatch, terminal STOP before observation overflow, bounded observations, append-only receipts and evaluation anchor isolation. Preserve old protocol behavior. Add opt-in call attribution observations from actual emitted token IDs and invocation-local Qwen parser provenance, binding stable execution IDs without changing parsed calls, process rewards, masks or advantages.",
           "status": "modified",
           "tests": [
+            "tests/test_call_attribution.py",
             "tests/test_execution_eligibility.py",
             "tests/test_rollout_boundaries.py",
             "tests/test_rollout_concurrency_stress.py",
             "tests/test_sampling_identity.py",
-            "tests/test_trajectory_facts.py",
-            "tests/test_token_harness.py"
+            "tests/test_token_harness.py",
+            "tests/test_trajectory_facts.py"
           ],
           "upstream_sha256": "2abfe16521dadef9d79aa95a2165714092f3c6643402ec7da1ae8465c6e469b8",
-          "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
+          "validation_scope": "Local CPU native-loop and deterministic tool/verifier checks; GPU execution requires separate approval and validation"
         },
         {
-          "local_sha256": "258c8ad79dc09d77dc52a0864e2745f142d8b86de598676679e9b80d2f7615bb",
+          "local_sha256": "bec2c671277024267c732214ed2f46585facd3e0c1147e716a71eca82656ff65",
           "path": "verl/experimental/agent_loop/tool_parser.py",
-          "reason": "Parse structured XML arguments with literal_eval, retaining schema errors and prose.",
+          "reason": "Parse structured XML arguments with literal_eval, retaining schema errors and prose. Add opt-in call attribution observations from actual emitted token IDs and invocation-local Qwen parser provenance, binding stable execution IDs without changing parsed calls, process rewards, masks or advantages.",
           "status": "modified",
           "tests": [
-            "tests/test_xml_structured_arguments.py",
-            "tests/test_rollout_boundaries.py"
+            "tests/test_call_attribution.py",
+            "tests/test_rollout_boundaries.py",
+            "tests/test_token_harness.py",
+            "tests/test_xml_structured_arguments.py"
           ],
           "upstream_sha256": "50f52ffc8bb91d65857e651b3b0f7303daeb264b881d33ea531503d2d50277ed",
           "validation_scope": "CPU contract; GPU execution requires separate approval and validation"

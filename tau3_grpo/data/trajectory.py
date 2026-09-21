@@ -6,7 +6,7 @@ from copy import deepcopy
 
 def trajectory_facts(*, request_id, task_id, turns, response_ids, response_mask,
                      response_logprobs=None, terminal=None, sample_group_uid=None,
-                     trial=None, seed=None):
+                     trial=None, seed=None, call_attributions=None):
     ids, mask = list(response_ids), list(response_mask)
     if len(ids) != len(mask) or any(v not in (0, 1) for v in mask):
         raise ValueError("Trajectory token IDs and binary response mask must align")
@@ -25,6 +25,15 @@ def trajectory_facts(*, request_id, task_id, turns, response_ids, response_mask,
             coverage[index] = 1
     if coverage != mask:
         raise ValueError("Assistant spans do not cover retained generated tokens")
+    if call_attributions is not None:
+        from tau3_grpo.data.call_attribution import retained_call_attribution
+
+        if len(call_attributions) != len(retained_turns):
+            raise ValueError("Call attribution must match every emitted assistant turn")
+        for turn, attribution in zip(retained_turns, call_attributions, strict=True):
+            if attribution['emitted_span'] != turn['token_span']:
+                raise ValueError("Call attribution belongs to a different assistant turn")
+            turn['call_attribution'] = retained_call_attribution(attribution, ids, mask)
     probabilities = None if response_logprobs is None else list(response_logprobs)
     complete_logprobs = (probabilities is not None and len(probabilities) == len(ids)
                          and all(t.get("generated_logprobs_available", False) for t in turns))

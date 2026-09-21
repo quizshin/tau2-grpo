@@ -470,3 +470,47 @@ def test_token_protocol_rejects_different_control_envelope(tokenizer, tmp_path):
             configure(loop)
 
     asyncio.run(check())
+
+
+@pytest.mark.parametrize('estimator', ['grpo', 'tau_gigpo', 'mt_gtpo'])
+def test_call_attribution_is_published_without_changing_native_outputs(tokenizer, entry, tmp_path, monkeypatch, estimator):
+    from tau2.data_model.message import AssistantMessage
+    from tau2.user import user_simulator
+
+    from tau3_grpo.evaluation.runtime import Endpoint
+
+    monkeypatch.setattr(user_simulator, 'generate', lambda **kwargs:
+                        AssistantMessage(role='assistant', content='###STOP###'))
+    texts = [xml('1+1') + xml('1/0') + xml('2+2'), 'Done.']
+    user = Endpoint('user', 'http://unused')
+    monkeypatch.setenv('TAU3_RECORD_CALL_ATTRIBUTION', '0')
+    before = asyncio.run(train(tokenizer, entry, ScriptedManager(tokenizer, texts), user,
+                               tmp_path, estimator=estimator))
+    monkeypatch.setenv('TAU3_RECORD_CALL_ATTRIBUTION', '1')
+    after = asyncio.run(train(tokenizer, entry, ScriptedManager(tokenizer, texts), user,
+                              tmp_path, estimator=estimator))
+    assert before.prompt_ids == after.prompt_ids
+    assert before.response_ids == after.response_ids
+    assert before.response_mask == after.response_mask
+    assert before.response_logprobs == after.response_logprobs
+    assert before.reward_score == after.reward_score
+    facts = json.loads(after.extra_fields['trajectory_facts_json'])
+    before_facts = json.loads(before.extra_fields['trajectory_facts_json'])
+    assert 'call_attribution' not in before_facts['turns'][0]
+    first, second = facts['turns']
+    attr = first['call_attribution']
+    assert attr['eligible_for_call_credit']
+    assert [c['error'] for c in attr['calls']] == [False, True, False]
+    assert [c['call_id'] for c in attr['calls']] == [c['id'] for c in first['tool_calls']]
+    assert len({c['call_id'] for c in attr['calls']}) == 3
+    assert not second['call_attribution']['calls']
+    for turn in facts['turns']:
+        a, b = turn['call_attribution']['retained_span']
+        assert turn['call_attribution']['emitted_token_ids'] == after.response_ids[a:b]
+    if estimator == 'mt_gtpo':
+        a = json.loads(before.extra_fields['process_reward_json'])
+        b = json.loads(after.extra_fields['process_reward_json'])
+        for key in ['turn_rewards', 'turn_spans']:
+            assert a[key] == b[key]
+        assert a.get('official_outcome') == b.get('official_outcome')
+        assert all('call_attribution' not in t for t in b['turn_records'])

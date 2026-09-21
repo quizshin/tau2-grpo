@@ -319,15 +319,38 @@ class Qwen3XMLToolParser(ToolParser):
     async def extract_tool_calls(
         self, responses_ids: list[int], tools: list[OpenAIFunctionToolSchema] = None
     ) -> tuple[str, list[FunctionCall]]:
+        content, calls, _ = await self._extract_with_sources(responses_ids, tools, False)
+        return content, calls
+
+    async def extract_tool_calls_with_provenance(self, responses_ids, tools=None):
+        """Optional observation API; source data belongs to this invocation only."""
+        return await self._extract_with_sources(responses_ids, tools, True)
+
+    async def _extract_with_sources(self, responses_ids, tools, observe):
         loop = get_event_loop()
         text = await loop.run_in_executor(None, self.tokenizer.decode, responses_ids)
         if self.tool_call_start_token not in text:
-            return text, []
+            return text, [], {"status": "parsed", "blocks": [], "calls": []}
 
+        provenance = {"status": "parse_failed", "blocks": [], "calls": []}
         try:
             function_calls = self._get_function_calls(text)
+            if observe:
+                # Use the same regexes/order as _get_function_calls; no separate
+                # argument conversion or second execution-oriented parser.
+                sourced_functions = []
+                for block_index, match in enumerate(self.tool_call_regex.finditer(text)):
+                    body = match[1] or match[2] or ""
+                    provenance["blocks"].append({"text": match[0]})
+                    for function_index, function in enumerate(self.tool_call_function_regex.findall(body)):
+                        sourced_functions.append(function[0] if function[0] else function[1])
+                        provenance["calls"].append({"block_index": block_index, "function_index": function_index})
+                if sourced_functions != function_calls:
+                    # Keep legacy parsing behavior, but do not certify sources.
+                    provenance = {"status": "unavailable", "blocks": [], "calls": []}
             if len(function_calls) == 0:
-                return text, []
+                provenance["status"] = "parsed"
+                return text, [], provenance
 
             tool_calls = [
                 self._parse_xml_function_call(function_call_str, tools) for function_call_str in function_calls
@@ -337,7 +360,11 @@ class Qwen3XMLToolParser(ToolParser):
             # An unfinished call consumes the remainder, including its args.
             content = self.tool_call_regex.sub("", text)
 
-            return content, tool_calls
+            if provenance["status"] != "unavailable":
+                provenance["status"] = "parsed"
+            return content, tool_calls, provenance
         except Exception as e:
             logger.exception(f"Error in extracting tool call from response: {e}")
-            return text, []
+            provenance["status"] = "parse_failed"
+            provenance["calls"] = []
+            return text, [], provenance

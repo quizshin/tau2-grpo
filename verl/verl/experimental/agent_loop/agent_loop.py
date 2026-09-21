@@ -1042,7 +1042,8 @@ class AgentLoopManager:
 
         # Assign trial indices before chunking: one group may span workers.
         # Use the estimator's actual UID; never infer membership from task IDs.
-        if os.getenv("TAU3_RECORD_TRAJECTORY_FACTS", "0") == "1":
+        if (os.getenv("TAU3_RECORD_TRAJECTORY_FACTS", "0") == "1"
+                or os.getenv("TAU3_RECORD_CALL_ATTRIBUTION", "0") == "1"):
             from tau3_grpo.data.sampling import sampling_identities
 
             if "uid" not in prompts.non_tensor_batch:

@@ -846,3 +846,77 @@ def test_dispatch_failure_receipt_is_between_two_real_writes(live_session):
         assert last["db_hash_after"] == session.db_hash()
 
     asyncio.run(run())
+
+
+@pytest.mark.parametrize('estimator', ['grpo', 'tau_gigpo', 'mt_gtpo'])
+def test_call_attribution_preserves_native_execution_and_credit(live_session, estimator):
+    """Same real output IDs, native parser, private DB, verifier and MT rewards."""
+    import numpy as np
+    from test_call_attribution import RealTokenizer
+
+    from tau3_grpo.algorithms.mt_gtpo import compute_mt_gtpo
+    from tau3_grpo.data.trajectory import trajectory_facts
+    from tau3_grpo.evaluation.process_reward import reward_settings
+
+    handler, session = live_session
+    task_id = session.adapted.task_id
+    reservations = list(session.db.reservations)[:2]
+    assert len(reservations) == 2
+    tokenizer = RealTokenizer()
+    text = (NEEDLE + '\n' + ''.join(
+        f'<tool_call><function={name}><parameter=reservation_id>{rid}</parameter></function></tool_call>'
+        for name, rid in [('cancel_reservation', reservations[0]), ('unknown_tool', 'bad'),
+                          ('cancel_reservation', reservations[1])]))
+
+    async def run(enabled):
+        if SESSIONS.get('boundary') is None:
+            await handler.start_interaction('boundary', task_id=task_id, initial_user_message='Please help')
+            SESSIONS.require('boundary').session.set_user_simulator(UserReply())
+        initial_hash = SESSIONS.require('boundary').session.db_hash()
+        loop, data, _ = make_loop(handler, text)
+        loop.tokenizer = tokenizer
+        loop.tool_parser = ToolParser.get_tool_parser('qwen3_coder', tokenizer)
+        loop.record_call_attribution = enabled
+        loop.record_turn_facts = True
+        loop.record_process_turns = estimator == 'mt_gtpo'
+        loop.process_reward_config = reward_settings({'mode': 'paper', 'version': 'paper_env_split_v4'})
+        schema = next(s for s in airline_tool_schemas() if s['function']['name'] == 'cancel_reservation')
+        loop.tools['cancel_reservation'] = Tau3AirlineTool({}, OpenAIFunctionToolSchema.model_validate(schema))
+        assert await loop._handle_generating_state(data, {}) == AgentState.PROCESSING_TOOLS
+        await loop._handle_processing_tools_state(data)
+        events = data.turn_records[0]['tool_calls']
+        assert [e['error'] for e in events] == [False, True, False]
+        kwargs = {'turn_records': data.turn_records, 'process_reward_config': loop.process_reward_config} if loop.record_process_turns else {}
+        payload = await handler.finalize_rollout('boundary', termination_reason='agent_stop', **kwargs)
+        facts = trajectory_facts(request_id='boundary', task_id=task_id, turns=data.turn_records,
+            response_ids=data.prompt_ids[1:], response_mask=data.response_mask,
+            call_attributions=data.call_attributions if enabled else None)
+        if enabled:
+            attr = facts['turns'][0].pop('call_attribution')
+            assert attr['eligible_for_call_credit'] and len(attr['calls']) == 3
+            assert [c['call_id'] for c in attr['calls']] == [e['id'] for e in events]
+            first, failed, last = attr['calls']
+            assert first['db_hash_before'] == initial_hash
+            assert first['db_hash_after'] == failed['db_hash_before'] == failed['db_hash_after']
+            assert last['db_hash_before'] == failed['db_hash_after']
+            assert first['db_hash_before'] != first['db_hash_after'] != last['db_hash_after']
+            for call, event in zip(attr['calls'], events, strict=True):
+                assert call['error'] == event['error'] and call['db_hash_after'] == event['db_hash_after']
+        evidence = {'facts': facts, 'turns': data.turn_records, 'ids': data.prompt_ids,
+                    'mask': data.response_mask, 'reward': payload['reward'],
+                    'db_hash': payload['db_hash'], 'process_json': payload.get('process_reward_json')}
+        if loop.record_process_turns:
+            process = json.loads(payload['process_reward_json'])
+            # Complete two-sample synthetic group only for equality of estimator inputs/outputs.
+            rewards = process['turn_rewards']
+            advantage, returns, detail = compute_mt_gtpo([payload['reward'], 0], ['g', 'g'],
+                [rewards, [r-0.2 for r in rewards]], [process['turn_spans']]*2,
+                np.array([data.response_mask]*2))
+            evidence['advantage'] = advantage.tolist()
+            evidence['returns'] = returns.tolist()
+            evidence['detail'] = detail
+        return evidence
+
+    baseline = asyncio.run(run(False))
+    observed = asyncio.run(run(True))
+    assert baseline == observed
