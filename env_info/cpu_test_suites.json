@@ -3,7 +3,6 @@
   "suites": {
     "core": [
       "tests/test_anchors.py",
-      "tests/test_call_attribution.py",
       "tests/test_dynamic_filtering.py",
       "tests/test_environment_reward.py",
       "tests/test_eval_scoring.py",
@@ -38,6 +37,7 @@
     "benchmark": [
       "tests/test_anchor_semantic_v3.py",
       "tests/test_audit_semantic_pairs.py",
+      "tests/test_call_attribution.py",
       "tests/test_checkpoint_contract.py",
       "tests/test_data_splits.py",
       "tests/test_decision_pair_audit.py",
@@ -64,8 +64,8 @@
       "tests/test_semantic_state.py",
       "tests/test_session_isolation.py",
       "tests/test_sft_data.py",
-      "tests/test_sft_expansion.py",
       "tests/test_sft_evaluate.py",
+      "tests/test_sft_expansion.py",
       "tests/test_sft_thinking.py",
       "tests/test_simulator_config.py",
       "tests/test_single_selection_retry.py",
@@ -117,8 +117,8 @@
     ]
   },
   "notes": {
-    "core": "CPU algorithms, scoring and artifact contracts; project dependencies installed.",
-    "benchmark": "Pinned tau2 runtime; real-data tests skip if ignored AReaL assets are absent.",
+    "core": "CPU algorithms, scoring and artifact contracts; project dependencies installed, no model/tokenizer assets required.",
+    "benchmark": "Pinned tau2 runtime; real-data tests skip if ignored AReaL assets are absent. Call-attribution tests require existing models/Qwen3.5-4B/tokenizer.json; no automatic download.",
     "verl": "Canonical pinned remote framework environment, CUDA hidden; GPU validation is separate."
   }
 }

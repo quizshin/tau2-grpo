@@ -1,5 +1,11 @@
 # 错误与风险回顾索引
 
+## 2026-09-23 GitHub CPU CI 缺失 tokenizer
+
+运行 `35842556347` 的 core 套件为 420 passed / 18 setup errors：`tests/test_call_attribution.py` 依赖被 Git 忽略的 `models/Qwen3.5-4B/tokenizer.json`，干净 checkout 不含该文件。按用户要求，GitHub CI 不上传或下载 tokenizer；将该真实 tokenizer 测试模块从 core 移入 benchmark 层，使用已有模型资产的环境运行。测试仍归类在 benchmark/all，缺资产时仍报错，不静默跳过。core 保留算法、奖励与数据契约测试。
+
+本地 macOS / Python 3.12.14：通过 git archive 创建无模型资产的干净源码目录并应用分层配置，core 420 passed / 1 个既有 audioop 弃用警告；在已有 tokenizer 的本地环境单独运行迁移模块，18 passed。lint 无新增债务。尚未推送，GitHub Linux 托管运行待验证；无 GPU 验证。
+
 ## 2026-09-21 5090 GRPO 正式启动故障
 
 v1 首个 backward 在 veRL activation_offload 的 tensor_pop 断言失败；原生 PyTorch saved-tensor CPU 卸载及八卡 actor 重放连续两轮通过。v2 策略服务初始化因 KV cache 仅 0.58 GiB、小于 24,576 上下文所需 0.81 GiB 而失败，在线更新仍为 0。v3 提高策略显存配额至 0.42，保持训练数学及上下文不变；v3通过初始化及首批64条采样，在backward再次OOM，真实在线完成步数仍为0；FSDP2 CPU卸载连续两轮重放通过，v4首个完整在线step于18:57通过，进入step2；同输入FSDP2/FSDP1第二个梯度范数相差0.013%，严格等价断言失败，已披露执行路径数值差异。三个失败尝试均已清理自有服务，保留日志与源码。[记录](docs/grpo_5090_a45_u30_20260921.md)。
