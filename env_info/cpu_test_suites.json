@@ -15,6 +15,8 @@
       "tests/test_leakage_audit.py",
       "tests/test_metrics.py",
       "tests/test_mt_gtpo.py",
+      "tests/test_mt_gtpo_call_credit.py",
+      "tests/test_mt_gtpo_call_residual.py",
       "tests/test_paper_credit_audit.py",
       "tests/test_paper_reward.py",
       "tests/test_path_traversal.py",
@@ -74,6 +76,7 @@
       "tests/test_algorithm_coexistence.py",
       "tests/test_anchor_evidence_v2.py",
       "tests/test_architecture_boundaries.py",
+      "tests/test_call_credit_runner.py",
       "tests/test_configs.py",
       "tests/test_cpu_saved_tensors.py",
       "tests/test_cpu_signal_validation.py",
@@ -88,6 +91,7 @@
       "tests/test_gigpo_signal_integration.py",
       "tests/test_integration_layer.py",
       "tests/test_logprob_memory.py",
+      "tests/test_mt_gtpo_call_credit_verl.py",
       "tests/test_mt_gtpo_verl.py",
       "tests/test_paper_irc.py",
       "tests/test_parquet_builder.py",
@@ -108,6 +112,7 @@
       "tests/test_swanlab_tracking.py",
       "tests/test_token_harness.py",
       "tests/test_tool_schema_projection.py",
+      "tests/test_uncalibrated_exploration.py",
       "tests/test_xml_structured_arguments.py"
     ]
   },

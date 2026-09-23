@@ -1,0 +1,5 @@
+# CPU-validated candidate, not GPU-validated. Fresh 1-2 step engineering smoke
+# is available; --uncalibrated-exploration remains restricted to turn_v1.
+includes:
+- formal50_5090_a45_mt_gtpo_v4.yaml
+- ../../algorithms/mt_gtpo_call_residual_v1.yaml

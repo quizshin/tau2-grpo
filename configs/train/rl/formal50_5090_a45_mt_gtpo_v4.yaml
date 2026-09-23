@@ -1,0 +1,8 @@
+# Candidate: reuse the completed GRPO hardware/SFT/protocol path.
+# Formal execution requires a passed paper_env_split_v4 frozen reward recipe.
+# Explicit --uncalibrated-exploration permits an uncalibrated turn_v1 experiment.
+# Composition checked on CPU; MT-GTPO GPU execution is not yet validated here.
+includes:
+- formal50_5090_a45_fsdp2.yaml
+- ../../algorithms/mt_gtpo.yaml
+- ../../rewards/paper_env_split_v4.yaml

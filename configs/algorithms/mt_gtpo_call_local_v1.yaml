@@ -1,0 +1,13 @@
+# Research extension: paid per-call immediate credit plus original future credit.
+includes:
+- mt_gtpo.yaml
+launch:
+  credit_mode: call_local_v1
+  environment:
+    TAU3_RECORD_CALL_ATTRIBUTION: '1'
+    TAU3_RECORD_TRAJECTORY_FACTS: '1'
+  overrides:
+  - ++algorithm.mt_gtpo.credit_mode=call_local_v1
+  - critic.enable=false
+  - ++ray_kwargs.ray_init.runtime_env.env_vars.TAU3_RECORD_CALL_ATTRIBUTION='1'
+  - ++ray_kwargs.ray_init.runtime_env.env_vars.TAU3_RECORD_TRAJECTORY_FACTS='1'

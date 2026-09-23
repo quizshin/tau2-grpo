@@ -1,0 +1,14 @@
+# Research candidate: A_call = A_turn + (q_call - mean(q_same_turn)) / (std_G + eps).
+# beta is fixed at 1 in v1; unchanged rewards and original returns.
+includes:
+- mt_gtpo.yaml
+launch:
+  credit_mode: call_residual_v1
+  environment:
+    TAU3_RECORD_CALL_ATTRIBUTION: '1'
+    TAU3_RECORD_TRAJECTORY_FACTS: '1'
+  overrides:
+  - ++algorithm.mt_gtpo.credit_mode=call_residual_v1
+  - critic.enable=false
+  - ++ray_kwargs.ray_init.runtime_env.env_vars.TAU3_RECORD_CALL_ATTRIBUTION='1'
+  - ++ray_kwargs.ray_init.runtime_env.env_vars.TAU3_RECORD_TRAJECTORY_FACTS='1'

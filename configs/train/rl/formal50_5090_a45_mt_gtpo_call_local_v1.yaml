@@ -1,0 +1,5 @@
+# Use runner --engineering-smoke --updates 2 for an uncalibrated execution test.
+# Formal runs still require a passed reward recipe and explicit training budget.
+includes:
+- formal50_5090_a45_mt_gtpo_v4.yaml
+- ../../algorithms/mt_gtpo_call_local_v1.yaml

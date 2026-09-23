@@ -44,10 +44,11 @@ MANIFEST_SHA = '641bde73c1495c59b5c0a87cfc84b9e00c0b5ffd2f86d10fd2205aaf2143adae
 
 def resolve(result, *, updates=20, dynamic_filter=False, resume_from=None, reward_version='v3',
             reward_recipe=None, allow_uncalibrated=False, estimator='mt_gtpo', token_protocol=None,
-            profile_override=None):
+            profile_override=None, credit_mode=None, engineering_smoke=False,
+            uncalibrated_exploration=False):
     from tau3_grpo.evaluation.process_reward import reward_settings
     from tau3_grpo.evaluation.rewards.recipe import load_frozen_recipe
-    from tau3_grpo.integrations.verl.mt_gtpo import settings_from_config
+    from tau3_grpo.integrations.verl.mt_gtpo import credit_mode_from_config, settings_from_config
 
     if token_protocol not in {None, 'tau3_token_budget_v1'}:
         raise ValueError(f'Unknown token protocol: {token_protocol}')
@@ -62,6 +63,23 @@ def resolve(result, *, updates=20, dynamic_filter=False, resume_from=None, rewar
     profile = PROFILES[reward_version] if estimator == 'mt_gtpo' else BASE_PROFILE
     if profile_override is not None:
         profile = Path(profile_override).resolve()
+    profile_launch = load_config(profile)['launch']
+    selected_credit = credit_mode or profile_launch.get('credit_mode', 'turn_v1')
+    credit_mode_from_config({'mt_gtpo': {'credit_mode': selected_credit}})
+    if estimator != 'mt_gtpo' and selected_credit != 'turn_v1':
+        raise ValueError('Call-local credit requires mt_gtpo')
+    if uncalibrated_exploration:
+        if estimator != 'mt_gtpo' or reward_version != 'paper_env_split_v4' or selected_credit != 'turn_v1':
+            raise ValueError('Uncalibrated exploration requires mt_gtpo + paper_env_split_v4 + turn_v1')
+        if engineering_smoke or reward_recipe is not None:
+            raise ValueError('Uncalibrated exploration cannot use engineering smoke or a frozen recipe')
+    if resume_from:
+        previous_launch = Path(result).resolve() / 'launch.json'
+        prior = json.loads(previous_launch.read_text()) if previous_launch.is_file() else {}
+        if bool(prior.get('uncalibrated_exploration', False)) != uncalibrated_exploration:
+            raise ValueError('Resume cannot change uncalibrated exploration identity')
+    if engineering_smoke and (updates not in (1, 2) or resume_from):
+        raise ValueError('Engineering smoke requires 1 or 2 updates and a fresh run')
     frozen = None
     expected_reward = reward_settings({
         'mode': 'paper' if reward_version in PAPER_VERSIONS else 'reference_write',
@@ -74,20 +92,26 @@ def resolve(result, *, updates=20, dynamic_filter=False, resume_from=None, rewar
         if frozen['reward']['version'] != reward_version:
             raise ValueError('Frozen recipe reward version differs from requested version')
         expected_reward = frozen['reward']
-    elif paper_run and (not allow_uncalibrated or resume_from):
+    elif paper_run and not engineering_smoke and not uncalibrated_exploration and (not allow_uncalibrated or resume_from):
         raise ValueError('Formal paper run requires a passed --reward-recipe; initializer is dry-run only')
-    if updates < 10 or updates % 10:
+    if not engineering_smoke and (updates < 10 or updates % 10):
         raise ValueError('Formal targets must be positive multiples of ten')
     result = Path(result).resolve()
     reward_label = reward_version if reward_version in PAPER_VERSIONS else f'refwrite-{reward_version}'
     if estimator != 'mt_gtpo':
         reward_label = 'outcome'
+    if selected_credit != 'turn_v1':
+        reward_label += f'-{selected_credit}'
+    if engineering_smoke:
+        reward_label += '-engineering-smoke'
+    if uncalibrated_exploration:
+        reward_label += '-uncalibrated-exploration'
     env = dict(os.environ, CODE_ROOT=str(CODE_ROOT))
     for key in ('TRAIN_PARQUET', 'ROLLOUT_DATA_DIR', 'RAY_ADDRESS', 'TAU3_E0_DISCOVERY_SECONDS',
                 'TAU3_BUDGET_STARTED_AT', 'TAU3_DRY_RUN'):
         env.pop(key, None)
     # Explicit profile settings override activation defaults, as in the E0 controller.
-    profile_environment = load_config(profile)['launch']['environment']
+    profile_environment = profile_launch['environment']
     for key, value in profile_environment.items():
         env[key] = Template(str(value)).substitute(env)
     controller_environment = dict(RESULTS_DIR=str(result), TOOL_CONFIG=str(result / 'tool_config.yaml'),
@@ -103,11 +127,26 @@ def resolve(result, *, updates=20, dynamic_filter=False, resume_from=None, rewar
                'TAU3_STOP_REQUEST_PATH': str(result / 'STOP_AFTER_BOUNDARY'),
                'TAU3_BUDGET_STATE_PATH': str(result / 'budget.json'), 'TAU3_BUDGET_INTERVAL': '10',
                'TAU3_GRPO_DEBUG_BATCH_DIR': env['TAU3_GRPO_DEBUG_BATCH_DIR']}
+    if selected_credit != 'turn_v1':
+        runtime['TAU3_RECORD_CALL_ATTRIBUTION'] = '1'
+    if engineering_smoke:
+        # A bounded smoke has no ten-step evaluation/stop-boundary controller.
+        runtime.update(TAU3_STOP_REQUEST_PATH='', TAU3_BUDGET_STATE_PATH='',
+                       TAU3_BUDGET_INTERVAL=str(updates))
     env.update(runtime)
     extra = [f'algorithm.dynamic_filter.enable={str(dynamic_filter).lower()}',
              'actor_rollout_ref.rollout.calculate_log_probs=true',
              'actor_rollout_ref.rollout.logprobs_mode=processed_logprobs',
              '++ray_kwargs.ray_init.address=local']
+    if uncalibrated_exploration:
+        extra += ['++tau3_experiment_kind=uncalibrated_exploration', '++tau3_irc_calibrated=false']
+    if estimator == 'mt_gtpo' and (credit_mode is not None or 'credit_mode' in profile_launch):
+        extra.append(f'++algorithm.mt_gtpo.credit_mode={selected_credit}')
+    if selected_credit != 'turn_v1':
+        extra.append('critic.enable=false')
+    if engineering_smoke:
+        extra += [f'trainer.save_freq={updates}', 'trainer.test_freq=-1',
+                  'trainer.val_before_train=false']
     if token_protocol:
         env['TOOL_SCHEMA_VERSION'] = 'tau3_full_schema_v2'
         env['TAU3_USER_MAX_MODEL_LEN'] = '16384'
@@ -123,6 +162,11 @@ def resolve(result, *, updates=20, dynamic_filter=False, resume_from=None, rewar
         if previous.get('tau3_token_protocol') != token_protocol:
             raise ValueError('Resume cannot change the token/budget protocol')
         previous_algorithm = previous.get('algorithm', {})
+        if credit_mode_from_config(previous_algorithm) != selected_credit:
+            raise ValueError('Resume cannot change MT-GTPO credit mode')
+        previous_launch = result / 'launch.json'
+        if previous_launch.is_file() and json.loads(previous_launch.read_text()).get('engineering_smoke'):
+            raise ValueError('Engineering smoke cannot be resumed as a formal run')
         if (previous_algorithm.get('adv_estimator') != estimator
                 or (estimator == 'mt_gtpo' and previous_algorithm.get('process_reward', {}).get('version') != reward_version)
                 or previous_algorithm.get('dynamic_filter', {}).get('enable') != dynamic_filter):
@@ -162,10 +206,32 @@ def resolve(result, *, updates=20, dynamic_filter=False, resume_from=None, rewar
     )
     snapshot.update(command=command, formal_runtime=runtime, dynamic_filter=dynamic_filter,
                     total_updates=updates, result_dir=str(result), estimator=estimator)
+    snapshot.update(credit_mode=selected_credit, engineering_smoke=engineering_smoke,
+                    uncalibrated_exploration=uncalibrated_exploration)
     if paper_run:
         snapshot['irc_recipe'] = frozen
         snapshot['uncalibrated_initializer'] = frozen is None
     return command, env, redact_config(snapshot)
+
+
+def validate_exploration_config(config, previous=None):
+    """Record effective uncalibrated settings and reject changes on resume."""
+    from tau3_grpo.evaluation.process_reward import reward_settings
+    from tau3_grpo.integrations.verl.mt_gtpo import credit_mode_from_config, settings_from_config
+
+    algorithm = config['algorithm']
+    if (config.get('tau3_experiment_kind') != 'uncalibrated_exploration'
+            or config.get('tau3_irc_calibrated') is not False
+            or algorithm['adv_estimator'] != 'mt_gtpo'
+            or credit_mode_from_config(algorithm) != 'turn_v1'):
+        raise ValueError('Resolved uncalibrated exploration identity mismatch')
+    settings = dict(reward=reward_settings(algorithm['process_reward']),
+                    algorithm=settings_from_config(algorithm))
+    if settings['reward']['mode'] != 'paper' or settings['reward']['version'] != 'paper_env_split_v4':
+        raise ValueError('Resolved uncalibrated exploration reward mismatch')
+    if previous is not None and validate_exploration_config(previous) != settings:
+        raise ValueError('Resume cannot change exploration reward weights/options or MT-GTPO settings')
+    return settings
 
 
 def validate_inputs(env, result, updates, reward_version='v3', estimator='mt_gtpo'):
@@ -290,9 +356,9 @@ def simulator_environment(env):
     return result
 
 
-def verify_completion(result, target, *, world_size=4):
+def verify_completion(result, target, *, world_size=4, engineering_smoke=False):
     latest = int((result / 'latest_checkpointed_iteration.txt').read_text())
-    budget = json.loads((result / 'budget.json').read_text())
+    budget = {} if engineering_smoke else json.loads((result / 'budget.json').read_text())
     expected = budget['target_step'] if budget.get('stop_requested') else target
     assert latest == expected
     validate_checkpoint(result, latest, world_size=world_size)
@@ -323,6 +389,11 @@ def main(argv=None):
     parser.add_argument('--dynamic-filter', action='store_true')
     parser.add_argument('--resume-from', type=Path)
     parser.add_argument('--dry-run', action='store_true')
+    parser.add_argument('--credit-mode', choices=['turn_v1', 'call_local_v1', 'call_residual_v1'])
+    parser.add_argument('--engineering-smoke', action='store_true',
+                        help='Fresh 1-2 update execution test; allows uncalibrated initializer, no selection eval')
+    parser.add_argument('--uncalibrated-exploration', action='store_true',
+                        help='Explicit uncalibrated split-v4/turn_v1 experiment; saves/evaluates every 10 steps')
     parser.add_argument('--token-protocol', choices=['tau3_token_budget_v1'])
     parser.add_argument('--profile', type=Path, help='Explicit composed hardware/model profile')
     parser.add_argument('--reward-version', choices=sorted(PROFILES), default='v3')
@@ -333,7 +404,9 @@ def main(argv=None):
     command, env, snapshot = resolve(result, updates=args.updates,
         dynamic_filter=args.dynamic_filter, resume_from=args.resume_from, reward_version=args.reward_version,
         reward_recipe=args.reward_recipe, allow_uncalibrated=args.dry_run, estimator=args.estimator,
-        token_protocol=args.token_protocol, profile_override=args.profile)
+        token_protocol=args.token_protocol, profile_override=args.profile,
+        credit_mode=args.credit_mode, engineering_smoke=args.engineering_smoke,
+        uncalibrated_exploration=args.uncalibrated_exploration)
     simenv = simulator_environment(env)
     if (result / 'STOP_AFTER_BOUNDARY').exists():
         raise ValueError('Stop request exists; inspect and archive it before resuming')
@@ -347,17 +420,27 @@ def main(argv=None):
     (result / 'resolved-command.txt').write_text(dry)
     hydra = subprocess.check_output(shlex.split(dry.splitlines()[-1]) + ['--cfg', 'job'],
                                    env=env, cwd=CODE_ROOT, text=True)
-    (result / 'resolved-hydra.yaml').write_text(hydra)
     config = yaml.safe_load(hydra)
+    from tau3_grpo.integrations.verl.mt_gtpo import credit_mode_from_config
+
     assert config['algorithm']['adv_estimator'] == args.estimator
     if args.estimator == 'mt_gtpo':
         assert config['algorithm']['process_reward']['mode'] == (
             'paper' if args.reward_version in PAPER_VERSIONS else 'reference_write')
         assert config['algorithm']['process_reward']['version'] == args.reward_version
+        assert credit_mode_from_config(config['algorithm']) == snapshot['credit_mode']
+        if snapshot['credit_mode'] != 'turn_v1':
+            assert config['critic']['enable'] is False
+            assert config['ray_kwargs']['ray_init']['runtime_env']['env_vars']['TAU3_RECORD_CALL_ATTRIBUTION'] == '1'
     assert config['algorithm']['dynamic_filter']['enable'] == args.dynamic_filter
-    assert config['trainer']['save_freq'] == config['trainer']['test_freq'] == 10
+    assert config['trainer']['save_freq'] == (args.updates if args.engineering_smoke else 10)
+    assert config['trainer']['test_freq'] == (-1 if args.engineering_smoke else 10)
     assert config['trainer']['max_actor_ckpt_to_keep'] == 1
     assert config['trainer']['total_training_steps'] == args.updates
+    if args.uncalibrated_exploration:
+        previous = (yaml.safe_load((result / 'resolved-hydra.yaml').read_text())
+                    if args.resume_from else None)
+        snapshot['exploration_settings'] = validate_exploration_config(config, previous)
     if args.estimator == 'mt_gtpo' and args.reward_version in PAPER_VERSIONS:
         from tau3_grpo.evaluation.process_reward import reward_settings
         from tau3_grpo.integrations.verl.mt_gtpo import settings_from_config
@@ -368,8 +451,17 @@ def main(argv=None):
             assert reward_settings(config['algorithm']['process_reward']) == frozen['reward']
             assert settings_from_config(config['algorithm']) == frozen['algorithm']
             atomic_json(result / 'frozen-recipe.json', frozen)
+    (result / 'resolved-hydra.yaml').write_text(hydra)
     atomic_json(result / 'launch.json', snapshot)
+    experiment_identity = dict(credit_mode=snapshot['credit_mode'], engineering_smoke=args.engineering_smoke,
+                               uncalibrated_exploration=args.uncalibrated_exploration)
+    if 'irc_calibrated' in report:
+        experiment_identity['irc_calibrated'] = report['irc_calibrated']
+    report.update(experiment_identity)
     atomic_json(result / 'preflight.json', report)
+    if args.uncalibrated_exploration:
+        print(json.dumps(dict(experiment_kind='uncalibrated_exploration',
+                              updates=args.updates, **experiment_identity)), flush=True)
     if args.dry_run:
         print(json.dumps(report, indent=2), flush=True)
         return
@@ -386,7 +478,8 @@ def main(argv=None):
 
     def state(status, **extra):
         atomic_json(result / 'controller-state.json', dict(status=status, pid=os.getpid(),
-                    updated_at=time.time(), target=args.updates, session=str(session), **extra))
+                    updated_at=time.time(), target=args.updates, session=str(session),
+                    **(experiment_identity | extra)))
 
     def launch(argv, process_env, name):
         process = launch_process(argv, cwd=CODE_ROOT, env=process_env,
@@ -417,7 +510,9 @@ def main(argv=None):
             raise RuntimeError(f'Training exited {rc}; inspect {session}/train.log')
         state('verifying')
         completion = verify_completion(result, args.updates,
-                                       world_size=config['trainer']['n_gpus_per_node'])
+                                       world_size=config['trainer']['n_gpus_per_node'],
+                                       engineering_smoke=args.engineering_smoke)
+        completion.update(experiment_identity)
         atomic_json(result / 'completion.json', completion)
         state('paused' if completion['paused'] else 'completed', **completion)
     except BaseException as exc:
