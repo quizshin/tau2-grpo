@@ -58,6 +58,15 @@ historical:
   removal: retain_until_all_compatibility_and_evidence_references_are_resolved
   reference_audit: docs/architecture/cleanup_20260919.md
 candidates:
+  call_residual_v1:
+    purpose: preserve_turn_advantage_and_center_call_rewards_within_turn
+    enabled_by_default: false
+    status: cpu_verified
+    profile: configs/train/rl/formal50_5090_a45_mt_gtpo_call_residual_v1.yaml
+    evidence: docs/mt_gtpo_call_residual_implementation_20260922.md
+    gpu_validation: pending
+    known_limit: near_zero_nonzero_return_variance_can_amplify_correction
+    uncalibrated_execution: fresh_one_or_two_step_engineering_smoke_only
   token_harness_v4:
     purpose: optional_matched_training_diagnostic_not_mandatory_evaluation
     enabled_by_default: false
