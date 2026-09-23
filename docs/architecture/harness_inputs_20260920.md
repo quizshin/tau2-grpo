@@ -1,5 +1,12 @@
 # Harness 输入修复、评测温度与完整工具 schema
 
+
+## 2026-09-21 5090 实际使用核对
+
+核对 A45/B100 各自训练时的 `source-snapshot.tgz`：SFT直接读取 `configs/envs/tool_config.yaml` 的原始14工具schema并交给tokenizer，不经过会丢字段的veRL注册模型。两份工具schema SHA256（sort_keys JSON）均为 `d3e56317590d4473fd220d11cd48e1c5fb210286ff86980e50c597e824514211`，包含Passenger必填first_name/last_name/dob、Payment必填payment_id/amount、数组items和$defs。
+
+当前5090 GRPO v4的token协议在runner强制完整schema，并在ToolAgentLoop初始化时与官方schema逐项核对。前18步1152份真实训练输入及step10的240份评测输入均保留完整schema；与SFT归档的唯一字典差异是无参数工具list_all_airports的空required列表省略，嵌套字段没有丢失。此证据证明当前GPU运行已使用完整schema，不是legacy/full schema的收益消融实验；下文“仅CPU、尚无GPU”的措辞属于9月20日当时的状态。
+
 日期：2026-09-20。本轮仅代码和 CPU 验证；没有 GPU、模型生成、API 推理、训练或官方 final50 访问。旧实验结果和旧协议保留。
 
 ## 2026-09-20 后续决定：所有活动采样默认统一为 0.7
