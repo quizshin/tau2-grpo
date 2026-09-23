@@ -129,7 +129,8 @@ class ScriptedManager:
                 "usage": {"prompt_tokens": len(payload["prompt"]), "completion_tokens": len(ids)}}
 
 
-async def train(tokenizer, entry, manager, user, directory, *, estimator="grpo", budget=None):
+async def train(tokenizer, entry, manager, user, directory, *, estimator="grpo", budget=None,
+                sampling_identity=None, reward_config=None):
     from tau3_grpo.data.parquet_builder import build_row
     from tau3_grpo.evaluation.token_runtime import make_loop
     from tau3_grpo.paths import TAU2_BENCH_ROOT
@@ -138,11 +139,16 @@ async def train(tokenizer, entry, manager, user, directory, *, estimator="grpo",
                                     directory=directory, estimator=estimator, evaluation=False)
     if budget:
         loop.token_budget = budget
+    if reward_config is not None:
+        from tau3_grpo.evaluation.process_reward import reward_settings
+
+        loop.process_reward_config = reward_settings(reward_config)
     row = build_row(entry, policy=(TAU2_BENCH_ROOT / "data/tau2/domains/airline/policy.md").read_text(),
                     split="selection", seed=42)
     output = await loop.run({"temperature": 0.7, "top_p": 1.0, "top_k": -1,
                             "repetition_penalty": 1.0, "logprobs": True},
-                            raw_prompt=row["prompt"], extra_info=row["extra_info"])
+                            raw_prompt=row["prompt"], extra_info=row["extra_info"],
+                            **({'tau3_sampling_identity': sampling_identity} if sampling_identity else {}))
     return output
 
 
@@ -514,3 +520,40 @@ def test_call_attribution_is_published_without_changing_native_outputs(tokenizer
             assert a[key] == b[key]
         assert a.get('official_outcome') == b.get('official_outcome')
         assert all('call_attribution' not in t for t in b['turn_records'])
+
+
+@pytest.mark.parametrize('mode', ['call_local_v1', 'call_residual_v1'])
+def test_native_generated_calls_reach_call_local_trainer(tokenizer, entry, tmp_path, monkeypatch, mode):
+    import numpy as np
+    import torch
+    from tau2.data_model.message import AssistantMessage
+    from tau2.user import user_simulator
+
+    from tau3_grpo.evaluation.runtime import Endpoint
+    from tau3_grpo.integrations.verl.mt_gtpo import compute_mt_gtpo_verl
+
+    monkeypatch.setenv('TAU3_RECORD_CALL_ATTRIBUTION', '1')
+    monkeypatch.setattr(user_simulator, 'generate', lambda **kw: AssistantMessage(role='assistant', content='###STOP###'))
+    reward_config = {'mode': 'paper', 'version': 'paper_env_split_v4'}
+    outputs = [asyncio.run(train(tokenizer, entry, ScriptedManager(tokenizer, [text, 'Done.']),
+        Endpoint('user', 'http://unused'), tmp_path, estimator='mt_gtpo', reward_config=reward_config,
+        sampling_identity={'sample_group_uid': 'native-group', 'trial': i, 'seed': 42}))
+        for i, text in enumerate([xml('1/0') + xml('1+1'), xml('1+1')])]
+    length = max(len(o.response_ids) for o in outputs)
+    responses, mask, rewards = (torch.zeros((2, length), dtype=dtype) for dtype in (torch.long, torch.long, torch.float32))
+    for i, output in enumerate(outputs):
+        n = len(output.response_ids)
+        responses[i, :n] = torch.tensor(output.response_ids)
+        mask[i, :n] = torch.tensor(output.response_mask)
+        rewards[i, -1] = output.reward_score
+    metadata = {key: np.asarray([o.extra_fields[key] for o in outputs], dtype=object)
+                for key in ['process_reward_json', 'trajectory_facts_json']}
+    config = {'process_reward': reward_config, 'mt_gtpo': {'credit_mode': mode}}
+    before = mask.clone()
+    advantages, _ = compute_mt_gtpo_verl(rewards, mask, ['native-group']*2, config, metadata,
+                                        batch={'responses': responses})
+    assert torch.equal(mask, before)
+    assert not advantages[mask == 0].any()
+    record = json.loads(metadata['mt_gtpo_replay_json'][0])
+    assert len(record['call_credit'][0]['call_advantages']) == 2
+    assert record['call_credit'][0]['call_advantages'][0] < record['call_credit'][0]['call_advantages'][1]

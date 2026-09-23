@@ -14,6 +14,13 @@ _LAST_STATS = {}
 _LAST_FILTER_STATS = {}
 
 
+def credit_mode_from_config(config):
+    mode = ((config or {}).get('mt_gtpo') or {}).get('credit_mode', 'turn_v1')
+    if mode not in {'turn_v1', 'call_local_v1', 'call_residual_v1'}:
+        raise ValueError('Unknown MT-GTPO credit mode')
+    return mode
+
+
 def settings_from_config(config):
     config = config or {}
     if config.get("use_kl_in_reward", False):
@@ -28,6 +35,8 @@ def settings_from_config(config):
         raise ValueError("mt_gtpo does not support outcome group filtering")
     settings = {"gamma": 0.9, "lambda_outcome": 0.3, "eps": 1e-6, "min_group_size": 2}
     supplied = dict(config.get("mt_gtpo") or {})
+    credit_mode_from_config(config)
+    supplied.pop('credit_mode', None)
     if set(supplied) - set(settings):
         raise ValueError("unknown mt_gtpo setting")
     settings.update(supplied)
@@ -41,6 +50,7 @@ def compute_mt_gtpo_verl(
 
     global _LAST_STATS, _LAST_FILTER_STATS
     settings = settings_from_config(config)
+    credit_mode = credit_mode_from_config(config)
     expected_reward = reward_settings((config or {}).get("process_reward"))
     metadata = non_tensor_batch
     if metadata is None or index is None or "process_reward_json" not in metadata:
@@ -66,13 +76,50 @@ def compute_mt_gtpo_verl(
         rewards.append(payload["turn_rewards"])
         spans.append(payload["turn_spans"])
         audit.append(payload)
-    advantages, returns, details = compute_mt_gtpo(
-        outcomes, index, rewards, spans, mask, **settings
-    )
+    receipts = None
+    if credit_mode != 'turn_v1':
+        from tau3_grpo.algorithms.mt_gtpo_call_credit import compute_mt_gtpo_call_credit
+        from tau3_grpo.data.call_credit import call_credit_inputs
+
+        batch = kwargs.get('batch')
+        if batch is None or 'responses' not in batch or 'trajectory_facts_json' not in metadata:
+            raise ValueError(f'{credit_mode} requires actual batch responses and trajectory_facts_json')
+        inputs, receipts = call_credit_inputs(
+            audit, metadata['trajectory_facts_json'], index,
+            batch['responses'].detach().cpu().numpy(), mask)
+        advantages, returns, details = compute_mt_gtpo_call_credit(
+            outcomes, index, rewards, spans, mask, **settings, **inputs, credit_mode=credit_mode)
+    else:
+        advantages, returns, details = compute_mt_gtpo(
+            outcomes, index, rewards, spans, mask, **settings)
     _LAST_STATS = {k: details[k] for k in ("active_rows", "turns", "nonzero_turns")}
     _LAST_STATS["zero_turn_fraction"] = 1 - details["nonzero_turns"] / max(details["turns"], 1)
+    if receipts is not None:
+        _LAST_STATS.update({f'call_credit/{key}': value
+                            for key, value in details['call_credit_stats'].items()})
     events = [[event for turn in p["turn_records"] for event in turn["tool_calls"]]
               for p in audit if p is not None]
+    if receipts is not None:
+        counts = Counter(dict(error_calls=0, error_positive_before=0, error_positive_after=0,
+                              positive_reward_calls=0, positive_reward_signal_lost=0))
+        for i, process in enumerate(audit):
+            if process is None:
+                continue
+            for k, turn in enumerate(process['turn_records']):
+                by_id = {e['id']: e for e in turn['tool_calls']}
+                detail = details['call_credit'][i][k]
+                old = detail['baseline_advantage']
+                new = detail['call_advantages'] or [old] * len(receipts[i][k]['call_ids'])
+                for call_id, value in zip(receipts[i][k]['call_ids'], new, strict=True):
+                    event = by_id[call_id]
+                    if event['error']:
+                        counts['error_calls'] += 1
+                        counts['error_positive_before'] += int(old > 0)
+                        counts['error_positive_after'] += int(value > 0)
+                    if event['reward'] > 0:
+                        counts['positive_reward_calls'] += 1
+                        counts['positive_reward_signal_lost'] += int(old > 0 and value <= 0)
+        _LAST_STATS.update({f'call_credit/{key}': value for key, value in counts.items()})
     _LAST_STATS.update(
         positive_process_rows=sum(any(e["reward"] > 0 for e in row) for row in events),
         positive_process_calls=sum(e["reward"] > 0 for row in events for e in row),
@@ -134,6 +181,19 @@ def compute_mt_gtpo_verl(
             allow_nan=False,
         )
     metadata["mt_gtpo_replay_json"] = replay
+    if receipts is not None:
+        # Legacy replay readers reject this schema rather than interpreting the
+        # baseline turn constants as the actual mixed token advantages.
+        for i, raw in enumerate(replay):
+            row = json.loads(raw)
+            row.update(schema='mt_gtpo_call_replay_v1', credit_mode=credit_mode,
+                       baseline_turn_advantages=row.pop('turn_advantages'),
+                       token_advantages=advantages[i].tolist(),
+                       returns_semantics='original_discounted_turn_return',
+                       call_credit=details['call_credit'][i], call_receipts=receipts[i],
+                       trajectory_facts=(json.loads(metadata['trajectory_facts_json'][i])
+                                         if mask[i].any() else None))
+            replay[i] = json.dumps(row, allow_nan=False)
     if kwargs.get("diagnostics_out") is not None:
         kwargs["diagnostics_out"].update(
             estimator="mt_gtpo", stats=dict(_LAST_STATS), filter_stats=last_filter_stats(),
