@@ -58,6 +58,17 @@ historical:
   removal: retain_until_all_compatibility_and_evidence_references_are_resolved
   reference_audit: docs/architecture/cleanup_20260919.md
 candidates:
+  harness_guard_v1:
+    purpose: diagnose_and_halt_repetitive_generation_before_actor_update
+    enabled_by_default: false
+    status: gpu_smoke_verified
+    profile: configs/train/rl/formal50_5090_a45_mt_gtpo_guard_v1.yaml
+    evidence: docs/harness_recovery_20260924.md
+    gpu_validation: single_gpu_generation_native_loops_and_dataproto_halt
+    gpu_evidence: docs/harness_guard_gpu_20260924.md
+    distributed_training_validation: pending
+    concurrency_token_invariance: not_established
+    independent_http_stream_cancellation: unsupported
   call_residual_v1:
     purpose: preserve_turn_advantage_and_center_call_rewards_within_turn
     enabled_by_default: false

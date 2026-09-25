@@ -153,6 +153,52 @@ async def train(tokenizer, entry, manager, user, directory, *, estimator="grpo",
 
 
 @pytest.mark.parametrize("estimator", ["grpo", "tau_gigpo", "mt_gtpo"])
+def test_native_repetition_abort_keeps_prefix_and_releases_session(tokenizer, entry, tmp_path, estimator):
+    from tau3_grpo.envs.registry import SESSIONS
+    from tau3_grpo.evaluation.runtime import Endpoint
+
+    class GuardedManager(ScriptedManager):
+        async def generate(self, **kwargs):
+            output = await super().generate(**kwargs)
+            if len(self.requests) == 2:
+                output.stop_reason = "aborted"
+                output.extra_fields.update(finish_reason="abort", generation_guard={
+                    "version": "tau3_generation_guard_v1", "mode": "abort", "cancelled": True,
+                    "kind": "token_cycle", "detected_at_tokens": len(output.token_ids)})
+            return output
+
+    manager = GuardedManager(tokenizer, [xml(), "✅ " * 128])
+    output = asyncio.run(train(tokenizer, entry, manager, Endpoint("user", "http://unused"),
+                               tmp_path, estimator=estimator))
+    facts = json.loads(output.extra_fields["trajectory_facts_json"])
+    assert facts["terminal"]["termination_reason"] == "agent_error"
+    assert facts["terminal"]["termination_detail"] == "repetition_detected"
+    assert output.reward_score == 0 and not facts["terminal"]["scored"]
+    assert facts["turns"][0]["tool_calls"][0]["name"] == "calculate"
+    assert facts["turns"][-1]["parse_status"] == "not_attempted"
+    assert facts["turns"][-1]["finish_reason"] == "abort"
+    start, end = facts["turns"][-1]["token_span"]
+    assert output.response_ids[start:end] == manager.tokens[-1]
+    assert all(output.response_mask[start:end])
+    assert len(output.response_ids) == len(output.response_logprobs)
+    assert SESSIONS.active_count() == 0
+
+
+def test_independent_eval_forwards_nondefault_penalty(tokenizer, entry, monkeypatch):
+    from tau2.data_model.message import AssistantMessage
+    from tau2.user import user_simulator
+
+    from tau3_grpo.evaluation.runtime import Endpoint
+    from tau3_grpo.evaluation.token_runtime import run_one
+
+    monkeypatch.setattr(user_simulator, "generate", lambda **kw: AssistantMessage(role="assistant", content="###STOP###"))
+    manager = ScriptedManager(tokenizer, ["Done."])
+    run_one(entry=entry, policy=Endpoint("policy", "http://unused", repetition_penalty=1.15),
+            user=Endpoint("user", "http://unused"), seed=42, trial=0, tokenizer=tokenizer, manager=manager)
+    assert manager.requests[0][1]["repetition_penalty"] == 1.15
+
+
+@pytest.mark.parametrize("estimator", ["grpo", "tau_gigpo", "mt_gtpo"])
 def test_real_token_multiturn_inputs_match_across_transports(tokenizer, entry, tmp_path, monkeypatch, estimator):
     from tau2.data_model.message import AssistantMessage
     from tau2.user import user_simulator
@@ -314,6 +360,38 @@ def test_resume_cannot_switch_token_protocol(tmp_path, old, new, monkeypatch):
                        token_protocol=new)
 
 
+def test_guard_profile_reaches_real_hydra_and_dataclass(tmp_path, monkeypatch):
+    import shlex
+    import subprocess
+
+    from hydra import compose, initialize_config_dir
+    from omegaconf import OmegaConf
+    from verl.utils.config import omega_conf_to_dataclass
+
+    from tau3_grpo.models.generation_guard import GenerationGuard, sampling_penalty
+    from tau3_grpo.training.rl import runner
+    from tau3_grpo.training.rl.update_guard import validate_guard_configuration
+
+    for key, value in {"TAU3_ROOT": tmp_path, "TAU3_RUN_ROOT": tmp_path / "runs",
+                       "TAU3_MODEL_ROOT": tmp_path / "models", "TAU3_DATA_ROOT": tmp_path / "data",
+                       "TAU3_ENV_FILE": tmp_path / "absent"}.items():
+        monkeypatch.setenv(key, str(value))
+    command, env, _ = runner.resolve(tmp_path / "run", estimator="mt_gtpo",
+        reward_version="paper_env_split_v4", uncalibrated_exploration=True,
+        token_protocol="tau3_token_budget_v1",
+        profile_override=CODE_ROOT / "configs/train/rl/formal50_5090_a45_mt_gtpo_guard_v1.yaml")
+    output = subprocess.check_output(command, env=dict(env, TAU3_DRY_RUN="1"), text=True)
+    args = shlex.split(output.splitlines()[-1])
+    with initialize_config_dir(config_dir=str(CODE_ROOT / "verl/verl/trainer/config"), version_base=None):
+        config = compose(config_name="ppo_trainer", overrides=args[args.index("tau3_grpo.training.rl.train") + 1:])
+    validate_guard_configuration(config)
+    rollout = omega_conf_to_dataclass(config.actor_rollout_ref.rollout)
+    assert GenerationGuard.from_config(rollout.generation_guard).mode == "abort"
+    assert sampling_penalty(rollout, validation=True) == 1.0
+    assert OmegaConf.to_container(config.tau3_update_guard)["repetition_fraction"] == .0625
+    assert config.algorithm.mt_gtpo.lambda_outcome == .3
+
+
 @pytest.mark.parametrize("corrupt", [False, True])
 def test_full_v4_runtime_concurrent_persistence_and_failures(tokenizer, entry, tmp_path, monkeypatch, corrupt):
     from tau2.data_model.message import AssistantMessage
@@ -345,8 +423,11 @@ def test_full_v4_runtime_concurrent_persistence_and_failures(tokenizer, entry, t
     result = run_evaluation(spec=EvalSpec(target="selection", trials=2, max_concurrency=2,
             harness_protocol=TOKENS_V4, tokenizer_path=str(tokenizer.name_or_path),
             token_request_timeout=600),
-        policy=Endpoint("policy", "http://unused/v1"), user=Endpoint("user", "http://unused/v1"),
+        policy=Endpoint("policy", "http://unused/v1", repetition_penalty=1.15), user=Endpoint("user", "http://unused/v1"),
         output_dir=tmp_path, selection_entries=[entry])
+    metadata = json.loads((tmp_path / "run.json").read_text())
+    assert metadata["endpoints"]["policy"]["repetition_penalty"] == 1.15
+    assert all(request["repetition_penalty"] == 1.15 for request in requests)
     assert checks == [("policy", 24576), ("user", 16384)]
     assert len(requests) == 2  # Failed transports do not silently retry.
     assert len({r["seed"] for r in requests}) == 2

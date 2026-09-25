@@ -886,6 +886,9 @@ class RayPPOTrainer:
         1. Ray resource pools from configuration
         2. Worker groups for each role (actor, critic, etc.)
         """
+        from tau3_grpo.training.rl.update_guard import validate_guard_configuration
+
+        validate_guard_configuration(self.config)
         self.resource_pool_manager.create_resource_pool()
 
         self.resource_pool_to_cls = {pool: {} for pool in self.resource_pool_manager.resource_pool_dict.values()}
@@ -1796,6 +1799,16 @@ class RayPPOTrainer:
                                 estimator_diagnostics=batch.meta_info["tau3_estimator_diagnostics"],
                             )
                         )
+
+                    # A driver decision before any worker optimizer collective.
+                    from tau3_grpo.training.rl.update_guard import enforce_update_guard
+
+                    self._tau3_guard_state, guard_metrics = enforce_update_guard(
+                        batch, self.config.get("tau3_update_guard"), step=self.global_steps,
+                        output_dir=self.config.trainer.default_local_dir,
+                        previous=getattr(self, "_tau3_guard_state", None),
+                        resolved_config=self.config)
+                    metrics.update(guard_metrics)
 
                     # update critic
                     if self.use_critic:

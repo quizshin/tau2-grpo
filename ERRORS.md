@@ -1,5 +1,13 @@
 # 错误与风险回顾索引
 
+## 2026-09-24 MT-GTPO 重复输出与 harness 保护
+
+后续单卡验收：发现旧单请求取消直接操作 vLLM 私有 request_states/queue，与 0.20.0 的外部/内部 ID 映射及私有签名不兼容，已改用公开 AsyncLLM.abort。32 次真实生成验证通过，最终 processed-logprob 模式下取消和三算法原生循环通过，故障 batch 可在 CPU 精确读取。并发正常请求能继续完成，但输出不保证逐 token 不变。前两轮测试夹具的 logprob 模式标签错误已独立记录并由最终显式模式复验覆盖；活动训练代码未部署，多卡训练尚未验证。[单卡结果](docs/harness_guard_gpu_20260924.md)。
+
+step 10–27 全量审计 MT-GTPO 1,152 条及 GRPO 对照 1,152 条，共 21,737 轮：没有单轮生成超过 1024；原始 length 被映射为 context_window_exceeded，诊断容易混淆。保守规则在 MT step 25/26/27 分别命中 7/24/58 条，对照未命中；89 个重复轮次的优势为 67 负、19 零、3 正。18 份原始更新 batch 的 10,649 个轮次优势与重放最大误差 1.2e-7，未发现超过 1e-6 的 span 错位；不据此声称已找到唯一根因。
+
+已修采样参数贯通和分层诊断，新增 opt-in 流式取消与更新前 halt，保留真实 token/logprob、失败候选和旧算法。候选规则回放可在 step 25 更新前停下。本地/远端 CPU 验证，未部署活动源码，未跑 GPU，独立 HTTP 流式取消仍未接入，模型效果未验证。[完整报告](docs/harness_recovery_20260924.md)。
+
 ## 2026-09-23 GitHub CPU CI 缺失 tokenizer
 
 运行 `35842556347` 的 core 套件为 420 passed / 18 setup errors：`tests/test_call_attribution.py` 依赖被 Git 忽略的 `models/Qwen3.5-4B/tokenizer.json`，干净 checkout 不含该文件。按用户要求，GitHub CI 不上传或下载 tokenizer；将该真实 tokenizer 测试模块从 core 移入 benchmark 层，使用已有模型资产的环境运行。测试仍归类在 benchmark/all，缺资产时仍报错，不静默跳过。core 保留算法、奖励与数据契约测试。

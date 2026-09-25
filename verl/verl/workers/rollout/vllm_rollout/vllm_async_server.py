@@ -546,6 +546,14 @@ class vLLMHttpServer:
         )
         sampling_params["logprobs"] = 0 if sampling_params.pop("logprobs", False) else None
         sampling_params.setdefault("repetition_penalty", self.config.get("repetition_penalty", 1.0))
+        from tau3_grpo.models.generation_guard import GenerationGuard, repetition_penalty
+
+        sampling_params["repetition_penalty"] = repetition_penalty(sampling_params["repetition_penalty"])
+        guard_config = GenerationGuard.from_config(self.config.get("generation_guard"))
+        if guard_config.mode != "off":
+            from vllm.sampling_params import RequestOutputKind
+
+            sampling_params["output_kind"] = RequestOutputKind.CUMULATIVE
         sampling_params = SamplingParams(max_tokens=max_tokens, **sampling_params)
         prompt_ids = qwen2_5_vl_dedup_image_tokens(prompt_ids, self.model_config.processor)
         multi_modal_data = {}
@@ -576,8 +584,23 @@ class vLLMHttpServer:
 
         # Get final response
         final_res: Optional[RequestOutput] = None
-        async for output in generator:
-            final_res = output
+        guard_event = None
+        if guard_config.mode == "off":
+            async for output in generator:
+                final_res = output
+        else:
+            from tau3_grpo.integrations.verl.generation_guard import consume_guarded_generation
+
+            async def cancel_repetition():
+                return await self.abort_request(request_id, reset_prefix_cache=False)
+
+            try:
+                final_res, guard_event = await consume_guarded_generation(
+                    generator, tokenizer=self.model_config.tokenizer, config=guard_config,
+                    cancel=cancel_repetition, require_logprobs=sampling_params.logprobs is not None)
+            except BaseException:
+                await self.abort_request(request_id, reset_prefix_cache=False)
+                raise
         assert final_res is not None
 
         token_ids = final_res.outputs[0].token_ids
@@ -611,6 +634,7 @@ class vLLMHttpServer:
             num_preempted=num_preempted,
             extra_fields={"global_steps": self.global_steps,
                           "finish_reason": finish_reason,
+                          "generation_guard": guard_event,
                           "logprobs_mode": self.config.logprobs_mode if log_probs is not None else None,
                           "sampling_seed": sampling_params.seed,
                           "engine_seed": self.replica_rank + self.config.get("seed", 0),
@@ -766,23 +790,11 @@ class vLLMHttpServer:
             dict[str, Any]: Dictionary containing abort result.
         """
         try:
-            request_states = self.engine.output_processor.request_states
-            req_state = request_states.get(request_id)
-
-            if req_state is None:
-                return {"aborted": False, "error": f"Request {request_id} not found"}
-
-            # Create abort output and put it to the queue
-            from vllm.v1.engine import FinishReason
-
-            request_output = req_state.make_request_output(
-                [], pooling_output=None, finish_reason=FinishReason.ABORT, stop_reason=None
-            )
-            req_state.queue.put(request_output)
-
-            # Abort in output processor and engine core
-            self.engine.output_processor.abort_requests([request_id])
-            await self.engine.engine_core.abort_requests_async([request_id])
+            # The engine owns external-to-internal request ID mapping and emits
+            # the final abort receipt. Do not mutate its private output queues.
+            # This acknowledgement is idempotent; the guard still requires the
+            # terminal stream receipt before classifying a model cancellation.
+            await self.engine.abort(request_id)
 
             # Try to reset prefix cache to ensure clean state
             if reset_prefix_cache:

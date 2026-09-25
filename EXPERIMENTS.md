@@ -1,5 +1,9 @@
 # 实验记录
 
+## 2026-09-24 Harness 单卡 GPU 工程验收
+
+用户授权在现有单 RTX 5090 上验证：独立源码快照、Qwen3.5-4B、vLLM 0.20.0、TP1/BF16/eager。三阶段 32 请求、9,999 生成 token，进程耗时合计 617 秒，完整窗口 916 秒，未超出 20 分钟/32 请求预算。重复取消在 128 token 生效，三算法原生循环和真实 GPU DataProto halt helper 通过，最终与正式 processed_logprobs 模式对齐复验；修复公共取消接口兼容性。追加并发对照表明生命周期隔离通过但逐 token 不变性不成立。已释放 GPU，无正式训练和效果结论，活动源码未覆盖。[结果及限制](docs/harness_guard_gpu_20260924.md)。
+
 ## 2026-09-22 call_local_v1 实现与两步 GPU 测试入口
 
 已实现调用局部优势核心、按实际token/UID/trajectory/call ID校验的数据连接和默认关闭的MT适配分支；旧版默认 `turn_v1`，新replay单独版本，续训禁止切换信用模式。新增八卡5090/A45配置及 `--engineering-smoke --updates 2`：128条候选，允许明确标记的未校准v4初始权重，第2步完整保存，不跑selection。首轮相关CPU回归165项通过，末次坐标/遥测定向35项通过；去重后166项通过、0失败、0跳过。本任务未部署服务器、未启动GPU。[测试命令与状态](docs/mt_gtpo_call_local_gpu_test_20260922.md)。

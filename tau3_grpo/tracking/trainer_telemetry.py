@@ -120,6 +120,14 @@ def collect_rollout_metrics(
         metrics["rollout/facts_trajectories"] = len(facts)
         metrics["rollout/exact_response_tokens"] = sum(len(f["tokens"]["response_ids"]) for f in facts)
         metrics["rollout/exact_generated_tokens"] = sum(sum(f["tokens"]["response_mask"]) for f in facts)
+        metrics["rollout/repetition_trajectories"] = sum(
+            any(bool(t.get("generation_guard")) for t in f["turns"]) for f in facts)
+        metrics["rollout/repetition_cancelled"] = sum(
+            bool((t.get("generation_guard") or {}).get("cancelled")) for f in facts for t in f["turns"])
+        details = Counter(f.get("terminal", {}).get("termination_detail") for f in facts)
+        for detail, count in details.items():
+            if detail:
+                metrics[f"rollout/termination_detail/{_metric_name(detail)}"] = count
         reasons = Counter(t.get("finish_reason") or "unavailable" for f in facts for t in f["turns"])
         for reason, count in reasons.items():
             metrics[f"rollout/raw_finish_reason/{_metric_name(reason)}"] = count

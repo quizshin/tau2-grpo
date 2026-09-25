@@ -84,6 +84,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--policy-temperature", type=float, default=None,
                         help="default: 0.7 for all harness protocols")
+    parser.add_argument("--policy-repetition-penalty", type=float, default=1.0)
     parser.add_argument("--user-temperature", type=float, default=0.7)
     parser.add_argument("--max-concurrency", type=int, default=16)
     parser.add_argument("--max-steps", type=int, default=30)
@@ -125,6 +126,11 @@ def main(argv: list[str] | None = None) -> int:
         validate_target(args.harness_protocol, args.target)
         if args.policy_temperature is None:
             args.policy_temperature = 0.7
+        from tau3_grpo.models.generation_guard import repetition_penalty
+
+        repetition_penalty(args.policy_repetition_penalty)
+        if args.policy_repetition_penalty != 1.0 and args.harness_protocol != TOKENS_V4:
+            raise ValueError("Non-default repetition penalty requires token-v4 evaluation")
         ks = resolve_ks(args.trials, args.ks)
         if args.max_steps <= 0 or args.max_errors <= 0 or args.max_concurrency <= 0:
             raise ValueError("max_steps, max_errors and max_concurrency must be positive")
@@ -190,6 +196,7 @@ def main(argv: list[str] | None = None) -> int:
         "primary_metric_family": "pass@k",
         "harness_protocol": protocol,
         "policy_temperature": args.policy_temperature,
+        "policy_repetition_penalty": args.policy_repetition_penalty if args.harness_protocol == TOKENS_V4 else None,
         "user_temperature": args.user_temperature,
         "token_request_timeout": args.token_request_timeout,
     })
@@ -224,6 +231,7 @@ def main(argv: list[str] | None = None) -> int:
         base_url=args.policy_base_url,
         api_key=os.environ.get("TAU3_POLICY_API_KEY", "EMPTY"),
         temperature=args.policy_temperature,
+        repetition_penalty=args.policy_repetition_penalty if args.harness_protocol == TOKENS_V4 else None,
     )
     user = Endpoint(
         model=args.user_model,

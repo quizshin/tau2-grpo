@@ -48,6 +48,7 @@ class Endpoint:
     base_url: str
     api_key: str = "EMPTY"
     temperature: float = 0.7
+    repetition_penalty: float | None = None
 
     @property
     def litellm_model(self) -> str:
@@ -218,6 +219,12 @@ def run_evaluation(
 
     if spec.max_steps <= 0 or spec.max_errors <= 0 or spec.max_concurrency <= 0:
         raise ValueError("max_steps, max_errors and max_concurrency must be positive")
+    if policy.repetition_penalty is not None:
+        from tau3_grpo.models.generation_guard import repetition_penalty
+
+        penalty = repetition_penalty(policy.repetition_penalty)
+        if penalty != 1.0 and spec.harness_protocol != TOKENS_V4:
+            raise ValueError("Non-default repetition penalty requires token-v4 evaluation")
     protocol = protocol_metadata(spec.harness_protocol, max_steps=spec.max_steps, max_errors=spec.max_errors)
     validate_target(spec.harness_protocol, spec.target)
     request_args(spec.harness_protocol, policy, role="policy")
@@ -244,9 +251,13 @@ def run_evaluation(
     token_runtime = None
     tokenizer = None
     token_provenance = {}
+    policy_penalty = None
     if spec.harness_protocol == TOKENS_V4:
         from tau3_grpo.evaluation import token_runtime
+        from tau3_grpo.models.generation_guard import repetition_penalty
         from tau3_grpo.models.token_budget import default_budget
+
+        policy_penalty = repetition_penalty(1.0 if policy.repetition_penalty is None else policy.repetition_penalty)
 
         if not spec.tokenizer_path:
             raise ValueError("token_v4 requires the served checkpoint tokenizer_path")
@@ -266,7 +277,8 @@ def run_evaluation(
         "spec": {**asdict(spec), "ks": list(ks)},
         "planned": planned,
         "endpoints": {
-            name: {"model": endpoint.model, "temperature": endpoint.temperature}
+            name: {"model": endpoint.model, "temperature": endpoint.temperature,
+                   **({"repetition_penalty": policy_penalty} if name == "policy" else {})}
             for name, endpoint in (("policy", policy), ("user", user))
         },
         "provenance": {**(provenance or {}), **token_provenance, **prompt_provenance(), **evaluation_provenance(jobs),

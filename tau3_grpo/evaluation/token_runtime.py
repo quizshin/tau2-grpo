@@ -132,6 +132,9 @@ def run_one(*, entry, policy, user, seed, trial, tokenizer, manager=None, reques
     environment = build_environment(load_flight_db(adapted.db_path))
     row = build_row(entry, policy=environment.get_policy(), split="selection", seed=seed)
     validate_opening(adapted.task, row["extra_info"]["interaction_kwargs"]["initial_user_message"])
+    from tau3_grpo.models.generation_guard import repetition_penalty
+
+    penalty = repetition_penalty(1.0 if policy.repetition_penalty is None else policy.repetition_penalty)
     endpoint = manager or TokenEndpoint(policy, timeout=request_timeout)
 
     async def execute():
@@ -141,7 +144,7 @@ def run_one(*, entry, policy, user, seed, trial, tokenizer, manager=None, reques
             handler.adapted = adapted
             handler.started = time.monotonic()
             output = await loop.run({"temperature": policy.temperature, "top_p": 1.0, "top_k": -1,
-                                     "repetition_penalty": 1.0, "logprobs": True, "seed": seed},
+                                     "repetition_penalty": penalty, "logprobs": True, "seed": seed},
                 raw_prompt=row["prompt"], extra_info=row["extra_info"],
                 tau3_sampling_identity={"trial": trial, "seed": seed, "task_id": entry.task_id})
             simulation = handler.simulation

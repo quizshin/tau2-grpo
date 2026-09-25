@@ -1,0 +1,24 @@
+# Opt-in recovery protocol. Historical profiles keep generation/update guards off.
+# Thresholds screened on archived 10-27 rollouts; single-GPU cancellation verified.
+# Distributed trainer validation remains pending; see docs/harness_guard_gpu_20260924.md.
+launch:
+  environment:
+    TAU3_RECORD_TRAJECTORY_FACTS: '1'
+    TOOL_SCHEMA_VERSION: tau3_full_schema_v2
+  overrides:
+  - ++tau3_token_protocol=tau3_token_budget_v1
+  - actor_rollout_ref.rollout.calculate_log_probs=true
+  - ++actor_rollout_ref.rollout.repetition_penalty=1.0
+  - ++actor_rollout_ref.rollout.val_kwargs.repetition_penalty=null
+  - ++actor_rollout_ref.rollout.generation_guard.version=tau3_generation_guard_v1
+  - ++actor_rollout_ref.rollout.generation_guard.mode=abort
+  - ++actor_rollout_ref.rollout.generation_guard.min_tokens=128
+  - ++actor_rollout_ref.rollout.generation_guard.repeats=32
+  - ++actor_rollout_ref.rollout.generation_guard.max_token_period=8
+  - ++actor_rollout_ref.rollout.generation_guard.max_text_period=64
+  - ++actor_rollout_ref.rollout.generation_guard.min_text_chars=128
+  - ++tau3_update_guard.version=tau3_update_guard_v1
+  - ++tau3_update_guard.mode=halt
+  - ++tau3_update_guard.repetition_fraction=0.0625
+  - ++tau3_update_guard.length_fraction=null
+  - ++tau3_update_guard.consecutive_steps=1

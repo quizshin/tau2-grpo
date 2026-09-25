@@ -472,12 +472,17 @@ class AgentLoopWorker:
             responses:     |<- LLM generation ->|<- tool_calls ->|<- LLM generation ->|<- padding ->|
             response_mask: | 1, 1, 1, ..., 1, 1 | 0, 0, .., 0, 0 | 1, 1, 1, ..., 1, 1 | 0, 0, ..., 0|
         """
+        from tau3_grpo.models.generation_guard import GenerationGuard, sampling_penalty
+
         config = self.rollout_config
+        guard = GenerationGuard.from_config(config.get("generation_guard"))
+        if guard.mode != "off" and self.config.get("tau3_token_protocol") != "tau3_token_budget_v1":
+            raise ValueError("Generation guard requires the shared Tau3 token protocol")
         sampling_params = dict(
             temperature=config.temperature,
             top_p=config.top_p,
             top_k=config.top_k,
-            repetition_penalty=1.0,
+            repetition_penalty=sampling_penalty(config, validation=batch.meta_info.get("validate", False)),
             logprobs=config.calculate_log_probs,
         )
 

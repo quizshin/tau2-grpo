@@ -18,27 +18,30 @@
     "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
   },
   "verl/verl/experimental/agent_loop/tool_agent_loop.py": {
-    "reason": "Ordered multi-call execution, private session cleanup, official terminal reward, anchors and shared trajectory facts. Add opt-in full text-weight audit, actual generation probability metadata or shared execution eligibility as applicable. Add live DB receipts for recorded dispatch failures and shared policy-only tool observation projection metadata; retain original clipping and terminal reward semantics. Add opt-in tau3_token_budget_v1 shared training/evaluation loop accounting: exact raw generation tokens, complete XML before dispatch, terminal STOP before observation overflow, bounded observations, append-only receipts and evaluation anchor isolation. Preserve old protocol behavior. Add opt-in call attribution observations from actual emitted token IDs and invocation-local Qwen parser provenance, binding stable execution IDs without changing parsed calls, process rewards, masks or advantages.",
+    "reason": "Ordered multi-call execution, private session cleanup, official terminal reward, anchors and shared trajectory facts. Add opt-in full text-weight audit, actual generation probability metadata or shared execution eligibility as applicable. Add live DB receipts for recorded dispatch failures and shared policy-only tool observation projection metadata; retain original clipping and terminal reward semantics. Add opt-in tau3_token_budget_v1 shared training/evaluation loop accounting: exact raw generation tokens, complete XML before dispatch, terminal STOP before observation overflow, bounded observations, append-only receipts and evaluation anchor isolation. Preserve old protocol behavior. Add opt-in call attribution observations from actual emitted token IDs and invocation-local Qwen parser provenance, binding stable execution IDs without changing parsed calls, process rewards, masks or advantages. Record parse-not-attempted separately, retain raw guarded-abort tokens, publish termination diagnostics, and automatically retain facts when guard is enabled.",
     "tests": [
       "tests/test_call_attribution.py",
       "tests/test_execution_eligibility.py",
+      "tests/test_generation_guard.py",
       "tests/test_rollout_boundaries.py",
       "tests/test_rollout_concurrency_stress.py",
       "tests/test_sampling_identity.py",
       "tests/test_token_harness.py",
       "tests/test_trajectory_facts.py"
     ],
-    "validation_scope": "Local CPU native-loop and deterministic tool/verifier checks; GPU execution requires separate approval and validation"
+    "validation_scope": "CPU regression plus real single-GPU guarded native loops for GRPO/GiGPO/MT-GTPO; exact prefixes and saved fault batch verified. Full distributed training not exercised."
   },
   "verl/verl/trainer/ppo/ray_trainer.py": {
-    "reason": "Project estimator registration, fixed-rollout filtering, zero-loss padding, boundary checkpoints and explicit batch telemetry.",
+    "reason": "Project estimator registration, fixed-rollout filtering, zero-loss padding, boundary checkpoints and explicit batch telemetry. Invoke a driver-side candidate-batch guard before any optimizer update and persist faults without marking incomplete steps complete.",
     "tests": [
+      "tests/test_generation_guard.py",
       "tests/test_gigpo_signal_integration.py",
       "tests/test_mt_gtpo_verl.py",
       "tests/test_rl_continuity.py",
+      "tests/test_token_harness.py",
       "tests/test_trainer_telemetry.py"
     ],
-    "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
+    "validation_scope": "CPU startup/hook-order contracts; guard helper exercised on real GPU-generated DataProto. No optimizer or full distributed trainer initialized in the single-GPU probe."
   },
   "verl/verl/trainer/config/algorithm.py": {
     "reason": "Expose estimator/filter settings and validate grouped batch padding.",
@@ -59,13 +62,15 @@
     "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
   },
   "verl/verl/workers/config/rollout.py": {
-    "reason": "Make sequential multi-call execution an explicit opt-in configuration.",
+    "reason": "Make sequential multi-call execution an explicit opt-in configuration. Expose optional validation repetition_penalty inheritance and versioned generation_guard configuration.",
     "tests": [
-      "tests/test_patch_contract.py",
       "tests/test_configs.py",
-      "tests/test_rollout_boundaries.py"
+      "tests/test_generation_guard.py",
+      "tests/test_patch_contract.py",
+      "tests/test_rollout_boundaries.py",
+      "tests/test_token_harness.py"
     ],
-    "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
+    "validation_scope": "Local CPU helpers/native loop; real vLLM cancellation and GPU multi-rank update/recovery remain pending separate authorization"
   },
   "verl/verl/trainer/config/rollout/rollout.yaml": {
     "reason": "Make sequential multi-call execution an explicit opt-in configuration.",
@@ -199,14 +204,17 @@
     "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
   },
   "verl/verl/workers/rollout/vllm_rollout/vllm_async_server.py": {
-    "reason": "Qwen3.5 rollout controls and preserve native per-generation finish/stop reasons. Add opt-in full text-weight audit, actual generation probability metadata or shared execution eligibility as applicable.",
+    "reason": "Qwen3.5 rollout controls and preserve native per-generation finish/stop reasons. Add opt-in full text-weight audit, actual generation probability metadata or shared execution eligibility as applicable. Delegate cumulative stream repetition detection to the project adapter, preserve actual prefix logprobs on cancellation, and cancel only the current request without resetting shared prefix cache. Use public AsyncLLM.abort to let vLLM resolve external/internal request IDs and produce its own terminal receipt; remove private queue manipulation incompatible with vLLM 0.20.0.",
     "tests": [
       "tests/test_execution_eligibility.py",
+      "tests/test_generation_guard.py",
       "tests/test_qwen35.py",
       "tests/test_rollout_boundaries.py",
-      "tests/test_sampling_identity.py"
+      "tests/test_sampling_identity.py",
+      "tests/test_token_harness.py",
+      "tests/gpu_harness_guard_probe.py"
     ],
-    "validation_scope": "CPU loop contract; actual vLLM transport requires GPU validation"
+    "validation_scope": "Single RTX 5090 real generation/cancellation passed, with explicit processed_logprobs final confirmation; see docs/harness_guard_gpu_20260924.md. Ray allocation, distributed trainer update/recovery and token invariance remain unverified."
   },
   "tau2-bench/src/tau2/domains/airline/environment.py": {
     "reason": "Deep-copy injected DB so prediction and gold replay do not share mutable state.",
@@ -217,13 +225,14 @@
     "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
   },
   "verl/verl/experimental/agent_loop/agent_loop.py": {
-    "reason": "Record actual group/trial/data-seed before worker splitting; reject partially missing generation logprobs. Preserve real group/sample identities when optional call attribution alone enables trajectory facts.",
+    "reason": "Record actual group/trial/data-seed before worker splitting; reject partially missing generation logprobs. Preserve real group/sample identities when optional call attribution alone enables trajectory facts. Read repetition_penalty from actual rollout/validation configuration and reject guard use without the shared token protocol.",
     "tests": [
+      "tests/test_generation_guard.py",
       "tests/test_rollout_boundaries.py",
       "tests/test_sampling_identity.py",
       "tests/test_token_harness.py"
     ],
-    "validation_scope": "Local CPU native-loop and deterministic tool/verifier checks; GPU execution requires separate approval and validation"
+    "validation_scope": "Local CPU helpers/native loop; real vLLM cancellation and GPU multi-rank update/recovery remain pending separate authorization"
   },
   "verl/verl/utils/qwen35_full_weight_audit.py": {
     "reason": "Independently reconstruct packed incoming actor weights and compare every active TP1 text-policy parameter; explicitly exclude vision.",

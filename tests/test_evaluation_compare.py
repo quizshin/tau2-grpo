@@ -38,6 +38,17 @@ def change(path, transform):
     (path / "run.json").write_text(json.dumps(data))
 
 
+def test_recorded_repetition_penalty_cannot_silently_compare_with_unknown_or_different(tmp_path):
+    base = artifact(tmp_path / "base")
+    treat = artifact(tmp_path / "treat")
+    change(treat, lambda d: d["endpoints"]["policy"].update(repetition_penalty=1.1))
+    assert not compare_evaluations(base, treat)["comparable"]
+    change(base, lambda d: d["endpoints"]["policy"].update(repetition_penalty=1.0))
+    assert not compare_evaluations(base, treat)["comparable"]
+    change(base, lambda d: d["endpoints"]["policy"].update(repetition_penalty=1.1))
+    assert compare_evaluations(base, treat)["comparable"]
+
+
 def test_exact_paired_deltas_zero_baseline_and_provenance(tmp_path):
     base = artifact(tmp_path / "base")
     treat = artifact(tmp_path / "treat", (2, 4))

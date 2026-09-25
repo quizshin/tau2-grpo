@@ -58,15 +58,25 @@ def start(loop, data):
 
 def generation_request(loop, data):
     allowed = loop.token_budget.allowance(len(data.prompt_ids), len(data.response_mask))
+    remaining = {"per_turn_limit": loop.token_budget.per_turn,
+                 "response_budget": loop.token_budget.response - len(data.response_mask),
+                 "context_budget": loop.token_budget.context - len(data.prompt_ids)}
+    binding = [key for key, value in remaining.items() if value == min(remaining.values())]
     data.token_receipts.append({"kind": "request", "input_sha256": token_digest(data.prompt_ids),
                                "input_tokens": len(data.prompt_ids),
-                               "appended_tokens": len(data.response_mask), "max_tokens": allowed})
+                               "appended_tokens": len(data.response_mask), "max_tokens": allowed,
+                               "remaining": remaining, "binding_limits": binding})
+    if allowed <= 0:
+        data.extra_fields.update(termination_detail="generation_budget_exhausted", binding_limits=binding)
     return allowed
 
 
 def generation_result(loop, data, output):
     finish = output.extra_fields.get("finish_reason")
-    if finish not in {"stop", "length"}:
+    guard = output.extra_fields.get("generation_guard") or {}
+    guarded_abort = (finish == "abort" and guard.get("version") == "tau3_generation_guard_v1"
+                     and guard.get("mode") == "abort" and guard.get("cancelled") is True)
+    if finish not in {"stop", "length"} and not guarded_abort:
         raise ValueError(f"Missing/invalid raw generation finish_reason: {finish}")
     allowed = data.token_receipts[-1]["max_tokens"]
     if not output.token_ids or len(output.token_ids) > allowed:
@@ -74,10 +84,18 @@ def generation_result(loop, data, output):
     text = loop.tokenizer.decode(output.token_ids, skip_special_tokens=True)
     complete = complete_tool_envelopes(text)
     data.token_receipts.append({"kind": "generation", "token_ids": list(output.token_ids),
-                               "finish_reason": finish, "complete_tool_envelopes": complete})
+                               "finish_reason": finish, "complete_tool_envelopes": complete,
+                               "generated_tokens": len(output.token_ids), "generation_guard": guard or None})
+    if guarded_abort:
+        data.extra_fields["termination_detail"] = "repetition_detected"
+        return "agent_error"
     # A length-ended text is not sent to the user as a complete turn. A complete
     # XML batch may execute even at the exact limit; a partial batch never does.
     if not complete or (finish == "length" and "<tool_call>" not in text):
+        binding = data.token_receipts[-2].get("binding_limits", [])
+        data.extra_fields.update(
+            termination_detail=(binding[0] if len(binding) == 1 else "generation_length")
+            if finish == "length" else "incomplete_tool_envelope", binding_limits=binding)
         return "context_window_exceeded" if finish == "length" else "agent_error"
     return None
 
@@ -87,6 +105,13 @@ def observation(loop, data, ids, *, kind, terminal=False):
     data.token_receipts.append({"kind": kind, "token_ids": list(ids), "retained": fits,
                                "terminal": terminal, "before_tokens": len(data.prompt_ids),
                                "before_appended_tokens": len(data.response_mask)})
+    if not fits and not terminal:
+        limits = []
+        if len(data.prompt_ids) + len(ids) > loop.token_budget.context:
+            limits.append("context_budget")
+        if len(data.response_mask) + len(ids) > loop.token_budget.response:
+            limits.append("response_budget")
+        data.extra_fields.update(termination_detail="observation_budget", budget_role=kind, binding_limits=limits)
     return fits
 
 
@@ -95,7 +120,13 @@ def publish(loop, data):
         return
     payload = {"budget": asdict(loop.token_budget), "receipts": data.token_receipts,
                "termination_reason": data.termination_reason,
+               "termination_detail": data.extra_fields.get("termination_detail"),
+               "binding_limits": data.extra_fields.get("binding_limits", []),
+               "diagnostics_version": "tau3_generation_diagnostics_v2",
                "final_input_sha256": token_digest(data.prompt_ids),
                "appended_tokens": len(data.response_mask),
                "full_schema": "tau3_full_schema_v2"}
     data.extra_fields["token_protocol_json"] = json.dumps(payload, sort_keys=True, allow_nan=False)
+    data.extra_fields.setdefault("reward_extra_info", {}).update(
+        token_protocol_json=data.extra_fields["token_protocol_json"],
+        termination_detail=data.extra_fields.get("termination_detail"))

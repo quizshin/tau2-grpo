@@ -10,6 +10,7 @@
       "tests/test_execution_eligibility.py",
       "tests/test_experiment_manifest.py",
       "tests/test_experiment_review.py",
+      "tests/test_generation_guard.py",
       "tests/test_launcher.py",
       "tests/test_leakage_audit.py",
       "tests/test_metrics.py",

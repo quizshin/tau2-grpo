@@ -1,0 +1,5 @@
+# Same legacy MT-GTPO objective; only the versioned harness guard changes.
+# Local/remote CPU checks do not authorize GPU training or validate model quality.
+includes:
+- formal50_5090_a45_mt_gtpo_v4.yaml
+- ../../protocols/harness_guard_v1.yaml

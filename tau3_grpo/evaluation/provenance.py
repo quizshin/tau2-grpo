@@ -60,7 +60,7 @@ def evaluation_provenance(jobs):
     evaluators = source_hashes(benchmark, ["evaluator"])
     harness = source_hashes(CODE_ROOT, ["tau3_grpo/envs", "tau3_grpo/evaluation", "tau3_grpo/prompts.py",
                                        "tau3_grpo/data/opening.py", "tau3_grpo/models/token_budget.py",
-                                       "tau3_grpo/models/token_endpoint.py", "configs/protocols/token_budget_v1.yaml", "tau3_grpo/integrations/verl/token_budget.py",
+                                       "tau3_grpo/models/token_endpoint.py", "tau3_grpo/models/generation_guard.py", "configs/protocols/token_budget_v1.yaml", "tau3_grpo/integrations/verl/token_budget.py",
                                        "verl/verl/experimental/agent_loop/tool_agent_loop.py",
                                        "verl/verl/experimental/agent_loop/tool_parser.py",
                                        "verl/verl/utils/chat_template.py"])

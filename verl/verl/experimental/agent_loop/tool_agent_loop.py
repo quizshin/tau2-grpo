@@ -188,6 +188,9 @@ class ToolAgentLoop(AgentLoopBase):
         self.record_turn_facts = os.getenv("TAU3_RECORD_TRAJECTORY_FACTS", "0") == "1"
         self.record_call_attribution = os.getenv("TAU3_RECORD_CALL_ATTRIBUTION", "0") == "1"
         self.record_turn_facts = self.record_turn_facts or self.record_call_attribution
+        guard_mode = (self.rollout_config.get("generation_guard") or {}).get("mode", "off")
+        update_guard_mode = (self.config.get("tau3_update_guard") or {}).get("mode", "off")
+        self.record_turn_facts = self.record_turn_facts or guard_mode != "off" or update_guard_mode != "off"
         self.process_reward_config = None
         if self.record_process_turns:
             from tau3_grpo.integrations.verl.mt_gtpo import settings_from_config
@@ -401,6 +404,8 @@ class ToolAgentLoop(AgentLoopBase):
                 call_attributions=(agent_data.call_attributions
                                    if getattr(self, "record_call_attribution", False) else None),
             )
+            facts["terminal"].update({key: agent_data.extra_fields.get(key)
+                                      for key in ("termination_detail", "binding_limits", "budget_role")})
             if sampling_identity:
                 facts["identity"].update(sampling_identity)
             raw = json.dumps(facts, sort_keys=True, allow_nan=False)
@@ -516,7 +521,8 @@ class ToolAgentLoop(AgentLoopBase):
             agent_data.turn_records.append({
                 "schema": "tau3_turn_v1", "turn_index": len(agent_data.turn_records),
                 "token_span": [_tau3_span_start, len(agent_data.response_mask)],
-                "tool_calls": [], "parsed": False, "truncated": False,
+                "tool_calls": [], "parsed": False, "parse_status": "not_attempted", "truncated": False,
+                "generation_guard": output.extra_fields.get("generation_guard"),
             })
             if getattr(self, "record_turn_facts", False):
                 agent_data.turn_records[-1].update(
@@ -570,10 +576,14 @@ class ToolAgentLoop(AgentLoopBase):
             if len(agent_data.tool_calls) != raw_text.count("<tool_call>"):
                 # The permissive parser may silently drop a malformed call.
                 # Reject the entire batch before any real environment write.
+                if self._records_turns():
+                    agent_data.turn_records[-1]["parse_status"] = "parse_error"
+                agent_data.extra_fields["termination_detail"] = "tool_parse_error"
                 agent_data.termination_reason = "agent_error"
                 return AgentState.TERMINATED
         if self._records_turns():
             agent_data.turn_records[-1]["parsed"] = True
+            agent_data.turn_records[-1]["parse_status"] = "parsed"
 
         # Handle interaction if needed
         if self.interaction_config_file:
@@ -771,6 +781,8 @@ class ToolAgentLoop(AgentLoopBase):
         if (getattr(self, "token_budget", None) and should_terminate_sequence
                 and not interaction_responses):
             agent_data.termination_reason = metrics.get("termination_reason", "user_stop")
+            if metrics.get("budget_role") == "user":
+                agent_data.extra_fields["termination_detail"] = "user_budget"
             return AgentState.TERMINATED
 
         add_messages: list[dict[str, Any]] = [{"role": "user", "content": interaction_responses}]

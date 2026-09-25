@@ -72,6 +72,14 @@ def compare_evaluations(baseline: Path, treatment: Path, *, ks=None, resamples=1
             missing.append(name)
         elif left != right:
             mismatches.append({"field": name, "baseline": left, "treatment": right})
+    # This sampling field was not recorded historically. Preserve old-vs-old
+    # comparisons with an explicit missing-evidence notice, never assume a value.
+    name = "endpoints.policy.repetition_penalty"
+    left, right = _field(base.metadata, name), _field(treat.metadata, name)
+    if left is None and right is None:
+        missing.append(name)
+    elif left != right:
+        mismatches.append({"field": name, "baseline": left, "treatment": right})
     # Missing versions in old runs remain unknown. Two historical runs retain
     # the old comparison rules, but cannot silently compare to a versioned run.
     name = "provenance.harness_protocol"

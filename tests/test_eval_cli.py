@@ -50,6 +50,14 @@ def test_dry_run_shows_budget_and_does_not_call_service(monkeypatch, tmp_path, c
     assert not (tmp_path / "out").exists()
 
 
+def test_runtime_rejects_unsupported_sampling_before_loading_jobs(monkeypatch, tmp_path):
+    monkeypatch.setattr(runtime, "_selection_jobs", lambda *args: pytest.fail("data loaded"))
+    with pytest.raises(ValueError, match="token-v4"):
+        runtime.run_evaluation(spec=runtime.EvalSpec(target="selection"),
+            policy=runtime.Endpoint("policy", "http://unused", repetition_penalty=1.15),
+            user=runtime.Endpoint("user", "http://unused"), output_dir=tmp_path)
+
+
 @pytest.mark.parametrize("flags", [
     ["--ks", "5"], ["--trials", "0"], ["--max-steps", "0"],
     ["--max-concurrency", "0"], ["--policy-temperature", "nan"],
