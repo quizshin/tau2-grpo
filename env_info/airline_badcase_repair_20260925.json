@@ -1,0 +1,408 @@
+{
+  "schema": "airline_badcase_repair_receipt_v1",
+  "date": "2026-09-25",
+  "scope": "offline raw replay only; no new inference, training or reward changes",
+  "verification": {
+    "status": "verified",
+    "records": 2784,
+    "sources": 38
+  },
+  "bundle_directory": "results/analysis/airline_badcase_v2_20260925",
+  "bundle_manifest_sha256": "3168b3dc4dabda6a13e781604be5efe5c8b5ad5cce71ed6dd7a6a7d3ec82ad24",
+  "analysis_code_sha256": "add67486db00d57bead61869a3f4d1ad7e4cae229281cebadadee0fe538d959d",
+  "eligibility_policy": "tau3_execution_eligibility_v1",
+  "eligibility_code_sha256": "7c96d1febf8981f7542603aefdcc62a4aef4591339ec18fc22bb6b8e6855f2f2",
+  "outputs_sha256": {
+    "records.jsonl": "cd41dd63b8f040754e4dc03084336ee23a0e7296c03353188cd19009f9160a06",
+    "summary.json": "0e21b42c7801911a7c30ffca553ed8801551d6476191cb6f5beeb5faf185ca4a",
+    "report.md": "f1eca77cd8fbcb6b83fa688227593171cd84c8dee0bb43f4b58c19c592d28f52"
+  },
+  "source_manifest": "configs/analysis/airline_badcase_replay_20260925.json",
+  "source_manifest_sha256": "7928fb94d22147fdae9ab57a5b0ca4347264cd870adcee81bc94261969feb753",
+  "unavailable_historical_scope": [
+    "SFT A/B selection60 eval240 original raw files",
+    "GRPO historical selection eval10/20/30 original raw files"
+  ],
+  "historical_v1_hashes_preserved": {
+    "airline_capability_badcase_report.md": "ad842e749b2e732274f2083e3f875186a56255480070991ea7b6f0acdfbc6922",
+    "records.jsonl": "ac0adeadd2b58a99e4e56d4c0a8ffcf9a8b05657930001db6c785c5d24e320c5",
+    "report.md": "82c8c6d1c3b6298de3a3651529fb95c4b7ba8ea0e9a7b44f0c0f124543c603ce",
+    "summary.json": "cc9ddd5770ef6b133f80a309e3d48d36af7051d93219eda2c9605eb1e4630f11"
+  },
+  "historical_v1_stale_aggregates": [
+    {
+      "source": "GRPO_10_eval",
+      "label": "duplicate_call",
+      "summary_count": 185,
+      "records_count": 25
+    },
+    {
+      "source": "GRPO_20_eval",
+      "label": "duplicate_call",
+      "summary_count": 189,
+      "records_count": 23
+    },
+    {
+      "source": "GRPO_30_eval",
+      "label": "duplicate_call",
+      "summary_count": 202,
+      "records_count": 46
+    }
+  ],
+  "historical_sft_eval_telemetry_bug": {
+    "SFT_A_eval": {
+      "records": 240,
+      "tool_calls_in_v1": 0,
+      "original_raw_unavailable": true
+    },
+    "SFT_B_eval": {
+      "records": 240,
+      "tool_calls_in_v1": 0,
+      "original_raw_unavailable": true
+    }
+  },
+  "sources": {
+    "BASE_selection60_eval240_20260925": {
+      "records": 240,
+      "successes": 131,
+      "officially_scored": 213,
+      "completed_fallback_zeros": 27,
+      "unresolved": 0,
+      "tool_calls_observed": 1586,
+      "tool_telemetry_missing_records": 0
+    },
+    "GRPO_train_step10": {
+      "records": 64,
+      "successes": 25,
+      "officially_scored": 59,
+      "completed_fallback_zeros": 5,
+      "unresolved": 0,
+      "tool_calls_observed": 476,
+      "tool_telemetry_missing_records": 0
+    },
+    "GRPO_train_step11": {
+      "records": 64,
+      "successes": 30,
+      "officially_scored": 53,
+      "completed_fallback_zeros": 11,
+      "unresolved": 0,
+      "tool_calls_observed": 495,
+      "tool_telemetry_missing_records": 0
+    },
+    "GRPO_train_step12": {
+      "records": 64,
+      "successes": 38,
+      "officially_scored": 55,
+      "completed_fallback_zeros": 9,
+      "unresolved": 0,
+      "tool_calls_observed": 480,
+      "tool_telemetry_missing_records": 0
+    },
+    "GRPO_train_step13": {
+      "records": 64,
+      "successes": 25,
+      "officially_scored": 43,
+      "completed_fallback_zeros": 21,
+      "unresolved": 0,
+      "tool_calls_observed": 468,
+      "tool_telemetry_missing_records": 0
+    },
+    "GRPO_train_step14": {
+      "records": 64,
+      "successes": 42,
+      "officially_scored": 62,
+      "completed_fallback_zeros": 2,
+      "unresolved": 0,
+      "tool_calls_observed": 441,
+      "tool_telemetry_missing_records": 0
+    },
+    "GRPO_train_step15": {
+      "records": 64,
+      "successes": 36,
+      "officially_scored": 61,
+      "completed_fallback_zeros": 3,
+      "unresolved": 0,
+      "tool_calls_observed": 392,
+      "tool_telemetry_missing_records": 0
+    },
+    "GRPO_train_step16": {
+      "records": 64,
+      "successes": 17,
+      "officially_scored": 58,
+      "completed_fallback_zeros": 6,
+      "unresolved": 0,
+      "tool_calls_observed": 568,
+      "tool_telemetry_missing_records": 0
+    },
+    "GRPO_train_step17": {
+      "records": 64,
+      "successes": 33,
+      "officially_scored": 53,
+      "completed_fallback_zeros": 11,
+      "unresolved": 0,
+      "tool_calls_observed": 428,
+      "tool_telemetry_missing_records": 0
+    },
+    "GRPO_train_step18": {
+      "records": 64,
+      "successes": 42,
+      "officially_scored": 56,
+      "completed_fallback_zeros": 8,
+      "unresolved": 0,
+      "tool_calls_observed": 508,
+      "tool_telemetry_missing_records": 0
+    },
+    "GRPO_train_step19": {
+      "records": 64,
+      "successes": 22,
+      "officially_scored": 42,
+      "completed_fallback_zeros": 22,
+      "unresolved": 0,
+      "tool_calls_observed": 465,
+      "tool_telemetry_missing_records": 0
+    },
+    "GRPO_train_step20": {
+      "records": 64,
+      "successes": 31,
+      "officially_scored": 55,
+      "completed_fallback_zeros": 9,
+      "unresolved": 0,
+      "tool_calls_observed": 421,
+      "tool_telemetry_missing_records": 0
+    },
+    "GRPO_train_step21": {
+      "records": 64,
+      "successes": 46,
+      "officially_scored": 62,
+      "completed_fallback_zeros": 2,
+      "unresolved": 0,
+      "tool_calls_observed": 382,
+      "tool_telemetry_missing_records": 0
+    },
+    "GRPO_train_step22": {
+      "records": 64,
+      "successes": 20,
+      "officially_scored": 58,
+      "completed_fallback_zeros": 6,
+      "unresolved": 0,
+      "tool_calls_observed": 590,
+      "tool_telemetry_missing_records": 0
+    },
+    "GRPO_train_step23": {
+      "records": 64,
+      "successes": 41,
+      "officially_scored": 62,
+      "completed_fallback_zeros": 2,
+      "unresolved": 0,
+      "tool_calls_observed": 446,
+      "tool_telemetry_missing_records": 0
+    },
+    "GRPO_train_step24": {
+      "records": 64,
+      "successes": 37,
+      "officially_scored": 51,
+      "completed_fallback_zeros": 13,
+      "unresolved": 0,
+      "tool_calls_observed": 481,
+      "tool_telemetry_missing_records": 0
+    },
+    "GRPO_train_step25": {
+      "records": 64,
+      "successes": 39,
+      "officially_scored": 58,
+      "completed_fallback_zeros": 6,
+      "unresolved": 0,
+      "tool_calls_observed": 452,
+      "tool_telemetry_missing_records": 0
+    },
+    "GRPO_train_step26": {
+      "records": 64,
+      "successes": 32,
+      "officially_scored": 45,
+      "completed_fallback_zeros": 19,
+      "unresolved": 0,
+      "tool_calls_observed": 472,
+      "tool_telemetry_missing_records": 0
+    },
+    "GRPO_train_step27": {
+      "records": 64,
+      "successes": 37,
+      "officially_scored": 61,
+      "completed_fallback_zeros": 3,
+      "unresolved": 0,
+      "tool_calls_observed": 450,
+      "tool_telemetry_missing_records": 0
+    },
+    "MTGTPO_train_step10": {
+      "records": 64,
+      "successes": 22,
+      "officially_scored": 57,
+      "completed_fallback_zeros": 7,
+      "unresolved": 0,
+      "tool_calls_observed": 441,
+      "tool_telemetry_missing_records": 0
+    },
+    "MTGTPO_train_step11": {
+      "records": 64,
+      "successes": 22,
+      "officially_scored": 46,
+      "completed_fallback_zeros": 18,
+      "unresolved": 0,
+      "tool_calls_observed": 453,
+      "tool_telemetry_missing_records": 0
+    },
+    "MTGTPO_train_step12": {
+      "records": 64,
+      "successes": 38,
+      "officially_scored": 55,
+      "completed_fallback_zeros": 9,
+      "unresolved": 0,
+      "tool_calls_observed": 464,
+      "tool_telemetry_missing_records": 0
+    },
+    "MTGTPO_train_step13": {
+      "records": 64,
+      "successes": 22,
+      "officially_scored": 44,
+      "completed_fallback_zeros": 20,
+      "unresolved": 0,
+      "tool_calls_observed": 461,
+      "tool_telemetry_missing_records": 0
+    },
+    "MTGTPO_train_step14": {
+      "records": 64,
+      "successes": 40,
+      "officially_scored": 61,
+      "completed_fallback_zeros": 3,
+      "unresolved": 0,
+      "tool_calls_observed": 395,
+      "tool_telemetry_missing_records": 0
+    },
+    "MTGTPO_train_step15": {
+      "records": 64,
+      "successes": 37,
+      "officially_scored": 58,
+      "completed_fallback_zeros": 6,
+      "unresolved": 0,
+      "tool_calls_observed": 346,
+      "tool_telemetry_missing_records": 0
+    },
+    "MTGTPO_train_step16": {
+      "records": 64,
+      "successes": 19,
+      "officially_scored": 58,
+      "completed_fallback_zeros": 6,
+      "unresolved": 0,
+      "tool_calls_observed": 549,
+      "tool_telemetry_missing_records": 0
+    },
+    "MTGTPO_train_step17": {
+      "records": 64,
+      "successes": 36,
+      "officially_scored": 58,
+      "completed_fallback_zeros": 6,
+      "unresolved": 0,
+      "tool_calls_observed": 418,
+      "tool_telemetry_missing_records": 0
+    },
+    "MTGTPO_train_step18": {
+      "records": 64,
+      "successes": 38,
+      "officially_scored": 55,
+      "completed_fallback_zeros": 9,
+      "unresolved": 0,
+      "tool_calls_observed": 478,
+      "tool_telemetry_missing_records": 0
+    },
+    "MTGTPO_train_step19": {
+      "records": 64,
+      "successes": 28,
+      "officially_scored": 46,
+      "completed_fallback_zeros": 18,
+      "unresolved": 0,
+      "tool_calls_observed": 438,
+      "tool_telemetry_missing_records": 0
+    },
+    "MTGTPO_train_step20": {
+      "records": 64,
+      "successes": 31,
+      "officially_scored": 54,
+      "completed_fallback_zeros": 10,
+      "unresolved": 0,
+      "tool_calls_observed": 393,
+      "tool_telemetry_missing_records": 0
+    },
+    "MTGTPO_train_step21": {
+      "records": 64,
+      "successes": 43,
+      "officially_scored": 62,
+      "completed_fallback_zeros": 2,
+      "unresolved": 0,
+      "tool_calls_observed": 348,
+      "tool_telemetry_missing_records": 0
+    },
+    "MTGTPO_train_step22": {
+      "records": 64,
+      "successes": 18,
+      "officially_scored": 55,
+      "completed_fallback_zeros": 9,
+      "unresolved": 0,
+      "tool_calls_observed": 566,
+      "tool_telemetry_missing_records": 0
+    },
+    "MTGTPO_train_step23": {
+      "records": 64,
+      "successes": 34,
+      "officially_scored": 61,
+      "completed_fallback_zeros": 3,
+      "unresolved": 0,
+      "tool_calls_observed": 368,
+      "tool_telemetry_missing_records": 0
+    },
+    "MTGTPO_train_step24": {
+      "records": 64,
+      "successes": 38,
+      "officially_scored": 49,
+      "completed_fallback_zeros": 15,
+      "unresolved": 0,
+      "tool_calls_observed": 445,
+      "tool_telemetry_missing_records": 0
+    },
+    "MTGTPO_train_step25": {
+      "records": 64,
+      "successes": 21,
+      "officially_scored": 33,
+      "completed_fallback_zeros": 31,
+      "unresolved": 0,
+      "tool_calls_observed": 396,
+      "tool_telemetry_missing_records": 0
+    },
+    "MTGTPO_train_step26": {
+      "records": 64,
+      "successes": 16,
+      "officially_scored": 28,
+      "completed_fallback_zeros": 36,
+      "unresolved": 0,
+      "tool_calls_observed": 351,
+      "tool_telemetry_missing_records": 0
+    },
+    "MTGTPO_train_step27": {
+      "records": 64,
+      "successes": 2,
+      "officially_scored": 3,
+      "completed_fallback_zeros": 61,
+      "unresolved": 0,
+      "tool_calls_observed": 397,
+      "tool_telemetry_missing_records": 0
+    },
+    "SFT100_selection60_eval240_20260925": {
+      "records": 240,
+      "successes": 98,
+      "officially_scored": 204,
+      "completed_fallback_zeros": 36,
+      "unresolved": 0,
+      "tool_calls_observed": 1774,
+      "tool_telemetry_missing_records": 0
+    }
+  }
+}

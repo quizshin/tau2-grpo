@@ -2,6 +2,7 @@
   "schema": "tau3_cpu_test_suites_v1",
   "suites": {
     "core": [
+      "tests/test_airline_badcases.py",
       "tests/test_anchors.py",
       "tests/test_dynamic_filtering.py",
       "tests/test_environment_reward.py",

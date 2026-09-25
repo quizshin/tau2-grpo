@@ -1,0 +1,322 @@
+{
+  "schema": "airline_badcase_raw_manifest_v1",
+  "date": "2026-09-25",
+  "sources": [
+    {
+      "name": "BASE_selection60_eval240_20260925",
+      "path": "../../results/analysis/review_repairs_20260925/inputs/base_trajectories.jsonl",
+      "kind": "rollout",
+      "expected_records": 240,
+      "sha256": "b536591563734ee3972cf3dbb56d6c1e0251e10072a9f86dc6044f8d92a3ba1e",
+      "scope": "selection60; 4 trials per task; seeds 42-45; latest local compare, NOT historical SFT A/B",
+      "summary_receipt_path": "../../results/analysis/review_repairs_20260925/inputs/base_summary.json",
+      "summary_receipt_sha256": "8cb2fdac20cd4bee1260c25ea356d1dc7fd23cd1409846b3417bba4d728508c7"
+    },
+    {
+      "name": "SFT100_selection60_eval240_20260925",
+      "path": "../../results/analysis/review_repairs_20260925/inputs/sft_trajectories.jsonl",
+      "kind": "rollout",
+      "expected_records": 240,
+      "sha256": "9e209142b0987292e4339138111be4a0d25cf5f0aef9cf29fa900bc2a3bbfa16",
+      "scope": "selection60; 4 trials per task; seeds 42-45; latest local compare, NOT historical SFT A/B",
+      "summary_receipt_path": "../../results/analysis/review_repairs_20260925/inputs/sft_summary.json",
+      "summary_receipt_sha256": "d829c9121600ad59746d5a24dac19dc12adbf9074391f0c83f99149352c17326"
+    },
+    {
+      "name": "GRPO_train_step10",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/grpo_5090_a45/20260921-u30-v4/rollouts/10.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "5aa9b470e7bb8ff38ffc6da425ea4b4f359c0957a79be2a9858e4ead41eda681",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "GRPO_train_step11",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/grpo_5090_a45/20260921-u30-v4/rollouts/11.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "fca0edb00ea6c956c3c37eb29814fa82ae09c2f94548b9bd2540641d0b0b2ec7",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "GRPO_train_step12",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/grpo_5090_a45/20260921-u30-v4/rollouts/12.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "0877d30091366cd278ddd402f7386164f4e5492ca29254f2fcf5378504663653",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "GRPO_train_step13",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/grpo_5090_a45/20260921-u30-v4/rollouts/13.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "e7dbea43dc10921a586f31f48942c4ba11cae871b244d279772ba882837b9be8",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "GRPO_train_step14",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/grpo_5090_a45/20260921-u30-v4/rollouts/14.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "83b956db1681e7e4b7bff2df794edea9e742a29a18169f0599c78957af038341",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "GRPO_train_step15",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/grpo_5090_a45/20260921-u30-v4/rollouts/15.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "8aad2c3424b40b203acaf59db36cba3416fd41145e61b3d9171918bfcf6aa243",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "GRPO_train_step16",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/grpo_5090_a45/20260921-u30-v4/rollouts/16.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "291ef3c1eda17b1f1fcc3c2652c14b5c18d4e679ebd09723a89e2eb8fd289c25",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "GRPO_train_step17",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/grpo_5090_a45/20260921-u30-v4/rollouts/17.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "c9c0cf45bc8f35a2676a9411b1bb2daa930137ac5e726ec4849dafd877c6ee74",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "GRPO_train_step18",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/grpo_5090_a45/20260921-u30-v4/rollouts/18.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "29f5d097daf29261be80a95aab601f86f49fd5b21d8aa8ca328a92e2fe39a3e5",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "GRPO_train_step19",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/grpo_5090_a45/20260921-u30-v4/rollouts/19.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "d401d27cbf56f604aa8598e75170d33730ee91f99d6db2c782ea22b69a7caa12",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "GRPO_train_step20",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/grpo_5090_a45/20260921-u30-v4/rollouts/20.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "0f334d349a45da48ddb8df1bd72c8f4670178e956f2e3b6817dba46d1aa414b5",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "GRPO_train_step21",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/grpo_5090_a45/20260921-u30-v4/rollouts/21.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "596ddcc18af3f17cf44673c821ba760c629bc5668e2903256f8335deae904580",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "GRPO_train_step22",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/grpo_5090_a45/20260921-u30-v4/rollouts/22.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "09fe9e2a24bc240dbb1bdcb2aa456ff59926a979db6e20c1c4e62aa6952e1098",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "GRPO_train_step23",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/grpo_5090_a45/20260921-u30-v4/rollouts/23.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "35c29bf5e11b04b816513dce3c989f52a122949474f1c5a2cf17672b836ca7c6",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "GRPO_train_step24",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/grpo_5090_a45/20260921-u30-v4/rollouts/24.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "716d8798caeab3deb170e73f8256437de5d3386faeb8218e5b4fa5146ca8b51f",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "GRPO_train_step25",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/grpo_5090_a45/20260921-u30-v4/rollouts/25.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "f5adb1e5366412f9dfbd9a9a3045b874122579eeead55ae3b08e5a4daf5ef1ce",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "GRPO_train_step26",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/grpo_5090_a45/20260921-u30-v4/rollouts/26.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "aac45bc704339436b8a0356ca7d9bee7ecfdc1035ab0d7b7124a95efbc90f694",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "GRPO_train_step27",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/grpo_5090_a45/20260921-u30-v4/rollouts/27.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "7f23fe1221ccfa4bd84aed124463596b8a73acd1e809c4ca9d5560672cca338a",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "MTGTPO_train_step10",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/mt_gtpo_5090_a45/v4-explore-u30-01/rollouts/10.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "a334e867984f8280ad0943b8a96c373f2a9368a634c6fafb41f69abf9b1d1f1c",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "MTGTPO_train_step11",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/mt_gtpo_5090_a45/v4-explore-u30-01/rollouts/11.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "df707a5f46e9b94a44bb5d097d53eecda94518ed6a648efce843781f77ee5729",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "MTGTPO_train_step12",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/mt_gtpo_5090_a45/v4-explore-u30-01/rollouts/12.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "fe805c1c195b1912a0208fbd45fafe851ebbf4f672d2b0f6cdb1f8e1831fad18",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "MTGTPO_train_step13",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/mt_gtpo_5090_a45/v4-explore-u30-01/rollouts/13.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "76889f45a8173410fafd679fa2fa10c2aaf4f8f81b0e84af23aef9755aacdb2f",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "MTGTPO_train_step14",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/mt_gtpo_5090_a45/v4-explore-u30-01/rollouts/14.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "f40489745411a7a610b5573c17e23998155da6742ce106fa0d7da4caa028970e",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "MTGTPO_train_step15",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/mt_gtpo_5090_a45/v4-explore-u30-01/rollouts/15.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "ff7cafda2280d2f92b4e67956533963d43f4f41251efafa7d05b7ee7722b6cca",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "MTGTPO_train_step16",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/mt_gtpo_5090_a45/v4-explore-u30-01/rollouts/16.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "daa958d0568d90c750584fc43567374b9a62c505626638aef1a6cdd5fb9993c0",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "MTGTPO_train_step17",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/mt_gtpo_5090_a45/v4-explore-u30-01/rollouts/17.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "bce8fc04bfa473c9dfd8c5b3d906d201e90fb0d6ad00f1541b17218bd2d33a16",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "MTGTPO_train_step18",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/mt_gtpo_5090_a45/v4-explore-u30-01/rollouts/18.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "4a1cfdab289246e39239e17cb1cf974a56d608f761549c4fd258e29e7b8bb439",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "MTGTPO_train_step19",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/mt_gtpo_5090_a45/v4-explore-u30-01/rollouts/19.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "33602054b1c1b810ee4883d632926c8ee67849fe63f33898653134b8367e0166",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "MTGTPO_train_step20",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/mt_gtpo_5090_a45/v4-explore-u30-01/rollouts/20.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "1f90c34604411e17bc5465462122b147407749ccd1c04b73f56c9239b1ee554d",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "MTGTPO_train_step21",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/mt_gtpo_5090_a45/v4-explore-u30-01/rollouts/21.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "add94362db42dfa9fc5e6c134a1a90d9fc915529cfeddec90b0f1018f780dac6",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "MTGTPO_train_step22",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/mt_gtpo_5090_a45/v4-explore-u30-01/rollouts/22.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "e3bd2515f4b0bf0910d4624f43b29cbdd46edf867ec8fba9d9ca699a8e4a7840",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "MTGTPO_train_step23",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/mt_gtpo_5090_a45/v4-explore-u30-01/rollouts/23.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "2091a2614a6a1f67af8a2a3db22ae0141146ad0a26e6bfd0dc7f52da9d7e67e9",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "MTGTPO_train_step24",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/mt_gtpo_5090_a45/v4-explore-u30-01/rollouts/24.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "6ec731af3f0a150c4b76f905eb52bb575f056f793fb59bf0bb80a0f1c03ed396",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "MTGTPO_train_step25",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/mt_gtpo_5090_a45/v4-explore-u30-01/rollouts/25.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "3ee8df154c5239caf028020bac53ef6c04c00c5cc75e9c2e4cde9ffdba742174",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "MTGTPO_train_step26",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/mt_gtpo_5090_a45/v4-explore-u30-01/rollouts/26.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "5abb261aecdf84cdfadb82fc3befaae0f5e565c30f0175bcea927a7ddcd3256a",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    },
+    {
+      "name": "MTGTPO_train_step27",
+      "path": "../../results/analysis/harness_recovery_20260924/raw/mt_gtpo_5090_a45/v4-explore-u30-01/rollouts/27.jsonl",
+      "kind": "rollout",
+      "expected_records": 64,
+      "sha256": "36b4f56349d0337bf5b90d0b7a9a0a057f662ce75c3d1edd7e665e76b9e03ead",
+      "scope": "historical training rollout; one step, not selection evaluation"
+    }
+  ],
+  "missing_historical_scope": [
+    "SFT A/B selection60 eval240 original raw files",
+    "GRPO historical selection eval10/20/30 original raw files"
+  ],
+  "limitations": [
+    "Latest Base/SFT100 is NOT a reconstruction of historical A/B.",
+    "Do not aggregate different training steps as stationary policy evaluation."
+  ]
+}

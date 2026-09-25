@@ -1,0 +1,42 @@
+version: airline_capability_v2
+analysis_version: airline_badcase_analysis_v2
+scope: offline_observations_not_correctness_labels
+capabilities_for_manual_review_only:
+  intent_understanding: Identify the user's task and constraints.
+  state_reading: Read reservation, user, flight, passenger, payment and policy state.
+  schema_use: Validate complete arguments against the runtime schema.
+  tool_selection: Check the chosen tool against the requested operation.
+  argument_binding: Check IDs, dates, flights, amounts and payment methods against evidence.
+  call_order: Check query, confirmation, mutation and verification dependencies.
+  database_mutation: Independently verify the intended final state.
+  result_verification: Check post-mutation evidence and communication.
+  dialogue_termination: Inspect termination and generation traces.
+badcase_labels:
+  infrastructure_error: Explicit unresolved infrastructure failure; not inferred from agent/tool errors.
+  unresolved: Missing outcome, explicit incomplete trial, or unknown termination; never silently dropped.
+  agent_generation_failure: Agent-error termination or failure category; not simulator failure.
+  tool_execution_error: Observed error flag/category; no automatic schema/policy/root-cause attribution.
+  turn_or_time_limit: Explicit max_steps or timeout termination.
+  length_or_context_limit: Explicit length/context termination or length-finished generation turn.
+  repetition_detected: Repetition guard evidence or at least 20 repeated checkmark symbols; not a semantic judge.
+  db_changed_on_failure: Recorded initial/final DB hashes differ on a failed complete trial; not proof of correct write.
+  db_unchanged_on_failure: Recorded initial/final DB hashes agree on a failed complete trial.
+  no_tool_calls_observed_on_failure: Available structured call evidence is empty on a failed complete trial.
+  write_attempt_on_failure: A write tool was requested on a failed complete trial; execution/correctness not implied.
+  repeated_call_signature: Same function and canonical arguments repeat; may be a necessary state re-read.
+  write_attempt_without_later_read: No listed read tool follows the last write request; not proof of missed verification.
+groups:
+  environment_or_unscorable:
+    rule: at_least_one_unresolved_observed_trial
+  stable_success:
+    rule: all_observed_trials_complete_and_successful
+  mixed_success:
+    rule: all_observed_trials_complete_with_both_success_and_failure
+  stable_failure:
+    rule: all_observed_trials_complete_and_failed
+limitations:
+  - Bucket names describe observed trials only, not future stability or task difficulty.
+  - Completed fallback-zero trials remain in denominators even when officially_scored is false.
+  - Missing telemetry is unknown, not zero.
+  - Rates do not attest full planned-budget completeness or cross-run comparability.
+  - No correct-write, partial-completion, policy-compliance or first-failure labels are inferred.
