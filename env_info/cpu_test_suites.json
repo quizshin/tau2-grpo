@@ -38,6 +38,7 @@
     "benchmark": [
       "tests/test_anchor_semantic_v3.py",
       "tests/test_audit_semantic_pairs.py",
+      "tests/test_build_clean14.py",
       "tests/test_call_attribution.py",
       "tests/test_checkpoint_contract.py",
       "tests/test_data_splits.py",

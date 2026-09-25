@@ -1,0 +1,87 @@
+{
+  "schema": "clean14_cpu_rebuild_receipt_v1",
+  "date": "2026-09-25",
+  "scope": "local offline CPU tokenizer render; no GPU or new policy replay",
+  "rebuilds": [
+    {
+      "recipe_id": "clean14_96_frozen_20260925",
+      "recipe_sha256": "1b094cca74176899550027020fdbd382d791667ffb84adf1cf21f35d227abddf",
+      "builder_sha256": "a0044b9af8af631f6ab97b24245f3831de37b5067c01de9db9827594162f01c1",
+      "inputs_sha256": {
+        "source": "24bc4d479799ef5d5efec7a5388ea2de6bf5dc5ab7c2c83e9b5ee26fa5813804",
+        "anchors": "e0aec9fb93c25f4f63e6580f6cdfcc0b95c1dfabe47bdf284745fa1759d1384b",
+        "validation": "9de13c3f1ff3f1029e7fc4599abfed19de39aa1fa2f82574d6161a1854dd4ccb",
+        "supplemental": "8d6e11dcd191e8e5605b3e78075d297f46e468a10c441544769bd188d6eedb93",
+        "blocked_reasons": "8fade601895f9892404d0b5d60807972bbb4f22062e943b75c1db7c21f85b084",
+        "tool_config": "69fb766ffa26c1b63c35bf97701a489dd302ba612195d0c71af0a946a4e5407f",
+        "train_manifest": "b142eb49e026f728c84cf1b100008d93d07c8c8fd711bf38e58f7062d4942abc"
+      },
+      "tokenizer_sha256": {
+        "tokenizer.json": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42",
+        "tokenizer_config.json": "316230d6a809701f4db5ea8f8fc862bc3a6f3229c937c174e674ff3ca0a64ac8",
+        "chat_template.jinja": "a4aee8afcf2e0711942cf848899be66016f8d14a889ff9ede07bca099c28f715",
+        "config.json": "ddc63e1c717afa86c865bb5e01313d89d72bb53b97ad4a8a03ba8510c0621670",
+        "vocab.json": "ce99b4cb2983d118806ce0a8b777a35b093e2000a503ebde25853284c9dfa003",
+        "merges.txt": "a9d356d7bdf1ef4949e3e748e95b8e10ad9d4e2e838eddc38a0a7b6b94d1db8d"
+      },
+      "outputs_sha256": {
+        "clean14_v1_train.jsonl": "5a1de6f0362095282cdd4bc4c831b3213b1f18683e88e7f9a285c01e0f0d1a25",
+        "clean14_v1_validation.jsonl": "fb8a2f1105abe9d29734984341cd8f396156cddda2034c0ac6eb651b96ea6a31"
+      },
+      "total_train_count": 96,
+      "validation_count": 5,
+      "status": "all_rows_source_schema_split_and_mask_verified",
+      "limitations": [
+        "Lexical decontamination only; no semantic leakage guarantee.",
+        "No new independent policy judge or environment replay.",
+        "Source quality labels apply to supplied source rows, not every historical context turn.",
+        "Source success labels and tool coverage do not guarantee SFT improvement."
+      ],
+      "audit_path": "results/analysis/review_repairs_20260925/clean14_96_verified/audit.json",
+      "audit_sha256": "c29b743a47dbcd4c85bd4c719b23f6c176b46d7739ce014261335b2fda5bcd33",
+      "validated_rows": 101,
+      "max_rendered_tokens": 23245,
+      "min_label_tokens": 232
+    },
+    {
+      "recipe_id": "clean14_100_frozen_20260925",
+      "recipe_sha256": "2de3cdff5fe25c4419448b878bdbd1754583f778549db0d44e74293cc1f14019",
+      "builder_sha256": "a0044b9af8af631f6ab97b24245f3831de37b5067c01de9db9827594162f01c1",
+      "inputs_sha256": {
+        "source": "24bc4d479799ef5d5efec7a5388ea2de6bf5dc5ab7c2c83e9b5ee26fa5813804",
+        "anchors": "e0aec9fb93c25f4f63e6580f6cdfcc0b95c1dfabe47bdf284745fa1759d1384b",
+        "validation": "9de13c3f1ff3f1029e7fc4599abfed19de39aa1fa2f82574d6161a1854dd4ccb",
+        "supplemental": "8d6e11dcd191e8e5605b3e78075d297f46e468a10c441544769bd188d6eedb93",
+        "blocked_reasons": "8fade601895f9892404d0b5d60807972bbb4f22062e943b75c1db7c21f85b084",
+        "tool_config": "69fb766ffa26c1b63c35bf97701a489dd302ba612195d0c71af0a946a4e5407f",
+        "train_manifest": "b142eb49e026f728c84cf1b100008d93d07c8c8fd711bf38e58f7062d4942abc"
+      },
+      "tokenizer_sha256": {
+        "tokenizer.json": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42",
+        "tokenizer_config.json": "316230d6a809701f4db5ea8f8fc862bc3a6f3229c937c174e674ff3ca0a64ac8",
+        "chat_template.jinja": "a4aee8afcf2e0711942cf848899be66016f8d14a889ff9ede07bca099c28f715",
+        "config.json": "ddc63e1c717afa86c865bb5e01313d89d72bb53b97ad4a8a03ba8510c0621670",
+        "vocab.json": "ce99b4cb2983d118806ce0a8b777a35b093e2000a503ebde25853284c9dfa003",
+        "merges.txt": "a9d356d7bdf1ef4949e3e748e95b8e10ad9d4e2e838eddc38a0a7b6b94d1db8d"
+      },
+      "outputs_sha256": {
+        "clean14_v1_train.jsonl": "726fd839d8f4f8e8f12e7534cced557d3201a5c0c8d6a0fc4eef7c41943cb7b5",
+        "clean14_v1_validation.jsonl": "fb8a2f1105abe9d29734984341cd8f396156cddda2034c0ac6eb651b96ea6a31"
+      },
+      "total_train_count": 100,
+      "validation_count": 5,
+      "status": "all_rows_source_schema_split_and_mask_verified",
+      "limitations": [
+        "Lexical decontamination only; no semantic leakage guarantee.",
+        "No new independent policy judge or environment replay.",
+        "Source quality labels apply to supplied source rows, not every historical context turn.",
+        "Source success labels and tool coverage do not guarantee SFT improvement."
+      ],
+      "audit_path": "results/analysis/review_repairs_20260925/clean14_100_verified/audit.json",
+      "audit_sha256": "73f9857a057c092966dad1b77320b77aa3cda67665cdee95925cb8111c5e43c6",
+      "validated_rows": 105,
+      "max_rendered_tokens": 23245,
+      "min_label_tokens": 232
+    }
+  ]
+}
