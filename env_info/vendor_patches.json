@@ -539,10 +539,10 @@
         "verl/checkpoint_engine/nixl_checkpoint_engine.py": "825db00813e352c66a8b7f7503a531ce9a5c61c99043006ced28baaa5275f7f3",
         "verl/experimental/__init__.py": "e65abd77db034b4f29eb1268c24867f84919dbce22e28d1997e563ed1d94179c",
         "verl/experimental/agent_loop/__init__.py": "197b5cd75e6c43b3f1da97243f48efba8d6d5f98fa43112e89a1089e90aa7e49",
-        "verl/experimental/agent_loop/agent_loop.py": "f2df66d68aa2e700637056828ec6a8dfbc64d104f7baa2adb5e09a613fe35ad6",
+        "verl/experimental/agent_loop/agent_loop.py": "eec851c91d5a6a692b898476537d23ebe8914de66e33dfc7921b622c982b67bb",
         "verl/experimental/agent_loop/prometheus_utils.py": "b447c4d25179186102b17df38b7a45d79e3978edade9bcdf5cf6af4439936851",
         "verl/experimental/agent_loop/single_turn_agent_loop.py": "8d3e51085f545209da4d54d3245bce7c5e98a1e64689848cf345be035b75eb96",
-        "verl/experimental/agent_loop/tool_agent_loop.py": "8a3a369e6f149eeda57f46d839fa4ef14bd5d6aab9d9909e0a4f06418fa0043e",
+        "verl/experimental/agent_loop/tool_agent_loop.py": "ea9ed1ab2cd577f6cc993aec82b4a280b9d4f4fb1c4dab30db1f1f4d2cca56b7",
         "verl/experimental/agent_loop/tool_parser.py": "bec2c671277024267c732214ed2f46585facd3e0c1147e716a71eca82656ff65",
         "verl/experimental/agent_loop/utils.py": "390125d2f7c03d9a42096d96fddba99a3236bcd669d119e13d6154cd85d6a3e9",
         "verl/experimental/dataset/__init__.py": "e65abd77db034b4f29eb1268c24867f84919dbce22e28d1997e563ed1d94179c",
@@ -820,7 +820,7 @@
         "verl/trainer/ppo/core_algos.py": "bd5c2a262df55ec143af4392ae3f702c56497a76c6e6b5b641cc5e67760fd432",
         "verl/trainer/ppo/metric_utils.py": "3443accbb84f872ee18968bed4e780de4734e58a5b55dd8e4c8d00983ff46b46",
         "verl/trainer/ppo/prefix_grouper_utils.py": "22f66f26c8c918f7ecf5e8522ed434f40e94660733b1f3dadfd31ff8b7699db0",
-        "verl/trainer/ppo/ray_trainer.py": "6ebdfb19bfe1b14160089cd891f3dd594d446df11edb703886917a05c49cffa7",
+        "verl/trainer/ppo/ray_trainer.py": "65db43b741da9864f44c57893491e011c410d4a9f4c403b81e0470c2221a1801",
         "verl/trainer/ppo/reward.py": "08fcaabb542f7a612c08bd7f0ba8c65c4f92029c03b2ba3f2d3a60e595bf376e",
         "verl/trainer/ppo/rollout_corr_helper.py": "d7c584d1c3f2fd31e4c2e508e32a7a54b12b94284cd441f1f1c7889f5258c304",
         "verl/trainer/ppo/utils.py": "dfc99f49a6f17ac41f30803be5e0c2941ef36836b3e602ec36a3d660f28316bc",
@@ -1008,7 +1008,7 @@
         "verl/workers/rollout/vllm_rollout/__init__.py": "11c57676b01ee7c95d8a1625908818fcd1ba698231737e619e1e5ea726d2fbfa",
         "verl/workers/rollout/vllm_rollout/bucketed_weight_transfer.py": "8392e7a98b4b0a6397b212546c56c9c444fe87810cdaa00bb433356084c8d174",
         "verl/workers/rollout/vllm_rollout/utils.py": "cd996709be549498b1d43ed52444b7ca4c4b8bd3e89a188a66758bf102d9f285",
-        "verl/workers/rollout/vllm_rollout/vllm_async_server.py": "a06b362c5aba0de30037f1fc0aed0a6da1bf7bc71ea4676394438adc34c06834",
+        "verl/workers/rollout/vllm_rollout/vllm_async_server.py": "49ea7652c6796058a05f00ca2ee8383e46a64981e31ee0fe36a4b4aaa3cab8e7",
         "verl/workers/rollout/vllm_rollout/vllm_rollout.py": "49531abb64c07a351c9188cf4e22deb768fdb2bcfd3f592777cd862c9b2bed8a",
         "verl/workers/sharding_manager/__init__.py": "e65abd77db034b4f29eb1268c24867f84919dbce22e28d1997e563ed1d94179c",
         "verl/workers/sharding_manager/base.py": "8c38bf57c5bf9c3ae5d51725ce20a8042beb4a77d8b9462c4b2ad6462c083e1e",
@@ -1031,26 +1031,27 @@
           "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
         },
         {
-          "local_sha256": "ec4949386fd98b0e2466ee8bdfddf2349e8d841654bb2d444565c97e03ec5b08",
+          "local_sha256": "eec851c91d5a6a692b898476537d23ebe8914de66e33dfc7921b622c982b67bb",
           "path": "verl/experimental/agent_loop/agent_loop.py",
-          "reason": "Record actual group/trial/data-seed before worker splitting; reject partially missing generation logprobs. Preserve real group/sample identities when optional call attribution alone enables trajectory facts. Read repetition_penalty from actual rollout/validation configuration and reject guard use without the shared token protocol. Persist each completed, scored rollout atomically before batch gather; no sampling/reward changes and no partial-batch resume claim.",
+          "reason": "Record actual group/trial/data-seed before worker splitting; reject partially missing generation logprobs. Preserve real group/sample identities when optional call attribution alone enables trajectory facts. Read repetition_penalty from actual rollout/validation configuration and reject guard use without the shared token protocol. Opt-in ARPO whole-group worker routing with original row-order restoration and grouped native rollout scheduling.",
           "status": "modified",
           "tests": [
+            "tests/test_arpo_verl.py",
             "tests/test_generation_guard.py",
             "tests/test_rollout_boundaries.py",
             "tests/test_sampling_identity.py",
-            "tests/test_token_harness.py",
-            "tests/test_rollout_stream.py"
+            "tests/test_token_harness.py"
           ],
           "upstream_sha256": "52a0b7387c6e7474ac1a6a6cae7ac2fc02d1ab23a6ac072366605b8b96e6c171",
-          "validation_scope": "Local CPU helpers/native loop; real vLLM cancellation and GPU multi-rank update/recovery remain pending separate authorization"
+          "validation_scope": "Local CPU helpers/native loop; real vLLM cancellation and GPU multi-rank update/recovery remain pending separate authorization ARPO changes: CPU only; GPU sampling/update/resume unvalidated."
         },
         {
-          "local_sha256": "8a3a369e6f149eeda57f46d839fa4ef14bd5d6aab9d9909e0a4f06418fa0043e",
+          "local_sha256": "ea9ed1ab2cd577f6cc993aec82b4a280b9d4f4fb1c4dab30db1f1f4d2cca56b7",
           "path": "verl/experimental/agent_loop/tool_agent_loop.py",
-          "reason": "Ordered multi-call execution, private session cleanup, official terminal reward, anchors and shared trajectory facts. Add opt-in full text-weight audit, actual generation probability metadata or shared execution eligibility as applicable. Add live DB receipts for recorded dispatch failures and shared policy-only tool observation projection metadata; retain original clipping and terminal reward semantics. Add opt-in tau3_token_budget_v1 shared training/evaluation loop accounting: exact raw generation tokens, complete XML before dispatch, terminal STOP before observation overflow, bounded observations, append-only receipts and evaluation anchor isolation. Preserve old protocol behavior. Add opt-in call attribution observations from actual emitted token IDs and invocation-local Qwen parser provenance, binding stable execution IDs without changing parsed calls, process rewards, masks or advantages. Record parse-not-attempted separately, retain raw guarded-abort tokens, publish termination diagnostics, and automatically retain facts when guard is enabled.",
+          "reason": "Ordered multi-call execution, private session cleanup, official terminal reward, anchors and shared trajectory facts. Add opt-in full text-weight audit, actual generation probability metadata or shared execution eligibility as applicable. Add live DB receipts for recorded dispatch failures and shared policy-only tool observation projection metadata; retain original clipping and terminal reward semantics. Add opt-in tau3_token_budget_v1 shared training/evaluation loop accounting: exact raw generation tokens, complete XML before dispatch, terminal STOP before observation overflow, bounded observations, append-only receipts and evaluation anchor isolation. Preserve old protocol behavior. Add opt-in call attribution observations from actual emitted token IDs and invocation-local Qwen parser provenance, binding stable execution IDs without changing parsed calls, process rewards, masks or advantages. Record parse-not-attempted separately, retain raw guarded-abort tokens, publish termination diagnostics, and automatically retain facts when guard is enabled. Opt-in ARPO resumable state boundaries and entropy callback; all actual tool/user transitions remain native.",
           "status": "modified",
           "tests": [
+            "tests/test_arpo_verl.py",
             "tests/test_call_attribution.py",
             "tests/test_execution_eligibility.py",
             "tests/test_generation_guard.py",
@@ -1061,7 +1062,7 @@
             "tests/test_trajectory_facts.py"
           ],
           "upstream_sha256": "2abfe16521dadef9d79aa95a2165714092f3c6643402ec7da1ae8465c6e469b8",
-          "validation_scope": "CPU regression plus real single-GPU guarded native loops for GRPO/GiGPO/MT-GTPO; exact prefixes and saved fault batch verified. Full distributed training not exercised."
+          "validation_scope": "CPU regression plus real single-GPU guarded native loops for GRPO/GiGPO/MT-GTPO; exact prefixes and saved fault batch verified. Full distributed training not exercised. ARPO changes: CPU only; GPU sampling/update/resume unvalidated."
         },
         {
           "local_sha256": "bec2c671277024267c732214ed2f46585facd3e0c1147e716a71eca82656ff65",
@@ -1139,11 +1140,12 @@
           "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
         },
         {
-          "local_sha256": "6ebdfb19bfe1b14160089cd891f3dd594d446df11edb703886917a05c49cffa7",
+          "local_sha256": "65db43b741da9864f44c57893491e011c410d4a9f4c403b81e0470c2221a1801",
           "path": "verl/trainer/ppo/ray_trainer.py",
-          "reason": "Project estimator registration, fixed-rollout filtering, zero-loss padding, boundary checkpoints and explicit batch telemetry. Invoke a driver-side candidate-batch guard before any optimizer update and persist faults without marking incomplete steps complete.",
+          "reason": "Project estimator registration, fixed-rollout filtering, zero-loss padding, boundary checkpoints and explicit batch telemetry. Invoke a driver-side candidate-batch guard before any optimizer update and persist faults without marking incomplete steps complete. Register ARPO soft attribution and persist grouped replay inputs.",
           "status": "modified",
           "tests": [
+            "tests/test_arpo_verl.py",
             "tests/test_generation_guard.py",
             "tests/test_gigpo_signal_integration.py",
             "tests/test_mt_gtpo_verl.py",
@@ -1152,7 +1154,7 @@
             "tests/test_trainer_telemetry.py"
           ],
           "upstream_sha256": "ab60b6225fb919e59c19743669735880a7ce04ffb48e9d97e47d0cd420949dc7",
-          "validation_scope": "CPU startup/hook-order contracts; guard helper exercised on real GPU-generated DataProto. No optimizer or full distributed trainer initialized in the single-GPU probe."
+          "validation_scope": "CPU startup/hook-order contracts; guard helper exercised on real GPU-generated DataProto. No optimizer or full distributed trainer initialized in the single-GPU probe. ARPO changes: CPU only; GPU sampling/update/resume unvalidated."
         },
         {
           "local_sha256": "a6bdf32a80f0948dc3ac2b2e4ec092eba1b0f35a3126eb2062b751b99c9204f5",
@@ -1345,21 +1347,22 @@
           "validation_scope": "CPU configuration coverage; actual received weights require GPU validation"
         },
         {
-          "local_sha256": "a06b362c5aba0de30037f1fc0aed0a6da1bf7bc71ea4676394438adc34c06834",
+          "local_sha256": "49ea7652c6796058a05f00ca2ee8383e46a64981e31ee0fe36a4b4aaa3cab8e7",
           "path": "verl/workers/rollout/vllm_rollout/vllm_async_server.py",
-          "reason": "Qwen3.5 rollout controls and preserve native per-generation finish/stop reasons. Add opt-in full text-weight audit, actual generation probability metadata or shared execution eligibility as applicable. Delegate cumulative stream repetition detection to the project adapter, preserve actual prefix logprobs on cancellation, and cancel only the current request without resetting shared prefix cache. Use public AsyncLLM.abort to let vLLM resolve external/internal request IDs and produce its own terminal receipt; remove private queue manipulation incompatible with vLLM 0.20.0.",
+          "reason": "Qwen3.5 rollout controls and preserve native per-generation finish/stop reasons. Add opt-in full text-weight audit, actual generation probability metadata or shared execution eligibility as applicable. Delegate cumulative stream repetition detection to the project adapter, preserve actual prefix logprobs on cancellation, and cancel only the current request without resetting shared prefix cache. Use public AsyncLLM.abort to let vLLM resolve external/internal request IDs and produce its own terminal receipt; remove private queue manipulation incompatible with vLLM 0.20.0. Opt-in top-k generation logprob entropy receipt; sampled token logprobs remain unchanged.",
           "status": "modified",
           "tests": [
+            "tests/gpu_harness_guard_probe.py",
+            "tests/test_arpo_verl.py",
             "tests/test_execution_eligibility.py",
             "tests/test_generation_guard.py",
             "tests/test_qwen35.py",
             "tests/test_rollout_boundaries.py",
             "tests/test_sampling_identity.py",
-            "tests/test_token_harness.py",
-            "tests/gpu_harness_guard_probe.py"
+            "tests/test_token_harness.py"
           ],
           "upstream_sha256": "05766747df9df5c1d47b48cd0d96e44ab3f2b9e83d4082bfeb32a9a088a4f548",
-          "validation_scope": "Single RTX 5090 real generation/cancellation passed, with explicit processed_logprobs final confirmation; see docs/harness_guard_gpu_20260924.md. Ray allocation, distributed trainer update/recovery and token invariance remain unverified."
+          "validation_scope": "Single RTX 5090 real generation/cancellation passed, with explicit processed_logprobs final confirmation; see docs/harness_guard_gpu_20260924.md. Ray allocation, distributed trainer update/recovery and token invariance remain unverified. ARPO changes: CPU only; GPU sampling/update/resume unvalidated."
         }
       ],
       "revision": "bec9ef74768dd201881cd4e54cd0385e87caae27",

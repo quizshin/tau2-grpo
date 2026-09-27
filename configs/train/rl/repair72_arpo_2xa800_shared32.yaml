@@ -1,0 +1,21 @@
+# CPU candidate; GPU execution requires separate bounded acceptance.
+includes:
+- repair72_grpo_2xa800_passenger_v1_fast32_shared.yaml
+launch:
+  expected_adv_estimator: arpo
+  environment:
+    TAU3_EXPERIMENT_LABEL: repair72-arpo-tau-v1-shared32
+    TAU3_RECORD_TRAJECTORY_FACTS: '1'
+  overrides:
+  - ++algorithm.arpo.version=arpo_tau_v1
+  - ++algorithm.arpo.initial_rollouts=4
+  - ++algorithm.arpo.entropy_window=20
+  - ++algorithm.arpo.entropy_top_k=10
+  - ++algorithm.arpo.base_probability=0.5
+  - ++algorithm.arpo.entropy_weight=0.5
+  - ++algorithm.arpo.entropy_mode=topk_partial
+  - ++algorithm.arpo.advantage_mode=soft
+  - actor_rollout_ref.actor.loss_agg_mode=seq-mean-token-mean
+  - actor_rollout_ref.rollout.calculate_log_probs=true
+  - trainer.val_before_train=true
+  - ++ray_kwargs.ray_init.runtime_env.env_vars.TAU3_RECORD_TRAJECTORY_FACTS='1'

@@ -1,10 +1,10 @@
 """ARPO τ v1: explicit partial-entropy proxy and deterministic group budgeting."""
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
 import hashlib
 import json
 import math
+from dataclasses import asdict, dataclass
 from typing import Mapping
 
 
@@ -65,11 +65,11 @@ def partial_entropy(logprob_rows, *, vocab_size: int, window: int) -> dict:
     contributions = []
     for row in logprob_rows[:window]:
         values = list(row)
-        if not values or any(not math.isfinite(v) or v > 1e-6 for v in values):
+        if not values or any(math.isnan(v) or v > 1e-6 for v in values):
             raise ValueError('Invalid or missing ARPO logprob distribution')
-        if sum(math.exp(v) for v in values) > 1.0001:
+        if not 0 < sum(math.exp(v) for v in values) <= 1.0001:
             raise ValueError('ARPO logprob probability mass exceeds one')
-        contributions.append(-sum(math.exp(v) * v for v in values))
+        contributions.append(-sum(math.exp(v) * v for v in values if v != -math.inf))
     return dict(value=sum(contributions) / math.log(vocab_size),
                 contributions=contributions, tokens=len(contributions), vocab_size=vocab_size,
                 mode='topk_partial')
@@ -103,3 +103,27 @@ def worker_rows(uids, size: int, workers: int) -> list[list[int]]:
     for i, rows in enumerate(groups):
         bins[i % len(bins)].extend(rows)
     return bins
+
+
+def replay_soft(records):
+    """Recompute saved soft advantages without a model, environment or framework."""
+    import numpy as np
+
+    if not records or any(r.get('schema') != 'arpo_soft_replay_v1' for r in records):
+        raise ValueError('ARPO replay needs versioned estimator inputs')
+    uids = [r['rollout']['group_uid'] for r in records]
+    sizes = {r['rollout']['group_size'] for r in records}
+    if len(sizes) != 1:
+        raise ValueError('ARPO replay group sizes differ')
+    results = [None] * len(records)
+    for indices in group_rows(uids, sizes.pop()):
+        rewards = np.array([records[i]['reward'] for i in indices], dtype=np.float32)
+        if not np.isfinite(rewards).all():
+            raise ValueError('ARPO replay contains non-finite rewards')
+        normalized = (rewards - rewards.mean()) / (rewards.std(ddof=1) + 1e-6)
+        for i, value in zip(indices, normalized, strict=True):
+            mask = np.asarray(records[i]['response_mask'], dtype=np.float32)
+            if not np.isin(mask, [0, 1]).all():
+                raise ValueError('ARPO replay mask must be binary')
+            results[i] = (mask * value).tolist()
+    return results

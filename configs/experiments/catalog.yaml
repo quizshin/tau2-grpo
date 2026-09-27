@@ -120,3 +120,12 @@ candidates:
     status: development_only_no_online_benefit_claim
     enabled_by_default: false
     evidence: docs/semantic_pair_direct_v1_20260916.md
+
+arpo:
+  profile: configs/train/rl/repair72_arpo_2xa800_shared32.yaml
+  estimator: arpo
+  protocol: arpo_tau_v1
+  status: development_checks_passed
+  reference: docs/architecture/arpo_tau_v1.md
+  gpu_validation: pending_separate_authorization
+  deployment: deferred_while_canonical_checkout_is_active

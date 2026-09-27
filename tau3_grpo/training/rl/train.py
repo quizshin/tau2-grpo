@@ -15,6 +15,9 @@ def main() -> int:
     from tau3_grpo.integrations.verl.mt_gtpo import register as register_mt_gtpo
 
     register_mt_gtpo()
+    from tau3_grpo.integrations.verl.arpo import register as register_arpo
+
+    register_arpo()
     # Rollout workers resolve this hook lazily on their first assistant segment.
     os.environ.setdefault(
         "TAU3_GRPO_ANCHOR_HOOK",

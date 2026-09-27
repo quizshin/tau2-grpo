@@ -544,7 +544,14 @@ class vLLMHttpServer:
         assert max_tokens <= max_possible_tokens, (
             f"max_tokens {max_tokens} exceeds available context space {max_possible_tokens}"
         )
+        arpo_top_k = sampling_params.pop("arpo_entropy_top_k", None)
+        arpo_window = sampling_params.pop("arpo_entropy_window", None)
         sampling_params["logprobs"] = 0 if sampling_params.pop("logprobs", False) else None
+        if arpo_top_k is not None:
+            if not 1 <= int(arpo_top_k) <= 20 or not arpo_window:
+                raise ValueError("Invalid ARPO entropy request")
+            sampling_params["logprobs"] = int(arpo_top_k)
+
         sampling_params.setdefault("repetition_penalty", self.config.get("repetition_penalty", 1.0))
         from tau3_grpo.models.generation_guard import GenerationGuard, repetition_penalty
 
@@ -608,6 +615,19 @@ class vLLMHttpServer:
         if sampling_params.logprobs is not None:
             log_probs = [logprobs[token_ids[i]].logprob for i, logprobs in enumerate(final_res.outputs[0].logprobs)]
 
+        arpo_entropy = None
+        if arpo_top_k is not None:
+            from tau3_grpo.algorithms.arpo import partial_entropy
+
+            rows = final_res.outputs[0].logprobs
+            if rows is None or len(rows) != len(token_ids):
+                raise ValueError("ARPO entropy must align with generated tokens")
+            arpo_entropy = partial_entropy(
+                [[value.logprob for value in row.values()] for row in rows[:arpo_window]],
+                vocab_size=len(self.model_config.tokenizer), window=arpo_window)
+            arpo_entropy.update(generated_tokens=len(token_ids), top_k=arpo_top_k,
+                                logprobs_mode=self.config.logprobs_mode)
+
         routed_experts = None
         if self.config.enable_rollout_routing_replay:
             routed_experts = final_res.outputs[0].routed_experts
@@ -633,6 +653,7 @@ class vLLMHttpServer:
             stop_reason=stop_reason,
             num_preempted=num_preempted,
             extra_fields={"global_steps": self.global_steps,
+                          "arpo_entropy": arpo_entropy,
                           "finish_reason": finish_reason,
                           "generation_guard": guard_event,
                           "logprobs_mode": self.config.logprobs_mode if log_probs is not None else None,

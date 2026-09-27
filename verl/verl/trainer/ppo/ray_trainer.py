@@ -383,6 +383,10 @@ def compute_advantage(
             from tau3_grpo.integrations.verl.mt_gtpo import register as register_mt_gtpo
 
             register_mt_gtpo()
+        if adv_estimator == "arpo":
+            from tau3_grpo.integrations.verl.arpo import register as register_arpo
+
+            register_arpo()
         adv_estimator_fn = core_algos.get_adv_estimator_fn(adv_estimator)
         adv_kwargs = {
             "token_level_rewards": data.batch["token_level_rewards"],
@@ -399,7 +403,7 @@ def compute_advantage(
             adv_kwargs["batch"] = data.batch
         # Tau3-GRPO local patch: tau_gigpo needs the per-segment anchor ids and token
         # spans that ToolAgentLoop published through extra_fields.
-        if adv_estimator in ("tau_gigpo", "mt_gtpo"):
+        if adv_estimator in ("tau_gigpo", "mt_gtpo", "arpo"):
             adv_kwargs["diagnostics_out"] = data.meta_info["tau3_estimator_diagnostics"]
             adv_kwargs["non_tensor_batch"] = data.non_tensor_batch
             adv_kwargs["batch"] = data.batch
@@ -1770,6 +1774,8 @@ class RayPPOTrainer:
                             norm_adv_by_std_in_grpo=norm_adv_by_std_in_grpo,
                             config=self.config.algorithm,
                         )
+                        if self.config.algorithm.adv_estimator == "arpo":
+                            reward_extra_infos_dict["arpo_replay_json"] = list(batch.non_tensor_batch["arpo_replay_json"])
                         if self.config.algorithm.adv_estimator == "mt_gtpo":
                             dynamic_filter_metrics = batch.meta_info["tau3_estimator_diagnostics"].get("filter_stats", {})
                             metrics.update(dynamic_filter_metrics)

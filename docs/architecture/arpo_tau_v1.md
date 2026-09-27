@@ -1,6 +1,7 @@
 # ARPO τ adaptation v1
 
-Status: implementation in progress; no GPU authorization or GPU validation.
+Status: local CPU integration implemented; remote CPU verification pending.
+No GPU authorization or GPU validation.
 
 ## Sources and scope
 
@@ -61,3 +62,24 @@ canonical checkout. Development uses temporary Git worktree branch
 identities before deployment; the activity snapshot is not a permanent process
 assertion. Existing unrelated uncommitted configuration/document edits are not
 part of this work.
+
+
+## Implementation notes
+
+- Root and branch seeds derive from data seed, global step, original group ordinal,
+  leaf ordinal and turn; random UUIDs and worker placement do not affect sampling.
+  The external simulator service's internal RNG state cannot be snapshotted;
+  inherited local simulator state plus explicit continuation seed is recorded.
+- The pinned τ airline constructor copies its input DB. Snapshots use the live
+  tool-owned DB, rebuild bound tool methods, and verify DB hash and policy.
+- Groups run concurrently; within each group roots/branches run in deterministic
+  FIFO order. GPU throughput is unmeasured and may need subsequent scheduling
+  optimization without changing allocation semantics.
+- Missing entropy is an error. A zero-token budget termination without a generation
+  is accepted. A short generation uses its actual observed window length.
+- Branch budgets count final leaves; unused slots become fresh roots. Branches
+  inherit remaining turn/context limits. Every sibling gets a distinct session.
+- Soft attribution deliberately retains all shared prefix copies and uses
+  sequence-mean/token-mean loss. Existing GRPO/GiGPO/MT-GTPO defaults stay unchanged.
+- Final Hydra is validated; resume checks bind ARPO settings, group size, seed,
+  sampling and loss aggregation. Existing controller owns checkpoints/evaluation.

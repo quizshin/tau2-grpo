@@ -53,15 +53,19 @@ def resolve(result, *, updates=20, dynamic_filter=False, resume_from=None, rewar
 
     if token_protocol not in {None, 'tau3_token_budget_v1'}:
         raise ValueError(f'Unknown token protocol: {token_protocol}')
-    if estimator not in {'grpo', 'tau_gigpo', 'mt_gtpo'}:
+    if estimator not in {'grpo', 'tau_gigpo', 'mt_gtpo', 'arpo'}:
         raise ValueError(f'Unknown estimator: {estimator}')
-    arm = ('mt_gtpo' if estimator == 'mt_gtpo' else
+    if estimator == 'arpo' and dynamic_filter:
+        raise ValueError('ARPO v1 does not support dynamic filtering')
+    arm = ('arpo' if estimator == 'arpo' else 'mt_gtpo' if estimator == 'mt_gtpo' else
            ('e3' if dynamic_filter else 'e2') if estimator == 'tau_gigpo' else
            ('e1' if dynamic_filter else 'e0'))
     if estimator != 'mt_gtpo' and reward_recipe is not None:
         raise ValueError('A process reward recipe requires mt_gtpo')
     paper_run = estimator == 'mt_gtpo' and reward_version in PAPER_VERSIONS
     profile = PROFILES[reward_version] if estimator == 'mt_gtpo' else BASE_PROFILE
+    if estimator == 'arpo':
+        profile = CODE_ROOT / 'configs/train/rl/repair72_arpo_2xa800_shared32.yaml'
     if profile_override is not None:
         profile = Path(profile_override).resolve()
     profile_launch = load_config(profile)['launch']
@@ -412,7 +416,7 @@ def verify_completion(result, target, *, world_size=4, engineering_smoke=False):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--estimator', choices=['grpo', 'tau_gigpo', 'mt_gtpo'], default='mt_gtpo')
+    parser.add_argument('--estimator', choices=['grpo', 'tau_gigpo', 'mt_gtpo', 'arpo'], default='mt_gtpo')
     parser.add_argument('--result-dir', type=Path, required=True)
     parser.add_argument('--updates', type=int, default=20)
     parser.add_argument('--dynamic-filter', action='store_true')
@@ -457,6 +461,15 @@ def main(argv=None):
     from tau3_grpo.integrations.verl.mt_gtpo import credit_mode_from_config
 
     assert config['algorithm']['adv_estimator'] == args.estimator
+    if args.estimator == 'arpo':
+        from tau3_grpo.integrations.verl.arpo import validate_training_config, resume_identity
+
+        validate_training_config(config)
+        snapshot['arpo_identity'] = resume_identity(config)
+        if args.resume_from:
+            previous = yaml.safe_load((result / 'resolved-hydra.yaml').read_text())
+            if resume_identity(previous) != snapshot['arpo_identity']:
+                raise ValueError('Resume cannot change ARPO sampling/loss protocol')
     if args.estimator == 'mt_gtpo':
         assert config['algorithm']['process_reward']['mode'] == (
             'paper' if args.reward_version in PAPER_VERSIONS else 'reference_write')

@@ -522,6 +522,12 @@ class AgentLoopWorker:
             batch.meta_info.get("global_steps", -1), index.tolist(), batch.meta_info.get("validate", False)
         )
 
+        if self.config.algorithm.get("adv_estimator") == "arpo" and not batch.meta_info.get("validate", False):
+            from tau3_grpo.integrations.verl.arpo_rollout import generate_groups
+
+            outputs = await generate_groups(self, batch, sampling_params, trajectory_info, traced_indices)
+            return self._postprocess(outputs, input_non_tensor_batch=batch.non_tensor_batch)
+
         tasks = []
         for i in range(len(batch)):
             trace_this_sample = i in traced_indices
@@ -568,7 +574,10 @@ class AgentLoopWorker:
                 dataset_cls=self.dataset_cls,
                 data_config=DictConfigWrap(self.config.data),
             )
+            raw_output = kwargs.pop("_tau3_raw_output", False)
             output: AgentLoopOutput = await agent_loop.run(sampling_params, **kwargs)
+            if raw_output:
+                return output
             processed = await self._agent_loop_postprocess(output, **kwargs)
             from tau3_grpo.tracking.rollout_stream import save_completed_rollout
 
@@ -1064,11 +1073,25 @@ class AgentLoopManager:
                 validation=prompts.meta_info.get("validate", False),
             )
             prompts.non_tensor_batch["tau3_sampling_identity"] = np.array(identities, dtype=object)
-        chunkes = prompts.chunk(len(self.agent_loop_workers))
+        permutation = None
+        if self.config.algorithm.get("adv_estimator") == "arpo" and not prompts.meta_info.get("validate", False):
+            from tau3_grpo.algorithms.arpo import group_rows, worker_rows
+
+            group_indices = np.empty(len(prompts), dtype=np.int64)
+            for group_index, indices in enumerate(group_rows(
+                    prompts.non_tensor_batch["uid"], int(self.config.actor_rollout_ref.rollout.n))):
+                group_indices[indices] = group_index
+            prompts.non_tensor_batch["arpo_group_index"] = group_indices
+            rows = worker_rows(prompts.non_tensor_batch["uid"], int(self.config.actor_rollout_ref.rollout.n),
+                               len(self.agent_loop_workers))
+            permutation = np.argsort([i for group in rows for i in group])
+            chunkes = [prompts[np.array(group)] for group in rows]
+        else:
+            chunkes = prompts.chunk(len(self.agent_loop_workers))
         outputs = await asyncio.gather(
             *[
                 worker.generate_sequences.remote(chunk)
-                for worker, chunk in zip(self.agent_loop_workers, chunkes, strict=True)
+                for worker, chunk in zip(self.agent_loop_workers[:len(chunkes)], chunkes, strict=True)
             ]
         )
         output = DataProto.concat(outputs)
@@ -1078,6 +1101,8 @@ class AgentLoopManager:
         timing = self._performance_metrics(metrics, output)
 
         output.meta_info = {"timing": timing, **outputs[0].meta_info}
+        if permutation is not None:
+            output = output[permutation]
         return output
 
     def _performance_metrics(self, metrics: list[list[dict[str, str]]], output: DataProto) -> dict[str, float]:

@@ -2,8 +2,15 @@ import math
 
 import pytest
 
-from tau3_grpo.algorithms.arpo import (ARPOConfig, branch_probability, group_rows,
-                                      partial_entropy, settings, stable_seed, worker_rows)
+from tau3_grpo.algorithms.arpo import (
+    ARPOConfig,
+    branch_probability,
+    group_rows,
+    partial_entropy,
+    settings,
+    stable_seed,
+    worker_rows,
+)
 
 
 def test_entropy_is_partial_mass_not_surprisal_or_renormalized():
