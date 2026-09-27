@@ -189,3 +189,19 @@ MT-v3原奖励/优势与1280条保存payload一致；E0二值终局优势范围�
 ### 2026-09-21 5090 RL 首次反向显存失败（开放）
 
 v2真实GRPO12条采样/打分/优势完成，首次FLA Triton反向自动调优CUDA OOM；optimizer更新0次，MT未运行。空闲GPU0同FP32内核短/4096形状反向通过，仅支持缓存预热重试，尚未确认根因或训练可用。旧batch/错误/源快照保留，评测服务不受清理影响。见[5090诊断](docs/rl_5090_feasibility_20260921.md)。
+
+
+### 2026-09-26 双起点 SFT72 训练后验收接口不一致
+
+两组9次更新和最终adapter已保存，原控制器因远端冻结trainer未输出`observed_training_dialogues`而报错并停止导出。实际源码哈希无漂移，但本地计数扩展与远端版本不同；启动前缺少验收字段兼容性检查。Base退出码0；SFT1退出码未记录，不补造。独立CPU恢复核对epoch1、optimizer step9、finite指标、effective数据哈希、最终adapter与checkpoint-9哈希一致后导出，未重训。72条消费量仅按调度推算，缺少运行时逐样本证明。原失败记录保留；详见[执行记录](docs/sft_decision_repair_pair_20260926.md)。
+
+
+### 2026-09-27 repair72 LoRA RL 首次加载精度冲突
+
+`repair72_grpo_smoke_20260927/seed42`：新两卡profile错误组合BF16模型dtype与已验证FP32 FLA路径，在fsdp_workers模型构造断言失败；0采样、0更新，服务已回收。修正actor/ref model及compute dtype为float32，补三算法最终Hydra精度回归；新尝试retry1沿用原两小时硬截止，旧失败保留。CPU通过不代表GPU已修复，实际验收待retry1。
+
+### 2026-09-27 repair72 RL 两步零信号与乘客顺序判零
+
+retry1完成2步/16候选，但全部奖励和优势为0、两步梯度为0、GPU与保存LoRA B均0；有效更新验收失败，未启动正式RL。12条预算终止（9轮数、3response/观察容量）未原生评分；4条已评分全0。CPU独立回放复现4条最终DB hash及全部工具回执，其中3条唯一DB差异是正确乘客的列表顺序，1条确实没有换人。现有语义outcome实现仅对乘客做保留重复数量的无序比较，但RL当前native verifier未启用该口径。不能据16条原生0分断言模型16次业务全失败，也不能将离线诊断当作已获得训练信号。后续需版本化接入奖励并保留原生旁路、重新验证有效更新；原buffer和分数不改。服务清理后双卡0MiB，平台实例未关闭。详见[计划与验收](docs/repair72_rl_and_curriculum_plan_20260927.md)。
+
+修复进展（同日后续）：已部署显式 `airline_passenger_multiset_v1` 到RL评分链；原16条只读重放中3条假阴性修正，第二批出现非零GRPO优势。默认native与历史结果保留。本地95/远端76 CPU项通过，新GPU复验未启动；9条轮数和3条response/观察终止未由本修复解决。详见上述计划末尾验收。

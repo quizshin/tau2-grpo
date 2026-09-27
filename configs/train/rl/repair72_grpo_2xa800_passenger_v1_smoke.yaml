@@ -1,0 +1,7 @@
+includes:
+- repair72_grpo_2xa800_passenger_v1.yaml
+launch:
+  environment:
+    GROUP_SIZE: '4'
+    GROUPS_PER_UPDATE: '2'
+    PPO_MINI_GROUPS: '2'

@@ -63,6 +63,19 @@ dist/
 /data/sft/clean14_v1/
 /data/sft/clean14_v1_100/
 
+# Generated repair/curriculum assets are deployed separately from source.
+# Previously tracked frozen inputs remain tracked under these patterns.
+/data/manifests/selection60_repaired_*/
+/data/sft/curriculum_*/
+/data/sft/generated_curriculum_*/
+/data/sft/decision_repair_*/
+/data/sft/grounded_gap_pilot_*/
+/data/sft/grounded_repair_*/
+/data/sft/repaired_source_grounded_*/
+/data/sft/source_reuse_*/
+/data/sft/staged_v2_*/
+/data/sft/.ipynb_checkpoints/
+
 # Local upstream archive and document rendering scratch files.
 /tau2.zip
 /tmp/

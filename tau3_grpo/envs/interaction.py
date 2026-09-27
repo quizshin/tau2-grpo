@@ -72,6 +72,11 @@ class Tau3AirlineInteraction(BaseInteraction):
         self._anchor_mode = AnchorMode(config.get("anchor_mode", AnchorMode.STRUCTURED.value))
         self._similarity_threshold = float(config.get("anchor_similarity_threshold", 0.9))
         self._strict_replay = bool(config.get("strict_replay", True))
+        from tau3_grpo.evaluation.rewards.terminal import NATIVE, validate_protocol
+
+        self._terminal_reward_protocol = validate_protocol(config.get("terminal_reward_protocol", NATIVE))
+        if self._terminal_reward_protocol != NATIVE and not self._strict_replay:
+            raise ValueError("Selected terminal rewards require strict native replay")
 
     # ---- wiring -----------------------------------------------------
 
@@ -355,6 +360,9 @@ class Tau3AirlineInteraction(BaseInteraction):
             strict_replay=self._strict_replay,
             tool_error_count=entry.tool_error_count,
         )
+        from tau3_grpo.evaluation.rewards.terminal import select_terminal_reward
+
+        result = select_terminal_reward(entry.session, result, self._terminal_reward_protocol)
         payload = result.to_dict()
         if not payload["execution_eligibility"]["training_candidate_eligible"]:
             raise RuntimeError(f"Unresolved execution cannot enter a training batch: {reason}")
@@ -374,6 +382,7 @@ class Tau3AirlineInteraction(BaseInteraction):
             )
             process["termination_reason"] = reason
             process["trajectory_id"] = str(instance_id)
+            process["terminal_reward_protocol"] = self._terminal_reward_protocol
             payload["process_reward_json"] = payload_json(process)
         return payload
 

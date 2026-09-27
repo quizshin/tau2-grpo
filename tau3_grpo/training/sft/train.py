@@ -115,6 +115,8 @@ def main(argv: list[str] | None = None) -> int:
     options = thinking_options(config["data"])
     if any(options.values()) and family != "qwen35":
         raise ValueError("Thinking SFT requires Qwen3.5")
+    options['require_approved_targets'] = config['data'].get('require_approved_targets', False)
+    options['frozen_prompt_protocols'] = config['data'].get('frozen_prompt_protocols')
     train_dataset = TrajectorySFTDataset(
         _resolve(config["data"]["train_jsonl"]),
         tokenizer,
@@ -202,7 +204,7 @@ def main(argv: list[str] | None = None) -> int:
         logging_steps=int(train_config.get("logging_steps", 1)),
         save_strategy=train_config.get("save_strategy", "epoch"),
         save_steps=int(train_config.get("save_steps", 500)),
-        save_total_limit=2,
+        save_total_limit=int(train_config.get("save_total_limit", 2)),
         eval_strategy=train_config.get("eval_strategy", "epoch"),
         eval_steps=int(train_config.get("eval_steps", 500)),
         load_best_model_at_end=bool(train_config.get("load_best_model_at_end", False)),

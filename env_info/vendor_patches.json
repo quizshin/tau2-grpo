@@ -539,7 +539,7 @@
         "verl/checkpoint_engine/nixl_checkpoint_engine.py": "825db00813e352c66a8b7f7503a531ce9a5c61c99043006ced28baaa5275f7f3",
         "verl/experimental/__init__.py": "e65abd77db034b4f29eb1268c24867f84919dbce22e28d1997e563ed1d94179c",
         "verl/experimental/agent_loop/__init__.py": "197b5cd75e6c43b3f1da97243f48efba8d6d5f98fa43112e89a1089e90aa7e49",
-        "verl/experimental/agent_loop/agent_loop.py": "ec4949386fd98b0e2466ee8bdfddf2349e8d841654bb2d444565c97e03ec5b08",
+        "verl/experimental/agent_loop/agent_loop.py": "f2df66d68aa2e700637056828ec6a8dfbc64d104f7baa2adb5e09a613fe35ad6",
         "verl/experimental/agent_loop/prometheus_utils.py": "b447c4d25179186102b17df38b7a45d79e3978edade9bcdf5cf6af4439936851",
         "verl/experimental/agent_loop/single_turn_agent_loop.py": "8d3e51085f545209da4d54d3245bce7c5e98a1e64689848cf345be035b75eb96",
         "verl/experimental/agent_loop/tool_agent_loop.py": "8a3a369e6f149eeda57f46d839fa4ef14bd5d6aab9d9909e0a4f06418fa0043e",
@@ -1033,13 +1033,14 @@
         {
           "local_sha256": "ec4949386fd98b0e2466ee8bdfddf2349e8d841654bb2d444565c97e03ec5b08",
           "path": "verl/experimental/agent_loop/agent_loop.py",
-          "reason": "Record actual group/trial/data-seed before worker splitting; reject partially missing generation logprobs. Preserve real group/sample identities when optional call attribution alone enables trajectory facts. Read repetition_penalty from actual rollout/validation configuration and reject guard use without the shared token protocol.",
+          "reason": "Record actual group/trial/data-seed before worker splitting; reject partially missing generation logprobs. Preserve real group/sample identities when optional call attribution alone enables trajectory facts. Read repetition_penalty from actual rollout/validation configuration and reject guard use without the shared token protocol. Persist each completed, scored rollout atomically before batch gather; no sampling/reward changes and no partial-batch resume claim.",
           "status": "modified",
           "tests": [
             "tests/test_generation_guard.py",
             "tests/test_rollout_boundaries.py",
             "tests/test_sampling_identity.py",
-            "tests/test_token_harness.py"
+            "tests/test_token_harness.py",
+            "tests/test_rollout_stream.py"
           ],
           "upstream_sha256": "52a0b7387c6e7474ac1a6a6cae7ac2fc02d1ab23a6ac072366605b8b96e6c171",
           "validation_scope": "Local CPU helpers/native loop; real vLLM cancellation and GPU multi-rank update/recovery remain pending separate authorization"

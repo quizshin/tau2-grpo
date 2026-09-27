@@ -26,7 +26,7 @@ class OpenAICompatibleSemanticModel:
     simulated = False
 
     def __init__(self, *, base_url, model, api_key, timeout=120, max_tokens=8192,
-                 temperature=0, transport=None, thinking_mode=None):
+                 temperature=0, transport=None, thinking_mode=None, response_format_json=False):
         if not api_key or not api_key.strip():
             raise ValueError('Fill TAU3_SEMANTIC_API_KEY in code/.env before running the audit')
         parsed = urlsplit(base_url)
@@ -44,6 +44,7 @@ class OpenAICompatibleSemanticModel:
         if thinking_mode not in (None, 'enabled', 'disabled'):
             raise ValueError('thinking_mode must be enabled, disabled or null')
         self.thinking_mode = thinking_mode
+        self.response_format_json = bool(response_format_json)
         self.transport = transport
         self.attempted_calls = 0
         self.metadata = []
@@ -53,15 +54,21 @@ class OpenAICompatibleSemanticModel:
         self.on_raw_response = None
 
     @classmethod
-    def from_env(cls, config, *, transport=None):
+    def from_env(cls, config, *, transport=None, env_prefix='TAU3_SEMANTIC'):
+        if not re.fullmatch(r'TAU3_[A-Z][A-Z0-9_]*', env_prefix):
+            raise ValueError('Environment prefix must be a TAU3_ uppercase identifier')
         load_dotenv(os.environ.get('TAU3_ENV_FILE', PROJECT_ROOT / '.env'), override=False)
-        return cls(base_url=os.environ.get('TAU3_SEMANTIC_BASE_URL', ''),
-                   model=config.get('model') or os.environ.get('TAU3_SEMANTIC_MODEL', ''),
-                   api_key=os.environ.get('TAU3_SEMANTIC_API_KEY', ''),
+        api_key = os.environ.get(f'{env_prefix}_API_KEY', '')
+        if not api_key.strip():
+            raise ValueError(f'Fill {env_prefix}_API_KEY in the selected .env before running')
+        return cls(base_url=os.environ.get(f'{env_prefix}_BASE_URL', ''),
+                   model=config.get('model') or os.environ.get(f'{env_prefix}_MODEL', ''),
+                   api_key=api_key,
                    timeout=config.get('timeout_seconds', 120),
                    max_tokens=config.get('max_tokens', 8192),
                    temperature=config.get('temperature', 0), transport=transport,
-                   thinking_mode=config.get('thinking_mode'))
+                   thinking_mode=config.get('thinking_mode'),
+                   response_format_json=config.get('response_format_json', False))
 
     @property
     def provenance(self):
@@ -69,7 +76,7 @@ class OpenAICompatibleSemanticModel:
                 'model': self.model, 'timeout_seconds': self.timeout,
                 'max_tokens': self.max_tokens, 'temperature': self.temperature,
                 'thinking_mode_requested': self.thinking_mode,
-                'automatic_retries': 0}
+                'automatic_retries': 0, 'response_format_json': self.response_format_json}
 
     async def extract(self, request):
         packet = await self.extract_json(request)
@@ -94,6 +101,8 @@ class OpenAICompatibleSemanticModel:
         # that an OpenAI-compatible gateway honored the vendor parameter.
         if self.thinking_mode is not None:
             payload['thinking'] = {'type': self.thinking_mode}
+        if self.response_format_json:
+            payload['response_format'] = {'type': 'json_object'}
         self.attempted_calls += 1
         started = time.monotonic()
         try:
@@ -123,6 +132,7 @@ class OpenAICompatibleSemanticModel:
                 self.on_raw_response(dict(raw))
             usage = body.get('usage')
             self.metadata.append({'prefix_sha256': request['prefix_sha256'],
+                                  **({'response_model': body['model']} if isinstance(body.get('model'), str) else {}),
                                   'finish_reason': choice.get('finish_reason') if isinstance(choice.get('finish_reason'), str) else None,
                                   'usage': {k: v for k, v in usage.items()
                                             if k in ('prompt_tokens', 'completion_tokens', 'total_tokens')

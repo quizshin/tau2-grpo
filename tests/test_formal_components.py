@@ -104,6 +104,87 @@ def resolved(command, env):
     return OmegaConf.to_container(config, resolve=True)
 
 
+@pytest.mark.parametrize('estimator', ['grpo', 'tau_gigpo', 'mt_gtpo'])
+@pytest.mark.parametrize('passenger_protocol', [False, True])
+def test_repair72_small_smoke_resolves_actual_model_and_two_gpu_allocation(tmp_path, monkeypatch, estimator, passenger_protocol):
+    for key, value in {'TAU3_ROOT': tmp_path, 'TAU3_RUN_ROOT': tmp_path / 'runs',
+                       'TAU3_DATA_ROOT': tmp_path / 'data', 'TAU3_MODEL_ROOT': tmp_path / 'models',
+                       'TAU3_ENV_FILE': tmp_path / 'absent'}.items():
+        monkeypatch.setenv(key, str(value))
+    monkeypatch.setenv('TAU3_TERMINAL_REWARD_PROTOCOL', 'must-not-leak-from-parent')
+    profile = ('repair72_grpo_2xa800_passenger_v1_smoke.yaml' if passenger_protocol
+               else 'repair72_grpo_2xa800_smoke.yaml')
+    protocol = 'airline_passenger_multiset_v1' if passenger_protocol else 'tau2_native_v1'
+    command, env, snapshot = runner.resolve(tmp_path / 'run', updates=2, estimator=estimator,
+        engineering_smoke=True, profile_override=CODE_ROOT / 'configs/train/rl' / profile)
+    config = resolved(command, env)
+    assert config['tau3_terminal_reward_protocol'] == protocol
+    assert env['TAU3_TERMINAL_REWARD_PROTOCOL'] == protocol
+    assert snapshot['terminal_reward_protocol'] == protocol
+    import yaml
+
+    from tau3_grpo.envs.interaction import Tau3AirlineInteraction
+    from tau3_grpo.envs.simulator_config import main as simulator_config
+    interaction_path = tmp_path / 'interaction.yaml'
+    simulator_config(['--output', str(interaction_path), '--terminal-reward-protocol', protocol])
+    interaction = Tau3AirlineInteraction(yaml.safe_load(interaction_path.read_text())['interaction'][0]['config'])
+    assert interaction._terminal_reward_protocol == protocol
+    assert config['actor_rollout_ref']['model']['path'].endswith('from_base/merged')
+    assert config['actor_rollout_ref']['model']['lora_rank'] == 16
+    # The enabled FLA IEEE kernel requires FP32 construction and computation.
+    assert env['VERL_QWEN35_FLA_IEEE'] == '1'
+    for role in ('actor', 'ref'):
+        fsdp = config['actor_rollout_ref'][role]['fsdp_config']
+        assert fsdp['model_dtype'] == fsdp['dtype'] == 'float32'
+        assert fsdp.get('mixed_precision') is None
+    assert config['data']['train_batch_size'] == 2
+    assert config['actor_rollout_ref']['rollout']['n'] == 4
+    assert config['trainer']['n_gpus_per_node'] == 1
+    assert config['trainer']['total_training_steps'] == config['trainer']['save_freq'] == 2
+    assert config['trainer']['test_freq'] == -1
+    assert config['algorithm']['adv_estimator'] == estimator
+    assert not config['trainer']['val_before_train']
+    assert env['TOOL_SCHEMA_VERSION'] == 'tau3_full_schema_v2'
+    assert env['TAU3_POLICY_CUDA_DEVICES'] == '0'
+    assert runner.simulator_environment(env)['TAU3_USER_CUDA_DEVICES'] == '1'
+
+
+def test_repair72_formal_keeps_full_sampling_and_initial_validation(tmp_path, monkeypatch):
+    for key, value in {'TAU3_ROOT': tmp_path, 'TAU3_RUN_ROOT': tmp_path / 'runs',
+                       'TAU3_DATA_ROOT': tmp_path / 'data', 'TAU3_MODEL_ROOT': tmp_path / 'models',
+                       'TAU3_ENV_FILE': tmp_path / 'absent'}.items():
+        monkeypatch.setenv(key, str(value))
+    command, env, _ = runner.resolve(tmp_path / 'run', updates=20, estimator='grpo',
+        profile_override=CODE_ROOT / 'configs/train/rl/repair72_grpo_2xa800.yaml')
+    config = resolved(command, env)
+    assert config['data']['train_batch_size'] == config['actor_rollout_ref']['rollout']['n'] == 8
+    assert config['trainer']['save_freq'] == config['trainer']['test_freq'] == 10
+    assert config['trainer']['val_before_train']
+    assert config['actor_rollout_ref']['actor']['checkpoint']['save_contents'] == ['model', 'optimizer', 'extra']
+
+
+def test_resume_rejects_terminal_reward_change_before_loading_checkpoint(tmp_path, monkeypatch):
+    import json
+
+    import yaml
+
+    for key in ('TAU3_ROOT', 'TAU3_RUN_ROOT', 'TAU3_DATA_ROOT', 'TAU3_MODEL_ROOT'):
+        monkeypatch.setenv(key, str(tmp_path / key))
+
+    (tmp_path / 'launch.json').write_text(json.dumps({'engineering_smoke': False}))
+    (tmp_path / 'resolved-hydra.yaml').write_text(yaml.safe_dump({
+        'tau3_terminal_reward_protocol': 'tau2_native_v1'}))
+    with pytest.raises(ValueError, match='terminal reward protocol'):
+        runner.resolve(tmp_path, updates=20, estimator='grpo', resume_from=tmp_path / 'global_step_10',
+            profile_override=CODE_ROOT / 'configs/train/rl/repair72_grpo_2xa800_passenger_v1.yaml')
+
+
+def test_existing_frozen_recipe_cannot_silently_change_terminal_semantics(tmp_path):
+    with pytest.raises(ValueError, match='frozen IRC recipes require the native'):
+        runner.resolve(tmp_path, estimator='mt_gtpo', reward_recipe=tmp_path / 'recipe.json',
+            profile_override=CODE_ROOT / 'configs/train/rl/repair72_grpo_2xa800_passenger_v1.yaml')
+
+
 @pytest.mark.parametrize("df", [False, True])
 @pytest.mark.parametrize("estimator,version", [("grpo", "v3"), ("tau_gigpo", "v3")]
                          + [("mt_gtpo", v) for v in HISTORICAL])

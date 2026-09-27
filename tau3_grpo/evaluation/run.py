@@ -86,13 +86,18 @@ def build_parser() -> argparse.ArgumentParser:
                         help="default: 0.7 for all harness protocols")
     parser.add_argument("--policy-repetition-penalty", type=float, default=1.0)
     parser.add_argument("--user-temperature", type=float, default=0.7)
+    parser.add_argument("--user-protocol", choices=("scope_v1", "scenario_fidelity_v2", "scenario_fidelity_v3"), default="scope_v1")
     parser.add_argument("--max-concurrency", type=int, default=16)
     parser.add_argument("--max-steps", type=int, default=30)
     parser.add_argument("--max-errors", type=int, default=10)
     parser.add_argument("--token-request-timeout", type=float, default=120,
                         help="token-v4 policy HTTP timeout in seconds; no automatic retries")
     parser.add_argument("--harness-protocol", choices=PROTOCOLS, default=LEGACY)
+    parser.add_argument('--quality-bundle', type=Path, default=None,
+                        help='Frozen complete task/outcome contract; fails before calls if any task is unresolved')
     parser.add_argument("--output-dir", type=Path, default=None)
+    parser.add_argument("--recovery-input", type=Path, default=None,
+                        help="Sealed rescored saved trajectories; preserve all planned identities")
     parser.add_argument(
         "--policy-attestation",
         type=Path,
@@ -198,8 +203,16 @@ def main(argv: list[str] | None = None) -> int:
         "policy_temperature": args.policy_temperature,
         "policy_repetition_penalty": args.policy_repetition_penalty if args.harness_protocol == TOKENS_V4 else None,
         "user_temperature": args.user_temperature,
+        "user_protocol": args.user_protocol,
         "token_request_timeout": args.token_request_timeout,
     })
+    if args.quality_bundle:
+        if args.target != 'selection' or args.harness_protocol != LEGACY:
+            raise ValueError('quality-bundle supports selection with legacy control only')
+        from tau3_grpo.evaluation.outcome_contract import load_bundle
+        from tau3_grpo.utils.hashing import sha256_json
+        quality = load_bundle(args.quality_bundle, selection_entries)
+        payload['quality_bundle_sha256'] = sha256_json(quality)
     if args.dry_run:
         payload["dry_run"] = True
         print(json.dumps(payload, indent=2, sort_keys=True))
@@ -248,6 +261,9 @@ def main(argv: list[str] | None = None) -> int:
                 max_steps=args.max_steps,
                 max_errors=args.max_errors,
                 harness_protocol=args.harness_protocol,
+                quality_bundle=str(args.quality_bundle) if args.quality_bundle else None,
+                user_protocol=args.user_protocol,
+                recovery_input=str(args.recovery_input) if args.recovery_input else None,
                 tokenizer_path=args.checkpoint if args.harness_protocol == TOKENS_V4 else None,
                 token_request_timeout=args.token_request_timeout,
                 max_concurrency=args.max_concurrency,

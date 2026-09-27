@@ -12,6 +12,7 @@ launch:
     MAX_PROMPT_LENGTH: '8192'
     MAX_RESPONSE_LENGTH: '16384'
     MAX_MODEL_LENGTH: '24576'
+    TAU3_TERMINAL_REWARD_PROTOCOL: tau2_native_v1
 transfer_bucket_megabytes:
   default: '2560'
   9B: '4096'

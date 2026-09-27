@@ -58,6 +58,16 @@ historical:
   removal: retain_until_all_compatibility_and_evidence_references_are_resolved
   reference_audit: docs/architecture/cleanup_20260919.md
 candidates:
+  repair72_passenger_multiset_v1:
+    purpose: correct_passenger_permutation_false_negatives_in_rl_terminal_db_reward
+    enabled_by_default: false
+    status: gpu_smoke_verified
+    profile: configs/train/rl/repair72_grpo_2xa800_passenger_v1.yaml
+    smoke_profile: configs/train/rl/repair72_grpo_2xa800_passenger_v1_smoke.yaml
+    protocol: airline_passenger_multiset_v1
+    evidence: docs/repair72_rl_and_curriculum_plan_20260927.md
+    native_reward: preserved_in_verifier_info_json_terminal_reward_selection
+    gpu_validation: real_nonzero_update_rollout_sync_saved_adapter_cloud_steps_1_2
   harness_guard_v1:
     purpose: diagnose_and_halt_repetitive_generation_before_actor_update
     enabled_by_default: false

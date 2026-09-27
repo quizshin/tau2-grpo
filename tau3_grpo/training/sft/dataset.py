@@ -14,9 +14,13 @@ from pathlib import Path
 from typing import Any, Optional, Sequence
 
 from tau3_grpo.models.compat import is_qwen35_tokenizer
-from tau3_grpo.models.qwen35_template import build_qwen35_example, thinking_options
+from tau3_grpo.models.qwen35_template import (
+    approved_assistant_indices,
+    build_qwen35_example,
+    thinking_options,
+)
 from tau3_grpo.models.tokenization import render_chat_ids as _render_ids
-from tau3_grpo.prompts import prepare_agent_messages, prompt_provenance
+from tau3_grpo.training.sft.frozen_messages import prepare_sft_messages
 from tau3_grpo.utils.hashing import sha256_text
 
 IGNORE_INDEX = -100
@@ -31,22 +35,20 @@ def build_supervised_example(
     enable_thinking: bool = False,
     supervise_reasoning: bool = False,
     preserve_historical_reasoning: bool = False,
+    approved_indices: Optional[list[int]] = None,
 ) -> dict[str, Any]:
     """Render one complete dialogue and label assistant output spans only."""
 
     if max_length <= 0:
         raise ValueError("max_length must be positive")
-    assistant_indices = [
-        index for index, message in enumerate(messages) if message.get("role") == "assistant"
-    ]
-    if not assistant_indices:
-        raise ValueError("dialogue has no assistant turn")
+    assistant_indices = approved_assistant_indices(messages, approved_indices)
 
     options = thinking_options(dict(enable_thinking=enable_thinking,
         supervise_reasoning=supervise_reasoning,
         preserve_historical_reasoning=preserve_historical_reasoning))
     if is_qwen35_tokenizer(tokenizer):
-        return build_qwen35_example(messages, tokenizer, tools=tools, max_length=max_length, **options)
+        return build_qwen35_example(messages, tokenizer, tools=tools, max_length=max_length,
+                                    approved_indices=assistant_indices, **options)
     if any(options.values()):
         raise ValueError("Thinking SFT is supported only for Qwen3.5 tokenizers")
 
@@ -116,24 +118,40 @@ class TrajectorySFTDataset:
         enable_thinking: bool = False,
         supervise_reasoning: bool = False,
         preserve_historical_reasoning: bool = False,
+        require_approved_targets: bool = False,
+        frozen_prompt_protocols: Optional[dict[str, str]] = None,
     ) -> None:
         self.examples: list[dict[str, Any]] = []
         self.records: list[dict[str, Any]] = []
+        if type(require_approved_targets) is not bool:
+            raise ValueError('require_approved_targets must be a boolean')
         path = Path(jsonl_path)
         with path.open(encoding="utf-8") as handle:
             records = [json.loads(line) for line in handle if line.strip()]
         if expected_size is not None and len(records) != expected_size:
             raise ValueError(f"{path} contains {len(records)} dialogues, expected {expected_size}")
         for record in records:
+            supervision = record.get('supervision')
+            approved = None
+            if require_approved_targets or supervision is not None:
+                if not isinstance(supervision, dict) or supervision.get('version') != 'approved_assistant_v1':
+                    raise ValueError('Missing/unsupported approved assistant supervision contract')
+                if not record['messages'] or record['messages'][0].get('role') != 'system':
+                    raise ValueError('Explicit target positions require a system-prefixed dialogue')
+                if not isinstance(supervision.get('message_indices'), list):
+                    raise ValueError('Explicit target positions must be a list')
+                approved = approved_assistant_indices(record['messages'], supervision.get('message_indices', []))
+            messages, provenance = prepare_sft_messages(record["messages"], frozen_prompt_protocols)
             effective = {
                 **record,
-                "messages": prepare_agent_messages(record["messages"]),
-                "metadata": {**(record.get("metadata") or {}), **prompt_provenance()},
+                "messages": messages,
+                "metadata": {**(record.get("metadata") or {}), **provenance},
             }
             example = build_supervised_example(
                 effective["messages"], tokenizer, tools=tools, max_length=max_length,
                 enable_thinking=enable_thinking, supervise_reasoning=supervise_reasoning,
-                preserve_historical_reasoning=preserve_historical_reasoning
+                preserve_historical_reasoning=preserve_historical_reasoning,
+                approved_indices=approved,
             )
             effective["metadata"].update({
                 "source_dialogue_hash": (record.get("metadata") or {}).get("dialogue_hash"),

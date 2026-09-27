@@ -12,6 +12,7 @@ import json
 import os
 import shlex
 import shutil
+import signal
 import socket
 import subprocess
 import tarfile
@@ -64,6 +65,11 @@ def resolve(result, *, updates=20, dynamic_filter=False, resume_from=None, rewar
     if profile_override is not None:
         profile = Path(profile_override).resolve()
     profile_launch = load_config(profile)['launch']
+    from tau3_grpo.evaluation.rewards.terminal import NATIVE, validate_protocol
+
+    terminal_protocol = validate_protocol(profile_launch.get('terminal_reward_protocol', NATIVE))
+    if terminal_protocol != NATIVE and reward_recipe is not None:
+        raise ValueError('Existing frozen IRC recipes require the native terminal reward protocol')
     selected_credit = credit_mode or profile_launch.get('credit_mode', 'turn_v1')
     credit_mode_from_config({'mt_gtpo': {'credit_mode': selected_credit}})
     if estimator != 'mt_gtpo' and selected_credit != 'turn_v1':
@@ -114,11 +120,17 @@ def resolve(result, *, updates=20, dynamic_filter=False, resume_from=None, rewar
     profile_environment = profile_launch['environment']
     for key, value in profile_environment.items():
         env[key] = Template(str(value)).substitute(env)
+    # The profile, never an inherited shell variable, selects training semantics.
+    env['TAU3_TERMINAL_REWARD_PROTOCOL'] = terminal_protocol
     controller_environment = dict(RESULTS_DIR=str(result), TOOL_CONFIG=str(result / 'tool_config.yaml'),
                SWANLAB_LOG_DIR=str(result / 'swanlog'), TOTAL_UPDATES=str(updates),
                TAU3_GRPO_DEBUG_BATCH_DIR=str(result / 'update-batches'),
                VERL_QWEN35_WEIGHT_AUDIT_DIR=str(result / 'weight-audits'),
-               SWANLAB_EXPERIMENT_NAME=f'{estimator.upper()}-Qwen35-4B-full-c50-g8x8-u{updates}-{reward_label}-df-{int(dynamic_filter)}-s42')
+               SWANLAB_EXPERIMENT_NAME=(f'{env["TAU3_EXPERIMENT_LABEL"]}-{estimator}-'
+                   f'g{env["GROUPS_PER_UPDATE"]}x{env["GROUP_SIZE"]}-u{updates}-'
+                   f'{reward_label}-df-{int(dynamic_filter)}-s42'
+                   if env.get('TAU3_EXPERIMENT_LABEL') else
+                   f'{estimator.upper()}-Qwen35-4B-full-c50-g8x8-u{updates}-{reward_label}-df-{int(dynamic_filter)}-s42'))
     env.update(controller_environment)
     runtime = {'TAU3_RECORD_TRAJECTORY_FACTS': '1', 'TAU3_GRPO_ARM': arm, 'TAU3_SWANLAB_CONTINUITY': '1',
                'TAU3_KEEP_COMPLETE_BOUNDARY': '1', 'SWANLAB_MODE': 'online',
@@ -126,7 +138,8 @@ def resolve(result, *, updates=20, dynamic_filter=False, resume_from=None, rewar
                'SWANLAB_LOG_DIR': env['SWANLAB_LOG_DIR'],
                'TAU3_STOP_REQUEST_PATH': str(result / 'STOP_AFTER_BOUNDARY'),
                'TAU3_BUDGET_STATE_PATH': str(result / 'budget.json'), 'TAU3_BUDGET_INTERVAL': '10',
-               'TAU3_GRPO_DEBUG_BATCH_DIR': env['TAU3_GRPO_DEBUG_BATCH_DIR']}
+               'TAU3_GRPO_DEBUG_BATCH_DIR': env['TAU3_GRPO_DEBUG_BATCH_DIR'],
+               'TAU3_ROLLOUT_STREAM_DIR': str(result / 'completed-rollouts')}
     if selected_credit != 'turn_v1':
         runtime['TAU3_RECORD_CALL_ATTRIBUTION'] = '1'
     if engineering_smoke:
@@ -135,6 +148,7 @@ def resolve(result, *, updates=20, dynamic_filter=False, resume_from=None, rewar
                        TAU3_BUDGET_INTERVAL=str(updates))
     env.update(runtime)
     extra = [f'algorithm.dynamic_filter.enable={str(dynamic_filter).lower()}',
+             f'++tau3_terminal_reward_protocol={terminal_protocol}',
              'actor_rollout_ref.rollout.calculate_log_probs=true',
              'actor_rollout_ref.rollout.logprobs_mode=processed_logprobs',
              '++ray_kwargs.ray_init.address=local']
@@ -159,6 +173,8 @@ def resolve(result, *, updates=20, dynamic_filter=False, resume_from=None, rewar
     extra += [f'++ray_kwargs.ray_init.runtime_env.env_vars.{k}={json.dumps(v)}' for k, v in runtime.items()]
     if resume_from:
         previous = yaml.safe_load((result / 'resolved-hydra.yaml').read_text())
+        if previous.get('tau3_terminal_reward_protocol', NATIVE) != terminal_protocol:
+            raise ValueError('Resume cannot change terminal reward protocol')
         if previous.get('tau3_token_protocol') != token_protocol:
             raise ValueError('Resume cannot change the token/budget protocol')
         previous_algorithm = previous.get('algorithm', {})
@@ -185,7 +201,8 @@ def resolve(result, *, updates=20, dynamic_filter=False, resume_from=None, rewar
         validate_checkpoint(result, step, world_size=int(env['POLICY_GPUS']))
         if not (result / 'swanlab-run.json').is_file():
             raise ValueError('Missing SwanLab identity')
-        extra += ['trainer.resume_mode=resume_path', f'trainer.resume_from_path={checkpoint}']
+        extra += ['trainer.resume_mode=resume_path', f'trainer.resume_from_path={checkpoint}',
+                  'trainer.val_before_train=false']
     command, env, snapshot = prepare('rl', profile, arm, 42, extra, env)
     if token_protocol:
         from tau3_grpo.configuration import load_config_with_sources
@@ -207,7 +224,8 @@ def resolve(result, *, updates=20, dynamic_filter=False, resume_from=None, rewar
     snapshot.update(command=command, formal_runtime=runtime, dynamic_filter=dynamic_filter,
                     total_updates=updates, result_dir=str(result), estimator=estimator)
     snapshot.update(credit_mode=selected_credit, engineering_smoke=engineering_smoke,
-                    uncalibrated_exploration=uncalibrated_exploration)
+                    uncalibrated_exploration=uncalibrated_exploration,
+                    terminal_reward_protocol=terminal_protocol)
     if paper_run:
         snapshot['irc_recipe'] = frozen
         snapshot['uncalibrated_initializer'] = frozen is None
@@ -263,11 +281,17 @@ def validate_inputs(env, result, updates, reward_version='v3', estimator='mt_gtp
     assert [x['task_id'] for x in actual.extra_info] == [x.task_id for x in selection]
     for path in (env['MODEL_PATH'], env['TAU3_USER_MODEL']):
         assert Path(path).is_dir() and list(Path(path).glob('*.safetensors')), path
-    prepare_experiment_inputs(arm=env['TAU3_GRPO_ARM'], seed=42, data_seed=42, group_size=8,
-        groups_per_update=8, total_updates=updates, anchor_mode='structured',
+    group_size = int(env['GROUP_SIZE'])
+    groups_per_update = int(env['GROUPS_PER_UPDATE'])
+    if group_size < 2 or groups_per_update < 1:
+        raise ValueError('RL needs at least two trajectories per group and one task group')
+    prepare_experiment_inputs(arm=env['TAU3_GRPO_ARM'], seed=42, data_seed=42, group_size=group_size,
+        groups_per_update=groups_per_update, total_updates=updates, anchor_mode='structured',
         manifest_dir=source.parent, output_dir=result)
     historical = Path(env['TAU3_RUN_ROOT']) / 'rl-c50-matched6h-a800-20260912/e0_seed42'
-    if (historical / 'experiment_manifest.json').is_file():
+    historical_schedule_checked = (group_size == 8 and groups_per_update == 8
+        and (historical / 'experiment_manifest.json').is_file())
+    if historical_schedule_checked:
         baseline = read_manifest(historical).schedule
         current = read_manifest(result).schedule
         length = min(len(baseline), len(current))
@@ -276,7 +300,11 @@ def validate_inputs(env, result, updates, reward_version='v3', estimator='mt_gtp
             'positive_process_reward_eligible_tasks': eligible if estimator == 'mt_gtpo' else None,
             'estimator': estimator,
             'reward_version': reward_version if estimator == 'mt_gtpo' else None,
-            'reward_scope': ('official outcome only' if estimator != 'mt_gtpo' else
+            'terminal_reward_protocol': env.get('TAU3_TERMINAL_REWARD_PROTOCOL', 'tau2_native_v1'),
+            'reward_scope': (('official outcome only'
+                              if env.get('TAU3_TERMINAL_REWARD_PROTOCOL', 'tau2_native_v1') == 'tau2_native_v1'
+                              else 'versioned terminal outcome; native reward preserved separately')
+                             if estimator != 'mt_gtpo' else
                              'environment-adapted split gold-read/gold-DB-write tiers; frozen IRC weights'
                              if reward_version in {'paper_env_split_v3', 'paper_env_split_v4'} else
                              'environment-adapted paper tiers; execution inputs and response-aware read duplicates'
@@ -286,8 +314,9 @@ def validate_inputs(env, result, updates, reward_version='v3', estimator='mt_gtp
                              'ungated execution-equivalent DB reference writes; positive budget 1; errors -0.1'
                              if reward_version == 'v3' else
                              'success-gated exact DB reference writes; positive budget 1; errors -0.1'),
-            'updates': updates, 'candidate_trajectories': updates * 64,
-            'historical_schedule_checked': (historical / 'experiment_manifest.json').is_file()}
+            'updates': updates, 'group_size': group_size, 'groups_per_update': groups_per_update,
+            'candidate_trajectories': updates * group_size * groups_per_update,
+            'historical_schedule_checked': historical_schedule_checked}
 
 
 def snapshot_source(destination):
@@ -389,6 +418,8 @@ def main(argv=None):
     parser.add_argument('--dynamic-filter', action='store_true')
     parser.add_argument('--resume-from', type=Path)
     parser.add_argument('--dry-run', action='store_true')
+    parser.add_argument('--max-wall-seconds', type=int,
+                        help='Hard limit for service startup/training/verification, with owned-service cleanup')
     parser.add_argument('--credit-mode', choices=['turn_v1', 'call_local_v1', 'call_residual_v1'])
     parser.add_argument('--engineering-smoke', action='store_true',
                         help='Fresh 1-2 update execution test; allows uncalibrated initializer, no selection eval')
@@ -399,6 +430,8 @@ def main(argv=None):
     parser.add_argument('--reward-version', choices=sorted(PROFILES), default='v3')
     parser.add_argument('--reward-recipe', type=Path, help='Passed frozen IRC recipe matching the paper reward version')
     args = parser.parse_args(argv)
+    if args.max_wall_seconds is not None and args.max_wall_seconds <= 0:
+        parser.error('--max-wall-seconds must be positive')
     load_tracking_env()
     result = args.result_dir.resolve()
     command, env, snapshot = resolve(result, updates=args.updates,
@@ -488,6 +521,12 @@ def main(argv=None):
         children.append(process)
         return process
 
+    previous_alarm_handler = None
+    if args.max_wall_seconds is not None:
+        def wall_timeout(signum, frame):
+            raise TimeoutError(f'Run reached hard wall-clock limit: {args.max_wall_seconds}s')
+        previous_alarm_handler = signal.signal(signal.SIGALRM, wall_timeout)
+        signal.alarm(args.max_wall_seconds)
     try:
         state('starting_simulator')
         simulator = launch(['bash', str(CODE_ROOT / 'scripts/serve/simulator_qwen38.sh')], simenv, 'simulator')
@@ -519,6 +558,9 @@ def main(argv=None):
         state('failed', error=str(exc))
         raise
     finally:
+        if args.max_wall_seconds is not None:
+            signal.alarm(0)
+            signal.signal(signal.SIGALRM, previous_alarm_handler)
         for process in reversed(children):
             stop_process(process)
 

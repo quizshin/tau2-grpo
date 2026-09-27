@@ -53,3 +53,24 @@ def test_sft_budget_generalizes_sizes_without_silently_changing_old_budget():
         training_schedule({"num_epochs": 5}, 45, 1, 4)
     with pytest.raises(ValueError, match="positive"):
         training_schedule({"num_epochs": 5, "max_steps": 0}, 45, 1, 8)
+
+
+@pytest.mark.parametrize("profile,expected_steps", [
+    ("clean14_v1_100_lora_1epoch.yaml", 13),
+    ("staged_v2_A100.yaml", 13),
+    ("staged_v2_A100_ep3.yaml", 39),
+    ("decision_repair_from_base_1epoch.yaml", 9),
+    ("decision_repair_from_sft1_1epoch.yaml", 9),
+    ("repaired149_1epoch.yaml", 19),
+])
+def test_unified_schedule_preserves_deployed_a800_profiles(profile, expected_steps):
+    from tau3_grpo.configuration import load_config
+    from tau3_grpo.paths import CODE_ROOT
+
+    config = load_config(CODE_ROOT / "configs/train/sft" / profile)
+    train = config["train"]
+    epochs, max_steps, steps = training_schedule(
+        train, config["data"]["expected_train_size"],
+        train["per_device_batch_size"], train["gradient_accumulation_steps"],
+    )
+    assert (epochs, max_steps, steps) == (train["num_epochs"], -1, expected_steps)

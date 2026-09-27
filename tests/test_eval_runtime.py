@@ -216,3 +216,18 @@ def test_single_execution_error_does_not_cancel_other_planned_trials(monkeypatch
     assert not summary['metrics_valid'] and summary['metrics'] is None
     error = json.loads((tmp_path / 'errors.jsonl').read_text())
     assert 'RuntimeError: isolated request failure' in error['traceback']
+
+
+def test_simulator_protocol_has_no_effect_on_legacy_and_rejects_unknown():
+    from tau3_grpo.envs.simulator_scope import scope_text
+    from tau3_grpo.evaluation.outcome_contract import USER_SCOPE
+    assert scope_text('scope_v1') == USER_SCOPE
+    assert scope_text('scenario_fidelity_v2').startswith(USER_SCOPE)
+    with pytest.raises(ValueError, match='Unknown simulator'):scope_text('invented')
+
+
+def test_simulator_v2_rejected_without_contract_before_endpoint(tmp_path, monkeypatch):
+    monkeypatch.setattr(eval_runtime,'_run_one',lambda **kw:pytest.fail('endpoint called'))
+    with pytest.raises(ValueError,match='frozen quality bundle'):
+        run_evaluation(spec=EvalSpec(target='selection',user_protocol='scenario_fidelity_v2'),
+                       policy=Endpoint('p','http://p'),user=Endpoint('u','http://u'),output_dir=tmp_path)

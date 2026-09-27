@@ -1,0 +1,13 @@
+# Same learning protocol; explicit same-device execution optimization candidate.
+# Activation checkpoint policy stays unchanged until a numerical GPU gate passes.
+includes:
+- repair72_grpo_2xa800_passenger_v1.yaml
+launch:
+  environment:
+    MAX_NUM_SEQS: '16'
+    TAU3_USER_MAX_NUM_SEQS: '16'
+    TAU3_EXPERIMENT_LABEL: repair72-lora16-passenger-v1-throughput
+  overrides:
+  - actor_rollout_ref.actor.fsdp_config.param_offload=false
+  - actor_rollout_ref.actor.fsdp_config.optimizer_offload=false
+  - actor_rollout_ref.rollout.gpu_memory_utilization=0.50

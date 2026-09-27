@@ -1,0 +1,8 @@
+launch:
+  environment:
+    QWEN35_SIZE: 4B
+    MODEL_PATH: ${TAU3_RUN_ROOT}/sft_decision_repair_pair_20260926/seed42/from_base/merged
+  overrides:
+  - actor_rollout_ref.model.lora_rank=16
+  - actor_rollout_ref.model.lora_alpha=32
+  - actor_rollout_ref.model.target_modules=["down_proj","gate_proj","in_proj_a","in_proj_b","in_proj_qkv","in_proj_z","k_proj","o_proj","out_proj","q_proj","up_proj","v_proj"]

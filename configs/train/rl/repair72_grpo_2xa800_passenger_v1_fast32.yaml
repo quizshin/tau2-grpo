@@ -1,0 +1,12 @@
+# User-authorized smaller sampling budget; not a matched-64 throughput claim.
+# Fresh-run step-0 evaluation is referenced from the identical repair72 baseline;
+# the launch authorization must bind that existing result and model/protocol hashes.
+includes:
+- repair72_grpo_2xa800_passenger_v1_throughput.yaml
+launch:
+  environment:
+    GROUPS_PER_UPDATE: '4'
+    GROUP_SIZE: '8'
+    TAU3_EXPERIMENT_LABEL: repair72-lora16-passenger-v1-fast32
+  overrides:
+  - trainer.val_before_train=false

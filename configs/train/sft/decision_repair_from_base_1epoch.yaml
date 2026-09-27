@@ -1,0 +1,42 @@
+model:
+  name_or_path: /autodl-fs/data/tau3-core/code/models/Qwen3.5-4B
+  trust_remote_code: false
+  attn_implementation: sdpa
+data:
+  train_jsonl: /autodl-fs/data/tau3-core/code/data/sft/decision_repair_20260926_v1/train.jsonl
+  validation_jsonl: /autodl-fs/data/tau3-core/code/data/sft/decision_repair_20260926_v1/validation.jsonl
+  tool_config: configs/envs/tool_config.yaml
+  expected_train_size: 72
+  expected_validation_size: 22
+  max_length: 24576
+  require_approved_targets: true
+  enable_thinking: false
+  supervise_reasoning: false
+  preserve_historical_reasoning: false
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules: qwen35_language_linear
+train:
+  method: lora
+  evaluate_before_train: true
+  load_best_model_at_end: false
+  num_epochs: 1
+  max_steps: -1
+  expected_optimizer_steps: 9
+  expected_effective_batch_size: 8
+  per_device_batch_size: 1
+  gradient_accumulation_steps: 8
+  learning_rate: 3.0e-05
+  lr_scheduler_type: cosine
+  warmup_ratio: 0.05
+  weight_decay: 0.0
+  max_grad_norm: 1.0
+  logging_steps: 1
+  save_strategy: epoch
+  eval_strategy: epoch
+  seed: 42
+  save_total_limit: 1
+output:
+  dir: /autodl-fs/data/tau3-core/code/results/runs/sft_decision_repair_pair_20260926/seed42/from_base/adapter

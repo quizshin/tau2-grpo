@@ -25,7 +25,8 @@ if [[ "${TAU3_DRY_RUN:-0}" != "1" ]]; then
     --base-url "${TAU3_USER_BASE_URL:-http://127.0.0.1:8100/v1}" \
     --thinking "${TAU3_USER_THINKING:-auto}" \
     --max-user-turns "${MAX_USER_TURNS:-15}" \
-    --max-assistant-turns "${MAX_ASSISTANT_TURNS:-15}"
+    --max-assistant-turns "${MAX_ASSISTANT_TURNS:-15}" \
+    --terminal-reward-protocol "${TAU3_TERMINAL_REWARD_PROTOCOL}"
 fi
 
 exec python -m tau3_grpo.training.rl.runtime_defaults exec-qwen35 -- "${ARM}" "${SEED}" "$@"

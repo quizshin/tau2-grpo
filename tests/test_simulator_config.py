@@ -28,3 +28,15 @@ def test_runtime_defaults_reach_actual_request_args():
     assert Endpoint('policy', 'http://unused').llm_args()['temperature'] == 0.7
     assert UserSimulatorConfig('user').to_llm_args()['temperature'] == 0.7
     assert Tau3AirlineInteraction({})._user_config.to_llm_args()['temperature'] == 0.7
+
+
+def test_selected_reward_requires_strict_replay_and_known_protocol():
+    import pytest
+
+    from tau3_grpo.envs.interaction import Tau3AirlineInteraction
+
+    with pytest.raises(ValueError, match='strict native replay'):
+        Tau3AirlineInteraction({'terminal_reward_protocol': 'airline_passenger_multiset_v1',
+                               'strict_replay': False})
+    with pytest.raises(ValueError, match='Unknown terminal'):
+        Tau3AirlineInteraction({'terminal_reward_protocol': 'typo'})

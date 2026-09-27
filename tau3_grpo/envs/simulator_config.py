@@ -5,6 +5,7 @@ from pathlib import Path
 
 import yaml
 
+from tau3_grpo.evaluation.rewards.terminal import NATIVE, PROTOCOLS
 from tau3_grpo.models.compat import model_family
 from tau3_grpo.paths import CONFIG_ROOT
 
@@ -16,6 +17,7 @@ def main(argv=None):
     parser.add_argument("--base-url", default="http://127.0.0.1:8100/v1")
     parser.add_argument("--max-user-turns", type=int, default=15)
     parser.add_argument("--max-assistant-turns", type=int, default=15)
+    parser.add_argument("--terminal-reward-protocol", choices=PROTOCOLS, default=NATIVE)
     parser.add_argument("--thinking", choices=["auto", "off", "on"], default="auto",
                         help="Simulator-only template setting; off also supports Qwen3.8 API aliases")
     args = parser.parse_args(argv)
@@ -26,6 +28,7 @@ def main(argv=None):
         user_base_url=args.base_url,
         max_user_turns=args.max_user_turns,
         max_assistant_turns=args.max_assistant_turns,
+        terminal_reward_protocol=args.terminal_reward_protocol,
     )
     if args.thinking != "auto" or model_family(args.model) == "qwen35":
         config["user_llm_args"] = {

@@ -64,6 +64,11 @@ def compare_evaluations(baseline: Path, treatment: Path, *, ks=None, resamples=1
     scores = [_score(a, ks) for a in (base, treat)]
     mismatches = []
     missing = []
+    for name in ('provenance.quality_bundle_sha256', 'provenance.outcome_contract_version',
+                 'provenance.user_scope_sha256'):
+        left, right = _field(base.metadata, name), _field(treat.metadata, name)
+        if left != right:
+            mismatches.append({'field': name, 'baseline': left, 'treatment': right})
     for name in (*PROTOCOL_FIELDS, *EXTENDED_FIELDS):
         left, right = _field(base.metadata, name), _field(treat.metadata, name)
         if left is None or right is None:

@@ -638,3 +638,142 @@ Remote evidence: /root/shared-nvme/tau3/runs/sft_coldstart_ab/20260921-AB100-v2/
 ## 2026-09-22：call_residual_v1 训练接入及 CPU 验证
 
 新增默认关闭的轮内残差模式，beta固定1，保留原轮优势、奖励及returns；精确调用token归属/veRL/CLI/YAML/遥测和续训身份贯通，原turn_v1与call_local_v1保留。169项CPU通过、无跳过，lint零新增。5090原128条真实token回放与veRL一致，独立公式误差1.11e-16，35次翻转全部恢复；错误正优势仍17次。历史1280条仅做调用级公式诊断（缺精确调用token身份）：正奖励正优势962→990，错误387→381，新增28次正奖励正优势均来自失败轨迹，不作收益结论。小非零方差压力测试发现大修正风险，未静默限幅；调用等权均值保留但token加权/PPO梯度不守恒。未部署远端、未启动GPU。详见[实现与验证](docs/mt_gtpo_call_residual_implementation_20260922.md)。
+
+
+## 2026-09-25：Stage A100 数据准备（未训练）
+
+- 状态：`cpu_verified`；100完整对话（98 AReaL + 2执行补充）、52独立offline dev、14工具覆盖。
+- 显式assistant目标mask；1epoch/13更新/lr3e-5配置已解析，GPU未启动。
+- 配置：`configs/train/sft/staged_v2_A100.yaml`；数据：`data/sft/staged_v2_A100_20260925/`。
+- 准备报告及实际限制：[Stage A](docs/sft_stage_a_ready_20260925.md)。不作为已训练/提点实验。
+
+- Stage A 执行更新：用户已批准7.5 A800 GPU小时上限；`sft_staged_v2_A100/seed42`已启动，13更新后自动导出及selection60×4，尚无评测结果。
+
+### 2026-09-25 A100 1epoch结果与3epoch后续
+
+1epoch selection60×4完成：121/240（50.42%），Base131/240（54.58%），差-4.17pp，任务配对95%CI [-10.83,2.08]pp。离线诊断见 `docs/sft_A100_regression_20260925.md`：HKEG34任务族净少9次成功；用户资料查询遗漏增多；部分模拟用户/gold冲突需独立审计，原分数保留。
+
+用户明确授权同A100数据3epoch及评测；已启动 `results/runs/sft_staged_v2_A100_ep3/seed42`，预期39更新；SwanLab r2599bdc。预算训练单卡≤3h、评测双卡≤3h；每10分钟监控。接续CPU测试11通过。当前状态running，不代表3epoch结果已出。
+
+## selection60 逐题审计（2026-09-25）
+
+完成60题665项检查表、Base/SFT1共228条失败分类与12条成功对照。240条CPU严格回放成功；188条已有DB检查全部一致，52条执行上限原无DB检查。机器初判与7个重点证据复核分开，官方分数不变。详见 [审计报告](docs/selection60_checklists_20260925.md)。当时API高峰未缓存估算约10.09元、累计33.44元，并非实际账单；2026-09-26用户确认对应历史939次请求实际累计13.93元，账本已对账且保留旧估算。12项远程CPU测试通过。
+
+## SFT A100 3 epoch 评测完成（2026-09-26）
+
+106/240，44.17%；Base131/240、1epoch121/240。metrics_valid=true，两项协议比较通过；详见 [完成报告](docs/sft_A100_ep3_result_20260926.md)。服务退出，监控停用。
+
+## 三模型独立确认与修复方案（2026-09-26，无卡准备）
+
+完成已有720条selection轨迹的离线统计。3epoch相对1epoch的退化主要扩展到已知7题家族以外；尚未证明根因。评测路线与新预算待确认，未启动GPU/API任务。详见 [后续方案](docs/sft_next_steps_20260926.md)。
+
+## 2026-09-26 Shopping划分核对、SFT静态审计与模拟用户漂移复核
+
+固定Shopping提交449bba2核对分桶约10%验证、累积课程和测试题替换记录。新增前缀证据审计与家族/曝光锁分桶工具；远程CPU4项通过，审计train100/dev52。未发现窄规则确证的训练错误，98条仍缺精确task/DB映射；发现dev288动作顺序待复核。另复核模拟器新增乘客需求及airline33生日漂移误报。原数据与评分保留，新标签/确认集未冻结，无新增GPU或judge调用。[数据及划分报告](docs/shopping_alignment_and_sft_audit_20260926.md)，[模拟器漂移报告](docs/simulator_drift_audit_20260926.md)。
+
+## 2026-09-26 三模型720轨迹模拟器全量审计与费用对账完成
+
+v4全量覆盖成功/失败，715条结构完整、5条部分结果；Base/SFT1/SFT3直接漂移候选22/29/35，不代表真实发生率。修复前61条重大候选的同模型质疑式复核：36条不支持、22条歧义、3条仍支持；原文核对其中1条为任务时间冲突，另2条脚本偏离仍不能用于失败因果归属。原成功数131/121/106不改。历史实际13.93元+后续估算10.925007元=预算占用24.855007元，非实际总账单；1998/2000请求，API已结束。无GPU。54项远程CPU回归及后续4项报告测试通过。原始调用及汇总同步本地与远程持久盘。[完成报告](docs/simulator_census_execution_20260926.md)。
+
+
+## 2026-09-26：分布先行的 SFT 数据修复与评测合同候选
+
+状态：`development_checks_passed`；未训练、未完成新独立评测。
+
+- 核对原999、train100、offline dev52、selection60、实际RL50、官方final50聚合分布；显式记录final分布曝光，不输出其逐题内容到生成队列。
+- 782条原SFT初筛候选、149条既有judge通过候选（98旧+51新）已物化；原任务/DB映射未恢复，不能视为全部回放合格。
+- 训练DB衍生8条完整补缺样例已执行，保留native工具回执及独立预期终态验证；仍为候选数据。
+- 新`quality_bundle`评测入口选择性开启；保留旧reward，显式接受终态、模拟器scope与合同哈希校验，未全部语义批准则拒绝运行。旧三组分数不被覆盖。
+- 本轮付费调用0、GPU小时0；细节、限制和最终CPU回执见 [执行报告](docs/sft_distribution_and_reuse_20260926.md)。
+
+
+### SFT repaired149 / selection合同v4（2026-09-26，CPU完成，GPU暂缓）
+
+149段完整训练数据已冻结（109原数据+40真实工具执行衍生），旧dev52与新能力dev14分开保存；1epoch/LR3e-5/LoRA16/19步配置通过远程实际入口CPU预检。全14工具覆盖不代表稳定提点。5题参考路径修复后执行通过，全60题语义/沟通验收仍未完成，在线评测仍阻断；无新GPU实验、无旧分数改写。详见 `docs/sft_repair_progress_20260926.md`。配置 `configs/train/sft/repaired149_1epoch.yaml`。
+
+
+### selection60题面一致性修订v1（2026-09-26，CPU已执行）
+
+依据用户授权保留合法参考并修改冲突题意，另修违规参考操作。原60ID/DB不变；34题改题面，7题改实质参考操作，15题仅规范航班参数。60/60参考回放成功、12项相关测试通过；与v4的60个参考最终状态一致，不能据此替代沟通验收。无GPU/付费API；旧分数保留，新版比较须重跑。产物 `data/manifests/selection60_repaired_20260926_v1/`；详情 `docs/sft_repair_progress_20260926.md` 最新章节。在线评分仍因沟通与多合法结果联调未完成而阻断。
+
+
+### selection60行为评分合同（2026-09-26，CPU/API验证，smoke待开卡）
+
+保留修订题面v1，为60题冻结180项沟通要求及151条原生执行候选（147种题目终态），接通知情确认/拒绝/转人工/补偿顺序、逐步政策检查和模拟器漂移门槛。50项回归通过；DeepSeek正反例v1=8/12、v2=12/13、v3=13/13，失败记录保留；原生33沟通smoke和548同终态不同合法性回放通过。不能从小型人工控制集推断真实长轨迹judge无误。最终合同仅允许60×1流水线smoke，4次正式评测继续阻断。此次39次API新增估算0.149309元，累计预算占用估算27.719355元（已确认历史实际仍13.93）；GPU0小时。详见 `docs/selection_behavior_scoring_20260926.md`。
+
+
+## 2026-09-26：selection60 双指标三模型 smoke
+
+规则先于结果冻结；Base/SFT1/SFT3各60×1，051两张A800，队列硬上限2小时/4 GPU小时。状态：已启动服务，尚无性能结论。协议、回归及边界见 docs/selection_dual_three_20260926.md；运行目录 results/runs/selection_dual_three_20260926/seed42。
+
+### selection_dual_three_20260926 停止审计
+
+2026-09-26：stopped_for_review。三条 judge 证据异常触发退出；Base 10 scored + 3 unresolved，SFT1/SFT3 未启动。原始部分严格成功6、等价成功7，整体 metrics_valid=false，不发布成功率。源码326项哈希无漂移。离线审计发现 judge 归因错误与模型金额／时间窗错误并存；详见 docs/selection_dual_stopped_audit_20260926.md。未重试付费 judge、未重采样、未启动训练。
+
+### selection_dual_three_20260926_v6 接续
+
+用户授权校准并中断修复直到三组评分完毕。v4/v5真实轨迹校准未通过，v6通过13条已暴露控制；134项CPU回归通过。原60题/DB/终态集合不变，13条完整Base复用、47条待补、SFT1/SFT3各60×1。18:04启动接续控制器6753，保留原19:01:29硬截止，训练未启动。详情 docs/selection_dual_calibration_v6_20260926.md；运行状态以 results/runs/selection_dual_three_20260926_v6/seed42 为准。
+
+## 2026-09-26 三模型v6中断恢复最终审计
+
+selection60×1 seed42，180/180对话完成，178条有效评分；SFT1_363、SFT3_740真实模拟器偏离保留未评分。Base严格20/60、等价23/60；SFT1已知18/19，SFT3已知19/19，不发布不完整集合成功率或CI。328个冻结源码哈希通过；原文与原生reward未修改。GPU已在原19:01:29前退出，累计保守上界3.89 GPU小时。API账本占用约30.34元（含实际13.93、后续估算/预留，不是实付账单）。本轮未启动新训练。详见[最终报告](docs/selection_dual_three_final_20260926.md)；逐题检查表、双指标、异常证据与最终回执位于`results/runs/selection_dual_three_20260926_v6_reviewed/seed42`。状态：采样及异常审计完成，完整三模型统计比较因两条模拟器无效对话受阻。
+
+
+## 2026-09-26 双起点修复 SFT72
+
+状态：`training`。用户授权后，051双A800分别从Base和SFT1合并权重启动新LoRA，使用同一72条完整修复对话训练1epoch/9更新；22条实体隔离验证、14/14工具覆盖。94条真实工具执行与独立DB重放通过；远程CPU11项相关测试通过。数据由AReaL训练数据库构造，不是原论文SFT轨迹，不混入旧100。两卡训练硬上限90分钟/合计3GPU小时，无新付费API。本轮仅训练和CPU导出，任务成功率待新同协议交互评测。SFT1是新优化器续训权重，不是精确resume；与旧100相比更新数也改变。详情见[执行记录](docs/sft_decision_repair_pair_20260926.md)。运行目录`results/runs/sft_decision_repair_pair_20260926/seed42`。
+
+
+### 双起点SFT72完成与CPU恢复
+
+两组各1epoch/9更新已完成，Base验证loss0.937384→0.656058，旧SFT1为0.714379→0.568023。原控制器消费计数字段不兼容导致收尾失败，独立核验68冻结文件、有效数据、optimizer step9和adapter后CPU导出恢复exit0；未重训，原失败保留。两个导出均CPU加载及finite logits通过。72消费量仅由调度推算，SFT1进程退出码缺失。状态`trained_exported_evaluation_pending`；训练GPU小时保守上界0.5564，GPU已释放，无新API调用，监控已暂停。loss不证明提点；详见[执行记录](docs/sft_decision_repair_pair_20260926.md)。
+
+
+## 2026-09-26 修复SFT四模型同协议开发评测
+
+用户要求继续后，准备Base/旧SFT1/repair_base/repair_sft1各selection60×1 seed42，051双A800总限2小时/4GPU小时，DeepSeek保留累计100元账本。新scenario_fidelity_v2仅为通用模拟器提示约束，先做24条独立短场景探针及Codex原文复核，再启动selection。相同修订题面/DB/终态/双指标与v6沟通要求；v7仅接受有明确枚举的status_code别名并冻结新源码。远程CPU77项通过，四组CLI dry-run通过。运行目录`results/runs/selection_repair_four_20260926/seed42`；详见[评测记录](docs/sft_repair_four_evaluation_20260926.md)。当前未有新模型成功率结论。
+
+### 2026-09-26 修复SFT四模型评测：r2校准通过
+
+scenario_fidelity_v3 / user temperature0的24条短探针自动及Codex原文检查通过（两seed相同，非独立重复）。hash绑定回执已放行，Base服务启动，随后旧SFT1、repair_base、repair_sft1各selection60×1。最新运行results/runs/selection_repair_four_20260926_r2/seed42；详情docs/sft_repair_four_evaluation_20260926.md。原23:06:26硬截止不变，尚未形成完整比较结果。
+
+2026-09-26 21:32:33（北京时间）控制器进入Base evaluating；21:33:29核验首条已评分轨迹落盘、errors.jsonl为空，两个GPU均由本队列服务占用。该检查只确认真实评测已开始，不提前解读子集成功率。
+
+
+## 2026-09-27 用户指定0.7四模型比较（running）
+
+Base/旧SFT1/repair_base/repair_sft1各selection60首次seed42，user/policy均0.7；证据批准的模拟器偏移补跑另存。新独立2小时/4GPU小时，累计DeepSeek100元。run：`results/runs/selection_repair_four_user07_20260927/seed42`；协议和CPU验证见`docs/sft_four_model_user07_20260927.md`。任务结束并保存结果、确认GPU停止后按用户要求在Chrome关闭051实例。
+
+
+## 2026-09-27 repair_base 两卡 LoRA GRPO 工程验证
+
+用户授权2步通过即正式20步。起点Base→repair72，LoRA16，2×A800（policy0、27B INT4 simulator1）；smoke 2任务组×4轨迹×2步，总16候选，原截止12:49:47北京/最多4GPU小时。首轮加载精度冲突失败、无更新；retry1修正FP32配置正在启动。目录 `results/runs/repair72_grpo_smoke_20260927_retry1/seed42`。正式协议为8×8、20步、selection60×4在起点及整十节点，未启动前不得记trained。详见 [执行计划](docs/repair72_rl_and_curriculum_plan_20260927.md)。并行SFT仅CPU数据处理，无新增SFT训练。
+
+SFT并行数据子任务v6完成：168实验候选、52条本轮语义审核37pass/15hold、累积A4/B34/C37；2条升舱→行李完整组合本地原生回放与tokenizer计数通过，19项CPU测试通过。独立family-dev未就绪、未启动SFT，见[数据交接](docs/sft_curriculum_evidence_build_20260927.md)。
+
+### 2026-09-27 用户要求实际造数：新增400+60完成
+
+状态`cpu_verified`。最终`data/sft/generated_curriculum_20260927_v4/`为400新增完整训练对话+60 dev，基础100/约束150/策略150，累积100→250→400。460有原生工具执行/新鲜DB回放及完整预期终态证据、真实tokenizer检查；本版453条精确继承本次生成的回放证据、7条新执行。训练assistant tokens230,794，总tokens3,110,763；全体最大13,468，回执不截断。内部及旧100/repair72对话+mask重复0；9 dev用户与训练及所查历史曝光隔离，语义模板共享。相关CPU32项通过；root抽查修复无效日期并复核最终哈希，见`results/analysis/sft_generated_curriculum_20260927_v4/root_review.json`。未做SFT训练、未得出能力提升结论；详见[数据交接](docs/sft_curriculum_evidence_build_20260927.md)。
+
+### repair_base LoRA smoke：执行完成但学习验收失败
+
+retry1完成2步/16轨迹，完整checkpoint结构与云端step1/2通过；两步grad_norm=0、全部训练奖励/优势0、保存与rollout LoRA B全0。工程验收`passed=false`，正式RL未启动。16条中12条预算终止未原生评分，4条正常评分全0；CPU完整DB回放证实其中3条仅乘客列表顺序不同导致严格DB=0，1条确实未完成换人。证据和下一步修复边界见[执行计划](docs/repair72_rl_and_curriculum_plan_20260927.md)。12:16确认两卡0MiB，平台实例未关闭。SFT新增400+60交付不受此阻塞影响。
+
+### 2026-09-27 乘客排列终局奖励修复：CPU已验证，GPU待复验
+
+状态`cpu_verified`。新 `airline_passenger_multiset_v1` 默认关闭，显式profile贯通GRPO/GiGPO/MT-GTPO，保留原生评分旁路，禁止跨协议续训及复用旧IRC。只修乘客排列，保留重复数、身份、航班/付款顺序及其他状态。原16条buffer不改；服务器CPU重放识别3条排列假阴性，第二批1组0/1/1/1，5268个非零token优势（约-1.5至0.5）。本地95通过，远端76通过/19无关配置排除；train50参考本地50/50可执行。此次无新GPU采样或更新，正式RL未启动，轮数/观察预算仍待处理。[详细验收与新复验命令](docs/repair72_rl_and_curriculum_plan_20260927.md)。
+
+### 2026-09-27 新奖励GPU复验已授权启动
+
+用户“那你进行rl吧”批准2×A800、2步/16候选、最多2小时/4GPU小时；14:14启动 `repair72_grpo_passenger_v1_smoke_20260927/seed42`，controller PID34233，内部7100秒上限。原repair_base、新乘客无序终局协议、LoRA16。结果待验收，不记gpu_smoke_verified；通过后正式20步授权保留。启动收据与精确源码身份保存在run内及本地maintenance/passenger_v1。
+
+### 2026-09-27 SFT目标调整：DeepSeek agent改进并补足500
+
+用户要求原72+现400利用DeepSeek提升质量并补足500训练，验证另计。v4确定性模板400暂停作为最终训练交付；先构建DeepSeek teacher/独立用户原生工具交互入口与20任务试批，Codex rubric逐条评审所有最终候选；不是单纯DeepSeek润色，也不是已完成DeepSeek评分。既有累计API100元预算不重置，当前账本35.222625元占用/64.777375元余量。无新增SFT GPU训练。详见[数据记录](docs/sft_curriculum_evidence_build_20260927.md)。
+
+SFT新方法运行更新：15:15首20任务DeepSeek teacher/独立user候选生成已启动，remote PID53584，`results/analysis/sft_deepseek500_pilot20_20260927/`。新入口本地相关24项/远端5项CPU通过，每候选native tools真实执行、费用共享原账本且试批≤10元。独立rubric已冻结，尚无本批入选结论，500训练目标未完成。
+
+
+## 2026-09-27 repair72速度优化与已授权清理
+
+修复smoke12项通过。正式53977在0更新时按用户新速度目标有意停止；2卡throughput profile（采样16并发、actor常驻）CPU4项通过，正式待启动。固定真实buffer重算比较完成，关闭/交替重算OOM，均拒绝。用户指定5目录已删，约65GiB，保留adapter/精确基座/导出记录/轨迹审计；step2不再可恢复。详见docs/repair72_rl_and_curriculum_plan_20260927.md。

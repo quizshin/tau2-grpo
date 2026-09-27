@@ -19,6 +19,7 @@ def supervised_template(template: str, supervise_reasoning: bool = False) -> str
         raise ValueError(
             "Unsupported Qwen3.5 assistant template; review supervision before training"
         )
+    original_body = body
     if supervise_reasoning:
         reasoning = "{{- '<|im_start|>' + message.role + '\\n<think>\\n' + reasoning_content + '\\n</think>\\n\\n' + content }}"
         plain = "{{- '<|im_start|>' + message.role + '\\n' + content }}"
@@ -37,7 +38,21 @@ def supervised_template(template: str, supervise_reasoning: bool = False) -> str
         )
     body = body.replace(tool_marker, "{%- generation %}" + tool_marker)
     body = body.replace(eos_marker, eos_marker + "{%- endgeneration %}")
+    body = ("{%- if tau3_target_indices is not defined or loop.index0 in tau3_target_indices %}"
+            + body + "{%- else %}" + original_body + "{%- endif %}")
     return before + found + body + end + after
+
+
+def approved_assistant_indices(messages, indices=None):
+    """Validate explicit message positions; None retains historical all-assistant loss."""
+    assistants = [i for i, message in enumerate(messages) if message.get('role') == 'assistant']
+    if indices is None:
+        indices = assistants
+    if (not isinstance(indices, (list, tuple)) or not indices
+            or any(type(i) is not int or i not in assistants for i in indices)
+            or len(set(indices)) != len(indices)):
+        raise ValueError('approved assistant indices must be nonempty, unique assistant positions')
+    return sorted(indices)
 
 
 def token_ids(encoded: Any) -> list[int]:
@@ -66,11 +81,12 @@ def thinking_options(config):
 
 def build_qwen35_example(messages, tokenizer, *, tools, max_length,
                          enable_thinking=False, supervise_reasoning=False,
-                         preserve_historical_reasoning=False):
+                         preserve_historical_reasoning=False, approved_indices=None):
     thinking_options(dict(enable_thinking=enable_thinking,
                          supervise_reasoning=supervise_reasoning,
                          preserve_historical_reasoning=preserve_historical_reasoning))
     messages = deepcopy(list(messages))
+    indices = approved_assistant_indices(messages, approved_indices)
     template = tokenizer.chat_template
     if enable_thinking:
         for message in messages:
@@ -93,6 +109,7 @@ def build_qwen35_example(messages, tokenizer, *, tools, max_length,
         chat_template=supervised_template(template, supervise_reasoning),
         return_dict=True,
         return_assistant_tokens_mask=True,
+        tau3_target_indices=indices,
         **params,
     )
     tokens = token_ids(encoded)

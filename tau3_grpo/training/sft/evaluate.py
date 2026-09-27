@@ -21,7 +21,8 @@ def validation_dataset(config, tokenizer):
     dataset = TrajectorySFTDataset(source, tokenizer, tools=tools,
         max_length=int(config['data']['max_length']), expected_size=int(config['data'].get('expected_validation_size', 5)),
         enable_thinking=False, supervise_reasoning=False,
-        preserve_historical_reasoning=False)
+        preserve_historical_reasoning=False,
+        frozen_prompt_protocols=config['data'].get('frozen_prompt_protocols'))
     digest = hashlib.sha256(json.dumps(dataset.examples, sort_keys=True).encode()).hexdigest()
     return dataset, {'validation_source_sha256': hashlib.sha256(source.read_bytes()).hexdigest(),
                      'rendered_examples_sha256': digest,

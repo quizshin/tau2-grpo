@@ -1,0 +1,16 @@
+# New LoRA RL baseline; never substitutes for historical full-parameter results.
+includes:
+- ../../protocols/formal50.yaml
+- ../../models/qwen35_4b_repair72_lora_rl.yaml
+- ../../hardware/2xa800_lora.yaml
+- ../../data/train50_selection60.yaml
+- ../../simulator/qwen38_27b_awq_client.yaml
+launch:
+  stage: rl
+  entrypoint: scripts/train/rl/run_qwen35.sh
+  seed: 42
+  environment:
+    TOOL_SCHEMA_VERSION: tau3_full_schema_v2
+    TAU3_EXPERIMENT_LABEL: repair72-lora16
+  overrides:
+  - trainer.val_before_train=true

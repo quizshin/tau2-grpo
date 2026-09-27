@@ -569,7 +569,12 @@ class AgentLoopWorker:
                 data_config=DictConfigWrap(self.config.data),
             )
             output: AgentLoopOutput = await agent_loop.run(sampling_params, **kwargs)
-            return await self._agent_loop_postprocess(output, **kwargs)
+            processed = await self._agent_loop_postprocess(output, **kwargs)
+            from tau3_grpo.tracking.rollout_stream import save_completed_rollout
+
+            # Preserve unpadded tokens/masks plus postprocess reward and raw prompt.
+            await save_completed_rollout(trajectory, output)
+            return processed
 
     async def _agent_loop_postprocess(self, output, **kwargs) -> _InternalAgentLoopOutput:
         """Perform post-processing operations on the output of each individual agent loop."""
