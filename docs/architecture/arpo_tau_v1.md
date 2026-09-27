@@ -1,6 +1,6 @@
 # ARPO τ adaptation v1
 
-Status: local CPU integration implemented; remote CPU verification pending.
+Status: cpu_verified (2026-09-27); deployment deferred while canonical runs are active.
 No GPU authorization or GPU validation.
 
 ## Sources and scope
@@ -83,3 +83,41 @@ part of this work.
   sequence-mean/token-mean loss. Existing GRPO/GiGPO/MT-GTPO defaults stay unchanged.
 - Final Hydra is validated; resume checks bind ARPO settings, group size, seed,
   sampling and loss aggregation. Existing controller owns checkpoints/evaluation.
+
+
+## Comparison boundaries
+
+The current GRPO profiles retain their existing loss reduction and simulator seed
+policy. A controlled ARPO-vs-GRPO experiment must explicitly match those choices
+(or report them as additional factors), as well as initialization, reward,
+task schedule and evaluation. Equal leaf counts do not imply equal compute.
+No claim of superiority, token savings, or matched historical E0–E3 performance
+is made by this CPU integration.
+
+
+## CPU verification receipt (2026-09-27)
+
+Runtime implementation: `533b55d340fb0bad2f49a6858c98800b09e78d24`.
+
+- Local core: 502 passed.
+- Local relevant integration first run: 262 passed, 9 failed. Two regressions
+  (legacy minimal manager config and old error wording) were fixed; remaining
+  failures were missing tokenizer asset link / subprocess Python PATH in the
+  temporary test environment. Relevant final retest: 31 passed, no skips.
+- Remote pinned qwen35 environment, CUDA hidden: first run 142 passed, 5 failed
+  (old error wording and subprocess PATH). Final retest: 54 passed, no skips,
+  240.25 seconds. Runs overlap; counts must not be added.
+- Verified native τ tools and DB, real tokenizer, scripted policy/user transports,
+  nested branch budgets, exact prefix/mask/logprob inheritance, cancellation,
+  truncation, complete-group routing/original order, soft arithmetic and offline
+  replay, real Hydra composition, three existing estimators, vendor inventory.
+- vLLM generation method body was executed with a CPU engine double; this does
+  not validate a live vLLM GPU engine or memory requirements.
+- Pinned upstream vendor inventory rebuilt and verified. No new Ruff diagnostics
+  in 16 changed Python files relative to b9c981a. Full repository lint still fails
+  on existing unregistered debt; its baseline was not expanded.
+- Receipts: local canonical `results/maintenance/arpo-tau-v1-20260927/` and
+  remote `/root/autodl-fs/tau3-core/maintenance/arpo-tau-v1-20260927/`.
+- GPU rollout/update/weight sync/checkpoint recovery and performance are pending
+  separate authorization. Temporary source worktrees are removed after receipts
+  and commit identities are verified; the feature branch preserves all code.

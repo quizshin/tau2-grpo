@@ -125,7 +125,7 @@ arpo:
   profile: configs/train/rl/repair72_arpo_2xa800_shared32.yaml
   estimator: arpo
   protocol: arpo_tau_v1
-  status: development_checks_passed
+  status: cpu_verified
   reference: docs/architecture/arpo_tau_v1.md
   gpu_validation: pending_separate_authorization
   deployment: deferred_while_canonical_checkout_is_active

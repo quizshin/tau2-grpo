@@ -788,5 +788,5 @@ SFT新方法运行更新：15:15首20任务DeepSeek teacher/独立user候选生�
 - Same repair72 environment/terminal reward and 4 × 8 leaf budget; 4 initial
   roots and 4 reserved branch slots per group. Shared prefix computation is
   counted once in ARPO cost metrics. Evaluation uses independent trajectories.
-- Status: development CPU checks; not trained, not GPU-verified, not deployed
+- Status: local and remote CPU verified; not trained, not GPU-verified, not deployed
   into the active remote checkout. Formal GPU budget requires separate approval.
