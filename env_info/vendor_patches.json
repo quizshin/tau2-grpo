@@ -539,7 +539,7 @@
         "verl/checkpoint_engine/nixl_checkpoint_engine.py": "825db00813e352c66a8b7f7503a531ce9a5c61c99043006ced28baaa5275f7f3",
         "verl/experimental/__init__.py": "e65abd77db034b4f29eb1268c24867f84919dbce22e28d1997e563ed1d94179c",
         "verl/experimental/agent_loop/__init__.py": "197b5cd75e6c43b3f1da97243f48efba8d6d5f98fa43112e89a1089e90aa7e49",
-        "verl/experimental/agent_loop/agent_loop.py": "c46dda9e8a21711f37120917bee0369bf5419a822654b7467fa8b0f29b40ad34",
+        "verl/experimental/agent_loop/agent_loop.py": "b400c72a7a00249c38fdde3bd80e8ebc5530bcc32cb80f00f6ce36058827c018",
         "verl/experimental/agent_loop/prometheus_utils.py": "b447c4d25179186102b17df38b7a45d79e3978edade9bcdf5cf6af4439936851",
         "verl/experimental/agent_loop/single_turn_agent_loop.py": "8d3e51085f545209da4d54d3245bce7c5e98a1e64689848cf345be035b75eb96",
         "verl/experimental/agent_loop/tool_agent_loop.py": "5c910b9896298474a2e17da96aa50900812cea0568abc405007db7ecb97a2224",
@@ -1031,7 +1031,7 @@
           "validation_scope": "CPU contract; GPU execution requires separate approval and validation"
         },
         {
-          "local_sha256": "c46dda9e8a21711f37120917bee0369bf5419a822654b7467fa8b0f29b40ad34",
+          "local_sha256": "b400c72a7a00249c38fdde3bd80e8ebc5530bcc32cb80f00f6ce36058827c018",
           "path": "verl/experimental/agent_loop/agent_loop.py",
           "reason": "Record actual group/trial/data-seed before worker splitting; reject partially missing generation logprobs. Preserve real group/sample identities when optional call attribution alone enables trajectory facts. Read repetition_penalty from actual rollout/validation configuration and reject guard use without the shared token protocol. Opt-in ARPO whole-group worker routing with original row-order restoration and grouped native rollout scheduling.",
           "status": "modified",

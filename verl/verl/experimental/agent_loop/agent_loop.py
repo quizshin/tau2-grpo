@@ -522,7 +522,8 @@ class AgentLoopWorker:
             batch.meta_info.get("global_steps", -1), index.tolist(), batch.meta_info.get("validate", False)
         )
 
-        if self.config.get("algorithm", {}).get("adv_estimator") == "arpo" and not batch.meta_info.get("validate", False):
+        if (self.config.get("algorithm", {}).get("adv_estimator") == "arpo"
+                and not batch.meta_info.get("validate", False)):
             from tau3_grpo.integrations.verl.arpo_rollout import generate_groups
 
             outputs = await generate_groups(self, batch, sampling_params, trajectory_info, traced_indices)
@@ -1074,7 +1075,8 @@ class AgentLoopManager:
             )
             prompts.non_tensor_batch["tau3_sampling_identity"] = np.array(identities, dtype=object)
         permutation = None
-        if self.config.get("algorithm", {}).get("adv_estimator") == "arpo" and not prompts.meta_info.get("validate", False):
+        if (self.config.get("algorithm", {}).get("adv_estimator") == "arpo"
+                and not prompts.meta_info.get("validate", False)):
             from tau3_grpo.algorithms.arpo import group_rows, worker_rows
 
             group_indices = np.empty(len(prompts), dtype=np.int64)
