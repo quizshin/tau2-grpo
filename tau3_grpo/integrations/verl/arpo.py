@@ -37,7 +37,11 @@ def compute_arpo_verl(token_level_rewards, response_mask, index=None, config=Non
     if index is None or records is None or len(records) != len(index):
         raise ValueError('ARPO requires grouped rollout lineage, not flat GRPO samples')
     decoded = [json.loads(raw) for raw in records]
+    if not decoded:
+        raise ValueError('ARPO requires a nonempty rollout batch')
     size = int(decoded[0]['group_size'])
+    if size < 2 or cfg.initial_rollouts > size:
+        raise ValueError('Invalid ARPO group budget')
     groups = group_rows(index, size)
     for rows in groups:
         seen = set()
@@ -49,6 +53,17 @@ def compute_arpo_verl(token_level_rewards, response_mask, index=None, config=Non
             seen.add(r['node'])
         if seen != set(range(size)):
             raise ValueError('ARPO group has missing or duplicate leaves')
+        by_node = {decoded[i]['node']: decoded[i] for i in rows}
+        if len({(decoded[i]['seed'], decoded[i]['policy_step']) for i in rows}) != 1:
+            raise ValueError('ARPO group mixes sampling or policy identities')
+        for node, record in by_node.items():
+            parent = record['parent']
+            if parent is None:
+                if record['root'] != node or record['shared_response_tokens'] != 0:
+                    raise ValueError('ARPO root lineage is invalid')
+            elif (node < cfg.initial_rollouts or parent not in by_node or parent >= node
+                  or record['root'] != by_node[parent]['root'] or record['shared_response_tokens'] <= 0):
+                raise ValueError('ARPO branch lineage is invalid')
     advantages, returns = compute_grpo_outcome_advantage(
         token_level_rewards=token_level_rewards, response_mask=response_mask,
         index=index, norm_adv_by_std_in_grpo=True)

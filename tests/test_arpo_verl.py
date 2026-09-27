@@ -37,7 +37,7 @@ def test_soft_advantage_uses_real_group_std_and_masks():
     mask = torch.tensor([[1., 0., 1.], [1., 0., 0.]])
     records = [json.dumps(dict(schema='arpo_tau_rollout_v1', config_sha256=c.identity,
         group_uid='g', group_size=2, node=i, parent=None if i == 0 else 0,
-        new_tokens=2, shared_response_tokens=i)) for i in range(2)]
+        new_tokens=2, shared_response_tokens=i, root=0, seed=42, policy_step=1)) for i in range(2)]
     batch = DataProto.from_dict(tensors={'token_level_rewards': rewards, 'response_mask': mask},
         non_tensors={'uid': np.array(['g', 'g']), 'arpo_rollout_json': np.array(records, dtype=object)})
     compute_advantage(batch, 'arpo', config=config)
@@ -53,6 +53,11 @@ def test_soft_advantage_uses_real_group_std_and_masks():
                                      estimator_diagnostics=batch.meta_info['tau3_estimator_diagnostics'])
     assert metrics['arpo/branches'] == 1
     assert batch.meta_info['tau3_estimator_diagnostics']['stats']['branches'] == 1
+    corrupt = [json.loads(r) for r in records]
+    corrupt[1]['parent'] = 1
+    with pytest.raises(ValueError, match='lineage'):
+        compute_arpo_verl(rewards, mask, index=['g', 'g'], config=config,
+                         non_tensor_batch={'arpo_rollout_json': [json.dumps(r) for r in corrupt]})
     for zero in (torch.zeros_like(mask), mask):
         a, _ = compute_arpo_verl(torch.zeros_like(rewards), zero, index=np.array(['g', 'g']),
                                 config=config, non_tensor_batch=batch.non_tensor_batch)
@@ -222,3 +227,55 @@ def test_manager_keeps_whole_groups_and_restores_trainer_order(monkeypatch):
     assert observed == [['a','a'], ['b','b'], ['c','c']]
     assert output.batch['marker'].flatten().tolist() == list(range(6))
     assert output.non_tensor_batch['uid'].tolist() == ['a','b','c','a','b','c']
+
+
+def test_native_vllm_method_requests_topk_and_preserves_sample_logprob():
+    """Execute the actual method body with a CPU engine double (no vLLM/CUDA import)."""
+    import __future__
+
+    import ast
+    import math
+    from types import SimpleNamespace
+
+    from verl.workers.rollout.replica import TokenOutput
+
+    from tau3_grpo.paths import CODE_ROOT
+
+    path = CODE_ROOT / 'verl/verl/workers/rollout/vllm_rollout/vllm_async_server.py'
+    tree = ast.parse(path.read_text())
+    cls = next(n for n in tree.body if isinstance(n, ast.ClassDef) and n.name == 'vLLMHttpServer')
+    method = deepcopy(next(n for n in cls.body if isinstance(n, ast.AsyncFunctionDef) and n.name == 'generate'))
+    method.decorator_list = []
+    module = ast.fix_missing_locations(ast.Module(body=[method], type_ignores=[]))
+    requests = []
+    async def generate(**kwargs):
+        requests.append(kwargs)
+        yield SimpleNamespace(outputs=[SimpleNamespace(token_ids=[1], finish_reason='stop',
+            logprobs=[{1: SimpleNamespace(logprob=math.log(.5)), 2: SimpleNamespace(logprob=math.log(.25))}])])
+    namespace = dict(normalize_token_ids=list, SamplingParams=lambda **kwargs: SimpleNamespace(**kwargs),
+        qwen2_5_vl_dedup_image_tokens=lambda ids, processor: ids, TokensPrompt=lambda **kwargs: kwargs,
+        TokenOutput=TokenOutput)
+    exec(compile(module, str(path), 'exec', flags=__future__.annotations.compiler_flag), namespace)
+    server = SimpleNamespace(config=OmegaConf.create(dict(max_model_len=100, response_length=20,
+        prompt_length=20, logprobs_mode='processed_logprobs', enable_rollout_routing_replay=False)),
+        model_config=SimpleNamespace(tokenizer=[0,1,2,3], processor=None),
+        engine=SimpleNamespace(generate=generate), lora_as_adapter=False, global_steps=3, replica_rank=0)
+    params = dict(max_tokens=5, logprobs=True, arpo_entropy_top_k=10, arpo_entropy_window=20,
+                  seed=42, temperature=.7, top_p=1., top_k=-1)
+    output = asyncio.run(namespace['generate'](server, [0], params, 'request'))
+    assert requests[0]['sampling_params'].logprobs == 10
+    assert output.log_probs == [math.log(.5)]
+    assert output.extra_fields['arpo_entropy']['value'] == pytest.approx(.5)
+    assert output.extra_fields['arpo_entropy']['generated_tokens'] == 1
+    assert not hasattr(requests[0]['sampling_params'], 'arpo_entropy_top_k')
+
+
+def test_missing_entropy_fails_even_when_generation_terminates():
+    from types import SimpleNamespace
+    controller = GroupRollout(ARPOConfig(initial_rollouts=1), 2, 'g', 42, 1)
+    data = SimpleNamespace(arpo_last_entropy=None, arpo_generation_attempted=True,
+                           termination_reason='agent_error')
+    with pytest.raises(ValueError, match='entropy'):
+        controller.after_generation(data, None)
+    data.arpo_generation_attempted = False
+    controller.after_generation(data, None)

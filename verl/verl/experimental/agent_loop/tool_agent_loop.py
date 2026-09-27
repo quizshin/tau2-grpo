@@ -501,6 +501,8 @@ class ToolAgentLoop(AgentLoopBase):
         turn_sampling_params = dict(sampling_params)
         turn_sampling_params["max_tokens"] = min(max_tokens_per_turn, remaining_tokens)
 
+        if "arpo_entropy_top_k" in turn_sampling_params:
+            agent_data.arpo_generation_attempted = True
         with simple_timer("generate_sequences", agent_data.metrics):
             output: TokenOutput = await self.server_manager.generate(
                 request_id=agent_data.request_id,

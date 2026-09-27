@@ -46,7 +46,7 @@ def prepare(stage: str, path: Path, experiment: str, seed: int | None,
         arm = resolve_arm(experiment, arms)
         env["TAU3_GRPO_CONFIG_ESTIMATOR"] = arm["adv_estimator"]
         if launch.get("expected_adv_estimator", arm["adv_estimator"]) != arm["adv_estimator"]:
-            raise ValueError(f"profile requires estimator {launch['expected_adv_estimator']}")
+            raise ValueError(f"profile requires --experiment {launch['expected_adv_estimator']}")
         env["TAU3_GRPO_CONFIG_DF_ENABLE"] = str(arm["dynamic_filter"]["enable"]).lower()
         env["TAU3_GRPO_CONFIG_ANCHOR_MODE"] = arm["anchors"]["mode"]
         for key, value in arm.get("gigpo", {}).items():

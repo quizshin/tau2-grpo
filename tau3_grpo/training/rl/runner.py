@@ -462,7 +462,7 @@ def main(argv=None):
 
     assert config['algorithm']['adv_estimator'] == args.estimator
     if args.estimator == 'arpo':
-        from tau3_grpo.integrations.verl.arpo import validate_training_config, resume_identity
+        from tau3_grpo.integrations.verl.arpo import resume_identity, validate_training_config
 
         validate_training_config(config)
         snapshot['arpo_identity'] = resume_identity(config)

@@ -65,6 +65,13 @@ def main(argv: list[str] | None = None) -> int:
                 problems.append("mt_gtpo did not register in ADV_ESTIMATOR_REGISTRY")
             else:
                 print("[ok] mt_gtpo estimator registered")
+            from tau3_grpo.integrations.verl.arpo import register as register_arpo
+
+            register_arpo()
+            if "arpo" not in ADV_ESTIMATOR_REGISTRY:
+                problems.append("arpo did not register in ADV_ESTIMATOR_REGISTRY")
+            else:
+                print("[ok] arpo estimator registered")
         except ImportError as exc:
             print(f"[skip] veRL not importable: {exc}")
 

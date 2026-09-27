@@ -78,6 +78,7 @@ class GroupRollout:
 
     def before_generation(self, data):
         data.arpo_last_entropy = None
+        data.arpo_generation_attempted = False
         if data.arpo_after_tools and self.allocated < self.size:
             return capture(data)
         return None
@@ -86,7 +87,7 @@ class GroupRollout:
         measurement = data.arpo_last_entropy
         if measurement is None:
             # A native turn/context limit can terminate without a generation.
-            if data.termination_reason:
+            if not data.arpo_generation_attempted and data.termination_reason:
                 return
             raise ValueError('ARPO rollout did not return entropy measurements')
         current = float(measurement['value'])

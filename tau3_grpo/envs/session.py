@@ -13,9 +13,9 @@ verifier can replay them without any translation layer.
 from __future__ import annotations
 
 import os
-from copy import deepcopy
 import threading
 import uuid
+from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Optional

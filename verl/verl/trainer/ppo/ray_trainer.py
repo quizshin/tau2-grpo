@@ -1775,7 +1775,9 @@ class RayPPOTrainer:
                             config=self.config.algorithm,
                         )
                         if self.config.algorithm.adv_estimator == "arpo":
-                            reward_extra_infos_dict["arpo_replay_json"] = list(batch.non_tensor_batch["arpo_replay_json"])
+                            reward_extra_infos_dict["arpo_replay_json"] = list(
+                                batch.non_tensor_batch["arpo_replay_json"]
+                            )
                         if self.config.algorithm.adv_estimator == "mt_gtpo":
                             dynamic_filter_metrics = batch.meta_info["tau3_estimator_diagnostics"].get("filter_stats", {})
                             metrics.update(dynamic_filter_metrics)
