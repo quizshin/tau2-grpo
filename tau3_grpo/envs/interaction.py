@@ -65,13 +65,18 @@ class Tau3AirlineInteraction(BaseInteraction):
             model=config.get("user_model", "gpt-4o-mini"),
             base_url=config.get("user_base_url") or os.environ.get("TAU3_USER_BASE_URL"),
             api_key_env=config.get("user_api_key_env", "OPENAI_API_KEY"),
-            temperature=float(config.get("user_temperature", 0.0)),
+            temperature=float(config.get("user_temperature", 0.7)),
             max_tokens=config.get("user_max_tokens"),
             extra_llm_args=dict(config.get("user_llm_args", {}) or {}),
         )
         self._anchor_mode = AnchorMode(config.get("anchor_mode", AnchorMode.STRUCTURED.value))
         self._similarity_threshold = float(config.get("anchor_similarity_threshold", 0.9))
         self._strict_replay = bool(config.get("strict_replay", True))
+        from tau3_grpo.evaluation.rewards.terminal import NATIVE, validate_protocol
+
+        self._terminal_reward_protocol = validate_protocol(config.get("terminal_reward_protocol", NATIVE))
+        if self._terminal_reward_protocol != NATIVE and not self._strict_replay:
+            raise ValueError("Selected terminal rewards require strict native replay")
 
     # ---- wiring -----------------------------------------------------
 
@@ -204,7 +209,16 @@ class Tau3AirlineInteraction(BaseInteraction):
 
         # tau2's UserSimulator uses a synchronous LiteLLM client. Running it on
         # the rollout event loop would serialize every concurrent trajectory.
-        user_message = await asyncio.to_thread(session.user_respond, assistant_message)
+        try:
+            user_message = await asyncio.to_thread(session.user_respond, assistant_message)
+        except Exception as exc:
+            from litellm import ContextWindowExceededError
+
+            if not getattr(self, "token_budget", None) or not isinstance(exc, ContextWindowExceededError):
+                raise
+            entry.terminated = True
+            entry.termination_reason = "context_window_exceeded"
+            return True, "", 0.0, {"termination_reason": "context_window_exceeded", "budget_role": "user"}
         content = user_message.content or ""
 
         if session.user_is_stop(user_message):
@@ -234,6 +248,10 @@ class Tau3AirlineInteraction(BaseInteraction):
         if recorded:
             session.record_assistant_tool_calls(recorded, content=assistant_content)
         return recorded
+
+    def tool_state_receipt(self, instance_id: str) -> dict[str, Any]:
+        """Snapshot the live state after a recorded call, including dispatch errors."""
+        return {"db_hash": SESSIONS.require(str(instance_id)).session.db_hash()}
 
     def record_tool_failure(
         self,
@@ -291,6 +309,8 @@ class Tau3AirlineInteraction(BaseInteraction):
         duration: float = 0.0,
         anchor_ids: Optional[list[Optional[str]]] = None,
         anchor_spans: Optional[list[Optional[tuple[int, int]]]] = None,
+        turn_records: Optional[list[dict[str, Any]]] = None,
+        process_reward_config: Optional[dict[str, Any]] = None,
         **kwargs: Any,
     ) -> dict[str, Any]:
         """Score the terminal trajectory, then release its private session."""
@@ -306,6 +326,8 @@ class Tau3AirlineInteraction(BaseInteraction):
                 duration=duration,
                 anchor_ids=anchor_ids,
                 anchor_spans=anchor_spans,
+                turn_records=turn_records,
+                process_reward_config=process_reward_config,
             )
         finally:
             SESSIONS.pop(str(instance_id))
@@ -320,6 +342,8 @@ class Tau3AirlineInteraction(BaseInteraction):
         duration: float = 0.0,
         anchor_ids: Optional[list[Optional[str]]] = None,
         anchor_spans: Optional[list[Optional[tuple[int, int]]]] = None,
+        turn_records: Optional[list[dict[str, Any]]] = None,
+        process_reward_config: Optional[dict[str, Any]] = None,
     ) -> dict[str, Any]:
         """Run the official verifier for a finished rollout.
 
@@ -336,12 +360,30 @@ class Tau3AirlineInteraction(BaseInteraction):
             strict_replay=self._strict_replay,
             tool_error_count=entry.tool_error_count,
         )
+        from tau3_grpo.evaluation.rewards.terminal import select_terminal_reward
+
+        result = select_terminal_reward(entry.session, result, self._terminal_reward_protocol)
         payload = result.to_dict()
+        if not payload["execution_eligibility"]["training_candidate_eligible"]:
+            raise RuntimeError(f"Unresolved execution cannot enter a training batch: {reason}")
         payload.update(prompt_provenance())
         payload["anchor_ids"] = list(anchor_ids if anchor_ids is not None else entry.anchor_ids)
         payload["anchor_spans"] = list(
             anchor_spans if anchor_spans is not None else entry.anchor_spans
         )
+        if turn_records is not None:
+            from tau3_grpo.evaluation.process_reward import payload_json, score_turns
+
+            criteria = entry.session.adapted.task.evaluation_criteria
+            gold = [action.model_dump(mode="json") for action in (criteria.actions or [])] if criteria else []
+            basis = [getattr(b, "value", str(b)) for b in (criteria.reward_basis or [])] if criteria else []
+            process = score_turns(
+                turn_records, gold, basis, process_reward_config, official_outcome=result.reward
+            )
+            process["termination_reason"] = reason
+            process["trajectory_id"] = str(instance_id)
+            process["terminal_reward_protocol"] = self._terminal_reward_protocol
+            payload["process_reward_json"] = payload_json(process)
         return payload
 
 

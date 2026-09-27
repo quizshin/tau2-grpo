@@ -99,12 +99,14 @@ def main(argv: list[str] | None = None) -> int:
     options = thinking_options(config["data"])
     if any(options.values()) and family != "qwen35":
         raise ValueError("Thinking SFT requires Qwen3.5")
+    options['require_approved_targets'] = config['data'].get('require_approved_targets', False)
+    options['frozen_prompt_protocols'] = config['data'].get('frozen_prompt_protocols')
     train_dataset = TrajectorySFTDataset(
         _resolve(config["data"]["train_jsonl"]),
         tokenizer,
         tools=tools,
         max_length=max_length,
-        expected_size=45,
+        expected_size=int(config["data"].get("expected_train_size", 45)),
         **options,
     )
     validation_dataset = TrajectorySFTDataset(
@@ -112,7 +114,7 @@ def main(argv: list[str] | None = None) -> int:
         tokenizer,
         tools=tools,
         max_length=max_length,
-        expected_size=5,
+        expected_size=int(config["data"].get("expected_validation_size", 5)),
         **options,
     )
 
@@ -134,9 +136,14 @@ def main(argv: list[str] | None = None) -> int:
     effective_batch = per_device_batch * accumulation
     if effective_batch != 8:
         raise ValueError(f"frozen SFT effective batch is 8, got {effective_batch}")
-    expected_steps = math.ceil(math.ceil(45 / per_device_batch) / accumulation) * epochs
-    if expected_steps != 30:
-        raise ValueError(f"frozen SFT schedule must produce about 30 steps, got {expected_steps}")
+    train_size = int(config["data"].get("expected_train_size", 45))
+    expected_steps = math.ceil(math.ceil(train_size / per_device_batch) / accumulation) * epochs
+    configured_steps = int(train_config.get("expected_optimizer_steps", expected_steps))
+    if expected_steps != configured_steps:
+        raise ValueError(
+            f"configured SFT schedule expects {configured_steps} steps, "
+            f"but batch/data settings produce {expected_steps}"
+        )
 
     set_seed(int(train_config["seed"]))
     model = load_policy_model(
@@ -187,7 +194,7 @@ def main(argv: list[str] | None = None) -> int:
         gradient_checkpointing_kwargs={"use_reentrant": False},
         logging_steps=int(train_config.get("logging_steps", 1)),
         save_strategy="epoch",
-        save_total_limit=2,
+        save_total_limit=int(train_config.get("save_total_limit", 2)),
         eval_strategy="epoch",
         load_best_model_at_end=bool(train_config.get("load_best_model_at_end", False)),
         metric_for_best_model="eval_loss",

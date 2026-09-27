@@ -81,6 +81,9 @@ REQUIREMENTS: tuple[PatchRequirement, ...] = (
             "record_tool_batch",
             "recorded_tool_call",
             "prepare_agent_messages",
+            "record_process_turns",
+            "turn_records",
+            "process_reward_json",
         ),
         description=(
             "ToolAgentLoop emits aligned anchors, loads the worker hook, and "
@@ -98,6 +101,9 @@ REQUIREMENTS: tuple[PatchRequirement, ...] = (
             "tau3_pad_policy_batch",
             "tau3_unpad_policy_batch",
             "TAU3_GRPO_POLICY_BATCH_DIVISOR",
+            "register_mt_gtpo",
+            "tau3_estimator_diagnostics",
+            "mt_gtpo_replay_json",
         ),
         description=(
             "ray_trainer threads non_tensor_batch, applies DF, and masks exact-DP "
@@ -106,7 +112,7 @@ REQUIREMENTS: tuple[PatchRequirement, ...] = (
     ),
     PatchRequirement(
         relative_path=ALGORITHM_CONFIG,
-        required_tokens=(PATCH_MARKER, "dynamic_filter", "gigpo"),
+        required_tokens=(PATCH_MARKER, "dynamic_filter", "gigpo", "mt_gtpo", "process_reward"),
         description="AlgoConfig accepts dynamic_filter and gigpo blocks",
     ),
 )

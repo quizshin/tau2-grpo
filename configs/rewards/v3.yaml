@@ -1,0 +1,4 @@
+launch:
+  overrides:
+  - ++algorithm.process_reward.mode=reference_write
+  - ++algorithm.process_reward.version=v3

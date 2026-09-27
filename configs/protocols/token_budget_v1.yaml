@@ -1,0 +1,8 @@
+# Shared by training and independent token-in/token-out evaluation.
+version: tau3_token_budget_v1
+prompt: 8192
+response: 16384
+context: 24576
+per_turn: 1024
+user_per_turn: 1024
+user_context: 16384

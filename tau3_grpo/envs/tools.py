@@ -21,6 +21,7 @@ from verl.tools.base_tool import BaseTool
 from verl.tools.schemas import OpenAIFunctionToolSchema, ToolResponse
 
 from tau3_grpo.envs.adapter import airline_tool_schemas
+from tau3_grpo.envs.generate_tool_config import FULL_SCHEMA, LEGACY_SCHEMA
 from tau3_grpo.envs.registry import session_for
 
 logger = logging.getLogger(__name__)
@@ -36,6 +37,13 @@ class Tau3AirlineTool(BaseTool):
     """Dispatches one named Airline tool onto the rollout's own Environment."""
 
     def __init__(self, config: dict, tool_schema: OpenAIFunctionToolSchema):
+        version = config.get("schema_projection", LEGACY_SCHEMA)
+        if version == FULL_SCHEMA:
+            from tau3_grpo.integrations.verl.tool_schema import FullToolSchema
+
+            tool_schema = FullToolSchema.from_payload(config["schema_payload"], tool_schema)
+        elif version != LEGACY_SCHEMA:
+            raise ValueError(f"Unknown tool schema version: {version}")
         super().__init__(config, tool_schema)
         self._instances: dict[str, str] = {}
 

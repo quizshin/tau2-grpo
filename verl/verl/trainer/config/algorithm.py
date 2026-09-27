@@ -631,3 +631,6 @@ class AlgoConfig(BaseConfig):
     #   reaches min_anchor_group_size.
     dynamic_filter: Optional[dict[str, Any]] = None
     gigpo: Optional[dict[str, Any]] = None
+    # Tau3-GRPO local patch: independent turn-position hybrid and rule rewards.
+    mt_gtpo: Optional[dict[str, Any]] = None
+    process_reward: Optional[dict[str, Any]] = None

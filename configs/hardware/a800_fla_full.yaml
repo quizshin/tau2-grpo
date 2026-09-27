@@ -1,0 +1,37 @@
+# Current formal component; historical profiles stay available for replay.
+launch:
+  environment:
+    TAU3_POLICY_CUDA_DEVICES: 0,1,2,3
+    POLICY_GPUS: '4'
+    ROLLOUT_TP: '1'
+    MAX_NUM_SEQS: '16'
+    OMP_NUM_THREADS: '4'
+    OPENBLAS_NUM_THREADS: '4'
+    PYTORCH_ALLOC_CONF: expandable_segments:True
+    VERL_QWEN35_COMPACT_HEAD: '1'
+    VERL_QWEN35_COMPACT_CHUNK: '256'
+    VERL_QWEN35_COMPACT_BACKEND: checkpoint
+    VERL_QWEN35_FIX_PADDING: '1'
+    VERL_QWEN35_TRIM_PADDING: experimental_both
+    VERL_QWEN35_FLA_IEEE: '1'
+    TRITON_F32_DEFAULT: ieee
+  overrides:
+  - actor_rollout_ref.actor.fsdp_config.model_dtype=float32
+  - actor_rollout_ref.actor.fsdp_config.param_offload=false
+  - actor_rollout_ref.actor.fsdp_config.optimizer_offload=false
+  - actor_rollout_ref.ref.fsdp_config.param_offload=true
+  - actor_rollout_ref.rollout.gpu_memory_utilization=0.30
+  - actor_rollout_ref.rollout.agent.num_workers=4
+  - ++ray_kwargs.ray_init.runtime_env.env_vars.VERL_QWEN35_COMPACT_HEAD='1'
+  - ++ray_kwargs.ray_init.runtime_env.env_vars.VERL_QWEN35_COMPACT_CHUNK='256'
+  - ++ray_kwargs.ray_init.runtime_env.env_vars.VERL_QWEN35_COMPACT_BACKEND=checkpoint
+  - ++ray_kwargs.ray_init.runtime_env.env_vars.VERL_QWEN35_FIX_PADDING='1'
+  - ++ray_kwargs.ray_init.runtime_env.env_vars.VERL_QWEN35_TRIM_PADDING=experimental_both
+  - actor_rollout_ref.actor.ppo_micro_batch_size_per_gpu=1
+  - actor_rollout_ref.rollout.log_prob_micro_batch_size_per_gpu=1
+  - actor_rollout_ref.ref.log_prob_micro_batch_size_per_gpu=1
+  - actor_rollout_ref.actor.fsdp_config.dtype=float32
+  - actor_rollout_ref.ref.fsdp_config.dtype=float32
+  - actor_rollout_ref.ref.fsdp_config.model_dtype=float32
+  - ++ray_kwargs.ray_init.runtime_env.env_vars.VERL_QWEN35_FLA_IEEE='1'
+  - ++ray_kwargs.ray_init.runtime_env.env_vars.TRITON_F32_DEFAULT=ieee

@@ -82,6 +82,18 @@ class ContinuousSwanlab:
         atomic_json(path, state)
 
     def log(self, data, step):
+        # A fresh policy may be evaluated before its first optimizer update.
+        # Keep this point out of trainer/global_step (used for resume audits).
+        if (step == 0 and self.last_step == 0 and data
+                and not self.state.get('baseline_logged')
+                and all(key.startswith(('val-core/', 'val-aux/')) for key in data)):
+            with (self.path.parent / 'metrics.jsonl').open('a') as handle:
+                handle.write(json.dumps({'step': 0, 'kind': 'initial_validation',
+                                         'metrics': data}, default=str) + '\n')
+            self.sdk.log(data=data, step=0)
+            self.state['baseline_logged'] = True
+            atomic_json(self.path, self.state)
+            return
         # No offsets: restoring step 30 means the next real update is 31.
         if step <= self.last_step:
             raise ValueError(f'Non-increasing SwanLab update {step}; last real step is {self.last_step}')

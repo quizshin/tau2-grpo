@@ -1,0 +1,15 @@
+# Task-disjoint from known semantic/decision development samples.
+# Frozen candidate; no repair or automatic retries on this audit cohort.
+enabled: true
+provider: openai_compatible
+model: GLM-5.3-Flash
+slot_schema: airline_slots_v4
+extraction_mode: incremental_v1
+diagnostic_continue: false
+max_incremental_calls: 96
+cases: results/runs/semantic_independent_v4/20260916_01/inputs/audit_cases.json
+limit: null
+concurrency: 4
+timeout_seconds: 180
+max_tokens: 8192
+temperature: 0

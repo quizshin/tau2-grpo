@@ -1,6 +1,7 @@
 """Mock HTTP only: no API key, external inference or GPU required."""
 import asyncio
 import json
+import os
 from pathlib import Path
 
 import httpx
@@ -102,6 +103,42 @@ def test_model_override_does_not_mutate_environment(monkeypatch, tmp_path):
     assert os.environ['TAU3_SEMANTIC_MODEL'] == 'Kimi-K3'
 
 
+def test_judge_namespace_does_not_reuse_semantic_credentials(monkeypatch, tmp_path):
+    set_env(monkeypatch, tmp_path)
+    monkeypatch.delenv('TAU3_JUDGE_API_KEY', raising=False)
+    with pytest.raises(ValueError, match='TAU3_JUDGE_API_KEY'):
+        OpenAICompatibleSemanticModel.from_env({}, env_prefix='TAU3_JUDGE')
+
+
+def test_judge_dotenv_preserves_process_overrides_and_separates_credentials(monkeypatch, tmp_path):
+    set_env(monkeypatch, tmp_path)
+    env_file = tmp_path / 'judge.env'
+    env_file.write_text('TAU3_JUDGE_BASE_URL=https://judge.example/v1\n'
+                        'TAU3_JUDGE_MODEL=file-model\nTAU3_JUDGE_API_KEY=file-test-key\n')
+    monkeypatch.setenv('TAU3_ENV_FILE', str(env_file))
+    monkeypatch.delenv('TAU3_JUDGE_BASE_URL', raising=False)
+    monkeypatch.setenv('TAU3_JUDGE_MODEL', 'process-model')
+    monkeypatch.setenv('TAU3_JUDGE_API_KEY', 'judge-test-key')
+    # dotenv mutates os.environ; register cleanup for the added value as well.
+    monkeypatch.setenv('TAU3_JUDGE_BASE_URL', 'https://judge.example/v1')
+    request, packet = request_and_packet()
+
+    def handler(req):
+        assert str(req.url) == 'https://judge.example/v1/chat/completions'
+        assert req.headers['Authorization'] == 'Bearer judge-test-key'
+        assert json.loads(req.content)['model'] == 'process-model'
+        return httpx.Response(200, json=envelope(packet))
+
+    client = OpenAICompatibleSemanticModel.from_env(
+        {}, env_prefix='TAU3_JUDGE', transport=httpx.MockTransport(handler))
+    assert asyncio.run(client.extract_json(request)) == packet
+    assert 'judge-test-key' not in json.dumps(client.provenance)
+    assert os.environ['TAU3_SEMANTIC_MODEL'] == 'Kimi-K3'
+    monkeypatch.delenv('TAU3_JUDGE_MODEL')
+    assert OpenAICompatibleSemanticModel.from_env(
+        {}, env_prefix='TAU3_JUDGE').model == 'file-model'
+
+
 @pytest.mark.parametrize('body', [None, {'choices': []}, {'choices': [None]}, envelope({}, 'length'),
                                  {'choices': [{'finish_reason': 'stop', 'message': {'content': 'oops'}}]},
                                  envelope([])])
@@ -127,6 +164,21 @@ def test_finish_and_usage_preserved_even_when_packet_rejected(finish):
                                 'finish_reason': finish,
                                 'usage': {'prompt_tokens': 12, 'completion_tokens': 8,
                                           'total_tokens': 20}}]
+    raw = client.raw_responses[request['prefix_sha256']]
+    assert raw['finish_reason'] == finish and raw['content'] == json.dumps(packet)
+    assert not raw['storage_truncated'] and 'secret' not in raw
+
+
+def test_raw_truncated_output_is_bounded_and_persisted_before_rejection():
+    request, _ = request_and_packet()
+    body = {'choices': [{'finish_reason': 'length', 'message': {'content': 'x' * 100001}}]}
+    client = model(lambda req: httpx.Response(200, json=body))
+    records = []
+    client.on_raw_response = records.append
+    with pytest.raises(SemanticAPIError, match='did not finish normally'):
+        asyncio.run(client.extract(request))
+    assert len(records) == 1 and records[0]['storage_truncated']
+    assert len(records[0]['content']) == 100000 and client.response_packets == {}
 
 
 def test_wrong_prefix_is_rejected_by_evidence_validator():

@@ -1,0 +1,16 @@
+includes:
+- qwen35_lora.yaml
+- mt_gtpo_base.yaml
+launch:
+  environment:
+    QWEN35_SIZE: 4B
+    MODEL_PATH: ${CODE_ROOT}/checkpoints/sft-merged/new-off
+    RESULTS_DIR: ${CODE_ROOT}/results/runs/mt_gtpo/audit_smoke_s42
+    TOOL_CONFIG: ${RESULTS_DIR}/tool_config.yaml
+    TAU3_GRPO_DEBUG_BATCH_DIR: ${RESULTS_DIR}/update-batches
+    TOTAL_UPDATES: '3'
+    SWANLAB_EXPERIMENT_NAME: mt-gtpo-audit-smoke-s42
+  overrides:
+  - trainer.total_training_steps=3
+  - trainer.val_before_train=false
+  - trainer.test_freq=-1

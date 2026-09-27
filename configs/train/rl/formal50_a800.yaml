@@ -1,0 +1,11 @@
+# Compose current protocol directly; use training.rl.runner for formal runs.
+includes:
+- ../../protocols/formal50.yaml
+- ../../models/qwen35_4b_new_off_rl.yaml
+- ../../hardware/a800_fla_full.yaml
+- ../../data/train50_selection60.yaml
+- ../../simulator/qwen38_27b_awq_client.yaml
+launch:
+  stage: rl
+  entrypoint: scripts/train/rl/run_qwen35.sh
+  seed: 42

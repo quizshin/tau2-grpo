@@ -14,6 +14,7 @@ from tau3_grpo.algorithms.tau_gigpo import (  # noqa: E402
 )
 from tau3_grpo.data.parquet_builder import INTERACTION_NAME  # noqa: E402
 from tau3_grpo.paths import CONFIG_ROOT, PROJECT_ROOT  # noqa: E402
+from tau3_grpo.training.rl.runtime_defaults import defaults  # noqa: E402
 
 
 def _load(relative: str) -> dict:
@@ -22,13 +23,13 @@ def _load(relative: str) -> dict:
     return yaml.safe_load(path.read_text(encoding="utf-8"))
 
 
-def test_base_config_has_v2_2_values():
+def test_base_config_has_current_values():
     config = _load("train/rl/base.yaml")
     assert config["model"]["path"] == "Qwen/Qwen2.5-7B-Instruct"
     assert config["rollout"]["group_size"] == 8
     assert config["rollout"]["groups_per_update"] == 16
-    assert config["rollout"]["temperature_train"] == 1.0
-    assert config["rollout"]["temperature_eval"] == 0.4
+    assert config["rollout"]["temperature_train"] == 0.7
+    assert config["rollout"]["temperature_eval"] == 0.7
     assert config["rollout"]["max_user_turns"] == 15
     assert config["rollout"]["max_assistant_turns"] == 15
     assert config["rollout"]["tensor_model_parallel_size"] == 2
@@ -74,9 +75,11 @@ def test_dynamic_filter_is_off_in_the_base_config():
     assert _load("train/rl/base.yaml")["dynamic_filter"]["enable"] is False
 
 
-def test_four_arms_are_defined():
+def test_original_arms_and_mt_gtpo_are_defined():
     arms = _load("experiments/arms.yaml")["arms"]
-    assert set(arms) == {"e0", "e1", "e2", "e3"}
+    assert set(arms) == {"e0", "e1", "e2", "e3", "mt_gtpo"}
+    assert arms["mt_gtpo"]["adv_estimator"] == "mt_gtpo"
+    assert arms["mt_gtpo"]["dynamic_filter"]["enable"] is False
 
 
 def test_arm_algorithm_matrix():
@@ -117,11 +120,11 @@ def test_interaction_config_turn_caps():
     assert config["max_assistant_turns"] == 15
 
 
-def test_training_user_simulator_is_deterministic():
+def test_training_user_simulator_matches_policy_temperature():
     base = _load("train/rl/base.yaml")["user_simulator"]
     interaction = _load("envs/interaction_config.yaml")["interaction"][0]["config"]
-    assert base["temperature"] == 0.0
-    assert interaction["user_temperature"] == 0.0
+    assert base["temperature"] == 0.7
+    assert interaction["user_temperature"] == 0.7
 
 
 def test_tool_config_uses_the_live_environment_tool():
@@ -196,7 +199,7 @@ def test_train_script_verifies_patches_first():
 
 def test_train_script_registers_the_estimator():
     wrapper = (PROJECT_ROOT / "tau3_grpo/training/rl/train.py").read_text(encoding="utf-8")
-    assert "tau3_grpo.algorithms.verl_estimator" in wrapper
+    assert "tau3_grpo.integrations.verl.gigpo" in wrapper
     assert 'runpy.run_module("verl.trainer.main_ppo"' in wrapper
 
 
@@ -215,7 +218,7 @@ def test_train_script_uses_four_root_relative_paths():
 
 def test_training_seed_does_not_change_the_frozen_data_split():
     text = _script("train/rl/run_base.sh")
-    assert "DATA_SPLIT_SEED=\"${DATA_SPLIT_SEED:-42}\"" in text
+    assert defaults("base", {})["DATA_SPLIT_SEED"] == "42"
     assert '--data-seed "${DATA_SPLIT_SEED}"' in text
     assert "TAU3_GRPO_TRAIN_SEED" in text
     assert 'data.seed="${SEED}"' in text
@@ -227,11 +230,11 @@ def test_training_seed_does_not_change_the_frozen_data_split():
 
 def test_train_script_carries_v2_2_constants():
     text = _script("train/rl/run_base.sh")
-    assert 'GROUP_SIZE="${GROUP_SIZE:-8}"' in text
-    assert 'GROUPS_PER_UPDATE="${GROUPS_PER_UPDATE:-16}"' in text
-    assert 'LR="${LR:-1e-6}"' in text
-    assert 'KL_COEF="${KL_COEF:-0.01}"' in text
-    assert 'MAX_USER_TURNS="${MAX_USER_TURNS:-15}"' in text
+    values = defaults("base", {})
+    assert {key: values[key] for key in ("GROUP_SIZE", "GROUPS_PER_UPDATE", "LR",
+                                        "KL_COEF", "MAX_USER_TURNS")} == {
+        "GROUP_SIZE": "8", "GROUPS_PER_UPDATE": "16", "LR": "1e-6",
+        "KL_COEF": "0.01", "MAX_USER_TURNS": "15"}
     assert "actor_rollout_ref.actor.use_kl_loss=true" in text
     assert 'actor_rollout_ref.actor.kl_loss_coef="${KL_COEF}"' in text
 
@@ -246,10 +249,10 @@ def test_train_script_selects_real_multiturn_tool_agent():
 
 def test_train_script_has_long_context_and_per_turn_cap():
     text = _script("train/rl/run_base.sh")
-    assert 'MAX_PROMPT_LENGTH="${MAX_PROMPT_LENGTH:-8192}"' in text
-    assert 'MAX_RESPONSE_LENGTH="${MAX_RESPONSE_LENGTH:-16384}"' in text
-    assert 'MAX_MODEL_LENGTH="${MAX_MODEL_LENGTH:-24576}"' in text
-    assert 'MAX_TOKENS_PER_TURN="${MAX_TOKENS_PER_TURN:-1024}"' in text
+    values = defaults("base", {})
+    assert [values[key] for key in ("MAX_PROMPT_LENGTH", "MAX_RESPONSE_LENGTH",
+                                    "MAX_MODEL_LENGTH", "MAX_TOKENS_PER_TURN")] == [
+        "8192", "16384", "24576", "1024"]
     assert 'TAU3_GRPO_MAX_TOKENS_PER_TURN="${MAX_TOKENS_PER_TURN}"' in text
     assert 'actor_rollout_ref.rollout.max_model_len="${MAX_MODEL_LENGTH}"' in text
 
@@ -274,7 +277,7 @@ def test_train_script_does_not_use_unsupported_rollout_seed():
 def test_train_script_preserves_128_real_rollouts_with_explicit_zero_loss_padding():
     text = _script("train/rl/run_base.sh")
     assert "REAL_ROLLOUTS=$((GROUP_SIZE * GROUPS_PER_UPDATE))" in text
-    assert 'PPO_MINI_GROUPS="${PPO_MINI_GROUPS:-6}"' in text
+    assert defaults("base", {})["PPO_MINI_GROUPS"] == "6"
     assert 'POLICY_BATCH_DIVISOR="${POLICY_BATCH_DIVISOR:-$((PPO_MINI_GROUPS * GROUP_SIZE))}"' in text
     assert 'TAU3_GRPO_POLICY_BATCH_DIVISOR="${POLICY_BATCH_DIVISOR}"' in text
     assert 'actor_rollout_ref.actor.ppo_mini_batch_size="${PPO_MINI_GROUPS}"' in text
@@ -324,7 +327,7 @@ def test_train_uses_vllm_only():
 
 
 def test_eval_script_uses_eval_temperature():
-    assert "EVAL_TEMP=0.4" in _script("eval/run.sh")
+    assert "EVAL_TEMP=0.7" in _script("eval/run.sh")
 
 
 def test_eval_script_goes_through_the_guard():

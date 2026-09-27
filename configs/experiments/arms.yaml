@@ -16,6 +16,14 @@ defaults:
   inherit: ../train/rl/base.yaml
 
 arms:
+  mt_gtpo:
+    description: Turn-position GTPO hybrid with optional advantage filtering
+    adv_estimator: mt_gtpo
+    dynamic_filter:
+      enable: false
+    anchors:
+      mode: structured  # data schema compatibility only; new loop skips anchor extraction
+
   e0:
     description: vanilla GRPO baseline
     adv_estimator: grpo

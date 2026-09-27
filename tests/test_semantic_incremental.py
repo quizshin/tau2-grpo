@@ -118,6 +118,72 @@ def test_request_budget_fail_closed():
     assert model.attempted_calls == 1
 
 
+def test_resume_reuses_validated_history_and_only_requests_missing_suffix():
+    case, _, deltas = fixture('approved')
+    keys = list(deltas)
+    saved = {key: {'at': i, 'delta': deltas[key], 'error': None} for i, key in enumerate(keys[:-1])}
+    model = client(deltas, max_calls=1, saved_deltas=saved,
+                   saved_provenance={'deltas_sha256': 'fixture'})
+    before = deepcopy(saved)
+    result = asyncio.run(model.extract(build_request(case['messages'])))
+    assert result['events'] and model.attempted_calls == 1
+    assert model.reused_delta_count == len(saved) and saved == before
+    assert model.delta_records[-1]['source'] == 'new_request'
+    assert all(r['source'] == 'saved' for r in model.delta_records[:-1])
+
+
+def test_resume_never_retries_a_saved_failed_request_without_output():
+    case, _, deltas = fixture('approved')
+    key = sha256_json(case['messages'][:1])
+    saved = {key: {'at': 0, 'delta': None, 'error': 'length'}}
+    model = client(deltas, saved_deltas=saved, saved_provenance={'deltas_sha256': 'fixture'})
+    with pytest.raises(SemanticError, match='no_retry'):
+        asyncio.run(model.extract(build_request(case['messages'])))
+    assert model.attempted_calls == 0
+
+
+def test_resume_revalidates_saved_output_instead_of_trusting_old_success():
+    case, _, deltas = fixture('approved')
+    key = sha256_json(case['messages'][:1])
+    saved = {key: {'at': 0, 'delta': deepcopy(deltas[key]), 'error': None}}
+    saved[key]['delta']['events'][0]['evidence'] = ['m99']
+    model = client(deltas, saved_deltas=saved, saved_provenance={'deltas_sha256': 'fixture'})
+    with pytest.raises(SemanticError, match='reference'):
+        asyncio.run(model.extract(build_request(case['messages'])))
+    assert model.attempted_calls == 0
+
+
+def test_diagnostic_suffix_is_collected_but_never_promoted_to_valid_state():
+    case, _, deltas = fixture('approved')
+    first = sha256_json(case['messages'][:1])
+    deltas[first]['events'][0]['evidence'] = ['m99']
+    model = client(deltas, diagnostic_continue=True)
+    with pytest.raises(SemanticError, match='reference'):
+        asyncio.run(model.extract(build_request(case['messages'])))
+    assert model.attempted_calls == len(deltas)
+    assert model.diagnostic_count == len(deltas) - 1
+    assert not model.response_packets
+    assert all(r.get('eligible_for_state') is False for r in model.delta_records[1:])
+    assert model.delta_records[-1]['delta'] is not None
+    saved = {r['prefix_sha256']: r for r in model.delta_records}
+    valid_first = fixture('approved')[2][first]
+    saved[first]['delta'] = valid_first
+    resumed = client(deltas, saved_deltas=saved, saved_provenance={'test': True})
+    with pytest.raises(SemanticError, match='diagnostic_delta_cannot_resume'):
+        asyncio.run(resumed.extract(build_request(case['messages'])))
+    assert resumed.attempted_calls == 0
+
+
+def test_diagnostic_requests_share_the_original_hard_budget():
+    case, _, deltas = fixture('approved')
+    first = sha256_json(case['messages'][:1])
+    deltas[first]['events'][0]['evidence'] = ['m99']
+    model = client(deltas, diagnostic_continue=True, max_calls=2)
+    with pytest.raises(SemanticError):
+        asyncio.run(model.extract(build_request(case['messages'])))
+    assert model.attempted_calls == 2 and model.diagnostic_count == 1
+
+
 def test_current_evidence_required_and_failed_append_is_atomic():
     case, _, deltas = fixture()
     messages = case['messages'][:2]

@@ -29,6 +29,7 @@ esac
 
 # Resolves the task set and enforces the winner lock for tau3-final.
 python -m tau3_grpo.evaluation.run \
+  --harness-protocol "${TAU3_EVAL_HARNESS_PROTOCOL:-tau3_eval_legacy_v1}" \
   --target "${TARGET}" \
   --checkpoint "${CHECKPOINT}" \
   --seed "${SEED}" \
@@ -38,11 +39,11 @@ if [[ "${TARGET}" == "tau3-final" ]]; then
   echo
   echo "winner lock verified. τ³ official final is a single frozen run:"
   echo "  - 50 Airline base tasks"
-  echo "  - eval temperature 0.4"
+  echo "  - policy/user eval temperature 0.7"
   echo "  - no model selection may depend on this result"
 fi
 
-EVAL_TEMP=0.4
+EVAL_TEMP=0.7
 MAX_USER_TURNS=15
 MAX_ASSISTANT_TURNS=15
 EVAL_TRIALS="${EVAL_TRIALS:-4}"
@@ -61,11 +62,14 @@ echo "policy=${POLICY_BASE_URL} user=${USER_BASE_URL} trials=${EVAL_TRIALS}"
 # manifest record supplies its own FlightDB. For tau3-final, the winner lock
 # above gates the official 50-task Airline base split.
 python -m tau3_grpo.evaluation.run \
+  --harness-protocol "${TAU3_EVAL_HARNESS_PROTOCOL:-tau3_eval_legacy_v1}" \
   --target "${TARGET}" \
   --checkpoint "${CHECKPOINT}" \
   --seed "${SEED}" \
   --policy-base-url "${POLICY_BASE_URL}" \
   --policy-model "${POLICY_MODEL}" \
+  --policy-temperature "${EVAL_TEMP}" \
+  --user-temperature "${EVAL_TEMP}" \
   --user-base-url "${USER_BASE_URL}" \
   --user-model "${USER_MODEL}" \
   --trials "${EVAL_TRIALS}" \

@@ -27,7 +27,8 @@ class FakeSwanlab:
     def Api(self):
         return SimpleNamespace(run=lambda path: SimpleNamespace(metrics=lambda **kw: {
             'list': [{'key': 'trainer/global_step', 'metrics': [
-                {'step': step, 'value': step} for run_id, step, _ in self.points if run_id == path.split('/')[-1]]}]}))
+                {'step': step, 'value': step} for run_id, step, data in self.points
+                if run_id == path.split('/')[-1] and 'trainer/global_step' in data]}]}))
 
 
 @pytest.fixture
@@ -71,6 +72,25 @@ def test_different_arm_cannot_append_to_original_curve(config, monkeypatch):
     monkeypatch.setenv('TAU3_GRPO_ARM', 'e1')
     with pytest.raises(ValueError, match='original arm'):
         start(sdk, config)
+
+
+def test_initial_validation_does_not_advance_training_step_or_allow_duplicate(config):
+    sdk = FakeSwanlab()
+    logger = start(sdk, config)
+    baseline = {'val-core/airline/reward/mean@4': 0.5, 'val-aux/num_turns/mean': 10.0}
+    logger.log(baseline, 0)
+    assert 'trainer/global_step' not in sdk.points[0][2]
+    assert logger.state['last_logged_step'] == logger.last_step == 0
+    with pytest.raises(ValueError, match='Non-increasing'):
+        logger.log(baseline, 0)
+    logger.log({'actor/grad_norm': 0.1}, 1)
+    assert sdk.points[-1][2]['trainer/global_step'] == 1
+
+
+def test_step_zero_training_metrics_remain_invalid(config):
+    logger = start(FakeSwanlab(), config)
+    with pytest.raises(ValueError, match='Non-increasing'):
+        logger.log({'actor/grad_norm': 0.1}, 0)
 
 
 def test_string_metadata_stays_local_without_breaking_numeric_or_media_logging(config):

@@ -9,6 +9,7 @@ from tau3_grpo.evaluation import run, runtime
 
 
 def test_cli_runs_and_persists_the_report_it_prints(monkeypatch, tmp_path, capsys):
+    monkeypatch.setattr(runtime, "evaluation_provenance", lambda jobs: {"provenance_schema": "test_fixture"})
     monkeypatch.setattr(run, "read_manifest", lambda path: [SimpleNamespace(task_id="a")])
     monkeypatch.setattr(run, "assert_service_matches_checkpoint", lambda **kwargs: SimpleNamespace(
         attestation_hash="attested-service", checkpoint_hash="exact-checkpoint-bytes",
@@ -55,3 +56,14 @@ def test_dry_run_shows_budget_and_does_not_call_service(monkeypatch, tmp_path, c
 def test_invalid_options_fail_before_loading_data(monkeypatch, flags):
     monkeypatch.setattr(run, "read_manifest", lambda path: pytest.fail("data loaded"))
     assert run.main(["--target", "selection", "--checkpoint", "/merged", *flags]) == 2
+
+
+def test_v2_dry_run_records_effective_envelope_and_rejects_legacy_override(monkeypatch, capsys):
+    monkeypatch.setattr(run, "read_manifest", lambda path: [SimpleNamespace(task_id="a")])
+    flags = ["--target", "selection", "--checkpoint", "/merged", "--dry-run",
+             "--harness-protocol", "tau3_eval_train_control_v2"]
+    assert run.main(flags) == 0
+    protocol = json.loads(capsys.readouterr().out)["harness_protocol"]
+    assert protocol["max_errors"] is None and protocol["max_assistant_turns"] == 15
+    monkeypatch.setattr(run, "read_manifest", lambda path: pytest.fail("data loaded"))
+    assert run.main(flags + ["--max-steps", "32"]) == 2

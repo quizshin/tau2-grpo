@@ -34,6 +34,150 @@ from tau3_grpo.paths import CODE_ROOT
 NEEDLE = "Your refund is 123.45"
 
 
+@pytest.mark.parametrize("reason", ["max_steps", "timeout", "context_window_exceeded"])
+def test_capped_real_session_keeps_zero_outcome_and_explicit_eligibility(live_session, reason):
+    handler, _ = live_session
+    payload = asyncio.run(handler.finalize_rollout("boundary", termination_reason=reason))
+    assert payload["reward"] == 0 and payload["scored"] is False
+    eligibility = payload["execution_eligibility"]
+    assert eligibility["category"] == "budget_limit"
+    assert eligibility["training_candidate_eligible"] and eligibility["automatic_retries"] == 0
+    assert SESSIONS.get("boundary") is None
+
+
+@pytest.mark.parametrize("reason", ["infrastructure_error", "unexpected_error"])
+def test_infrastructure_finalization_aborts_and_releases_private_session(live_session, reason):
+    handler, _ = live_session
+    with pytest.raises(RuntimeError, match="Unresolved execution"):
+        asyncio.run(handler.finalize_rollout("boundary", termination_reason=reason))
+    assert SESSIONS.get("boundary") is None
+
+
+@pytest.mark.parametrize("recipe", [
+    {"mode": "conservative"}, {"mode": "paper", "version": "paper_v1"},
+])
+def test_mt_gtpo_turn_records_multi_call_and_terminal_payload(live_session, recipe):
+    """Native parser, real calculator, isolated session and official verifier."""
+    from tau3_grpo.evaluation.process_reward import reward_settings
+
+    handler, session = live_session
+
+    async def run():
+        text = "\n".join(tool_text("qwen3_coder", e) for e in ("1+1", "1/0", "2+2"))
+        loop, data, _ = make_loop(handler, text)
+        loop.record_process_turns = True
+        loop.process_reward_config = reward_settings(recipe)
+        assert await loop._handle_generating_state(data, {}) == AgentState.PROCESSING_TOOLS
+        assert data.anchor_ids == []  # no semantic/state extraction
+        span = [0, len(data.response_ids)]
+        await loop._handle_processing_tools_state(data)
+        assert len(data.turn_records) == 1
+        assert data.turn_records[0]["token_span"] == span
+        events = data.turn_records[0]["tool_calls"]
+        assert [e["arguments"]["expression"] for e in events] == ["1+1", "1/0", "2+2"]
+        assert [e["error"] for e in events] == [False, True, False]
+        assert len({e["id"] for e in events}) == 3
+        payload = await handler.finalize_rollout("boundary", termination_reason="agent_stop",
+            turn_records=data.turn_records, process_reward_config=loop.process_reward_config)
+        process = json.loads(payload["process_reward_json"])
+        assert process["turn_rewards"] == pytest.approx([-.1])
+        assert process["turn_spans"] == [span]
+        assert process["termination_reason"] == "agent_stop"
+        assert SESSIONS.get("boundary") is None
+
+    asyncio.run(run())
+
+
+def test_mt_gtpo_context_truncation_keeps_unparsed_turn(live_session):
+    handler, _ = live_session
+
+    async def run():
+        text = tool_text("qwen3_coder")
+        loop, data, _ = make_loop(handler, text)
+        loop.record_process_turns = True
+        loop.response_length = len(loop.tokenizer.encode(text))
+        assert await loop._handle_generating_state(data, {}) == AgentState.TERMINATED
+        assert data.turn_records[0]["truncated"] is True
+        assert data.turn_records[0]["parsed"] is False
+        assert data.turn_records[0]["tool_calls"] == []
+
+    asyncio.run(run())
+
+
+@pytest.mark.parametrize("estimator", ["grpo", "tau_gigpo", "mt_gtpo"])
+@pytest.mark.parametrize("record_logprobs", [False, True])
+def test_full_loop_publishes_shared_facts_without_changing_reward(live_session, estimator, record_logprobs):
+    from tau3_grpo.evaluation.process_reward import reward_settings
+
+    handler, _ = live_session
+
+    async def run():
+        loop, _, _ = make_loop(handler, tool_text("qwen3_coder"))
+        loop.record_process_turns = estimator == "mt_gtpo"
+        loop.record_turn_facts = True
+        loop.process_reward_config = reward_settings()
+        loop.interaction_map = {"tau3_airline": handler}
+        original_start = handler.start_interaction
+
+        async def start(*args, **kwargs):
+            request = await original_start(*args, **kwargs)
+            SESSIONS.require(request).session.set_user_simulator(UserReply())
+            return request
+
+        async def vision(messages):
+            return {}
+
+        async def pending(data, params):
+            data.prompt_ids = [42]
+            return AgentState.GENERATING
+
+        count = 0
+
+        async def generate(**kwargs):
+            nonlocal count
+            text = tool_text("qwen3_coder") if count == 0 else NEEDLE
+            count += 1
+            return SimpleNamespace(token_ids=loop.tokenizer.encode(text), num_preempted=0,
+                                   extra_fields={"finish_reason": "length" if count == 1 else "stop",
+                                                 "native_stop_reason": None if count == 1 else "eos"},
+                                   log_probs=[-.25] * len(loop.tokenizer.encode(text)) if record_logprobs else None,
+                                   routed_experts=None)
+
+        handler.start_interaction = start
+        loop.process_vision_info = vision
+        loop._handle_pending_state = pending
+        loop.server_manager.generate = generate
+        output = await loop.run({}, raw_prompt=[{"role": "user", "content": "help"}],
+            tau3_sampling_identity={"sample_group_uid": "actual-group", "trial": 3, "seed": 42,
+                                    "seed_semantics": "configured_data_seed"},
+            extra_info={"interaction_kwargs": {"name": "tau3_airline", "task_id": "airline_709",
+                                                "initial_user_message": "help"}})
+        raw = output.extra_fields["trajectory_facts_json"]
+        assert output.extra_fields["reward_extra_info"]["trajectory_facts_json"] == raw
+        facts = json.loads(raw)
+        assert facts["tokens"]["response_ids"] == output.response_ids
+        assert facts["tokens"]["response_mask"] == output.response_mask
+        assert [t["finish_reason"] for t in facts["turns"]] == ["length", "stop"]
+        assert facts["identity"]["sample_group_uid"] == "actual-group"
+        assert facts["identity"]["trial"] == 3 and facts["identity"]["seed"] == 42
+        assert facts["terminal"]["scored"] is True
+        assert facts["capabilities"]["complete_response_logprobs"] is record_logprobs
+        if record_logprobs:
+            assert len(facts["tokens"]["response_logprobs"]) == len(output.response_ids)
+            assert all(p == (-.25 if m else 0.) for p, m in
+                       zip(facts["tokens"]["response_logprobs"], output.response_mask))
+        assert facts["terminal"]["execution_eligibility"]["training_candidate_eligible"]
+        if estimator == "mt_gtpo":
+            payload = json.loads(output.extra_fields["process_reward_json"])
+            assert payload["turn_rewards"] == [0, 0]
+        else:
+            assert "process_reward_json" not in output.extra_fields
+            assert output.extra_fields["anchor_ids"]  # fact recording retains the anchor hook
+        assert output.reward_score == 1.
+
+    asyncio.run(run())
+
+
 class TextTokenizer:
     """Token identity is irrelevant to boundary/recording tests; keep text lossless."""
 
@@ -306,11 +450,13 @@ def test_dispatch_error_preserves_prose_in_replay(live_session):
     async def run():
         text = NEEDLE + '\n<tool_call>{"name":"unknown_tool","arguments":{}}</tool_call>'
         loop, data, _ = make_loop(handler, text, "hermes")
+        loop.record_turn_facts = True
         assert await loop._handle_generating_state(data, {}) == AgentState.PROCESSING_TOOLS
         await loop._handle_processing_tools_state(data)
         assert session.messages[-2].content.strip() == NEEDLE
         assert session.messages[-1].error is True
         assert SESSIONS.require("boundary").tool_error_count == 1
+        assert all(event["db_hash_after"] == session.db_hash() for event in data.turn_records[0]["tool_calls"])
 
     asyncio.run(run())
 
@@ -383,6 +529,8 @@ def test_middle_error_has_own_result_and_does_not_drop_later_calls(live_session,
             "bad_arguments": FunctionCall(name="calculate", arguments="[]"),
             "tool_error": FunctionCall(name="calculate", arguments='{"expression":"1/0"}'),
         }[failure]
+        loop.record_turn_facts = True
+        data.turn_records = [{"tool_calls": []}]
         data.tool_calls = [
             FunctionCall(name="calculate", arguments='{"expression":"1+1"}'),
             middle,
@@ -397,6 +545,7 @@ def test_middle_error_has_own_result_and_does_not_drop_later_calls(live_session,
         assert second.error is True
         assert third.content == "4.0"
         assert SESSIONS.require("boundary").tool_error_count == 1
+        assert all(event["db_hash_after"] == session.db_hash() for event in data.turn_records[0]["tool_calls"])
 
     asyncio.run(run())
 
@@ -470,5 +619,230 @@ def test_pending_updates_legacy_parquet_prompt_before_tokenization(live_session)
         loop.tool_execution_mode = "parallel"
         with pytest.raises(ValueError, match="requires tool_execution_mode=sequential"):
             await loop._handle_pending_state(data, {})
+
+    asyncio.run(run())
+
+
+@pytest.mark.parametrize("correct_text", [True, False])
+def test_training_and_independent_harness_agree_on_scripted_tool_execution(live_session, monkeypatch, correct_text):
+    """Run both real harnesses with scripted participants, no endpoint calls."""
+    import tau2.runner.build as build
+    from tau2.data_model.message import AssistantMessage, ToolCall, UserMessage
+
+    import tau3_grpo.envs.agent as agent_module
+    from tau3_grpo.evaluation import runtime
+
+    handler, session = live_session
+    reply = NEEDLE if correct_text else "Done."
+    reservation_id = next(iter(session.db.reservations))
+    calls = [ToolCall(id=str(i), requestor="assistant", name=name, arguments=args) for i, (name, args) in enumerate([
+        ("cancel_reservation", {"reservation_id": reservation_id}),
+        ("get_reservation_details", {"reservation_id": reservation_id}),
+        ("calculate", {"expression": "1/0"}),
+    ])]
+
+    class Scripted:
+        def __init__(self, messages):
+            self.messages = messages
+
+        def set_seed(self, seed):
+            pass
+
+        def get_init_state(self, **kwargs):
+            return 0
+
+        def generate_next_message(self, message, state):
+            return self.messages[state].model_copy(deep=True), state + 1
+
+        def stop(self, *args):
+            pass
+
+        @staticmethod
+        def is_stop(message):
+            return message.content == "###STOP###"
+
+    monkeypatch.setattr(agent_module, "MultiCallAirlineAgent", lambda **kw: Scripted([
+        AssistantMessage(role="assistant", tool_calls=calls),
+        AssistantMessage(role="assistant", content=reply),
+    ]))
+    monkeypatch.setattr(build, "build_user", lambda *args, **kw: Scripted([
+        UserMessage(role="user", content="Please help"), UserMessage(role="user", content="###STOP###"),
+    ]))
+    environments = []
+    original_build = runtime.build_environment
+
+    def capture(db):
+        env = original_build(db)
+        environments.append(env)
+        return env
+
+    monkeypatch.setattr(runtime, "build_environment", capture)
+    simulation = runtime._run_one(task=session.adapted.task, db_path=session.db_path,
+        policy=runtime.Endpoint("scripted", "http://not-called"),
+        user=runtime.Endpoint("scripted", "http://not-called"), seed=42, max_steps=30, max_errors=10)
+
+    async def training():
+        text = "\n".join('<tool_call>' + json.dumps({"name": c.name, "arguments": c.arguments}) + '</tool_call>' for c in calls)
+        loop, data, _ = make_loop(handler, text, parser="hermes")
+        loop.record_turn_facts = True
+        for name in ("cancel_reservation", "get_reservation_details"):
+            schema = next(s for s in airline_tool_schemas() if s["function"]["name"] == name)
+            loop.tools[name] = Tau3AirlineTool({}, OpenAIFunctionToolSchema.model_validate(schema))
+        assert await loop._handle_generating_state(data, {}) == AgentState.PROCESSING_TOOLS
+        await loop._handle_processing_tools_state(data)
+        session.record_assistant_text(reply)
+        session.record_user_message(UserMessage(role="user", content="###STOP###"))
+        return await handler.finalize_rollout("boundary", termination_reason="user_stop")
+
+    result = asyncio.run(training())
+    assert result["reward"] == simulation.reward_info.reward == float(correct_text)
+    assert result["termination_reason"] == simulation.termination_reason.value
+    assert result["db_hash"] == environments[0].get_db_hash()
+    independent_tools = [(m.content, m.error) for m in simulation.messages if m.role == "tool"]
+    training_tools = [(m.content, m.error) for m in session.messages if m.role == "tool"]
+    assert training_tools == independent_tools
+    assert [error for _, error in training_tools] == [False, False, True]
+
+
+def test_manager_preserves_group_identity_across_real_dataproto_chunks(monkeypatch):
+    import numpy as np
+    import torch
+    from omegaconf import OmegaConf
+    from verl.experimental.agent_loop.agent_loop import AgentLoopManager
+
+    from verl import DataProto
+
+    monkeypatch.setenv("TAU3_RECORD_TRAJECTORY_FACTS", "1")
+    observed = []
+
+    async def remote(chunk):
+        from copy import deepcopy
+
+        chunk = deepcopy(chunk)  # Ray transport gives each worker its own metadata.
+        observed.extend(chunk.non_tensor_batch["tau3_sampling_identity"].tolist())
+        chunk.meta_info["metrics"] = []
+        return chunk
+
+    manager = object.__new__(AgentLoopManager)
+    manager.config = OmegaConf.create({"data": {"seed": 42}})
+    manager.agent_loop_workers = [SimpleNamespace(generate_sequences=SimpleNamespace(remote=remote)) for _ in range(3)]
+    manager._performance_metrics = lambda metrics, output: {}
+    batch = DataProto.from_dict(tensors={"input_ids": torch.zeros(12, 1, dtype=torch.long)},
+                                non_tensors={"uid": np.array(["a"] * 6 + ["b"] * 6, dtype=object)},
+                                meta_info={"global_steps": 2})
+    output = manager.generate_sequences(batch)
+    assert len(output) == 12
+    assert [row["trial"] for row in observed] == list(range(6)) * 2
+    assert [row["sample_group_uid"] for row in observed] == ["a"] * 6 + ["b"] * 6
+    assert all(row["global_step"] == 2 for row in observed)
+
+
+def test_probability_diagnostics_do_not_enable_importance_or_rejection_sampling():
+    import torch
+    from omegaconf import OmegaConf
+    from verl.trainer.ppo.rollout_corr_helper import compute_rollout_correction_and_add_to_batch
+
+    from tau3_grpo.paths import CODE_ROOT
+    from verl import DataProto
+
+    mask = torch.tensor([[1, 1, 0], [1, 0, 0]])
+    old = torch.tensor([[-2., -1., 0.], [-3., 0., 0.]])
+    batch = DataProto.from_dict(tensors={"old_log_probs": old.clone(),
+                                         "rollout_log_probs": old * 2,
+                                         "response_mask": mask.clone()})
+    output, metrics = compute_rollout_correction_and_add_to_batch(
+        batch, OmegaConf.load(CODE_ROOT / "verl/verl/trainer/config/algorithm/rollout_correction.yaml"))
+    assert torch.equal(output.batch["response_mask"], mask)
+    assert torch.equal(output.batch["old_log_probs"], old)
+    assert "rollout_is_weights" not in output.batch
+    assert metrics
+
+
+@pytest.mark.parametrize("scenario", ["last_text", "ten_errors", "last_tool_batch", "user_cap", "last_user_stop", "stop_at_observation_cap"])
+@pytest.mark.parametrize("protocol", ["tau3_eval_legacy_v1", "tau3_eval_train_control_v2"])
+def test_versioned_native_harness_boundaries(live_session, monkeypatch, scenario, protocol):
+    import tau2.agent.llm_agent as agent_module
+    import tau2.user.user_simulator as user_module
+    from tau2.data_model.message import AssistantMessage, ToolCall
+
+    from tau3_grpo.evaluation.runtime import Endpoint, _run_one
+
+    _, session = live_session
+    calls = 0
+    user_calls = 0
+    if scenario in {"last_text", "last_tool_batch", "ten_errors"}:
+        rounds = {"last_text": 14, "last_tool_batch": 15, "ten_errors": 10}[scenario]
+        responses = [AssistantMessage(role="assistant", tool_calls=[ToolCall(
+            id=f"call-{i}-{j}", name="calculate", requestor="assistant",
+            arguments={"expression": "1/0" if scenario == "ten_errors" else "1+1"},
+        ) for j in range(2 if scenario == "last_tool_batch" else 1)]) for i in range(rounds)]
+        responses.append(AssistantMessage(role="assistant", content=NEEDLE))
+        users = ["Please help", "###STOP###"]
+    else:
+        responses = [AssistantMessage(role="assistant", content=NEEDLE)] * 15
+        users = ["Please help"] + ["Continue"] * 13 + [
+            "###STOP###" if scenario in {"last_user_stop", "stop_at_observation_cap"} else "Continue"]
+        if scenario == "stop_at_observation_cap":
+            responses = [AssistantMessage(role="assistant", tool_calls=[ToolCall(
+                id="initial-calc", name="calculate", requestor="assistant", arguments={"expression": "1+1"},
+            )])] + responses[:14]
+
+    def agent_generate(**kwargs):
+        nonlocal calls
+        message = responses[calls].model_copy(deep=True)
+        calls += 1
+        return message
+
+    def user_generate(**kwargs):
+        nonlocal user_calls
+        message = AssistantMessage(role="assistant", content=users[user_calls])
+        user_calls += 1
+        return message
+
+    monkeypatch.setattr(agent_module, "generate", agent_generate)
+    monkeypatch.setattr(user_module, "generate", user_generate)
+    result = _run_one(task=session.adapted.task, db_path=session.db_path,
+                      policy=Endpoint("scripted", "http://never-called"),
+                      user=Endpoint("scripted", "http://never-called"), seed=42,
+                      max_steps=30, max_errors=10, harness_protocol=protocol)
+    corrected = protocol.endswith("v2")
+    expected = "user_stop" if (corrected and scenario in {"last_text", "ten_errors", "stop_at_observation_cap"}) or scenario == "last_user_stop" else (
+        "too_many_errors" if scenario == "ten_errors" else "max_steps")
+    assert result.termination_reason.value == expected
+    assert result.reward_info.reward == float(expected == "user_stop")
+    if scenario == "last_tool_batch":
+        assert calls == 15
+        assert len([m for m in result.messages if m.role == "tool"]) == 30
+    if scenario == "user_cap":
+        assert calls == 15 and user_calls == 15
+    if corrected:
+        assert result.info["harness_protocol"]["token_context_equivalence"] == "not_established"
+
+
+def test_dispatch_failure_receipt_is_between_two_real_writes(live_session):
+    """A failure receipt must describe that call, not the initial/final batch DB."""
+    from verl.experimental.agent_loop.tool_parser import FunctionCall
+
+    handler, session = live_session
+    reservations = list(session.db.reservations)[:2]
+    initial_hash = session.db_hash()
+
+    async def run():
+        loop, data, _ = make_loop(handler, "")
+        schema = next(s for s in airline_tool_schemas() if s["function"]["name"] == "cancel_reservation")
+        loop.tools["cancel_reservation"] = Tau3AirlineTool({}, OpenAIFunctionToolSchema.model_validate(schema))
+        loop.record_turn_facts = True
+        data.turn_records = [{"tool_calls": []}]
+        data.tool_calls = [
+            FunctionCall(name="cancel_reservation", arguments=json.dumps({"reservation_id": reservations[0]})),
+            FunctionCall(name="unknown_tool", arguments="{}"),
+            FunctionCall(name="cancel_reservation", arguments=json.dumps({"reservation_id": reservations[1]})),
+        ]
+        await loop._handle_processing_tools_state(data)
+        first, failed, last = data.turn_records[0]["tool_calls"]
+        assert first["db_hash_after"] != initial_hash
+        assert failed["error"] and failed["db_hash_after"] == first["db_hash_after"]
+        assert last["db_hash_after"] != failed["db_hash_after"]
+        assert last["db_hash_after"] == session.db_hash()
 
     asyncio.run(run())

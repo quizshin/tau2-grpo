@@ -9,9 +9,12 @@ import runpy
 def main() -> int:
     # The estimator registry is process-local. A preliminary `python -c`
     # process cannot register an estimator for the subsequent trainer process.
-    from tau3_grpo.algorithms.verl_estimator import register
+    from tau3_grpo.integrations.verl.gigpo import register
 
     register()
+    from tau3_grpo.integrations.verl.mt_gtpo import register as register_mt_gtpo
+
+    register_mt_gtpo()
     # Rollout workers resolve this hook lazily on their first assistant segment.
     os.environ.setdefault(
         "TAU3_GRPO_ANCHOR_HOOK",

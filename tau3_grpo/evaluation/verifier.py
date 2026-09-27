@@ -23,9 +23,9 @@ from typing import Any, Optional
 
 from tau3_grpo.envs.adapter import AIRLINE_DOMAIN, load_flight_db
 from tau3_grpo.envs.tau2_bridge import evaluator, simulation_models
+from tau3_grpo.evaluation.eligibility import SCORABLE_TERMINATIONS, execution_eligibility
 
 #: Terminations upstream is willing to score.
-SCORABLE_TERMINATIONS = frozenset({"agent_stop", "user_stop"})
 
 
 class FailureCategory(str, Enum):
@@ -56,6 +56,7 @@ class TerminalReward:
     scored: bool = True
     info: dict[str, Any] = field(default_factory=dict)
     trajectory: dict[str, Any] = field(default_factory=dict)
+    simulation: Any = field(default=None, repr=False)
 
     @property
     def solved(self) -> bool:
@@ -74,6 +75,7 @@ class TerminalReward:
             "scored": self.scored,
             "info": self.info,
             "trajectory": self.trajectory,
+            "execution_eligibility": execution_eligibility(self.termination_reason, reward=self.reward),
         }
 
 
@@ -184,6 +186,7 @@ def verify_trajectory(
         env_kwargs={"db": load_flight_db(session.adapted.db_path)},
         strict_replay=strict_replay,
     )
+    simulation.reward_info = reward_info
     reason = _termination_value(termination_reason)
     reward = float(reward_info.reward)
     breakdown = {
@@ -205,4 +208,5 @@ def verify_trajectory(
         scored=reason in SCORABLE_TERMINATIONS,
         info=dict(reward_info.info or {}),
         trajectory=session.metadata(),
+        simulation=simulation,
     )

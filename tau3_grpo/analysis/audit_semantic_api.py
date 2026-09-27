@@ -22,6 +22,7 @@ async def run(config, output, *, transport=None):
         raise ValueError('Expected openai_compatible provider')
     # Preflight before output creation or any network traffic.
     model = OpenAICompatibleSemanticModel.from_env(config, transport=transport)
+    api_model = model
     dataset = json.loads(Path(config['cases']).read_text())
     cases = dataset['cases']
     if len({c['id'] for c in cases}) != len(cases):
@@ -43,17 +44,48 @@ async def run(config, output, *, transport=None):
     build_request([], slot_schema=slot_schema)  # Validate switch before network/output.
     mode = config.get('extraction_mode', 'full_prefix')
     if mode == 'incremental_v1':
-        from tau3_grpo.models.semantic_incremental import IncrementalSemanticModel
+        from tau3_grpo.models.semantic_incremental import IncrementalSemanticModel, PROMPT as INCREMENTAL_PROMPT
+        saved, saved_provenance = None, None
+        if config.get('resume_from'):
+            source = Path(config['resume_from'])
+            provenance = json.loads((source / 'summary.json').read_text())['provenance']
+            expected = {'slot_schema': slot_schema, 'extraction_mode': mode,
+                        'slot_prompt_sha256': sha256_file(slot_prompt_path(slot_schema)),
+                        'prompt_sha256': sha256_file(PROMPT_PATH),
+                        'incremental_prompt_sha256': sha256_file(INCREMENTAL_PROMPT),
+                        'model': model.model, 'base_url': model.base_url,
+                        'temperature': model.temperature, 'max_tokens': model.max_tokens,
+                        'thinking_mode_requested': model.thinking_mode,
+                        'cases_sha256': sha256_file(config['cases'])}
+            if any(provenance.get(k) != v for k, v in expected.items()):
+                raise ValueError('Resume source model/schema/prompt mismatch')
+            source_rows = [json.loads(line) for line in (source / 'deltas.jsonl').read_text().splitlines()]
+            saved = {r['prefix_sha256']: r for r in source_rows}
+            if len(saved) != len(source_rows):
+                raise ValueError('Duplicate resume prefix')
+            saved_provenance = {'path': str(source), 'summary_sha256': sha256_file(source / 'summary.json'),
+                                'deltas_sha256': sha256_file(source / 'deltas.jsonl')}
         model = IncrementalSemanticModel(model, slot_schema=slot_schema,
-                                         max_calls=config.get('max_incremental_calls', 32))
+                                         max_calls=config.get('max_incremental_calls', 32),
+                                         saved_deltas=saved, saved_provenance=saved_provenance,
+                                         diagnostic_continue=config.get('diagnostic_continue', False))
     elif mode != 'full_prefix':
         raise ValueError('Unsupported extraction_mode')
+    elif config.get('resume_from'):
+        raise ValueError('resume_from requires incremental_v1')
     semaphore = asyncio.Semaphore(concurrency)
     output = Path(output)
     output.mkdir(parents=True, exist_ok=False)
     results, cached = {}, {}
     # Neither pair labels nor task metadata/returns are sent to the API.
     with ExitStack() as stack:
+        raw_responses = stack.enter_context((output / 'raw_responses.jsonl').open('w'))
+
+        def persist_raw_response(record):
+            raw_responses.write(json.dumps(record, ensure_ascii=False) + '\n')
+            raw_responses.flush()
+
+        api_model.on_raw_response = persist_raw_response
         packets = stack.enter_context((output / 'packets.jsonl').open('w'))
         states = stack.enter_context((output / 'states.jsonl').open('w'))
         if mode == 'incremental_v1':

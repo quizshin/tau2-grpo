@@ -1,0 +1,8 @@
+# Only terminal DB passenger permutation semantics differ from the native run.
+includes:
+- repair72_grpo_2xa800.yaml
+launch:
+  terminal_reward_protocol: airline_passenger_multiset_v1
+  environment:
+    TAU3_TERMINAL_REWARD_PROTOCOL: airline_passenger_multiset_v1
+    TAU3_EXPERIMENT_LABEL: repair72-lora16-passenger-v1

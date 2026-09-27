@@ -8,6 +8,7 @@ avoids process-local counters and makes every update independently auditable.
 
 from __future__ import annotations
 
+import json
 import os
 import re
 from collections import Counter
@@ -59,6 +60,7 @@ def collect_rollout_metrics(
     non_tensor_batch: dict[str, Any],
     *,
     adv_estimator: Any = None,
+    estimator_diagnostics: dict[str, Any] | None = None,
 ) -> dict[str, float | int]:
     """Return logger-safe scalar metrics for one gathered training update."""
 
@@ -91,12 +93,38 @@ def collect_rollout_metrics(
         }
     )
 
-    if str(adv_estimator) == "tau_gigpo":
-        from tau3_grpo.algorithms.verl_estimator import last_stats
+    if estimator_diagnostics is not None:
+        if estimator_diagnostics.get("estimator") != str(adv_estimator):
+            raise ValueError("Estimator diagnostics belong to a different algorithm")
+        prefix = {"tau_gigpo": "gigpo", "mt_gtpo": "mt_gtpo"}.get(str(adv_estimator))
+        if prefix:
+            for key, value in estimator_diagnostics.get("stats", {}).items():
+                if isinstance(value, (bool, int, float, np.number)):
+                    metrics[f"{prefix}/{key}"] = float(value)
+    else:
+        # Compatibility for external callers; the trainer always supplies batch diagnostics.
+        if str(adv_estimator) == "tau_gigpo":
+            from tau3_grpo.integrations.verl.gigpo import last_stats
 
-        for key, value in last_stats().items():
-            if isinstance(value, (bool, int, float, np.number)):
-                metrics[f"gigpo/{key}"] = float(value) if isinstance(value, np.floating) else value
+            for key, value in last_stats().items():
+                if isinstance(value, (bool, int, float, np.number)):
+                    metrics[f"gigpo/{key}"] = float(value)
+        if str(adv_estimator) == "mt_gtpo":
+            from tau3_grpo.integrations.verl.mt_gtpo import last_stats
+
+            metrics.update({f"mt_gtpo/{k}": v for k, v in last_stats().items()})
+
+    facts = [json.loads(raw) for raw in _python_rows(non_tensor_batch.get("trajectory_facts_json"))
+             if raw is not None]
+    if facts:
+        metrics["rollout/facts_trajectories"] = len(facts)
+        metrics["rollout/exact_response_tokens"] = sum(len(f["tokens"]["response_ids"]) for f in facts)
+        metrics["rollout/exact_generated_tokens"] = sum(sum(f["tokens"]["response_mask"]) for f in facts)
+        reasons = Counter(t.get("finish_reason") or "unavailable" for f in facts for t in f["turns"])
+        for reason, count in reasons.items():
+            metrics[f"rollout/raw_finish_reason/{_metric_name(reason)}"] = count
+        metrics["rollout/logprob_complete_trajectories"] = sum(
+            f["capabilities"]["complete_response_logprobs"] for f in facts)
 
     for column, prefix in (
         ("failure_category", "rollout/failure_category"),

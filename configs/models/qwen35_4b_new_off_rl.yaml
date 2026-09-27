@@ -1,0 +1,7 @@
+# Current formal component; historical profiles stay available for replay.
+launch:
+  environment:
+    QWEN35_SIZE: 4B
+    MODEL_PATH: ${TAU3_ROOT}/code/checkpoints/sft-merged/new-off
+  overrides:
+  - actor_rollout_ref.model.lora_rank=0

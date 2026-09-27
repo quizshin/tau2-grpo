@@ -50,12 +50,21 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.check_registration:
         try:
-            from tau3_grpo.algorithms.verl_estimator import is_registered, register
+            from tau3_grpo.integrations.verl.gigpo import is_registered, register
 
             register()
             print(f"[{'ok' if is_registered() else 'FAIL'}] tau_gigpo estimator registered")
             if not is_registered():
                 problems.append("tau_gigpo did not register in ADV_ESTIMATOR_REGISTRY")
+            from verl.trainer.ppo.core_algos import ADV_ESTIMATOR_REGISTRY
+
+            from tau3_grpo.integrations.verl.mt_gtpo import register as register_mt_gtpo
+
+            register_mt_gtpo()
+            if "mt_gtpo" not in ADV_ESTIMATOR_REGISTRY:
+                problems.append("mt_gtpo did not register in ADV_ESTIMATOR_REGISTRY")
+            else:
+                print("[ok] mt_gtpo estimator registered")
         except ImportError as exc:
             print(f"[skip] veRL not importable: {exc}")
 

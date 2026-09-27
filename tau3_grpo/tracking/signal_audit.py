@@ -16,8 +16,8 @@ import uuid
 import numpy as np
 
 from tau3_grpo.algorithms.tau_gigpo import step_advantages, steps_from_anchor_payload
-from tau3_grpo.algorithms.verl_estimator import (
-    _anchor_payload, _episode_returns, _gigpo_settings, _resolve_similarity_payload,
+from tau3_grpo.integrations.verl.gigpo import (
+    anchor_payload, episode_returns, settings_from_config, resolve_similarity_payload,
 )
 
 
@@ -46,7 +46,7 @@ def restore_mask(rows, length):
 @lru_cache(maxsize=1)
 def source_hashes():
     root = Path(__file__).resolve().parents[2]
-    paths = ['tau3_grpo/algorithms/verl_estimator.py', 'tau3_grpo/algorithms/tau_gigpo.py',
+    paths = ['tau3_grpo/integrations/verl/gigpo.py', 'tau3_grpo/algorithms/tau_gigpo.py',
              'tau3_grpo/tracking/signal_audit.py', 'tau3_grpo/algorithms/dynamic_filtering.py',
              'tau3_grpo/integrations/anchor_hook.py', 'tau3_grpo/algorithms/anchors/features.py',
              'tau3_grpo/algorithms/anchors/encoder.py', 'tau3_grpo/algorithms/anchors/evidence.py', 'tau3_grpo/algorithms/anchors/semantic.py', 'verl/verl/trainer/ppo/ray_trainer.py',
@@ -66,13 +66,13 @@ def analyze(data, before, config):
     # Padding rows must not contribute to either the audit or the estimator.
     if np.any(before[padding]) or np.any(after[padding]):
         raise ValueError('padding rows have policy tokens')
-    raw_ids, spans = _anchor_payload(nt, size)
-    settings = _gigpo_settings(config)
-    ids = _resolve_similarity_payload(raw_ids, threshold=settings['similarity_threshold'])
+    raw_ids, spans = anchor_payload(nt, size)
+    settings = settings_from_config(config)
+    ids = resolve_similarity_payload(raw_ids, threshold=settings['similarity_threshold'])
     steps = steps_from_anchor_payload(ids, spans)
     if any(padding[s.trajectory_index] for s in steps):
         raise ValueError('padding rows have anchors')
-    rewards = _episode_returns(data.batch['token_level_rewards'], data.batch['response_mask'])
+    rewards = episode_returns(data.batch['token_level_rewards'], data.batch['response_mask'])
     values, _ = step_advantages(steps, rewards, gamma=settings['gamma'], fnorm=settings['fnorm'],
                                 min_group_size=settings['min_group_size'])
     groups = defaultdict(set)

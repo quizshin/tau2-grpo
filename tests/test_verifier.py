@@ -229,3 +229,110 @@ def test_verify_trajectory_replays_record_specific_db(monkeypatch, tmp_path):
     reward = module.verify_trajectory(session, termination_reason="agent_stop")
     assert reward.reward == 1.0
     assert captured["env_kwargs"] == {"db": replay_db}
+
+
+@pytest.mark.parametrize("change,expected", [
+    ("passenger_order", 1.0), ("name", 0.0), ("dob", 0.0),
+    ("duplicate", 0.0), ("flight_order", 0.0), ("payment_order", 0.0),
+    ("unrelated", 0.0), ("user_db", 0.0), ("communication", 0.0),
+    ("unfinished", 0.0),
+])
+def test_terminal_passenger_selection_keeps_all_other_constraints(monkeypatch, change, expected):
+    import copy
+    from types import SimpleNamespace
+
+    from tau3_grpo.evaluation import outcome_contract
+    from tau3_grpo.evaluation.rewards.terminal import PASSENGER_MULTISET, select_terminal_reward
+    from tau3_grpo.utils.hashing import sha256_json
+
+    state = {"reservations": {"r": {"passengers": [
+        {"first_name": "A", "last_name": "K", "dob": "2000-01-01"},
+        {"first_name": "B", "last_name": "K", "dob": "2001-01-01"}],
+        "flights": ["outbound", "return"], "payment_history": [10, 20]},
+        "other": {"passengers": [], "total_baggages": 0}}}
+
+    class Environment:
+        def __init__(self, value):
+            self.state = copy.deepcopy(value)
+            self.user_hash = "user"
+            self.tools = SimpleNamespace(db=SimpleNamespace(model_dump=lambda **_: copy.deepcopy(self.state)))
+
+        def get_db_hash(self):
+            return sha256_json(self.state)
+
+        def get_user_db_hash(self):
+            return self.user_hash
+
+    gold, pred = Environment(state), Environment(state)
+    pred.state["reservations"]["r"]["passengers"].reverse()
+    reservation = pred.state["reservations"]["r"]
+    if change in ("name", "dob"):
+        reservation["passengers"][0]["first_name" if change == "name" else "dob"] = "WRONG"
+    elif change == "duplicate":
+        reservation["passengers"].append(copy.deepcopy(reservation["passengers"][0]))
+    elif change == "flight_order":
+        reservation["flights"].reverse()
+    elif change == "payment_order":
+        reservation["payment_history"].reverse()
+    elif change == "unrelated":
+        pred.state["reservations"]["other"]["total_baggages"] = 1
+    elif change == "user_db":
+        pred.user_hash = "changed"
+    before = copy.deepcopy(pred.state)
+    replay_calls = []
+
+    def execute(path, actions, initial):
+        replay_calls.append((path, actions, initial))
+        return gold, []
+
+    monkeypatch.setattr(outcome_contract, "execute_actions", execute)
+    session = SimpleNamespace(environment=pred, adapted=SimpleNamespace(db_path="task-db",
+        task=SimpleNamespace(initial_state="initial", evaluation_criteria=SimpleNamespace(actions=[]))))
+    native = TerminalReward(task_id="t", reward=0.0,
+        termination_reason="max_steps" if change == "unfinished" else "user_stop",
+        scored=change != "unfinished", failure_category=FailureCategory.WRONG_OUTCOME,
+        reward_basis=["DB", "COMMUNICATE"],
+        reward_breakdown={"DB": 0.0, "COMMUNICATE": 0.0 if change == "communication" else 1.0},
+        db_hash=pred.get_db_hash(), simulation=object())
+    selected = select_terminal_reward(session, native, PASSENGER_MULTISET)
+    assert selected.reward == expected
+    assert selected.info["terminal_reward_selection"]["native_reward"] == 0.0
+    assert selected.simulation is native.simulation
+    assert native.reward == native.reward_breakdown["DB"] == 0.0
+    assert "terminal_reward_selection" not in native.info
+    assert pred.state == before and gold.state == state
+    assert bool(replay_calls) is (change != "unfinished")
+
+
+def test_terminal_protocol_default_is_identity_and_unknown_fails():
+    from tau3_grpo.evaluation.rewards.terminal import select_terminal_reward
+
+    native = TerminalReward(task_id="t", reward=0, termination_reason="user_stop",
+                            failure_category=FailureCategory.WRONG_OUTCOME)
+    assert select_terminal_reward(None, native) is native
+    with pytest.raises(ValueError, match="Unknown terminal"):
+        select_terminal_reward(None, native, "anything")
+
+
+@pytest.mark.parametrize('issue', ['changed_state', 'missing_component', 'bad_reference'])
+def test_selected_terminal_reward_fails_closed(monkeypatch, issue):
+    from types import SimpleNamespace
+
+    from tau3_grpo.evaluation import outcome_contract
+    from tau3_grpo.evaluation.rewards.terminal import PASSENGER_MULTISET, select_terminal_reward
+
+    def bad_reference(*_):
+        raise ValueError('Reference execution failed')
+
+    monkeypatch.setattr(outcome_contract, 'execute_actions', bad_reference)
+    native = TerminalReward(task_id='t', reward=0, termination_reason='user_stop',
+        failure_category=FailureCategory.WRONG_OUTCOME, reward_basis=['DB', 'COMMUNICATE'],
+        reward_breakdown={'DB': 0, 'COMMUNICATE': 1}, db_hash='before')
+    if issue == 'missing_component':
+        del native.reward_breakdown['COMMUNICATE']
+    session = SimpleNamespace(environment=SimpleNamespace(
+        get_db_hash=lambda: 'changed' if issue == 'changed_state' else 'before'),
+        adapted=SimpleNamespace(db_path='db', task=SimpleNamespace(initial_state=None,
+            evaluation_criteria=SimpleNamespace(actions=[]))))
+    with pytest.raises(ValueError):
+        select_terminal_reward(session, native, PASSENGER_MULTISET)

@@ -250,3 +250,37 @@ def merge_stats(batches: Iterable[FilterStats]) -> dict[str, Any]:
         "d_bar_max": float(np.max(d_bars)),
         "inverse_one_minus_d_bar_mean": float(np.mean([1.0 / max(1e-9, 1.0 - d) for d in d_bars])),
     }
+
+
+def apply_advantage_filter(response_mask, advantages, uids, *, group_size, tolerance=1e-12,
+                           padding=None):
+    """Optional fixed-rollout filter AFTER hybrid advantages are computed.
+
+    A group survives if any valid policy token has nonzero advantage. Complete
+    real groups are required; padding never participates in the decision.
+    """
+    mask, adv = np.asarray(response_mask), np.asarray(advantages)
+    if (mask.shape != adv.shape or mask.shape[0] != len(uids)
+            or not np.isfinite(adv).all() or not np.isfinite(tolerance) or tolerance < 0
+            or group_size < 2):
+        raise ValueError("invalid advantage filter inputs")
+    padded = np.zeros(len(uids), dtype=bool) if padding is None else np.asarray(padding, dtype=bool)
+    if padded.shape != (len(uids),):
+        raise ValueError("invalid padding marker")
+    result = mask.copy()
+    result[padded] = 0
+    decisions = {}
+    for uid, indices in group_indices(uids).items():
+        real = [i for i in indices if not padded[i]]
+        if not real:
+            continue
+        if len(real) != group_size:
+            raise ValueError(f"incomplete mt_gtpo group {uid}: {len(real)} != {group_size}")
+        keep = bool(np.any((np.abs(adv[real]) > tolerance) & (mask[real] > 0)))
+        decisions[uid] = keep
+        if not keep:
+            result[real] = 0
+    kept = sum(decisions.values())
+    return result, decisions, {"candidate_groups": len(decisions), "effective_groups": kept,
+                               "zero_signal_groups": len(decisions) - kept,
+                               "d_bar": 1 - kept / len(decisions) if decisions else 0.}

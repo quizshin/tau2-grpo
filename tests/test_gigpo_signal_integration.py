@@ -185,3 +185,21 @@ def test_dialogue_screening_excludes_stop_control_messages(tmp_path):
     result=audit([p]);assert result['counts']['terminal_control_messages']==2
     assert result['counts']['user_turns']==2
     assert result['counts'].get('latched_after_pause_cue',0)==0
+
+
+def test_batch_diagnostics_survive_later_estimator_calls_and_reset_on_switch():
+    from tau3_grpo.integrations.verl.gigpo import last_stats
+    from tau3_grpo.tracking.trainer_telemetry import collect_rollout_metrics
+
+    first = compute_advantage(batch_fixture(), 'tau_gigpo', config=cfg())
+    saved = deepcopy(first.meta_info['tau3_estimator_diagnostics'])
+    assert saved['stats'] == last_stats()
+    second = batch_fixture()
+    second.batch['response_mask'].zero_()
+    compute_advantage(second, 'tau_gigpo', config=cfg())
+    assert first.meta_info['tau3_estimator_diagnostics'] == saved
+    metrics = collect_rollout_metrics(first.non_tensor_batch, adv_estimator='tau_gigpo',
+                                      estimator_diagnostics=saved)
+    assert all(metrics[f'gigpo/{key}'] == value for key, value in saved['stats'].items())
+    compute_advantage(first, 'grpo')
+    assert first.meta_info['tau3_estimator_diagnostics'] == {'estimator': 'grpo', 'stats': {}}

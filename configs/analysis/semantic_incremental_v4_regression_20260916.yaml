@@ -1,0 +1,15 @@
+# Previously reviewed development regression, not an independent holdout.
+# Diagnostic suffixes consume the SAME global budget and never become valid states.
+enabled: true
+provider: openai_compatible
+model: GLM-5.3-Flash
+slot_schema: airline_slots_v4
+extraction_mode: incremental_v1
+diagnostic_continue: true
+max_incremental_calls: 96
+cases: results/analysis/semantic_v3_20260915/baseline/results/analysis/semantic_real_audit_20260914/inputs/audit_cases.json
+limit: null
+concurrency: 4
+timeout_seconds: 180
+max_tokens: 8192
+temperature: 0

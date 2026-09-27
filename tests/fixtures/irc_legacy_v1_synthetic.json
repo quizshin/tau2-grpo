@@ -1,0 +1,270 @@
+{
+  "schema": "mt_gtpo_irc_recipe_v1",
+  "status": "passed",
+  "reward": {
+    "mode": "paper",
+    "version": "paper_v1",
+    "weights": {
+      "gold_exact": 0.9999999999999998,
+      "soft_match": 0.0,
+      "read_only": 0.0,
+      "state_change": 0.0,
+      "error": -0.9999999999999998,
+      "duplicate": 0.0,
+      "message": 0.0,
+      "unknown": 0.0
+    },
+    "paper_options": {
+      "normalization": "recursive_v1",
+      "aggregation": "sum",
+      "duplicate_scope": "successful_call",
+      "soft_scoring": "constant",
+      "precedence": "error_gold_duplicate_soft_read_state"
+    }
+  },
+  "algorithm": {
+    "gamma": 0.9,
+    "lambda_outcome": 0.3,
+    "eps": 1e-06,
+    "min_group_size": 2
+  },
+  "train_manifest_sha256": "fixture",
+  "calibration_tasks": [
+    "a",
+    "b"
+  ],
+  "holdout_tasks": [
+    "c",
+    "d"
+  ],
+  "irc": {
+    "alpha": 1.0,
+    "delta": 0.05,
+    "eta": 0.1,
+    "min_support": 2,
+    "holdout_fraction": 0.2,
+    "split_seed": 42,
+    "alignment_tolerance": 1e-08,
+    "intended_signs": {
+      "gold_exact": 1,
+      "error": -1
+    },
+    "fixed_weights": {
+      "soft_match": 0.0,
+      "read_only": 0.0,
+      "state_change": 0.0,
+      "duplicate": 0.0,
+      "message": 0.0,
+      "unknown": 0.0
+    }
+  },
+  "checks": {
+    "calibration": {
+      "trajectories": 8,
+      "tasks": 2,
+      "successes": 4,
+      "tiers": {
+        "gold_exact": {
+          "trajectory_presence": 4,
+          "support": 4,
+          "supported": true,
+          "rho": 0.9999999999999998,
+          "mean_hybrid_advantage": 1.2999987103465034,
+          "mean_proxy_advantage": 1.2999984000022,
+          "positive_turns": 4,
+          "negative_turns": 0
+        },
+        "soft_match": {
+          "trajectory_presence": 0,
+          "support": 0,
+          "supported": false,
+          "rho": null,
+          "mean_hybrid_advantage": null,
+          "mean_proxy_advantage": null,
+          "positive_turns": 0,
+          "negative_turns": 0
+        },
+        "read_only": {
+          "trajectory_presence": 0,
+          "support": 0,
+          "supported": false,
+          "rho": null,
+          "mean_hybrid_advantage": null,
+          "mean_proxy_advantage": null,
+          "positive_turns": 0,
+          "negative_turns": 0
+        },
+        "state_change": {
+          "trajectory_presence": 0,
+          "support": 0,
+          "supported": false,
+          "rho": null,
+          "mean_hybrid_advantage": null,
+          "mean_proxy_advantage": null,
+          "positive_turns": 0,
+          "negative_turns": 0
+        },
+        "error": {
+          "trajectory_presence": 4,
+          "support": 4,
+          "supported": true,
+          "rho": -0.9999999999999998,
+          "mean_hybrid_advantage": -1.299998710346503,
+          "mean_proxy_advantage": -1.2999984000022,
+          "positive_turns": 0,
+          "negative_turns": 4
+        },
+        "duplicate": {
+          "trajectory_presence": 0,
+          "support": 0,
+          "supported": false,
+          "rho": null,
+          "mean_hybrid_advantage": null,
+          "mean_proxy_advantage": null,
+          "positive_turns": 0,
+          "negative_turns": 0
+        },
+        "message": {
+          "trajectory_presence": 0,
+          "support": 0,
+          "supported": false,
+          "rho": null,
+          "mean_hybrid_advantage": null,
+          "mean_proxy_advantage": null,
+          "positive_turns": 0,
+          "negative_turns": 0
+        },
+        "unknown": {
+          "trajectory_presence": 0,
+          "support": 0,
+          "supported": false,
+          "rho": null,
+          "mean_hybrid_advantage": null,
+          "mean_proxy_advantage": null,
+          "positive_turns": 0,
+          "negative_turns": 0
+        }
+      },
+      "reward_outcome_correlation": 0.9999999999999998,
+      "mixed_positive_turns": 0,
+      "error_positive_calls": 0,
+      "failed_positive_tokens": 0,
+      "failed_tokens": 12
+    },
+    "holdout": {
+      "trajectories": 8,
+      "tasks": 2,
+      "successes": 4,
+      "tiers": {
+        "gold_exact": {
+          "trajectory_presence": 4,
+          "support": 4,
+          "supported": true,
+          "rho": 0.9999999999999998,
+          "mean_hybrid_advantage": 1.2999987103465034,
+          "mean_proxy_advantage": 1.2999984000022,
+          "positive_turns": 4,
+          "negative_turns": 0
+        },
+        "soft_match": {
+          "trajectory_presence": 0,
+          "support": 0,
+          "supported": false,
+          "rho": null,
+          "mean_hybrid_advantage": null,
+          "mean_proxy_advantage": null,
+          "positive_turns": 0,
+          "negative_turns": 0
+        },
+        "read_only": {
+          "trajectory_presence": 0,
+          "support": 0,
+          "supported": false,
+          "rho": null,
+          "mean_hybrid_advantage": null,
+          "mean_proxy_advantage": null,
+          "positive_turns": 0,
+          "negative_turns": 0
+        },
+        "state_change": {
+          "trajectory_presence": 0,
+          "support": 0,
+          "supported": false,
+          "rho": null,
+          "mean_hybrid_advantage": null,
+          "mean_proxy_advantage": null,
+          "positive_turns": 0,
+          "negative_turns": 0
+        },
+        "error": {
+          "trajectory_presence": 4,
+          "support": 4,
+          "supported": true,
+          "rho": -0.9999999999999998,
+          "mean_hybrid_advantage": -1.299998710346503,
+          "mean_proxy_advantage": -1.2999984000022,
+          "positive_turns": 0,
+          "negative_turns": 4
+        },
+        "duplicate": {
+          "trajectory_presence": 0,
+          "support": 0,
+          "supported": false,
+          "rho": null,
+          "mean_hybrid_advantage": null,
+          "mean_proxy_advantage": null,
+          "positive_turns": 0,
+          "negative_turns": 0
+        },
+        "message": {
+          "trajectory_presence": 0,
+          "support": 0,
+          "supported": false,
+          "rho": null,
+          "mean_hybrid_advantage": null,
+          "mean_proxy_advantage": null,
+          "positive_turns": 0,
+          "negative_turns": 0
+        },
+        "unknown": {
+          "trajectory_presence": 0,
+          "support": 0,
+          "supported": false,
+          "rho": null,
+          "mean_hybrid_advantage": null,
+          "mean_proxy_advantage": null,
+          "positive_turns": 0,
+          "negative_turns": 0
+        }
+      },
+      "reward_outcome_correlation": 0.9999999999999998,
+      "mixed_positive_turns": 0,
+      "error_positive_calls": 0,
+      "failed_positive_tokens": 0,
+      "failed_tokens": 12
+    }
+  },
+  "issues": {
+    "calibration": [],
+    "holdout": [],
+    "proposal": []
+  },
+  "source_buffers": [
+    {
+      "sha256": "fixture",
+      "rows": 16
+    }
+  ],
+  "report_sha256": "5261ebe9ba6431173c0e71caf33c88cea846e7440f83cf8dcd93451c7cfb13a5",
+  "implementation_sha256": {
+    "evaluation/process_reward.py": "bdc851316ac5b73922982600e325630b9968736fdb184f2eb4d3348927cc1f8c",
+    "evaluation/paper_reward.py": "2cb40497a40ed0f32cdf68c63892b08ca02a1bb7861a0621346fdc743880aaaa",
+    "evaluation/environment_reward.py": "8fe05e2b38c1ee268bff929c378ba7d6faf2c18347b8eb0ca83aafb8fc7b367b",
+    "algorithms/mt_gtpo.py": "bb25428930ea597fd86737293af42cee134267b0b7a1b577d49a31085b867e7d",
+    "analysis/calibrate_paper_rewards.py": "def9e690cccce3e3297269a98d9177403e26ea7697b9dc3427a5f90ce0281f8d",
+    "tau2-bench/src/tau2/domains/airline/data_model.py": "a8083e2f590e4b9b66a65d7cd50b7a0247e4fa33d6961aaeb02e4d92488b3cff",
+    "tau2-bench/src/tau2/domains/airline/tools.py": "3987f21c286314cb48764f97052934ff4fd60e27a0b2e4a43423911adf8eaa26"
+  },
+  "scope": "offline_buffer_calibration_not_new_policy_performance",
+  "sha256": "726d540afb1afdfe87f74bb124b90eef10192e1d74b7fa861cf8d50dfb158385"
+}

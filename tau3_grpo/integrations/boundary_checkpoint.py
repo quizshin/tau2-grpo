@@ -1,19 +1,17 @@
 """Publish a complete training boundary before removing the previous one."""
 import json
-from pathlib import Path
 import re
 import shutil
+from pathlib import Path
 
 from tau3_grpo.tracking.rl_continuity import atomic_json
+from tau3_grpo.training.rl.checkpoints import required_files, validate_checkpoint
 
 
 def complete_boundary(root, step, world_size, keep=1):
     root = Path(root)
     current = root / f'global_step_{step}'
-    files = [current / 'data.pt']
-    for prefix in ('model', 'optim', 'extra_state'):
-        files += [current / 'actor' / f'{prefix}_world_size_{world_size}_rank_{rank}.pt'
-                  for rank in range(world_size)]
+    files = [current / name for name in sorted(required_files(world_size))]
     if any(not path.is_file() or path.stat().st_size == 0 for path in files):
         raise ValueError('Incomplete model/optimizer/RNG/dataloader checkpoint; previous checkpoint retained')
     metadata = root / 'swanlab-run.json'
@@ -21,6 +19,7 @@ def complete_boundary(root, step, world_size, keep=1):
         atomic_json(current / metadata.name, json.loads(metadata.read_text()))
     atomic_json(current / 'checkpoint-complete.json', {'step': step, 'world_size': world_size,
                 'files': {str(p.relative_to(current)): p.stat().st_size for p in files}})
+    validate_checkpoint(root, step, world_size=world_size, require_latest=False)
     marker = root / 'latest_checkpointed_iteration.txt'
     temporary = marker.with_suffix('.tmp')
     temporary.write_text(str(step))

@@ -1,0 +1,15 @@
+# Algorithm overlay. Combine with a hardware/model profile; no services start here.
+launch:
+  expected_adv_estimator: mt_gtpo
+  overrides:
+  - ++algorithm.mt_gtpo.gamma=0.9
+  - ++algorithm.mt_gtpo.lambda_outcome=0.3
+  - ++algorithm.mt_gtpo.eps=1.0e-6
+  - ++algorithm.mt_gtpo.min_group_size=2
+  - ++algorithm.process_reward.mode=audit
+  - ++algorithm.process_reward.version=v1
+  - ++algorithm.dynamic_filter.metric=advantage
+  - ++algorithm.dynamic_filter.tolerance=1.0e-12
+  - algorithm.dynamic_filter.enable=false
+  - algorithm.use_kl_in_reward=false
+  - trainer.resume_mode=disable

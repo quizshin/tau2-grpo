@@ -1,0 +1,18 @@
+# Explicit local choices: these thresholds were not specified in the paper.
+alpha: 1.0
+delta: 0.05
+eta: 0.1
+min_support: 20
+holdout_fraction: 0.2
+split_seed: 42
+alignment_tolerance: 1.0e-8
+intended_signs:
+  gold_exact: 1
+  soft_match: 1
+  state_change: -1
+  error: -1
+  duplicate: -1
+fixed_weights:
+  read_only: 0.0
+  message: 0.0
+  unknown: 0.0

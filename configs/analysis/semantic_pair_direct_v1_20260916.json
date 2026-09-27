@@ -1,0 +1,10 @@
+{
+  "provider": "openai_compatible",
+  "model": "GLM-5.3-Flash",
+  "timeout_seconds": 180,
+  "max_tokens": 8192,
+  "temperature": 0,
+  "concurrency": 4,
+  "max_calls": 80,
+  "cohort_mode": "evaluation_trials"
+}

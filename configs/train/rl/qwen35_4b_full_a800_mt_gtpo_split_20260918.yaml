@@ -1,0 +1,21 @@
+# Independent split-tier adaptation. Formal run still requires a frozen recipe.
+includes:
+- qwen35_4b_full_a800_c50_matched6h_common_20260912.yaml
+- mt_gtpo_base.yaml
+launch:
+  environment:
+    RESULTS_DIR: ${CODE_ROOT}/results/runs/mt_gtpo_paper_env_split_v3/formal_s42
+    TOTAL_UPDATES: '20'
+    TAU3_GRPO_DEBUG_BATCH_DIR: ${RESULTS_DIR}/update-batches
+    TRAINER_LOGGERS: '[console,swanlab]'
+    SWANLAB_MODE: online
+    SWANLAB_EXPERIMENT_NAME: MT-GTPO-Qwen35-4B-full-c50-g8x8-u20-paper-env-split-v3-df-off-s42
+  overrides:
+  - ++algorithm.process_reward.mode=paper
+  - ++algorithm.process_reward.version=paper_env_split_v3
+  - ++algorithm.process_reward.paper_options.normalization=execution_v1
+  - ++algorithm.process_reward.paper_options.aggregation=sum
+  - ++algorithm.process_reward.paper_options.duplicate_scope=successful_call_read_response_v1
+  - ++algorithm.process_reward.paper_options.soft_scoring=constant
+  - ++algorithm.process_reward.paper_options.precedence=error_gold_duplicate_soft_read_state
+  - algorithm.dynamic_filter.enable=false

@@ -21,8 +21,8 @@ from tau3_grpo.data.sft import (
     select_dialogues,
     write_dialogue_split,
 )
+from tau3_grpo.models.tokenization import render_chat_ids
 from tau3_grpo.paths import AREAL_SFT_JSONL, CONFIG_ROOT, MANIFEST_ROOT, SFT_DATA_ROOT
-from tau3_grpo.training.sft.dataset import _render_ids
 from tau3_grpo.utils.hashing import sha256_file
 
 
@@ -94,7 +94,7 @@ def main(argv: list[str] | None = None) -> int:
     tools = _tool_schemas(args.tool_config)
     rendered_token_counts = {
         dialogue.source_dialog_id: len(
-            _render_ids(
+            render_chat_ids(
                 tokenizer,
                 list(dialogue.messages),
                 tools=tools,

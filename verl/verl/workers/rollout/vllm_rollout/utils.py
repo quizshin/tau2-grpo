@@ -187,8 +187,18 @@ class vLLMColocateWorkerExtension:
         )
         audit_dir = os.environ.get("VERL_QWEN35_WEIGHT_AUDIT_DIR")
         expected_conv = {} if audit_dir and not peft_config else None
+        full_audit = None
+        if os.environ.get("VERL_QWEN35_FULL_WEIGHT_AUDIT", "0") == "1":
+            if (not audit_dir or peft_config or not use_standard_weight_load
+                    or self.model_runner.vllm_config.parallel_config.tensor_parallel_size != 1):
+                raise ValueError("Full language audit requires dense unquantized TP1 and an audit directory")
+            from verl.utils.qwen35_full_weight_audit import FullLanguageWeightAudit
+
+            full_audit = FullLanguageWeightAudit()
 
         def receive_bucket(weights):
+            if full_audit is not None:
+                full_audit.capture(weights)
             if expected_conv is not None:
                 # Copy before loading: bucket storage is reused, and full RL
                 # legitimately changes convolution weights from the SFT base.
@@ -227,6 +237,8 @@ class vLLMColocateWorkerExtension:
                 expected_conv=expected_conv,
             )
             logger.info("Qwen3.5 rollout weight audit: %s", path)
+        if full_audit is not None:
+            logger.info("Qwen3.5 full text-policy audit: %s", full_audit.write(self.model_runner.model, audit_dir))
 
     def _update_weights(self, weights: list[tuple[str, torch.Tensor]], peft_config: dict, base_sync_done: bool):
         if peft_config and base_sync_done:

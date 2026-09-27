@@ -14,6 +14,7 @@ from typing import Any, Optional, Sequence
 
 from tau3_grpo.data.manifest import ManifestEntry
 from tau3_grpo.data.official import assert_trainable_entries
+from tau3_grpo.data.opening import initial_user_message
 from tau3_grpo.paths import PARQUET_ROOT
 from tau3_grpo.prompts import build_system_prompt, prompt_provenance
 
@@ -35,10 +36,7 @@ def build_row(
     """Build one veRL dataset row for a manifest entry."""
 
     task = entry.task or {}
-    instructions = task.get("user_scenario", {}).get("instructions", {})
-    opening = ""
-    if isinstance(instructions, dict):
-        opening = str(instructions.get("reason_for_call", "") or "")
+    opening = initial_user_message(task)
 
     interaction_kwargs = {
         "name": INTERACTION_NAME,
@@ -55,8 +53,7 @@ def build_row(
         # The first user message is already present in the policy prompt.  Carry
         # the same text into the tau2 session so the user simulator history,
         # official replay and the t=1 anchor all observe identical state.
-        "initial_user_message": opening
-        or "Hello, I need help with my reservation.",
+        "initial_user_message": opening,
         "anchor_mode": anchor_mode,
         "anchor_similarity_threshold": anchor_similarity_threshold,
     }
@@ -83,7 +80,7 @@ def build_row(
         "data_source": entry.source.value,
         "prompt": [
             {"role": "system", "content": build_system_prompt(policy)},
-            {"role": "user", "content": opening or "Hello, I need help with my reservation."},
+            {"role": "user", "content": opening},
         ],
         "ability": "airline_customer_service",
         "reward_model": {"style": "rule", "ground_truth": entry.task_hash},

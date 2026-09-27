@@ -18,6 +18,7 @@ import uuid
 import yaml
 
 from tau3_grpo.algorithms.anchors.evidence import validate_version
+from tau3_grpo.data.messages import visible_message as visible_message
 from tau3_grpo.data.manifest import read_manifest
 from tau3_grpo.data.schema import ArealTaskRecord, DataSource
 from tau3_grpo.envs.adapter import build_environment, load_flight_db
@@ -39,10 +40,6 @@ def normalized_content(value: Any, comparison: str) -> str:
     # Ignores object key order / whitespace only; array order, text, bool and
     # number representations remain distinct. No fuzzy matching of observations.
     return 'json:'+json.dumps(value,sort_keys=True,ensure_ascii=False,separators=(',',':'),allow_nan=False)
-
-
-def visible_message(raw):
-    return {k:deepcopy(raw[k]) for k in ('role','content','tool_calls','id','tool_call_id','error','requestor') if k in raw}
 
 
 def as_object(raw):

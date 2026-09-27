@@ -61,6 +61,12 @@ def slots(value, *, terms=False):
 
 
 def normalize_packet(packet, version, *, messages=None):
+    if version == 'airline_slots_v4':
+        from tau3_grpo.algorithms.anchors.semantic_slots_v4 import normalize_packet as v4
+        return v4(packet, messages if messages is not None else [])
+    if version == 'airline_slots_v3':
+        from tau3_grpo.algorithms.anchors.semantic_slots_v3 import normalize_packet as v3
+        return v3(packet, messages if messages is not None else [])
     if version == 'airline_slots_v2':
         from tau3_grpo.algorithms.anchors.semantic_slots_v2 import normalize_packet as v2
         return v2(packet, messages if messages is not None else [])

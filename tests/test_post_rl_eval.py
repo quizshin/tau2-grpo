@@ -1,4 +1,3 @@
-import importlib.util
 import json
 from pathlib import Path
 from types import SimpleNamespace
@@ -8,11 +7,14 @@ import pytest
 
 @pytest.fixture
 def module():
-    path = Path(__file__).parents[1] / 'env_info/a800_20260912/run_post_rl_eval.py'
-    spec = importlib.util.spec_from_file_location('post_rl_eval_test', path)
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod
+    from tau3_grpo.evaluation import controller
+    return controller
+
+
+@pytest.fixture
+def enough_backup_space(module, monkeypatch):
+    # Unit-sized checkpoint fixtures must not depend on the host /tmp capacity.
+    monkeypatch.setattr(module.shutil, 'disk_usage', lambda _: SimpleNamespace(free=100 * module.GIB))
 
 
 def checkpoint(mod, root, arm='e2'):
@@ -37,7 +39,7 @@ def checkpoint(mod, root, arm='e2'):
     return run
 
 
-def test_complete_backup_survives_original_loss(module, tmp_path):
+def test_complete_backup_survives_original_loss(module, tmp_path, enough_backup_space):
     run = checkpoint(module, tmp_path)
     out = tmp_path / 'post';out.mkdir()
     dest = module.persist_complete(tmp_path, out, 'e2')
@@ -47,7 +49,7 @@ def test_complete_backup_survives_original_loss(module, tmp_path):
     module.validate_checkpoint(dest)
 
 
-def test_backup_does_not_publish_corruption(module, tmp_path, monkeypatch):
+def test_backup_does_not_publish_corruption(module, tmp_path, monkeypatch, enough_backup_space):
     checkpoint(module, tmp_path)
     out = tmp_path / 'post';out.mkdir()
     original = module.shutil.copytree
@@ -104,7 +106,7 @@ def test_training_state_is_not_a_trigger(module, tmp_path):
     assert module.queue_ready(tmp_path, True) is False
 
 
-def test_reused_backup_must_match_receipt(module, tmp_path):
+def test_reused_backup_must_match_receipt(module, tmp_path, enough_backup_space):
     checkpoint(module, tmp_path)
     out = tmp_path / 'post';out.mkdir()
     dest = module.persist_complete(tmp_path, out, 'e2')
@@ -159,11 +161,22 @@ def test_hf_directory_with_only_config_is_not_a_merged_model(module, tmp_path):
 def test_stop_only_targets_owned_process_group(module, tmp_path, monkeypatch):
     c = module.Controller(tmp_path, tmp_path)
     calls = []
-    monkeypatch.setattr(module.os, 'killpg', lambda pid, sig: calls.append(pid))
-    proc = SimpleNamespace(pid=456, wait=lambda timeout: 0)
+    monkeypatch.setattr(module, 'stop_process', lambda proc, **kw: calls.append(proc))
+    proc = object()
     c.children.append(proc)
     c.cleanup()
-    assert calls == [456]
+    assert calls == [proc]
+
+
+def test_low_space_keeps_checkpoint_and_does_not_publish_backup(module, tmp_path, monkeypatch):
+    run = checkpoint(module, tmp_path)
+    out = tmp_path / 'post'
+    out.mkdir()
+    monkeypatch.setattr(module.shutil, 'disk_usage', lambda _: SimpleNamespace(free=0))
+    with pytest.raises(RuntimeError, match='Insufficient persistent space'):
+        module.persist_complete(tmp_path, out, 'e2')
+    assert (run / 'global_step_20/data.pt').exists()
+    assert not (tmp_path / 'persistent-checkpoints/e2_seed42').exists()
 
 
 def reuse_fixture(module, tmp_path):

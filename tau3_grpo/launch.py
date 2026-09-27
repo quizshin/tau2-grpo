@@ -9,40 +9,16 @@ import subprocess
 from pathlib import Path
 from string import Template
 
-import yaml
-
+from tau3_grpo.configuration import load_config as load_config
+from tau3_grpo.configuration import load_config_with_sources, resolve_arm
+from tau3_grpo.configuration import merge as merge
 from tau3_grpo.paths import CODE_ROOT
 from tau3_grpo.tracking.swanlab import load_tracking_env, redact_config
 
 
-def merge(base: dict, update: dict) -> dict:
-    result = dict(base)
-    for key, value in update.items():
-        if isinstance(value, dict) and isinstance(result.get(key), dict):
-            result[key] = merge(result[key], value)
-        elif key == "overrides" and isinstance(value, list):
-            result[key] = result.get(key, []) + value
-        else:
-            result[key] = value
-    return result
-
-
-def load_config(path: Path, stack: tuple[Path, ...] = ()) -> dict:
-    path = path.resolve()
-    if path in stack:
-        raise ValueError(f"cyclic config include: {path}")
-    payload = yaml.safe_load(path.read_text())
-    if not isinstance(payload, dict):
-        raise ValueError(f"config must be a mapping: {path}")
-    result: dict = {}
-    for parent in payload.pop("includes", []):
-        result = merge(result, load_config(path.parent / parent, (*stack, path)))
-    return merge(result, payload)
-
-
 def prepare(stage: str, path: Path, experiment: str, seed: int | None,
             extra: list[str], inherited: dict[str, str]) -> tuple[list[str], dict, dict]:
-    config = load_config(path)
+    config, config_sources = load_config_with_sources(path)
     launch = config.get("launch", {})
     if launch.get("stage") != stage:
         raise ValueError(f"expected launch.stage={stage!r} in {path}")
@@ -67,12 +43,10 @@ def prepare(stage: str, path: Path, experiment: str, seed: int | None,
     algorithm_overrides = []
     if stage == "rl":
         arms = load_config(CODE_ROOT / "configs/experiments/arms.yaml")
-        if experiment in arms["arms"]:
-            arm = arms["arms"][experiment]
-        else:
-            ablation = arms["ablations"][experiment]
-            arm = merge(arms["arms"][ablation["base_arm"]], ablation)
+        arm = resolve_arm(experiment, arms)
         env["TAU3_GRPO_CONFIG_ESTIMATOR"] = arm["adv_estimator"]
+        if launch.get("expected_adv_estimator", arm["adv_estimator"]) != arm["adv_estimator"]:
+            raise ValueError("profile requires --experiment mt_gtpo")
         env["TAU3_GRPO_CONFIG_DF_ENABLE"] = str(arm["dynamic_filter"]["enable"]).lower()
         env["TAU3_GRPO_CONFIG_ANCHOR_MODE"] = arm["anchors"]["mode"]
         for key, value in arm.get("gigpo", {}).items():
@@ -89,8 +63,24 @@ def prepare(stage: str, path: Path, experiment: str, seed: int | None,
                 "command": command, "environment": {k: env[k] for k in
                     {*launch.get("environment", {}), "TAU3_DATA_ROOT", "TAU3_MODEL_ROOT",
                      "TAU3_RUN_ROOT", "TAU3_CACHE_ROOT"}}, "stage": stage}
+    snapshot["configuration_sources"] = config_sources
+    snapshot["snapshot_scope"] = "launch_inputs_not_final_hydra"
+    snapshot["environment_sources"] = {
+        key: "inherited_environment" if key in inherited else "profile_or_path_default"
+        for key in snapshot["environment"]
+    }
     if stage == "rl":
         snapshot["experiment"] = snapshot_arm
+        snapshot["algorithm_sources"] = load_config_with_sources(
+            CODE_ROOT / "configs/experiments/arms.yaml"
+        )[1]
+        runtime_paths = [CODE_ROOT / "configs/train/rl/base.yaml"]
+        if script.name == "run_qwen35.sh":
+            runtime_paths.append(CODE_ROOT / "configs/runtime/rl_qwen35.yaml")
+        snapshot["runtime_configuration_sources"] = [
+            source for runtime_path in runtime_paths
+            for source in load_config_with_sources(runtime_path)[1]
+        ]
     return command, env, redact_config(snapshot)
 
 
@@ -99,7 +89,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("stage", choices=("sft", "rl", "simulator"))
     parser.add_argument("--config", type=Path, required=True)
     parser.add_argument("--experiment", default="e0",
-                        choices=("e0", "e1", "e2", "e3", "e2_db_hash_only", "e2_similarity"))
+                        choices=("e0", "e1", "e2", "e3", "e2_db_hash_only", "e2_similarity", "mt_gtpo"))
     parser.add_argument("--seed", type=int)
     parser.add_argument("--dry-run", action="store_true", help="resolve config without starting services or training")
     args, extra = parser.parse_known_args(argv)

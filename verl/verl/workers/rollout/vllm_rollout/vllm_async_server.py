@@ -609,7 +609,16 @@ class vLLMHttpServer:
             routed_experts=routed_experts,
             stop_reason=stop_reason,
             num_preempted=num_preempted,
-            extra_fields={"global_steps": self.global_steps},
+            extra_fields={"global_steps": self.global_steps,
+                          "finish_reason": finish_reason,
+                          "logprobs_mode": self.config.logprobs_mode if log_probs is not None else None,
+                          "sampling_seed": sampling_params.seed,
+                          "engine_seed": self.replica_rank + self.config.get("seed", 0),
+                          "sampling_parameters": {"temperature": sampling_params.temperature,
+                                                  "top_p": sampling_params.top_p,
+                                                  "top_k": sampling_params.top_k,
+                                                  "repetition_penalty": sampling_params.repetition_penalty},
+                          "native_stop_reason": getattr(final_res.outputs[0], "stop_reason", None)},
         )
 
     async def wake_up(self):

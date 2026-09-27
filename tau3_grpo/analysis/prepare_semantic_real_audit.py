@@ -3,7 +3,7 @@ import argparse
 import json
 from pathlib import Path
 
-from tau3_grpo.analysis.replay_decisions import visible_message
+from tau3_grpo.data.messages import visible_message
 from tau3_grpo.utils.hashing import sha256_file, sha256_json
 
 

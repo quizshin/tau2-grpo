@@ -1,0 +1,7 @@
+# Formal 20-step launch is gated on the shared32 two-step GPU acceptance.
+# Same 32-candidate batch and two physical GPUs as the verified candidate.
+includes:
+- repair72_grpo_2xa800_passenger_v1_fast32_shared_candidate.yaml
+launch:
+  environment:
+    TAU3_EXPERIMENT_LABEL: repair72-lora16-passenger-v1-fast32-shared

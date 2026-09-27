@@ -1,0 +1,18 @@
+# Candidate only: same two physical GPUs, simulator shares GPU1 during rollout
+# and sleeps before both policy GPUs compute logprobs and gradients.
+# Requires separate bounded GPU acceptance; never use as an implicit resume.
+includes:
+- repair72_grpo_2xa800_passenger_v1_fast32.yaml
+launch:
+  environment:
+    TAU3_POLICY_CUDA_DEVICES: '0,1'
+    POLICY_GPUS: '2'
+    TAU3_USER_CUDA_DEVICES: '1'
+    TAU3_SIMULATOR_COLOCATED_SLEEP: '1'
+    TAU3_USER_GPU_MEMORY_UTILIZATION: '0.40'
+    TAU3_EXPERIMENT_LABEL: repair72-lora16-passenger-v1-fast32-shared-candidate
+  overrides:
+  - actor_rollout_ref.rollout.gpu_memory_utilization=0.30
+  - +actor_rollout_ref.rollout.agent.agent_loop_manager_class=tau3_grpo.integrations.verl.sleeping_simulator.SleepingSimulatorAgentLoopManager
+  - ++ray_kwargs.ray_init.runtime_env.env_vars.TAU3_SIMULATOR_COLOCATED_SLEEP='1'
+  - ++ray_kwargs.ray_init.runtime_env.env_vars.TAU3_USER_BASE_URL=http://127.0.0.1:8100/v1
