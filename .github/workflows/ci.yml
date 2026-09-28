@@ -54,14 +54,14 @@ jobs:
         run: python -m tau3_grpo.integrations.vendor_inventory
 
       - name: Run core CPU contracts
-        run: python scripts/maintenance/check_cpu.py --suite core --junitxml=core-cpu.xml
+        run: python scripts/maintenance/check_cpu.py --suite core --report-dir results/maintenance/ci-core --require-no-skips
 
       - name: Preserve CPU test evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: core-cpu
-          path: core-cpu.xml
+          path: results/maintenance/ci-core/
 
       # The benchmark and veRL suites run in the existing pinned remote environment:
       # python scripts/maintenance/check_cpu.py --suite benchmark|verl

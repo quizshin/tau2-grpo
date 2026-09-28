@@ -75,9 +75,11 @@ def test_dynamic_filter_is_off_in_the_base_config():
     assert _load("train/rl/base.yaml")["dynamic_filter"]["enable"] is False
 
 
-def test_original_arms_and_mt_gtpo_are_defined():
+def test_original_arms_mt_gtpo_and_arpo_are_defined():
     arms = _load("experiments/arms.yaml")["arms"]
-    assert set(arms) == {"e0", "e1", "e2", "e3", "mt_gtpo"}
+    assert set(arms) == {"e0", "e1", "e2", "e3", "mt_gtpo", "arpo"}
+    assert arms["arpo"]["adv_estimator"] == "arpo"
+    assert arms["arpo"]["dynamic_filter"]["enable"] is False
     assert arms["mt_gtpo"]["adv_estimator"] == "mt_gtpo"
     assert arms["mt_gtpo"]["dynamic_filter"]["enable"] is False
 

@@ -75,3 +75,15 @@ trainer 消费 `batch.meta_info["tau3_estimator_diagnostics"]` 的本批结果�
 - 基础 shell 默认由 `training/rl/runtime_defaults.py` 读取 `configs/train/rl/base.yaml`；Qwen3.5 的兼容参数在 `configs/runtime/rl_qwen35.yaml`。新增可调默认先写对应 YAML，再补入口映射；不在 shell 重新复制同一值。正式协议的显式覆盖与历史兼容默认分别保留，不能为去重改变旧命令。
 - arm 与 ablation 使用 `configuration.resolve_arm`；启动快照的 `runtime_configuration_sources` 记录兼容参数来源。原生 Hydra 覆盖最后追加，修改后验证三算法的最终命令或完整 Hydra。
 - `python -m tau3_grpo.experiments.review --receipt KIND=PATH --experiment-id ID --run-id ID --output-dir NEW_DIR` 从明确回执生成实验／错误草稿；KIND 为 `gpu_acceptance`、`formal_controller` 或 `evaluation`。新目录防止覆盖人工批注；审核后归入已有唯一索引。草稿仅转录事实，不推断因果、算法增幅或真实 GPU 验证完成。
+
+
+## 发布证据入口（2026-09-29）
+
+沿用 `check_cpu.py`，新增 `--report-dir NEW_DIR --require-no-skips`。报告目录必须不存在，
+避免覆盖旧结果；生成 `junit.xml` 和 `receipt.json`，记录 Git HEAD、跟踪文件内容哈希、
+Python/依赖版本、tokenizer SHA256、全部跳过原因及退出码。源码运行中变化、零测试、
+缺 tokenizer 或严格模式存在跳过均失败。子进程 PATH 优先使用当前解释器的环境。
+
+发布顺序：干净环境安装 `.github/workflows/ci.yml` 指定依赖；完整 lint / Shell / vendor
+检查；core；已有资产环境 benchmark；固定服务器环境 verl；核对最终提交的 GitHub CI。
+GPU 条件测试在 CPU 下的跳过须单独报告，不代表 GPU 验收。若任一层未完成，不称“全层通过”。

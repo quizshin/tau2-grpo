@@ -245,3 +245,12 @@ and secret-redaction check remain enabled. No tokenizer/model download is needed
 恢复显式同名 re-export，保留原公共路径和 tracking 中的唯一实现。
 本地账单4项与真实 tokenizer 18项共22项通过；lint 无新增债务。
 完整 benchmark/verl 与最终发布验证另行记录，不由这22项推断。
+
+
+### 2026-09-29 全层发布检查与环境边界
+
+ARPO 合并后旧 `test_configs` 仍只允许5个 arm，补为包含 ARPO 的6个精确分支，并断言
+其 estimator 与 DF 默认值。隔离 worktree 的 benchmark 首轮缺少已有冻结数据，
+补齐现有资产后728项通过，未下载模型。日常 macOS 环境的 Torch 2.8 / Transformers
+5.17 / PEFT 0.20 不等于 `qwen35-constraints.txt` 的固定框架，不能以该环境的
+FSDP 失败或通过判定服务器状态。发布入口现可保存身份与严格跳过回执。
