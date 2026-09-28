@@ -12,6 +12,7 @@ from pathlib import Path
 from tau3_grpo.data.sft import load_complete_airline_dialogues
 from tau3_grpo.models.semantic_api import SemanticAPIError
 from tau3_grpo.tracking.judge_budget import Budget, call_json, dump
+from tau3_grpo.tracking.judge_budget import flash_usage_estimate as flash_usage_estimate
 from tau3_grpo.utils.hashing import sha256_file, sha256_json
 
 VERSION = "airline_rubric_pilot_v1"

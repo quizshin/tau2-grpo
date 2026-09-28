@@ -236,3 +236,12 @@ then exposed a second pre-existing CI dependency gap: 502 core tests passed and
 OmegaConf was absent. The local RL environment had masked this missing declaration.
 Added `omegaconf>=2.3,<3` to the CPU `dev` extra used by CI; the real config conversion
 and secret-redaction check remain enabled. No tokenizer/model download is needed.
+
+
+### 2026-09-28 发布全层检查发现 rubric 兼容导出回归
+
+`5bc20ba` 的 lint 整理删除了 `rubric_pilot.flash_usage_estimate` 的隐式导出，
+完整 benchmark 在收集 `test_billing_reconciliation.py` 时失败；core 不覆盖该模块。
+恢复显式同名 re-export，保留原公共路径和 tracking 中的唯一实现。
+本地账单4项与真实 tokenizer 18项共22项通过；lint 无新增债务。
+完整 benchmark/verl 与最终发布验证另行记录，不由这22项推断。
