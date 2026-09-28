@@ -210,3 +210,53 @@ Deployed only the two missing modules, their four-case CPU test and exact four-l
 21:35 verified formal controller169037 reached training; created STOP_AFTER_BOUNDARY exclusively after state transition. Scheduler remains20; stop request should select boundary10 after first update. No formal rollout metrics yet.
 
 用户于2026-09-27约22:01明确要求立即停止远程正式训练。经核验向controller169037发送SIGINT，RL heartbeat已PAUSED；不自动恢复，不影响SFT。保留日志/轨迹/既有产物，停止记录在正式run/user-immediate-stop.json。
+
+User reauthorized formal RL restart at22:36 and explicitly requires initial evaluation, no reuse. Before mutation, hashed1231 tracked relevant package/config/launcher/vendor files across local and remote: zero differences; receipt full_initial_eval_sync_check.json. Local HEAD b9c981a992da0d238448b2ec3b885cf470f9dea9. Added explicit shared32_full_eval profile overriding val_before_train=true; no old run altered. New fresh20 run pending full CPU dry-run; retain previous formal absolute deadline1790573409.6468837, no budget reset. Selection240 at0/10/20,640 train candidates; two GPUs, same repair72 terminal reward/LoRA16/IEEE/full recompute.
+
+22:39 full-eval formal20 launch submitted: results/runs/repair72_grpo_shared32_full_eval20_20260927/seed42, timeout184500. Profile89c6cc34975fe6c1ed6e1cda8825d51d0d5e2edb312d00e53fe857ad2c3a40ff. Remote full dryrun passed and val_before_train=True confirmed. New640train+720eval candidates; maxwall53277 and oldformal absolute deadline retained. No baseline reuse. Monitor ACTIVE updated; new STOP_AFTER_BOUNDARY pending until training state.
+
+22:54 full_eval controller184501 verified training process; model replicas still initializing, simulator initial sleep succeeded, no evaluation trajectories yet. Created STOP_AFTER_BOUNDARY only after training state. Heartbeat updated; current marker will select10 after first update.
+
+23:39 full_eval live: initial validation177/240 stream records, controller184501 active, no training step yet. One logged traceback23:27 from tool_parser malformed model XML (ValueError substring not found) was caught at response parsing; subsequent trajectories continue. Not a controller/engine crash; retain this model-format error in evaluation accounting, do not silently repair outputs or restart.
+
+23:54 live check: actual initial selection evaluation completed240/240, terminal mean reward0.4458333333 (107/240 if binary), scored0.85. Simulator wake1790521093.86246 to sleep1790524246.12261 ~=52.54min evaluation phase incl interactions; not full startup time. Initial metric persisted atstep0; cloud not separately read back this check. Trainingstep1 now active,4/32 streamed complete. No capability gain claim; known selection reference/simulator issues retained.
+
+
+## 2026-09-28 04:24 boundary10 cloud verification failure
+
+Current full_eval20 completed10 updates and240 step10 evaluation rows; checkpoint-complete world2 retained. Controller exited failed: Cloud step readback incomplete. All GPU processes cleaned; STOP_AFTER_BOUNDARY retained; repair72-rl automation PAUSED per failure instructions, no restart. Read-only live SwanLab API verified trainer/global_step contains exactly0..10 (each step=value), including real initial evaluation step0. runner.py verify_completion currently compares all points strictly to1..10, so the extra legitimate0 causes false rejection rather than missing uploads. Step10 rewardmean0.4833333333 vs initial0.4458333333 is selection-only, not established capability gain. Step10 training/save1612.073s, save155.823s, testing2806.376s. Fix and validated resume remain pending; absolute deadline1790573409.6468837 unchanged.
+
+
+## 2026-09-28 08:48 explicit user-authorized resume10
+
+Cloud verification now accepts optional genuine (0,0) in addition to exact1..N, still rejects missing/duplicate update points. Local commit0dead01, remote182af5e; changed-file SHA match. Remote20 related CPU tests passed. Live cloud0..10 and world2 CP structural verification passed; both rank optimizer states and scheduler/RNG/data loaded on CPU. GPU restore remains pending. Original failed state/config/budget retained under resume10-before; STOP_AFTER_BOUNDARY archived there after acceptance.
+
+Remote full resume dryrun passed world2/updates20/resume_path=global_step_10/val_before_train=false. Same formalrun and SwanLab retained; actual controller309836 under timeout309835 launched at1790556483.5775347. Deadline1790573409.6468837 unchanged, remaining16926s, runner16776/outer16896. Receipt resume10-launcher.json; log resume10-controller.log. No new step10 stop marker; next required complete save/eval is20. repair72-rl monitor ACTIVE. SFT owner separately restored Kimi per user; sft-500 monitor ACTIVE.
+
+
+## 2026-09-28 user override: no fixed deadline; automatic repair and continuation
+
+User explicitly cancels both former wall-clock deadlines and authorizes diagnosing/fixing/verifying recoverable failures then automatically continuing from latest complete checkpoint to20 in the same run/SwanLab. Never blindly retry, alter the protocol, discard evidence or duplicate curve points. The step0 cloud validation fix is already deployed/tested (local0dead01/remote182af5e). Monitor prompt updated ACTIVE accordingly. Future launch omits timeout wrapper and --max-wall-seconds. Current live timer removal is being verified separately; old command-line flags alone do not establish timer state. No restart of active trainer is authorized merely to change a timer.
+
+
+## 2026-09-28 11:30 live deadline removal verified
+
+User cancels former fixed wall deadlines and authorizes diagnose/repair/test/automatic same-run continuation to step20 after recoverable failures. Future launches omit timeout and --max-wall-seconds; the monitoring automation is ACTIVE with this policy. Existing step0 cloud validation fix remains deployed (local0dead01/remote182af5e;20 related tests passed).
+
+Both live timers were removed without restarting the trainer. After disposable-process testing, controller309836 alarm(0) returned7114 remaining seconds, a second call returned0; outer309835 POSIX timer0 deletion returned0 and /proc/309835/timers is empty. Both processes remain alive, GPUs both100%, completed_step16 with step17 update in progress. Old CLI flags persist but no longer represent armed timers. Full receipt: results/runs/repair72_grpo_shared32_full_eval20_20260927/seed42/resume10-deadline-removal.json (verified=true). No GPU workers were attached or restarted.
+
+
+## 2026-09-28 user-authorized AutoDL 051 shutdown after evaluation
+
+User explicitly requests shutting down AutoDL machine051 after evaluation. Complete step20 selection240, checkpoint and cloud verification first; verify instance identity matches051, preserve results and coordinate with SFT owner so active paid API calls drain and ledger/evidence are safe. Move needed subsequent CPU/API work locally if feasible, then shut down only051 via platform control, without destroying storage. This supersedes the earlier no-platform-shutdown instruction for051 only. RL automation updated to perform and confirm this before pausing.
+
+User further confirms: after051 shutdown, finish SFT data on Mac first. Migrate originals and the sole authoritative DeepSeek budget ledger after remote paid calls drain and the writer releases its lock; archive stale Mac ledger, preserve history/reservations/caps. Continue Mac CPU/API only; do not restart051 or start SFT training. SFT owner coordinates migration and provides shutdown-readiness receipt.
+
+2026-09-28 13:15 shutdown identity verified read-only in existing Chrome AutoDL console: A800专区/051机 instance857546be50-ec463c07, 2xA800 running, matches remote hostname autodl-container-857546be50-ec463c07. Other instance011 (47bb4a8b0c-e6603b21) is already off and must not be touched. Native cua Google Chrome AX available; browser-provider discovery errored, native app control works. Do not click shutdown before RL final evaluation/cloud verification and SFT full-source sync receipt.
+
+
+## 2026-09-28 13:35 formal20 complete; shutdown pending Mac unlock
+
+All20 optimizer steps and0/10/20 selection240 each finished. Scores107/240=44.5833%,116/240=48.3333%,118/240=49.1667%; selection only. Final upload omitted154 step20 scalar values despite SDK finish, so controller correctly rejected missing20 (not the former zero-step bug). Recovered only absent exact scalar values from immutable local metrics into same SwanLab run; independent all-key cloud readback and verify_completion passed0..20. Preserved original failed state and plan/verification under cloud20-recovery. Bothrank optimizer496 states, scheduler/RNG/data CPU load passed; complete CP20 retained persistent disk and all17 files SHA recorded. Logs/buffers/evaluations/adapter and checkpoint metadata synced Mac; model/optimizer tensors remain remote persistent disk. Local core and adapter hashes verified. SFT migration receipt confirms complete source and ledger handoff. GPU services exited. AutoDL051857546be50-ec463c07 identity verified; shutdown attempt blocked by locked Mac before any click. User asked to unlock; machine NOT yet shut down.
+
+2026-09-28 14:14-14:15: Mac unlocked. Confirmed051857546be50-ec463c07 normal shutdown in AutoDL console, refreshed and independently observed已关机.011 untouched. No instance deletion. shutdown-status.json saved locally; RL monitor paused after complete20/eval/cloud/backup/shutdown. SFT continues Mac CPU/API.

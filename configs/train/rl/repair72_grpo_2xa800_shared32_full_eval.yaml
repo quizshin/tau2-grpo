@@ -1,0 +1,8 @@
+# Fresh formal GRPO run with actual selection60 x4 evaluation at 0/10/20.
+includes:
+- repair72_grpo_2xa800_passenger_v1_fast32_shared.yaml
+launch:
+  environment:
+    TAU3_EXPERIMENT_LABEL: repair72-shared32-grpo-full-eval
+  overrides:
+  - trainer.val_before_train=true
