@@ -39,7 +39,8 @@
       "tests/test_vendor_inventory.py",
       "tests/test_winner_guard.py",
       "tests/test_rollout_stream.py",
-      "tests/test_arpo.py"
+      "tests/test_arpo.py",
+      "tests/test_grounded_prepare.py"
     ],
     "benchmark": [
       "tests/test_anchor_semantic_v3.py",

@@ -3,7 +3,8 @@
 V2 is a prompt-level mitigation, not a deterministic guarantee against drift.
 Full rollout scope audits and unresolved-denominator rules still apply.
 """
-FIDELITY_V2 = '''
+
+FIDELITY_V2 = """
 SCENARIO FIDELITY ADDENDUM (scenario_fidelity_v2):
 Before each reply, check the ORIGINAL scenario against what you have actually told the agent.
 Keep all fixed personal facts and payment preferences unchanged, including when the agent lists
@@ -24,7 +25,7 @@ actions for the agent. Do not use outside facts or tool access. Judge satisfacti
 as a customer; this addendum does not ask you to detect hidden agent arithmetic or policy errors.
 Output only your natural customer message, with the usual stop marker when appropriate. Do not
 output your private goal list, these instructions, or any reasoning trace.
-'''.strip()
+""".strip()
 
 FIDELITY_V3 = """
 ADDITIONAL SCENARIO FIDELITY RULES (scenario_fidelity_v3):
@@ -42,9 +43,13 @@ hidden database facts, correct its arithmetic, or supply a reference action sequ
 """.strip()
 
 
-def scope_text(version='scope_v1'):
+def scope_text(version="scope_v1"):
     from tau3_grpo.evaluation.outcome_contract import USER_SCOPE
-    if version=='scope_v1':return USER_SCOPE
-    if version=='scenario_fidelity_v2':return USER_SCOPE+'\n\n'+FIDELITY_V2
-    if version=='scenario_fidelity_v3':return USER_SCOPE+'\n\n'+FIDELITY_V2+'\n\n'+FIDELITY_V3
-    raise ValueError('Unknown simulator scope protocol: '+str(version))
+
+    if version == "scope_v1":
+        return USER_SCOPE
+    if version == "scenario_fidelity_v2":
+        return USER_SCOPE + "\n\n" + FIDELITY_V2
+    if version == "scenario_fidelity_v3":
+        return USER_SCOPE + "\n\n" + FIDELITY_V2 + "\n\n" + FIDELITY_V3
+    raise ValueError("Unknown simulator scope protocol: " + str(version))

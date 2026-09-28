@@ -135,12 +135,13 @@ def _run_one(
     user_task = task
     if outcome_contract is not None:
         from tau3_grpo.envs.simulator_scope import scope_text
+
         USER_SCOPE = scope_text(user_protocol)
         user_task = task.model_copy(deep=True)
         if isinstance(user_task.user_scenario.instructions, str):
-            user_task.user_scenario.instructions += '\n\n' + USER_SCOPE
+            user_task.user_scenario.instructions += "\n\n" + USER_SCOPE
         else:
-            user_task.user_scenario.instructions.task_instructions += '\n\n' + USER_SCOPE
+            user_task.user_scenario.instructions.task_instructions += "\n\n" + USER_SCOPE
     simulated_user = build_user(
         "user_simulator",
         environment,
@@ -155,7 +156,8 @@ def _run_one(
     )
 
     orchestrator_cls = {
-        LEGACY: EvaluationOrchestrator, CONTROL_V2: TrainingControlOrchestrator,
+        LEGACY: EvaluationOrchestrator,
+        CONTROL_V2: TrainingControlOrchestrator,
         INPUTS_V3: TrainingInputOrchestrator,
     }[harness_protocol]
     orchestrator = orchestrator_cls(
@@ -171,6 +173,7 @@ def _run_one(
     )
     if completed_rollout_path:
         import time
+
         started_path = Path(completed_rollout_path).with_suffix(".started.json")
         started_path.parent.mkdir(parents=True, exist_ok=True)
         with started_path.open("x") as handle:
@@ -185,35 +188,53 @@ def _run_one(
         error.evaluation_evidence = orchestrator.failure_snapshot()
         error.evaluation_evidence["harness_protocol"] = protocol
         raise
-    simulation.info = {**(simulation.info or {}), "harness_protocol": protocol,
-                       "tool_observation_receipts": getattr(agent, "observation_receipts", [])}
+    simulation.info = {
+        **(simulation.info or {}),
+        "harness_protocol": protocol,
+        "tool_observation_receipts": getattr(agent, "observation_receipts", []),
+    }
     if completed_rollout_path:
         # Complete native trajectory must be durable BEFORE any paid judge call.
         import os
+
         with Path(completed_rollout_path).open("x") as handle:
             json.dump(simulation.model_dump(mode="json"), handle)
-            handle.flush(); os.fsync(handle.fileno())
+            handle.flush()
+            os.fsync(handle.fileno())
     if outcome_contract is not None:
         from tau3_grpo.evaluation.outcome_contract import score_simulation
-        behavior=None
-        if outcome_contract.get('communication'):
+
+        behavior = None
+        if outcome_contract.get("communication"):
             from tau3_grpo.evaluation.communication_contract import judge_communication
             from tau3_grpo.evaluation.eligibility import SCORABLE_TERMINATIONS
             from tau3_grpo.prompts import build_system_prompt
+
             if simulation.termination_reason.value in SCORABLE_TERMINATIONS:
                 try:
                     if not behavior_output or not behavior_budget_directory:
-                        raise ValueError('Behavior scoring requires an output and shared budget directory')
-                    behavior=judge_communication(simulation.model_dump(mode='json')['messages'],
-                        scenario=task.user_scenario.model_dump(mode='json'),policy=build_system_prompt(),
-                        contract=outcome_contract,output=behavior_output,budget_directory=behavior_budget_directory)
+                        raise ValueError(
+                            "Behavior scoring requires an output and shared budget directory"
+                        )
+                    behavior = judge_communication(
+                        simulation.model_dump(mode="json")["messages"],
+                        scenario=task.user_scenario.model_dump(mode="json"),
+                        policy=build_system_prompt(),
+                        contract=outcome_contract,
+                        output=behavior_output,
+                        budget_directory=behavior_budget_directory,
+                    )
                 except Exception as error:
                     # Keep the completed rollout so a judge error never forces GPU resampling.
-                    error.evaluation_evidence={'stage':'communication_scoring',
-                        'simulation':simulation.model_dump(mode='json'),'resampling_required':False}
+                    error.evaluation_evidence = {
+                        "stage": "communication_scoring",
+                        "simulation": simulation.model_dump(mode="json"),
+                        "resampling_required": False,
+                    }
                     raise
-        simulation.info['outcome_contract'] = score_simulation(
-            simulation, db_path=db_path, task=task, contract=outcome_contract,behavior=behavior)
+        simulation.info["outcome_contract"] = score_simulation(
+            simulation, db_path=db_path, task=task, contract=outcome_contract, behavior=behavior
+        )
     if harness_protocol == INPUTS_V3:
         from tau3_grpo.evaluation.provenance import digest
 
@@ -275,23 +296,33 @@ def run_evaluation(
         penalty = repetition_penalty(policy.repetition_penalty)
         if penalty != 1.0 and spec.harness_protocol != TOKENS_V4:
             raise ValueError("Non-default repetition penalty requires token-v4 evaluation")
-    protocol = protocol_metadata(spec.harness_protocol, max_steps=spec.max_steps, max_errors=spec.max_errors)
+    protocol = protocol_metadata(
+        spec.harness_protocol, max_steps=spec.max_steps, max_errors=spec.max_errors
+    )
     validate_target(spec.harness_protocol, spec.target)
     request_args(spec.harness_protocol, policy, role="policy")
     request_args(spec.harness_protocol, user, role="user")
     from tau3_grpo.envs.simulator_scope import scope_text
+
     scope_text(spec.user_protocol)
-    if spec.user_protocol != "scope_v1" and (spec.target != "selection" or not spec.quality_bundle or spec.harness_protocol != LEGACY):
+    if spec.user_protocol != "scope_v1" and (
+        spec.target != "selection" or not spec.quality_bundle or spec.harness_protocol != LEGACY
+    ):
         raise ValueError("User protocol v2 requires selection legacy with a frozen quality bundle")
     ks = resolve_ks(spec.trials, spec.ks)
     quality = None
     if spec.quality_bundle:
-        if spec.target != 'selection' or spec.harness_protocol != LEGACY:
-            raise ValueError('Outcome contract v1 currently supports selection with legacy control only')
+        if spec.target != "selection" or spec.harness_protocol != LEGACY:
+            raise ValueError(
+                "Outcome contract v1 currently supports selection with legacy control only"
+            )
         from tau3_grpo.evaluation.outcome_contract import load_bundle
+
         quality = load_bundle(spec.quality_bundle, selection_entries)
-        if quality.get('approval_scope')=='smoke_only' and spec.trials!=1:
-            raise ValueError('This contract is approved for one-trial pipeline smoke only; formal evaluation is blocked')
+        if quality.get("approval_scope") == "smoke_only" and spec.trials != 1:
+            raise ValueError(
+                "This contract is approved for one-trial pipeline smoke only; formal evaluation is blocked"
+            )
     if spec.target == "selection":
         jobs = list(_selection_jobs(selection_entries, spec.trials, spec.seed))
     elif spec.target == "tau3-final":
@@ -307,8 +338,10 @@ def run_evaluation(
     else:
         # Legacy/v2 generate their own opening. Do not attest the parquet opening
         # as an input to a run that never consumes it.
-        jobs = [{key: value for key, value in job.items() if key != "initial_user_message"}
-                for job in jobs]
+        jobs = [
+            {key: value for key, value in job.items() if key != "initial_user_message"}
+            for job in jobs
+        ]
 
     token_runtime = None
     tokenizer = None
@@ -319,13 +352,17 @@ def run_evaluation(
         from tau3_grpo.models.generation_guard import repetition_penalty
         from tau3_grpo.models.token_budget import default_budget
 
-        policy_penalty = repetition_penalty(1.0 if policy.repetition_penalty is None else policy.repetition_penalty)
+        policy_penalty = repetition_penalty(
+            1.0 if policy.repetition_penalty is None else policy.repetition_penalty
+        )
 
         if not spec.tokenizer_path:
             raise ValueError("token_v4 requires the served checkpoint tokenizer_path")
         tokenizer = token_runtime.load_tokenizer(spec.tokenizer_path)
         token_runtime.prepare_runtime()
-        token_provenance["tokenizer_files_sha256"] = token_runtime.tokenizer_identity(spec.tokenizer_path)
+        token_provenance["tokenizer_files_sha256"] = token_runtime.tokenizer_identity(
+            spec.tokenizer_path
+        )
         budget = default_budget()
         token_runtime.check_context(policy, budget.context)
         token_runtime.check_context(user, budget.user_context)
@@ -339,24 +376,34 @@ def run_evaluation(
         "spec": {**asdict(spec), "ks": list(ks)},
         "planned": planned,
         "endpoints": {
-            name: {"model": endpoint.model, "temperature": endpoint.temperature,
-                   **({"repetition_penalty": policy_penalty} if name == "policy" else {})}
+            name: {
+                "model": endpoint.model,
+                "temperature": endpoint.temperature,
+                **({"repetition_penalty": policy_penalty} if name == "policy" else {}),
+            }
             for name, endpoint in (("policy", policy), ("user", user))
         },
-        "provenance": {**(provenance or {}), **token_provenance, **prompt_provenance(), **evaluation_provenance(jobs),
-                       "harness_protocol": protocol},
+        "provenance": {
+            **(provenance or {}),
+            **token_provenance,
+            **prompt_provenance(),
+            **evaluation_provenance(jobs),
+            "harness_protocol": protocol,
+        },
     }
     if quality is not None:
         from tau3_grpo.utils.hashing import sha256_json
-        metadata['provenance']['quality_bundle_sha256'] = sha256_json(quality)
-        metadata['provenance']['outcome_contract_version'] = quality['version']
-        metadata['provenance']['user_scope_sha256'] = sha256_json(scope_text(spec.user_protocol))
-        metadata['provenance']['user_protocol'] = spec.user_protocol
+
+        metadata["provenance"]["quality_bundle_sha256"] = sha256_json(quality)
+        metadata["provenance"]["outcome_contract_version"] = quality["version"]
+        metadata["provenance"]["user_scope_sha256"] = sha256_json(scope_text(spec.user_protocol))
+        metadata["provenance"]["user_protocol"] = spec.user_protocol
     recovered = []
     if spec.recovery_input:
         if quality is None:
             raise ValueError("Recovery requires a frozen quality bundle")
         from tau3_grpo.evaluation.recovery import validate_recovery
+
         recovered, recovery_provenance = validate_recovery(spec.recovery_input, metadata, quality)
         metadata["provenance"]["saved_rollout_recovery"] = recovery_provenance
     completed_keys = {(r["task_id"], r["trial"], r["seed"]) for r in recovered}
@@ -380,28 +427,50 @@ def run_evaluation(
             trajectory_file.write(json.dumps(row, sort_keys=True) + "\n")
         trajectory_file.flush()
         futures = {
-            (pool.submit(token_runtime.run_one, entry=job["entry"], policy=policy, user=user,
-                         seed=job["seed"], trial=job["trial"], tokenizer=tokenizer,
-                         request_timeout=spec.token_request_timeout)
-             if token_runtime is not None else pool.submit(
-                _run_one,
-                task=job["task"],
-                db_path=job["db_path"],
-                policy=policy,
-                user=user,
-                seed=job["seed"],
-                max_steps=spec.max_steps,
-                max_errors=spec.max_errors,
-                harness_protocol=spec.harness_protocol,
-                completed_rollout_path=str(out/"completed_rollouts"/f"{job['task_id']}_{job['trial']}_{job['seed']}.json"),
-                user_protocol=spec.user_protocol,
-                **({'outcome_contract': quality['tasks'][job['task_id']],
-                    'behavior_output':str(out/'behavior'),
-                    'behavior_budget_directory':quality.get('budget_directory')}
-                   if quality else {}),
-                **({"initial_user_message": job["initial_user_message"]}
-                   if spec.harness_protocol == INPUTS_V3 else {}),
-            )): job
+            (
+                pool.submit(
+                    token_runtime.run_one,
+                    entry=job["entry"],
+                    policy=policy,
+                    user=user,
+                    seed=job["seed"],
+                    trial=job["trial"],
+                    tokenizer=tokenizer,
+                    request_timeout=spec.token_request_timeout,
+                )
+                if token_runtime is not None
+                else pool.submit(
+                    _run_one,
+                    task=job["task"],
+                    db_path=job["db_path"],
+                    policy=policy,
+                    user=user,
+                    seed=job["seed"],
+                    max_steps=spec.max_steps,
+                    max_errors=spec.max_errors,
+                    harness_protocol=spec.harness_protocol,
+                    completed_rollout_path=str(
+                        out
+                        / "completed_rollouts"
+                        / f"{job['task_id']}_{job['trial']}_{job['seed']}.json"
+                    ),
+                    user_protocol=spec.user_protocol,
+                    **(
+                        {
+                            "outcome_contract": quality["tasks"][job["task_id"]],
+                            "behavior_output": str(out / "behavior"),
+                            "behavior_budget_directory": quality.get("budget_directory"),
+                        }
+                        if quality
+                        else {}
+                    ),
+                    **(
+                        {"initial_user_message": job["initial_user_message"]}
+                        if spec.harness_protocol == INPUTS_V3
+                        else {}
+                    ),
+                )
+            ): job
             for job in pending_jobs
         }
         for future in as_completed(futures):
@@ -423,7 +492,7 @@ def run_evaluation(
                 else:
                     reward = float(simulation.reward_info.reward)
                     if quality is not None:
-                        reward = float(simulation.info['outcome_contract']['reward'])
+                        reward = float(simulation.info["outcome_contract"]["reward"])
                     if not math.isfinite(reward):
                         raise ValueError("simulation reward must be finite")
                     row = {
@@ -435,10 +504,14 @@ def run_evaluation(
                     }
                     scored = True
             except Exception as exc:  # retain failures without losing completed trials
-                row = {**identity, "error_type": type(exc).__name__, "error": str(exc),
-                       "traceback": traceback.format_exc(),
-                       "execution_evidence": getattr(exc, "evaluation_evidence", None),
-                       "execution_eligibility": execution_eligibility(None, exception=True)}
+                row = {
+                    **identity,
+                    "error_type": type(exc).__name__,
+                    "error": str(exc),
+                    "traceback": traceback.format_exc(),
+                    "execution_evidence": getattr(exc, "evaluation_evidence", None),
+                    "execution_eligibility": execution_eligibility(None, exception=True),
+                }
             # Disk/serialization failures must propagate, not duplicate a trial
             # into both success and error files.
             handle = trajectory_file if scored else error_file
@@ -458,19 +531,29 @@ def run_evaluation(
     summary = {
         "target": spec.target,
         **summarize_trials(
-            planned=planned, results=results, errors=errors, trials=spec.trials,
-            ks=ks, include_pass_hat=spec.include_pass_hat,
+            planned=planned,
+            results=results,
+            errors=errors,
+            trials=spec.trials,
+            ks=ks,
+            include_pass_hat=spec.include_pass_hat,
         ),
         "policy_model": policy.model,
         "user_model": user.model,
         "benchmark_revision": TAU3_REVISION,
         "provenance": metadata["provenance"],
     }
-    if quality is not None and quality.get('dual_rule'):
+    if quality is not None and quality.get("dual_rule"):
         from tau3_grpo.evaluation.dual_metrics import summarize_dual
-        summary['dual_metrics'] = summarize_dual(
-            planned=planned, results=results, errors=errors, trials=spec.trials,
-            ks=ks, include_pass_hat=spec.include_pass_hat)
+
+        summary["dual_metrics"] = summarize_dual(
+            planned=planned,
+            results=results,
+            errors=errors,
+            trials=spec.trials,
+            ks=ks,
+            include_pass_hat=spec.include_pass_hat,
+        )
     (out / "summary.json").write_text(
         json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )

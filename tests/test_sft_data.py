@@ -155,8 +155,7 @@ def test_selection_applies_length_gate_and_one_dialogue_per_intent(tmp_path):
     selected_reasons = [dialogue.reason_for_call for dialogue in selected]
     for index, reason in enumerate(selected_reasons):
         assert all(
-            reason_similarity(reason, other) < 0.88
-            for other in selected_reasons[index + 1 :]
+            reason_similarity(reason, other) < 0.88 for other in selected_reasons[index + 1 :]
         )
 
 
@@ -199,11 +198,17 @@ def test_assistant_only_mask_labels_content_and_tool_calls_not_observations():
         assert all(label == IGNORE_INDEX for token, label in pairs if token == observation_token)
 
 
-
 def test_staged_screen_matches_legacy_similarity():
     from tau3_grpo.data.staged_sft import near_duplicate
-    reasons = ['Cancel my flight tomorrow', 'cancel my flight tomorrow!',
-               'book a new flight to Boston', 'add a bag', '', 'add two bags']
+
+    reasons = [
+        "Cancel my flight tomorrow",
+        "cancel my flight tomorrow!",
+        "book a new flight to Boston",
+        "add a bag",
+        "",
+        "add two bags",
+    ]
     for a in reasons:
         for b in reasons:
             assert near_duplicate(a, b) == (reason_similarity(a, b) >= 0.88)
@@ -211,38 +216,71 @@ def test_staged_screen_matches_legacy_similarity():
 
 def test_ordered_receipts_reject_swapped_same_tool_ids():
     from tau3_grpo.data.staged_sft import ordered_tool_receipts
-    row = {'messages': [
-        {'role': 'assistant', 'tool_calls': [
-            {'id': 'a', 'function': {'name': 'get_user_details'}},
-            {'id': 'b', 'function': {'name': 'get_user_details'}}]},
-        {'role': 'tool', 'name': 'get_user_details', 'tool_call_id': 'a'},
-        {'role': 'tool', 'name': 'get_user_details', 'tool_call_id': 'b'}]}
-    assert ordered_tool_receipts(row) == []
-    row['messages'][1]['tool_call_id'] = 'b'
-    assert '1:tool_id_mismatch' in ordered_tool_receipts(row)
 
+    row = {
+        "messages": [
+            {
+                "role": "assistant",
+                "tool_calls": [
+                    {"id": "a", "function": {"name": "get_user_details"}},
+                    {"id": "b", "function": {"name": "get_user_details"}},
+                ],
+            },
+            {"role": "tool", "name": "get_user_details", "tool_call_id": "a"},
+            {"role": "tool", "name": "get_user_details", "tool_call_id": "b"},
+        ]
+    }
+    assert ordered_tool_receipts(row) == []
+    row["messages"][1]["tool_call_id"] = "b"
+    assert "1:tool_id_mismatch" in ordered_tool_receipts(row)
 
 
 def test_baggage_rules_use_prior_membership_and_passenger_count():
     from tau3_grpo.data.sft_policy_checks import audit_baggage_allowances
     from tau3_grpo.prompts import build_system_prompt
+
     messages = [
-        {'role': 'system', 'content': build_system_prompt()},
-        {'role': 'tool', 'name': 'get_user_details',
-         'content': json.dumps({'user_id': 'u', 'membership': 'silver'})},
-        {'role': 'tool', 'name': 'get_reservation_details', 'content': json.dumps({
-            'reservation_id': 'r', 'user_id': 'u', 'cabin': 'economy',
-            'passengers': [{}, {}], 'total_baggages': 3, 'nonfree_baggages': 0})},
-        {'role': 'assistant', 'tool_calls': [{'name': 'update_reservation_baggages',
-            'arguments': {'reservation_id': 'r', 'total_baggages': 4, 'nonfree_baggages': 0}}]}]
+        {"role": "system", "content": build_system_prompt()},
+        {
+            "role": "tool",
+            "name": "get_user_details",
+            "content": json.dumps({"user_id": "u", "membership": "silver"}),
+        },
+        {
+            "role": "tool",
+            "name": "get_reservation_details",
+            "content": json.dumps(
+                {
+                    "reservation_id": "r",
+                    "user_id": "u",
+                    "cabin": "economy",
+                    "passengers": [{}, {}],
+                    "total_baggages": 3,
+                    "nonfree_baggages": 0,
+                }
+            ),
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "name": "update_reservation_baggages",
+                    "arguments": {
+                        "reservation_id": "r",
+                        "total_baggages": 4,
+                        "nonfree_baggages": 0,
+                    },
+                }
+            ],
+        },
+    ]
     check = audit_baggage_allowances(messages)[0]
-    assert check['status'] == 'satisfied' and check['free_total'] == 4
-    messages[-1]['tool_calls'][0]['arguments']['nonfree_baggages'] = 1
-    assert audit_baggage_allowances(messages)[0]['status'] == 'violated'
+    assert check["status"] == "satisfied" and check["free_total"] == 4
+    messages[-1]["tool_calls"][0]["arguments"]["nonfree_baggages"] = 1
+    assert audit_baggage_allowances(messages)[0]["status"] == "violated"
     # Future profile evidence cannot retroactively establish a prerequisite.
     messages.append(messages.pop(1))
-    assert audit_baggage_allowances(messages)[0]['status'] == 'unknown'
-
+    assert audit_baggage_allowances(messages)[0]["status"] == "unknown"
 
 
 def test_review_acceptance_requires_bound_visible_messages(tmp_path):
@@ -252,78 +290,99 @@ def test_review_acceptance_requires_bound_visible_messages(tmp_path):
     from tau3_grpo.data.finalize_staged_sft import reviewed_pool
     from tau3_grpo.prompts import build_system_prompt
     from tau3_grpo.utils.hashing import sha256_json
-    row = {'messages': [{'role': 'system', 'content': build_system_prompt()},
-                        {'role': 'user', 'content': 'Hello'}, {'role': 'assistant', 'content': 'Hello'}],
-           'metadata': {'source_dialog_id': 'test'},
-           'supervision': {'basis': 'source_answer_positions'}}
-    (tmp_path / 'records').mkdir()
-    path = tmp_path / 'records/test.json'
-    verdict = {'visible_hash': sha256_json(visible_events(row['messages'])), 'status': 'review_ready',
-               'audit': {'recommendation': 'keep_candidate', 'issues': [],
-                         'requirements': [{'status': 'satisfied'}], 'difficulty': {'level': 'easy'}}}
+
+    row = {
+        "messages": [
+            {"role": "system", "content": build_system_prompt()},
+            {"role": "user", "content": "Hello"},
+            {"role": "assistant", "content": "Hello"},
+        ],
+        "metadata": {"source_dialog_id": "test"},
+        "supervision": {"basis": "source_answer_positions"},
+    }
+    (tmp_path / "records").mkdir()
+    path = tmp_path / "records/test.json"
+    verdict = {
+        "visible_hash": sha256_json(visible_events(row["messages"])),
+        "status": "review_ready",
+        "audit": {
+            "recommendation": "keep_candidate",
+            "issues": [],
+            "requirements": [{"status": "satisfied"}],
+            "difficulty": {"level": "easy"},
+        },
+    }
     path.write_text(json.dumps(verdict))
     accepted, held = reviewed_pool([row], tmp_path)
     assert len(accepted) == 1 and not held
-    verdict['audit']['requirements'][0]['status'] = 'unknown'
+    verdict["audit"]["requirements"][0]["status"] = "unknown"
     path.write_text(json.dumps(verdict))
     assert not reviewed_pool([row], tmp_path)[0]
-    row['messages'][-1]['content'] = 'Changed after judgment'
-    with pytest.raises(ValueError, match='identity mismatch'):
+    row["messages"][-1]["content"] = "Changed after judgment"
+    with pytest.raises(ValueError, match="identity mismatch"):
         reviewed_pool([row], tmp_path)
-
 
 
 def test_continuation_rejects_partial_epoch_and_changed_training_masks(tmp_path):
     import hashlib
+
     import pytest
+
     from tau3_grpo.training.sft.continuation import validate_training
+
     root = tmp_path
-    (root / 'adapter').mkdir()
-    (root / 'train.exit').write_text('0')
-    stats = {'train': {'dialogues': 100}, 'validation': {'dialogues': 52}}
-    summary = {'actual_optimizer_steps': 13, 'train_loss': 1.2,
-               'validation_metrics': {'eval_loss': 1.0}, **stats}
-    (root / 'adapter/train_summary.json').write_text(json.dumps(summary))
-    state = {'global_step': 13, 'epoch': 1, 'log_history': [{'grad_norm': 1.0}]}
-    path = root / 'adapter/trainer_state.json'
+    (root / "adapter").mkdir()
+    (root / "train.exit").write_text("0")
+    stats = {"train": {"dialogues": 100}, "validation": {"dialogues": 52}}
+    summary = {
+        "actual_optimizer_steps": 13,
+        "train_loss": 1.2,
+        "validation_metrics": {"eval_loss": 1.0},
+        **stats,
+    }
+    (root / "adapter/train_summary.json").write_text(json.dumps(summary))
+    state = {"global_step": 13, "epoch": 1, "log_history": [{"grad_norm": 1.0}]}
+    path = root / "adapter/trainer_state.json"
     path.write_text(json.dumps(state))
     files = {}
-    for split in ('train', 'validation'):
-        (root / 'adapter' / f'effective_{split}.jsonl').write_text(split)
-        files[f'{split}_effective.jsonl'] = hashlib.sha256(split.encode()).hexdigest()
-    audit = {'token_stats': stats, 'files': files}
-    assert validate_training(root, audit)['actual_optimizer_steps'] == 13
-    with pytest.raises(ValueError, match='complete'):
+    for split in ("train", "validation"):
+        (root / "adapter" / f"effective_{split}.jsonl").write_text(split)
+        files[f"{split}_effective.jsonl"] = hashlib.sha256(split.encode()).hexdigest()
+    audit = {"token_stats": stats, "files": files}
+    assert validate_training(root, audit)["actual_optimizer_steps"] == 13
+    with pytest.raises(ValueError, match="complete"):
         validate_training(root, audit, expected_steps=39, expected_epochs=3)
     state.update(global_step=39, epoch=3)
-    summary['actual_optimizer_steps'] = 39
+    summary["actual_optimizer_steps"] = 39
     path.write_text(json.dumps(state))
-    (root / 'adapter/train_summary.json').write_text(json.dumps(summary))
+    (root / "adapter/train_summary.json").write_text(json.dumps(summary))
     assert validate_training(root, audit, expected_steps=39, expected_epochs=3)
     state.update(global_step=13, epoch=1)
-    summary['actual_optimizer_steps'] = 13
-    (root / 'adapter/train_summary.json').write_text(json.dumps(summary))
-    state['epoch'] = .92
+    summary["actual_optimizer_steps"] = 13
+    (root / "adapter/train_summary.json").write_text(json.dumps(summary))
+    state["epoch"] = 0.92
     path.write_text(json.dumps(state))
-    with pytest.raises(ValueError, match='complete'):
+    with pytest.raises(ValueError, match="complete"):
         validate_training(root, audit)
-    state['epoch'] = 1
+    state["epoch"] = 1
     path.write_text(json.dumps(state))
-    (root / 'adapter/effective_train.jsonl').write_text('changed mask')
-    with pytest.raises(ValueError, match='masks/messages'):
+    (root / "adapter/effective_train.jsonl").write_text("changed mask")
+    with pytest.raises(ValueError, match="masks/messages"):
         validate_training(root, audit)
 
 
 def test_continuation_tokenizer_rejects_semantic_change(tmp_path, monkeypatch):
     from types import SimpleNamespace
+
     import pytest
     import transformers
+
     from tau3_grpo.training.sft.continuation import preserve_base_tokenizer
 
     def tokenizer(path, **kwargs):
-        return SimpleNamespace(get_vocab=lambda: {'token': 1 if path.endswith('base') else 2})
+        return SimpleNamespace(get_vocab=lambda: {"token": 1 if path.endswith("base") else 2})
 
-    monkeypatch.setattr(transformers.AutoTokenizer, 'from_pretrained', tokenizer)
-    with pytest.raises(ValueError, match='semantics changed'):
-        preserve_base_tokenizer(tmp_path / 'base', tmp_path / 'merged', tmp_path / 'backup')
-    assert not (tmp_path / 'backup').exists()
+    monkeypatch.setattr(transformers.AutoTokenizer, "from_pretrained", tokenizer)
+    with pytest.raises(ValueError, match="semantics changed"):
+        preserve_base_tokenizer(tmp_path / "base", tmp_path / "merged", tmp_path / "backup")
+    assert not (tmp_path / "backup").exists()
