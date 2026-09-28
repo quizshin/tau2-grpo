@@ -279,3 +279,60 @@ Observed Kimi supervisor64087 already naturally fail-closed by14:18:45 after3 ne
 `generation_first_inventory.json` remote14:23:26:296user_stop teacher attempts,37known rejected completed candidates excluded,259unique complete teacher goals;historical70+259=329,remaining171.27failed and1running excluded;32dev excluded. Hash/message-mask/source-state structure checks and user isolation passed;full native replay pending. Frozen200semantic and token audit unchanged.
 
 Finite waiter `wait_round03_then_round04_generation_first.py` remotePID183525 now waits existing round03,then launches frozen round04 once. PlanSHA `2675c5744ab9742dd12b8b8c5823f49fc0b0a4357e145629f89ef08629228b2e`;remote100-task dryrun passed. No Kimi/dev wait dependency, no parallelDeepSeek owner. Dev retry5 is prepared but deferred;it will not preempt training-candidate generation. Native CPU audit runs independently against snapshot259,with frozen130teacher prior-audit provenance preserved and fresh candidates replayed against originalDB.
+
+### 15:34 UTC recovery: production continued during UI interruption
+
+Remote round03controller177378 andbatch17child195579 alive,60round03 attempts completed;round04waiter183525 alive. Kimi supervisor/dev waiter gone,active{} and54held requests unchanged. The interruption did not stop generation: unique complete non-rejected teacher goals rose259→289;with historical70=359candidates,remaining141. Rawtrain326user_stop,41failed,1running. Formal `Budget.accounted`=50.505145CNY at6152calls; do not sum original call entries because historical accounting adjustments exist. One live request reservation is normal while generation is active; no new orphan reservation was reported by its controller.
+
+Native+token audits of259snapshot both completed with0failures. Separate finite post-round04 fill now waits asPID204724 (`generation_first_fill_after_round04_v2.py`):maximum80extra attempts,subbatches≤20,shared100CNY/≤10CNYincrement,originaltask/DB,perexactgoal≤3. It uses only known settled failure or existing frozenCodex/Kimi rejection proofs and stops at430mechanically valid unique teacher goals. No semantic review API is called. The initial fill waiter204245 was safely terminated while stillwaiting andbefore any paidcall, because globbing all rubric versions found obsolete duplicates;replacementv2 binds460authoritative current frozen rubricsSHA `5e030d7c5f0f850a9a18f03dc98f37a2f4d0f4b0fa33f3c8d1cdd6c31242c61d`. CurrentDeepSeek was not touched.
+
+Prepared a separate `package_pending_review500.py`,with hard430teacher+70historical,fullnative/token/hash/uniquegoal/max3/user-isolation gates. Output explicitly remainspending_review,per-row existing247acceptances preserved,not500qualified;noSFTGPU. Frozen200source andtoken hashes retained. A bounded packaging continuation will audit actual original attempts afterfill then freeze thecandidate package;it never callsgeneration,Kimi,ortraining.
+
+### 16:09 UTC round transition and final evidence readiness
+
+Round03 completed100actual attempts,net72user_stop and28settled generation failures;failures retained andnot counted. Frozen round04 automatically launched controller215016 /batch19child215041 at16:09:30UTC,afterround03 ended,with startBudget.accounted51.849873CNY. Live snapshot16:09:53:310unique complete non-rejected teacher goals +70historical=380candidates,remaining120;Kimi-qualified total247unchanged. Incremental303teacher snapshot passed303/303 native and303/303token/mask audits with0failures by16:02UTC.
+
+The finite fill successor isnowPID213485,script `generation_first_fill_after_round04_v3.py`,using the existing `generation_first_fill_v2_runtime.json` interface for packaging. While stillwaiting with0paidcalls, v2PID204724 was safely replaced and its priorruntime archived. V3 retains80maximum extra attempts,allows additional smalltail batches within that same80budget,instead of incorrectly limiting allwork to4batches. CPU fixture:45missing candidates can finish in5batches/62attempts;no budget expansion,eachbatch≤20,exactgoal≤3.
+
+Remote immutable provenance iscomplete:37previously local-only frozen source copies (830609203bytes) uploaded to missing paths,all130frozen teacher sourceSHA verified;all130original candidateSHA also match frozenindex. Historical72review files copied andbound to existing frozen summarySHA;only70frozen accepted rows enterpackage. All221Kimi input/state/review/raw-response files (including known failures/unknown usage) copied with per-file hash checks,noexisting bytes changed andnoAPIcalls. The pendingpackager includes existing acceptance proofs,frozen430task/rubric evidence,fullsource pointers,native/token audit,isolateddev manifest,andcurriculum subsets without changingfrozen200 messages/masks.
+
+`generation_first_control_manifest.json` now recordscanonical runtime/progress paths andgeneration-first quotas. Pending500 remainsdistinct fromqualified500. Packaging waiterPID205991 isstillwaiting;it will notemit a packageuntil430unique mechanically checkedteacher candidates exist. Oldwaiter runtimefiles arehistory,notactivecommands torestart.
+
+
+## 2026-09-27 19:18 UTC — generation-first milestone delivered
+
+500 complete unique training candidates are frozen and delivered locally: 70 historical rows + 430 different teacher goals. This is **not 500 qualified samples**: 200 frozen approvals + 47 Kimi approvals = **247 qualified**, with **253 pending semantic review**. Kimi scheduling remains paused. No SFT GPU/training was started and RL was not modified.
+
+## Delivered artifacts
+
+- Package: `pending_review500_generation_first_20260927/`
+- Main data: `500_candidates_pending_review.jsonl`
+- Summary: `pending_review500_generation_first_20260927/summary.json`
+- Local receipt: `pending_review500_local_delivery_receipt.json`
+- Archive: `pending_review500_generation_first_20260927.tar.gz`
+- Archive SHA256: `ae18c35a386bce7895c9828b9b4689c0977c2cf83d6a8bb8b38de2dfafd18920`
+- Summary SHA256: `dea76ba27e25f1848fbc4cda279c345613d90b79032e47b92516ae0ef55477f7`
+
+430/430 teacher native state/receipt replays and exact token/mask checks passed, zero failures. All package manifest file hashes and the archive hash were verified locally. Exact message/mask duplicates: 0. Train/dev user overlap: 0. Maximum rendered tokens: 18015 (limit24576). Maximum actual attempts per exact goal: 3. Frozen200 source hashes/messages/masks and original generator/renderer remained unchanged.
+
+Cumulative curriculum subsets are A73, B381, C500, all explicitly candidate/pending-review datasets. Dev37 is excluded and unchanged (32 complete,5 generation failures,0 semantic approvals); prepared dev retry remains unscheduled. All221 preserved Kimi input/state/review/raw-response files remain included; failed or unknown-usage review calls were not retried.
+
+## Completed pipeline, no restart needed
+
+Round04 completed100 attempts. Fill01/02/03/04 completed20+14+6+1=41 attempts (29 complete,12 settled generation failures), within80 maximum. Existing known rejects and failed/in-flight/duplicate candidates were excluded.
+
+Final fill v5 PID275558, pack PID275640, and local delivery PID76572 completed and exited. All earlier PIDs in historical documentation are obsolete; do not restart these finite controllers. Runtime states are `target_reached_pending_review_package_required`, `pending_review500_package_frozen_not_qualified500`, and `local_pending_review500_verified_not_qualified500` respectively. The parent owns pausing the monitor.
+
+Shared original DeepSeek ledger Budget.accounted: **57.410209 CNY /100 CNY**,7599 started calls at generation completion. Never sum raw call entries or rewrite/copy/reset the ledger. The legacy historical reserve remains as recorded.
+
+Mechanical filesystem recovery receipts: `generation_first_waiter_recovery_20260927T1653.json`, `generation_first_io_recovery_20260927T1757.json`, `generation_first_io_recovery_20260927T1854.json`. Transient missing temporary-file errors were preserved. Token/native audits now use exclusive locks and unique fsynced temporary files with bounded retries; no acceptance gates changed. The final recovery retained34 prior attempts and resumed atfill03 without repeating paid generation.
+
+This finishes the generation-first milestone only. The older qualified500+37 package gate remains intact and unmet. No new semantic approval is inferred from mechanical checks.
+
+
+
+## 2026-09-28 — explicit user authorization resumed Kimi semantic review
+
+This supersedes the earlier Kimi pause only; the delivered500 candidate package remains immutable. Target now returns to500 truly qualified unique training samples. First bounded plan54 untouched candidates runs locally under supervisor80251, concurrency3, exactKimi-K3,1200s timeout/16384 output limit,automatic request retries0. Finite continuation80438 waits for this plan and then reviews up to100+92 additional untouched candidates; any newly unresolved request stops dispatch after active requests drain. Seven previous failed attempts, including unknown usages, remain preserved and never retried.192 missing original candidate files were downloaded and verified against original hashes without overwriting existing files.
+
+At00:50UTC,4new complete Kimi reviews yielded2accept+2reject:200frozen+49Kimi=249qualified, not500. Current mutable receipts/index live outside the delivered immutable package. Runtime references: `kimi_resumed500_01_runtime.json`, `kimi_resumed500_continuation_runtime.json`, `kimi_resumption_control_manifest_20260928.json`. Qualified shortfalls after semantic rejection require authorized bounded teacher generation and fresh Kimi review; no Codex semantic substitute. Shared DeepSeek100CNY ledger is unchanged (last57.410209CNY); CPU/API only, RL untouched.
