@@ -229,3 +229,10 @@ frozen source snapshots and experiment receipts remain authoritative; no frozen
 bundle/source identity is rewritten to conceal these changes. The active local
 dev150 generation checkout stays at its original revision while this CI fix is
 published from an isolated Git branch. No GPU/API job is launched by the fix.
+
+The first repair run `36432516975` passed lint, shell syntax and vendor checks,
+then exposed a second pre-existing CI dependency gap: 502 core tests passed and
+`test_halt_persists_pending_batch_and_redacted_config_not_checkpoint` failed because
+OmegaConf was absent. The local RL environment had masked this missing declaration.
+Added `omegaconf>=2.3,<3` to the CPU `dev` extra used by CI; the real config conversion
+and secret-redaction check remain enabled. No tokenizer/model download is needed.
