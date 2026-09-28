@@ -1,0 +1,88 @@
+{
+  "schema": "tau3_sft_package_receipt_v1",
+  "verified_on": "2026-09-28",
+  "source_summary_sha256": "a5b9385b4e9f865308cd7ca122b456504d4a59d91e9431d5bd773b9d87693885",
+  "asset_directory": "results/analysis/sft_deepseek_500_20260927/verified500_mixed_review_20260928",
+  "public_repository_includes_dataset": false,
+  "status": "verified500train37dev_no_training_run",
+  "train_count": 500,
+  "validation_count": 37,
+  "historical_accepted": 70,
+  "codex_teacher_accepted": 130,
+  "kimi_train_accepted": 281,
+  "sol_high_train_accepted": 19,
+  "kimi_dev_accepted": 36,
+  "sol_high_dev_accepted": 1,
+  "all_kimi_train_accepted": 281,
+  "all_kimi_dev_accepted": 36,
+  "all_sol_high_train_accepted": 19,
+  "all_sol_high_dev_accepted": 1,
+  "train_curriculum_counts": {
+    "foundation": 109,
+    "constraints": 284,
+    "strategy": 107
+  },
+  "curriculum_subsets": {
+    "A": {
+      "file": "A109_train.jsonl",
+      "count": 109,
+      "buckets": [
+        "foundation"
+      ]
+    },
+    "B": {
+      "file": "B393_train.jsonl",
+      "count": 393,
+      "buckets": [
+        "foundation",
+        "constraints"
+      ]
+    },
+    "C": {
+      "file": "C500_train.jsonl",
+      "count": 500,
+      "buckets": [
+        "foundation",
+        "constraints",
+        "strategy"
+      ]
+    }
+  },
+  "token_audits": {
+    "train": {
+      "dialogues": 500,
+      "total_tokens": 3903108,
+      "label_tokens": 358647,
+      "mean_total_tokens": 7806.216,
+      "mean_label_tokens": 717.294
+    },
+    "validation": {
+      "dialogues": 37,
+      "total_tokens": 252180,
+      "label_tokens": 18399,
+      "mean_total_tokens": 6815.675675675676,
+      "mean_label_tokens": 497.27027027027026
+    }
+  },
+  "global_attempt_audit_sha256": "0e7667892b4c4890d5b4c3ab9410fc74016305d370aec7fac42e1c676cf84849",
+  "max_actual_attempts": 3,
+  "max_exact_goal_attempts": 3,
+  "train_dev_user_overlap": [],
+  "exact_message_mask_duplicates": 0,
+  "gpu_used": false,
+  "files": {
+    "train.jsonl": "bad03735e0475481da837f9eabec86967243e0028c03ecaedc4be0cd4751273c",
+    "C500_train.jsonl": "bad03735e0475481da837f9eabec86967243e0028c03ecaedc4be0cd4751273c",
+    "token_mask_audit.json": "fe38102c28155ef4e63b06bfae1d6bd1962194202b37bc260fbbf733853a801d",
+    "validation_effective.jsonl": "bbc34c11281049ee2bf0530c295bfeee4914bf766593fab219fdac0b33b1a202",
+    "frozen_prompt_protocols.json": "3d6d6fec62aab10aa785db4c895a9d6b1665c8299f18b235ba42caab750c4326",
+    "B393_train.jsonl": "deee1e547b18167963ac663d2d7f73f8f30c2ca67a340b0c898c5ec2be98a4a7",
+    "source_ledger.json": "205b586e007ff81a55c53cfb9aac6ff50891a4d64c6d942fc7f1e269c36be545",
+    "A109_train.jsonl": "07be818654f479dac9e856823367ac3cba824a31d86631039b7d873082c59822",
+    "train_effective.jsonl": "9f216d5b505f0991db14c06891271fa1fc25ca86a7cff42e6fa5676821092c22",
+    "validation.jsonl": "440e6910e42f50d071b8c451af334e4b382e46fa7302090c3b110117f260b142",
+    "strategy_train.jsonl": "ef5c3526a84b7e64725880ed62e5a90551d112465919800dc18f1750bce8be02",
+    "constraints_train.jsonl": "3ce5b129c8f7c13eeba7172c25e637cdbb7dce682bb72de11dc65ef93351edca",
+    "foundation_train.jsonl": "07be818654f479dac9e856823367ac3cba824a31d86631039b7d873082c59822"
+  }
+}

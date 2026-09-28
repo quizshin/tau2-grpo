@@ -790,3 +790,16 @@ SFT新方法运行更新：15:15首20任务DeepSeek teacher/独立user候选生�
   counted once in ARPO cost metrics. Evaluation uses independent trajectories.
 - Status: local and remote CPU verified; not trained, not GPU-verified, not deployed
   into the active remote checkout. Formal GPU budget requires separate approval.
+
+
+## 2026-09-28 课程500数据交付与dev150计划
+
+状态：数据已验收、SFT未训练。冻结500 train +37 dev，累计A109/B393/C500；全部包内文件SHA已核对，train/dev用户交集0、精确消息/mask重复0，混合审核来源明确保留。见[数据清单](docs/sft500_package_manifest_20260928.json)和[当前计划](README.md)。用户后续要求dev扩至150，先DeepSeek生成候选、语义审核后置；新增113条合格dev尚未交付。旧selection60仅历史回归，官方final50不参与选型。
+
+## 2026-09-28 repair72 shared32 full-eval正式20步完成
+
+状态：`trained`。run `results/runs/repair72_grpo_shared32_full_eval20_20260927/seed42` 已完成20更新与云端20步核对；selection终局奖励均值step0/10/20为0.445833/0.483333/0.491667。completion、controller-state和shutdown-status本地归档一致；051随后正常关机。不是新课程SFT结果或盲测增益，详见[执行记录](docs/repair72_rl_and_curriculum_plan_20260927.md)。
+
+## 2026-09-28 ARPO集成发布与后续对照
+
+已将`codex/arpo-tau-v1`的CPU验证实现合入本地发布checkout，同时保留初始评测step0的云端核验修复。ARPO仍为`cpu_verified`，不宣称GPU更新、恢复、吞吐或算法收益已验证。计划在A/B/C对应同一冻结SFT起点上比较SFT-only、GRPO与ARPO；先冻结预算、任务、奖励、dev150和采样，并对齐损失归约/模拟器种子。现有repair72 profile仅工程模板，不能当作新课程配置直接运行。

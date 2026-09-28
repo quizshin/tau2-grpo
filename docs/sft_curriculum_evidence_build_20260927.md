@@ -1,3 +1,11 @@
+## 最新状态：2026-09-28 课程计划发布
+
+已核对 `verified500_mixed_review_20260928/summary.json` 及其中全部文件哈希：**500 train + 37 dev 已语义验收并冻结，尚未训练 SFT**。累计训练子集为 A109 → B393 → C500；历史候选 A73/B381/C500 和 400+60 版本均不代表当前交付。审核来源保留历史70、Codex teacher130、Kimi train281/dev36、GPT-6-sol high train19/dev1，不改写已有来源。
+
+最新目标是保持 train500 不变，将 dev37 扩充至 dev150（目标按基础/约束/策略约50/50/50覆盖）。用户要求 DeepSeek 先生成题目/候选、语义审核后置；新113条合格 dev 尚未交付，不启动 Kimi 或 SFT 训练。五维 rubric、九类能力和 badcase 分类共同指导覆盖，关键 checkpoint 用共同完整 dev，分阶段检查前序能力回归。旧 selection60 单列历史回归，不计入 dev150；官方 final50 保留最终测试。
+
+详见 [README 当前计划](../README.md#当前计划三阶段-sft--grpo--arpo2026-09-28) 和 [冻结数据清单](sft500_package_manifest_20260928.json)。下文为按当时事实保留的历史流水，旧计数、PID、Kimi 授权和暂停状态不覆盖本节。
+
 ## 2026-09-27 18:04 — 用户新指令：Codex审核到累计200，随后交Kimi K3
 
 当前主账本180=历史70+teacher110，距200还20。owner审06后10（125不通过/126hold，预计8通过到188）；curriculum_audit仅07前10（131–140），最多10通过；owner精确补最后缺口，达到200后interrupt审核子agent且不再唤醒。停止的是Codex逐条语义审核，DeepSeek继续生成，后续全部pending Kimi K3 review，不擅自调用Kimi或猜端点。准备200冻结索引和待审原始对话/DB/API回执/hash/rubric交接资料。100元共享历史预算、每goal最多3总尝试、新unknown即停不变。自动化保持现有PAUSED状态。

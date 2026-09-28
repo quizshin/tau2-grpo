@@ -58,6 +58,15 @@ historical:
   removal: retain_until_all_compatibility_and_evidence_references_are_resolved
   reference_audit: docs/architecture/cleanup_20260919.md
 candidates:
+  repair72_shared32_full_eval:
+    purpose: historical_repair72_grpo_20step_with_real_initial_and_boundary_evaluation
+    enabled_by_default: false
+    status: trained
+    profile: configs/train/rl/repair72_grpo_2xa800_shared32_full_eval.yaml
+    estimator: grpo
+    protocol: airline_passenger_multiset_v1
+    evidence: docs/repair72_rl_and_curriculum_plan_20260927.md
+    validation_scope: old_repair72_selection60_not_curriculum500_or_blind_test
   repair72_passenger_multiset_v1:
     purpose: correct_passenger_permutation_false_negatives_in_rl_terminal_db_reward
     enabled_by_default: false

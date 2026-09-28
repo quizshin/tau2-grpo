@@ -1,3 +1,9 @@
+## 最新状态：2026-09-28 发布计划与旧实验收尾
+
+本地归档的 `results/runs/repair72_grpo_shared32_full_eval20_20260927/seed42/completion.json` 与 `controller-state.json` 确认旧 repair72 GRPO 已完成20步，云端20个更新步验收通过；step10/20 的 selection 终局奖励均值为0.483333/0.491667，起点记录为0.445833。收尾含 step20 缺失标量按本地原始指标精确补传，不改写实验身份。`shutdown-status.json` 记录051已于2026-09-28按原任务授权正常关机、未删除实例存储。这里是已归档事实，不再沿用下文旧PID作为当前运行状态。
+
+新主线为已验收500条的 A109→B393→C500 累计SFT，以及对应同一SFT起点的GRPO/ARPO分支对照。dev37扩充至150仍在候选生成阶段，新课程训练尚未执行；ARPO仅CPU验收，未做GPU验收。当前发布把既有完整评测profile与ARPO合入本地Git，并准备同步GitHub，不启动训练服务器或更改其checkout。详细计划见 [README](../README.md)。下文历史预算、暂停/重启和未完成状态保留作为追溯记录。
+
 ## 2026-09-27 17:58 用户授权改为速度优先 fast32
 
 用户明确允许每step轨迹减半，并明确选择保留日志/轨迹、停止旧运行、放弃未保存更新，从同repair72起点立即重开。旧throughput20 controller55708已SIGINT并由自有cleanup释放两卡，原状态failed是人工停止而非训练崩溃，user_authorized_fast32_stop.json记录。停止前step1约40分钟，进入update_actor，尚无完整step指标或checkpoint；不计为完成更新。

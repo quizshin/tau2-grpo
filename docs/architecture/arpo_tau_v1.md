@@ -1,6 +1,9 @@
 # ARPO τ adaptation v1
 
-Status: cpu_verified (2026-09-27); deployment deferred while canonical runs are active.
+Status: cpu_verified (2026-09-27); integrated into local publication checkout on 2026-09-28.
+The old GRPO run subsequently completed and its server was shut down; this publication
+does not deploy ARPO into that server checkout. Historical development boundaries below
+retain the original run/source identity.
 No GPU authorization or GPU validation.
 
 ## Sources and scope
