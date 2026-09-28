@@ -69,7 +69,9 @@ def test_resume_cannot_switch_credit_mode(local_paths, previous, requested):
         runner.resolve(local_paths, credit_mode=requested, resume_from=local_paths / 'global_step_10')
 
 
-def test_smoke_completion_requires_checkpoint_and_cloud_steps_not_selection(tmp_path, monkeypatch):
+@pytest.mark.parametrize('steps,valid', [([1, 2], True), ([0, 1, 2], True),
+                                        ([0, 2], False), ([0, 1, 1, 2], False)])
+def test_smoke_completion_requires_checkpoint_and_cloud_steps_not_selection(tmp_path, monkeypatch, steps, valid):
     import swanlab
 
     (tmp_path / 'latest_checkpointed_iteration.txt').write_text('2')
@@ -79,13 +81,18 @@ def test_smoke_completion_requires_checkpoint_and_cloud_steps_not_selection(tmp_
 
     class Run:
         def metrics(self, **kw):
-            return {'list': [{'metrics': [{'step': i, 'value': i} for i in [1, 2]]}]}
+            return {'list': [{'metrics': [{'step': i, 'value': i} for i in steps]}]}
 
     class Api:
         def run(self, path):
             return Run()
 
     monkeypatch.setattr(swanlab, 'Api', Api)
+    monkeypatch.setattr(runner.time, 'sleep', lambda _: None)
+    if not valid:
+        with pytest.raises(RuntimeError, match='Cloud step readback incomplete'):
+            runner.verify_completion(tmp_path, 2, world_size=8, engineering_smoke=True)
+        return
     result = runner.verify_completion(tmp_path, 2, world_size=8, engineering_smoke=True)
     assert result['completed_step'] == 2 and result['evaluation_scores'] == {}
     assert calls[0][1]['world_size'] == 8

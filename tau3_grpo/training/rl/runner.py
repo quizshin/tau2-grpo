@@ -401,7 +401,9 @@ def verify_completion(result, target, *, world_size=4, engineering_smoke=False):
     for _ in range(6):
         values = swanlab.Api().run(tracking['run_path']).metrics(keys=['trainer/global_step'], all=True)
         points = [(int(p['step']), int(p['value'])) for row in values.get('list', []) for p in row.get('metrics', [])]
-        if sorted(points) == [(s, s) for s in range(1, latest + 1)]:
+        expected_points = [(s, s) for s in range(1, latest + 1)]
+        # Initial validation logs step zero; it is not an optimizer update.
+        if sorted(points) in (expected_points, [(0, 0), *expected_points]):
             break
         time.sleep(2)
     else:
