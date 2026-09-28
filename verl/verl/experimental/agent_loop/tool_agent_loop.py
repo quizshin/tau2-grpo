@@ -187,7 +187,8 @@ class ToolAgentLoop(AgentLoopBase):
         self.record_process_turns = algorithm.get("adv_estimator") == "mt_gtpo"
         self.record_turn_facts = os.getenv("TAU3_RECORD_TRAJECTORY_FACTS", "0") == "1"
         self.record_call_attribution = os.getenv("TAU3_RECORD_CALL_ATTRIBUTION", "0") == "1"
-        self.record_turn_facts = self.record_turn_facts or self.record_call_attribution
+        self.record_turn_facts = (self.record_turn_facts or self.record_call_attribution
+                                  or algorithm.get("adv_estimator") == "arpo")
         guard_mode = (self.rollout_config.get("generation_guard") or {}).get("mode", "off")
         update_guard_mode = (self.config.get("tau3_update_guard") or {}).get("mode", "off")
         self.record_turn_facts = self.record_turn_facts or guard_mode != "off" or update_guard_mode != "off"
@@ -232,57 +233,74 @@ class ToolAgentLoop(AgentLoopBase):
 
     @rollout_trace_op
     async def run(self, sampling_params: dict[str, Any], **kwargs) -> AgentLoopOutput:
-        messages = list(kwargs["raw_prompt"])
+        controller = kwargs.pop("_tau3_arpo", None)
+        resumed = kwargs.pop("_tau3_resume", None)
+        if resumed is not None:
+            if controller is None:
+                raise ValueError("Resuming a branch requires an ARPO controller")
+            agent_data = resumed
+            state = AgentState.GENERATING
+        else:
+            messages = list(kwargs["raw_prompt"])
 
-        # extract images and videos from messages
-        multi_modal_data = await self.process_vision_info(messages)
-        images = multi_modal_data.get("images")
-        videos = multi_modal_data.get("videos")
+            # extract images and videos from messages
+            multi_modal_data = await self.process_vision_info(messages)
+            images = multi_modal_data.get("images")
+            videos = multi_modal_data.get("videos")
 
-        metrics = {}
-        request_id = uuid4().hex
-        tools_kwargs = kwargs.get("tools_kwargs", {})
+            metrics = {}
+            request_id = uuid4().hex
+            tools_kwargs = kwargs.get("tools_kwargs", {})
 
-        # Initialize interaction if needed
-        interaction = None
-        interaction_kwargs = {}
-        if self.interaction_config_file:
-            interaction_kwargs = kwargs["extra_info"]["interaction_kwargs"]
-            if "name" not in interaction_kwargs:
-                raise ValueError("'name' key is required in interaction_kwargs")
-            interaction_name = interaction_kwargs["name"]
-            if interaction_name not in self.interaction_map:
-                raise ValueError(
-                    f"Interaction '{interaction_name}' not found in interaction_map. Available interactions: "
-                    f"{list(self.interaction_map.keys())}"
-                )
-            interaction = self.interaction_map[interaction_name]
-            await interaction.start_interaction(request_id, **interaction_kwargs)
-        # Create AgentData instance to encapsulate all state
-        agent_data = AgentData(
-            messages=messages,
-            image_data=images,
-            video_data=videos,
-            metrics=metrics,
-            request_id=request_id,
-            tools_kwargs=tools_kwargs,
-            interaction=interaction,
-            interaction_kwargs=interaction_kwargs,
-        )
+            # Initialize interaction if needed
+            interaction = None
+            interaction_kwargs = {}
+            if self.interaction_config_file:
+                interaction_kwargs = kwargs["extra_info"]["interaction_kwargs"]
+                if "name" not in interaction_kwargs:
+                    raise ValueError("'name' key is required in interaction_kwargs")
+                interaction_name = interaction_kwargs["name"]
+                if interaction_name not in self.interaction_map:
+                    raise ValueError(
+                        f"Interaction '{interaction_name}' not found in interaction_map. Available interactions: "
+                        f"{list(self.interaction_map.keys())}"
+                    )
+                interaction = self.interaction_map[interaction_name]
+                await interaction.start_interaction(request_id, **interaction_kwargs)
+            # Create AgentData instance to encapsulate all state
+            agent_data = AgentData(
+                messages=messages,
+                image_data=images,
+                video_data=videos,
+                metrics=metrics,
+                request_id=request_id,
+                tools_kwargs=tools_kwargs,
+                interaction=interaction,
+                interaction_kwargs=interaction_kwargs,
+            )
 
-        agent_data.tau3_evaluation_only = getattr(self, "evaluation_only", False)
+            agent_data.tau3_evaluation_only = getattr(self, "evaluation_only", False)
 
-        # State machine loop. Tau3-GRPO local patch: release the private tau2
-        # session even when generation, a tool, or the simulator raises.
-        state = AgentState.PENDING
+            # State machine loop. Tau3-GRPO local patch: release the private tau2
+            # session even when generation, a tool, or the simulator raises.
+            state = AgentState.PENDING
+        if controller is not None:
+            controller.attach(agent_data)
         try:
             while state != AgentState.TERMINATED:
                 if state == AgentState.PENDING:
                     state = await self._handle_pending_state(agent_data, sampling_params)
                 elif state == AgentState.GENERATING:
-                    state = await self._handle_generating_state(agent_data, sampling_params)
+                    snapshot = controller.before_generation(agent_data) if controller else None
+                    params = controller.sampling_params(agent_data, sampling_params) if controller else sampling_params
+                    state = await self._handle_generating_state(agent_data, params)
+                    if controller:
+                        controller.after_generation(agent_data, snapshot)
+                        agent_data.arpo_after_tools = False
                 elif state == AgentState.PROCESSING_TOOLS:
                     state = await self._handle_processing_tools_state(agent_data)
+                    if controller:
+                        agent_data.arpo_after_tools = state == AgentState.GENERATING
                 elif state == AgentState.INTERACTING:
                     state = await self._handle_interacting_state(agent_data)
                 else:
@@ -296,6 +314,9 @@ class ToolAgentLoop(AgentLoopBase):
                 except Exception as cleanup_exc:  # pragma: no cover - preserve original error
                     logger.warning(f"interaction cleanup failed: {cleanup_exc}")
             raise
+
+        if controller:
+            controller.finish(agent_data)
 
         # Tau3-GRPO local patch: terminal verifier reward is computed inside the
         # rollout worker while its private tau2 session still exists. Publishing
@@ -411,6 +432,8 @@ class ToolAgentLoop(AgentLoopBase):
             raw = json.dumps(facts, sort_keys=True, allow_nan=False)
             output.extra_fields["trajectory_facts_json"] = raw
             output.extra_fields.setdefault("reward_extra_info", {})["trajectory_facts_json"] = raw
+        if controller:
+            controller.publish(agent_data, output)
         return output
 
     def _records_turns(self):
@@ -478,6 +501,8 @@ class ToolAgentLoop(AgentLoopBase):
         turn_sampling_params = dict(sampling_params)
         turn_sampling_params["max_tokens"] = min(max_tokens_per_turn, remaining_tokens)
 
+        if "arpo_entropy_top_k" in turn_sampling_params:
+            agent_data.arpo_generation_attempted = True
         with simple_timer("generate_sequences", agent_data.metrics):
             output: TokenOutput = await self.server_manager.generate(
                 request_id=agent_data.request_id,
@@ -486,6 +511,8 @@ class ToolAgentLoop(AgentLoopBase):
                 image_data=agent_data.image_data,
                 video_data=agent_data.video_data,
             )
+        if "arpo_entropy_top_k" in turn_sampling_params:
+            agent_data.arpo_last_entropy = output.extra_fields.get("arpo_entropy")
         token_end_reason = None
         if getattr(self, "token_budget", None):
             from tau3_grpo.integrations.verl.token_budget import generation_result

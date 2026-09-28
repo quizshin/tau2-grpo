@@ -96,7 +96,7 @@ def collect_rollout_metrics(
     if estimator_diagnostics is not None:
         if estimator_diagnostics.get("estimator") != str(adv_estimator):
             raise ValueError("Estimator diagnostics belong to a different algorithm")
-        prefix = {"tau_gigpo": "gigpo", "mt_gtpo": "mt_gtpo"}.get(str(adv_estimator))
+        prefix = {"tau_gigpo": "gigpo", "mt_gtpo": "mt_gtpo", "arpo": "arpo"}.get(str(adv_estimator))
         if prefix:
             for key, value in estimator_diagnostics.get("stats", {}).items():
                 if isinstance(value, (bool, int, float, np.number)):

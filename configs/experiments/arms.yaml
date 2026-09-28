@@ -16,6 +16,14 @@ defaults:
   inherit: ../train/rl/base.yaml
 
 arms:
+  arpo:
+    description: Entropy-guided branching with soft GRPO attribution (tau v1)
+    adv_estimator: arpo
+    dynamic_filter:
+      enable: false
+    anchors:
+      mode: structured
+
   mt_gtpo:
     description: Turn-position GTPO hybrid with optional advantage filtering
     adv_estimator: mt_gtpo

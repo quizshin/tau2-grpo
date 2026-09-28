@@ -15,6 +15,7 @@ from __future__ import annotations
 import os
 import threading
 import uuid
+from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Optional
@@ -102,6 +103,44 @@ class TrajectorySession:
             if callable(setter):
                 setter(seed)
         self._user_state = self._user.get_init_state()
+
+    def snapshot(self) -> dict[str, Any]:
+        """Copy a quiescent airline session without replaying mutating tools.
+
+        The caller owns the turn boundary: no in-flight tool or user request may
+        overlap this operation. Locks and bound environment tools are rebuilt.
+        The simulator is copied with its local RNG/config and conversation state;
+        an external inference service's global RNG is not checkpointable here.
+        """
+        with self._lock:
+            state = deepcopy({key: value for key, value in vars(self).items()
+                              if key not in {"_lock", "_models", "environment"}})
+            # The pinned airline constructor copies the input DB. Snapshot the
+            # live tool-owned DB, not the original input stored on the session.
+            tools = getattr(self.environment, "tools", None)
+            if tools is not None:
+                state["db"] = deepcopy(tools.db)
+            return {"schema": "tau3_session_snapshot_v1", "state": state,
+                    "db_hash": self.db_hash(), "policy": self.policy()}
+
+    @classmethod
+    def from_snapshot(cls, snapshot: dict[str, Any], *, session_id: str) -> "TrajectorySession":
+        if snapshot.get("schema") != "tau3_session_snapshot_v1":
+            raise ValueError("Unsupported session snapshot")
+        if not session_id or session_id == snapshot["state"]["session_id"]:
+            raise ValueError("A fork requires a distinct session ID")
+        child = cls.__new__(cls)
+        child.__dict__.update(deepcopy(snapshot["state"]))
+        child.session_id = session_id
+        child._lock = threading.Lock()
+        child._models = message_models()
+        child.environment = build_environment(child.db)
+        tools = getattr(child.environment, "tools", None)
+        if tools is not None:
+            child.db = tools.db
+        if child.db_hash() != snapshot["db_hash"] or child.policy() != snapshot["policy"]:
+            raise ValueError("Restored environment differs from the fork boundary")
+        return child
 
     # ---- properties -------------------------------------------------
 

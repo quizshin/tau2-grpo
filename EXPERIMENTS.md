@@ -777,3 +777,16 @@ SFT新方法运行更新：15:15首20任务DeepSeek teacher/独立user候选生�
 ## 2026-09-27 repair72速度优化与已授权清理
 
 修复smoke12项通过。正式53977在0更新时按用户新速度目标有意停止；2卡throughput profile（采样16并发、actor常驻）CPU4项通过，正式待启动。固定真实buffer重算比较完成，关闭/交替重算OOM，均拒绝。用户指定5目录已删，约65GiB，保留adapter/精确基座/导出记录/轨迹审计；step2不再可恢复。详见docs/repair72_rl_and_curriculum_plan_20260927.md。
+
+
+## ARPO τ v1 — development candidate
+
+- Algorithm: entropy-guided branch rollout plus soft GRPO attribution;
+  [protocol and deviations](docs/architecture/arpo_tau_v1.md).
+- Profile: `configs/train/rl/repair72_arpo_2xa800_shared32.yaml`;
+  `python -m tau3_grpo.training.rl.runner --estimator arpo` selects it.
+- Same repair72 environment/terminal reward and 4 × 8 leaf budget; 4 initial
+  roots and 4 reserved branch slots per group. Shared prefix computation is
+  counted once in ARPO cost metrics. Evaluation uses independent trajectories.
+- Status: local and remote CPU verified; not trained, not GPU-verified, not deployed
+  into the active remote checkout. Formal GPU budget requires separate approval.

@@ -12,7 +12,7 @@
 |envs|任务状态、会话、工具、模拟用户|实际执行和 gold 验证独立数据库；不同轨迹隔离；同轮多调用完整按序对应|
 |evaluation|官方验证、过程奖励、独立评测|终局官方 reward 与训练 shaping 分开；奖励变化使用显式版本|
 |algorithms|优势、信用分配、过滤、anchors|尽量纯数组输入输出；不启动服务、读凭据或依赖离线 CLI|
-|integrations/verl|注册、torch/batch 转换、框架回调|接入三种 estimator；批次身份与 mask 不丢失；上游补丁尽量委托到此|
+|integrations/verl|注册、torch/batch 转换、框架回调|接入 GRPO、GiGPO、MT-GTPO、ARPO estimator；批次身份与 mask 不丢失；上游补丁尽量委托到此|
 |training|SFT/RL 运行流程、服务与续训|共享 controller 与服务所有权；运行失败不能被 tracking 的 FINISHED 代替|
 |data / models|可见消息、数据契约、模板和模型兼容|可见投影不带 gold/reward 元数据；保留原始 token 身份，禁止重 tokenize 冒充训练 token|
 |analysis / tracking|只读重放、诊断和记录|消费公开接口；不能成为模型运行层的反向依赖|
@@ -27,7 +27,7 @@ trainer 消费 `batch.meta_info["tau3_estimator_diagnostics"]` 的本批结果�
 
 1. 写明改动的研究假设、模块归属及可观察结果。已有功能优先扩展配置，不按实验日期复制整个控制器。
 2. 新参数必须贯通 YAML、CLI、实际入口及配置快照；给出默认值、非法值处理、与旧版的差异。
-3. 修改共享入口验证 GRPO、GiGPO、MT-GTPO 三条路径。修改奖励/分组/DF 必须能在旧 buffer 上重算，不能只看单个成功样例。
+3. 修改共享入口验证 GRPO、GiGPO、MT-GTPO、ARPO 四条路径。修改奖励/分组/DF 必须能在旧 buffer 上重算，不能只看单个成功样例。
 4. 只增加能捕捉实际风险的测试：协议差异、丢轨迹、多工具、数据库隔离、空 mask、跨算法泄漏、续训身份或服务所有权。纯文档无需 GPU。
 5. 更新本索引中的职责、必要实验记录与错误条目，说明本地/远程 CPU/GPU 分别验证到了哪里。
 6. 发布使用变更文件清单、哈希和备份；保留工作区既有变更。模型、环境、数据和历史结果不进入源码同步。

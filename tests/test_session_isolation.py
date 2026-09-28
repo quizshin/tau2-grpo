@@ -337,3 +337,53 @@ def test_real_environment_reports_policy_and_hash(requires_tau2):
     assert env.get_db_hash()
     assert "airline" in env.get_domain_name()
     assert env.get_policy().strip()
+
+
+def test_arpo_snapshot_restores_without_repeating_writes(stub_session):
+    parent = _make(stub_session, seed=42)
+    parent.record_initial_user_text("book a flight")
+    call = parent.make_tool_call("book_reservation", {}, "c1")
+    parent.record_assistant_tool_calls([call])
+    parent.execute_tool_call(call)
+    snap = parent.snapshot()
+    a = TrajectorySession.from_snapshot(snap, session_id="child-a")
+    b = TrajectorySession.from_snapshot(snap, session_id="child-b")
+    assert a.db_hash() == b.db_hash() == parent.db_hash()
+    assert a.tool_calls == b.tool_calls == 1
+    assert a.initial_db_hash == parent.initial_db_hash
+    a.execute_tool_call(call)
+    a._user_state["messages"].clear()
+    a.set_seed(99)
+    assert json.loads(a.db_hash())["reservations"] == 2
+    assert json.loads(b.db_hash())["reservations"] == 1
+    assert json.loads(parent.db_hash())["reservations"] == 1
+    assert b._user_state["messages"] and parent._user_state["messages"]
+    assert parent.seed == b.seed == 42
+    assert a._user is not b._user and a._lock is not b._lock
+    assert TrajectorySession.from_snapshot(snap, session_id="child-c").db_hash() == b.db_hash()
+    with pytest.raises(ValueError, match="distinct"):
+        TrajectorySession.from_snapshot(snap, session_id=parent.session_id)
+
+
+@pytest.mark.tau3
+def test_arpo_real_environment_rebinds_tools_to_child_db(requires_tau2, tmp_path):
+    from tau3_grpo.envs.adapter import load_default_flight_db
+    db = load_default_flight_db()
+    path = tmp_path / 'db.json'
+    path.write_text(db.model_dump_json())
+    adapted = AdaptedTask(task_id='fork-real', task=object(), db_path=path,
+                          db_file_hash='fixture', user_instructions='test', known_info=None)
+    parent = _make(adapted, seed=42)
+    parent.record_initial_user_text('hello')
+    # A live mutation must be in the snapshot, even though constructor input DB is stale.
+    removed = next(iter(parent.environment.tools.db.reservations))
+    parent.environment.tools.db.reservations.pop(removed)
+    child = TrajectorySession.from_snapshot(parent.snapshot(), session_id='real-child')
+    assert child.db_hash() == parent.db_hash()
+    assert removed not in child.environment.tools.db.reservations
+    assert child.environment.tools.db is child.db
+    child.db.reservations.clear()
+    assert parent.db.reservations
+    assert child.db_hash() != parent.db_hash()
+    assert child.environment.get_db_hash() == child.db.get_hash()
+    assert child._user_state is not parent._user_state

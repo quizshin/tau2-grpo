@@ -35,7 +35,8 @@ cd "$CODE_ROOT"
 | `data/`、`models/`、`checkpoints/`、`results/` | 运行数据、模型、检查点和实验产物，不作为源码副本存放位置 |
 
 - 奖励判定归环境/验证器，信用分配归算法，参数更新归训练框架；不把实验算法写进 shell 启动脚本。
-- RL 通过 `algorithm.adv_estimator` 显式选择 `grpo`、`tau_gigpo` 或 `mt_gtpo`。GiGPO 的锚点分组/信号审计与 GTPO 的逐轮过程奖励/优势过滤分别维护；修改共享训练入口时验证三条路径，不能覆盖另一算法的分支。
+- RL 通过 `algorithm.adv_estimator` 显式选择 `grpo`、`tau_gigpo`、`mt_gtpo` 或 `arpo`。GiGPO 的锚点分组/信号审计与 GTPO 的逐轮过程奖励/优势过滤分别维护；修改共享训练入口时验证三条路径，不能覆盖另一算法的分支。
+- ARPO 使用 `arpo_tau_v1` 显式配置：整组采样预算、工具后状态分叉和 soft GRPO 归因；评测仍为独立完整轨迹。分叉必须复制实际工具数据库及模拟用户状态，保持原 token/mask/logprob 前缀，不能重放修改性工具。算法规格见 `docs/architecture/arpo_tau_v1.md`；CPU 验证不代表已完成 GPU 训练验收。
 - 新实验复用现有模块和入口，通过配置选择实现；仅在职责确实不同的时候新增模块。
 - `integrations/verl/` 保存框架 estimator/batch 适配，`algorithms/` 保存核心计算；旧 estimator 路径仅转发到同一模块对象。新调用使用公开接口。
 - `configs/` 与 `scripts/` 的相似子目录用于参数与入口对应，不是重复代码；公共 Python 实现进入包内。

@@ -38,7 +38,8 @@
       "tests/test_trajectory_facts.py",
       "tests/test_vendor_inventory.py",
       "tests/test_winner_guard.py",
-      "tests/test_rollout_stream.py"
+      "tests/test_rollout_stream.py",
+      "tests/test_arpo.py"
     ],
     "benchmark": [
       "tests/test_anchor_semantic_v3.py",
@@ -133,7 +134,8 @@
       "tests/test_token_harness.py",
       "tests/test_tool_schema_projection.py",
       "tests/test_uncalibrated_exploration.py",
-      "tests/test_xml_structured_arguments.py"
+      "tests/test_xml_structured_arguments.py",
+      "tests/test_arpo_verl.py"
     ]
   },
   "notes": {
