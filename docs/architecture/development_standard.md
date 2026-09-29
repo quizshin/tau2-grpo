@@ -21,7 +21,7 @@
 
 trainer 消费 `batch.meta_info["tau3_estimator_diagnostics"]` 的本批结果；`last_stats` 仅兼容旧外部调用。全算法事实记录不等于过程奖励：只有 MT-GTPO 把 turn records 送入 shaping。精确 token、生成/观察 mask、发出/保留 span 和逐轮原始结束原因由 `data/trajectory.py` 定义，不能把未提供的 logprob/UID/seed 填成猜测值。
 
-2026-09-24 的可选 harness guard：纯重复规则位于 `models/generation_guard.py`，vLLM 流式适配位于 `integrations/verl/generation_guard.py`，driver 更新前保护位于 `training/rl/update_guard.py`，离线回放位于 `analysis/repetition_audit.py`。不向算法层写入重试、删候选或修造 token 逻辑；实现与 CPU/GPU 验证边界见 [修复报告](../harness_recovery_20260924.md)。
+2026-09-24 的可选 harness guard：纯重复规则位于 `models/generation_guard.py`，vLLM 流式适配位于 `integrations/verl/generation_guard.py`，driver 更新前保护位于 `training/rl/update_guard.py`，离线回放位于 `analysis/repetition_audit.py`。不向算法层写入重试、删候选或修造 token 逻辑；实现与 CPU/GPU 验证边界见 [修复报告](https://github.com/quizshin/tau2-grpo/blob/archive/pre-a800-focus-20260929/docs/harness_recovery_20260924.md)。
 
 ## 新功能的最小交付
 

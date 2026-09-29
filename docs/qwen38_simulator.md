@@ -115,7 +115,7 @@ caching 开启，先预热再顺序测试各并发；无空正文、thinking 泄
 与 27B 模拟器同机时不能沿用“策略一张卡、模拟器一张卡”就保证能跑。
 应先验证两卡 FSDP、模拟器较低缓存预算和训练阶段的 rollout 释放；
 若峰值不足，需要真正的 CPU offload 或外置模拟器。参见
-[两卡预算](rl_model_budget_2xa800.md)。
+[两卡预算](https://github.com/quizshin/tau2-grpo/blob/archive/pre-a800-focus-20260929/docs/rl_model_budget_2xa800.md)。
 
 来源：
 - https://huggingface.co/cyankiwi/Qwen3.8-27B-AWQ-INT4

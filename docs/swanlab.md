@@ -1,6 +1,6 @@
 # SwanLab：SFT 与 RL 指标和样例
 
-> 历史 smoke runs `bd743csc`、`8qja7qdf`、`vwg965wg` 已按要求删除；本文下方的相关运行链接与命令仅作历史记录。新训练使用新的 run，当前状态见 [接管记录](training_handover_20260909.md)。
+> 历史 smoke runs `bd743csc`、`8qja7qdf`、`vwg965wg` 已按要求删除；本文下方的相关运行链接与命令仅作历史记录。新训练使用新的 run，当前状态见 [接管记录](https://github.com/quizshin/tau2-grpo/blob/archive/pre-a800-focus-20260929/docs/training_handover_20260909.md)。
 
 固定 SDK `swanlab==0.10.0`。新环境通过项目的 `tracking` extra 安装。
 SFT 入口默认 `--report-to swanlab`，RL 入口默认 `trainer.logger=[console,swanlab]`。
