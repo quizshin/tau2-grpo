@@ -164,7 +164,7 @@ def curriculum_pool():
     )
     # Exclude active formal RL reference entities from the development split.
     for e in read_manifest(
-        "results/analysis/rl_curriculum50_20260912/manifests/areal_airline_train_seed42.jsonl"
+        "data/manifests/rl_curriculum50_20260912/areal_airline_train_seed42.jsonl"
     ):
         raw = raw_database(
             str(ArealTaskRecord.model_validate(e.task).resolve_db_path(AREAL_DB_ROOT))
@@ -1590,7 +1590,7 @@ def finalize_curriculum(output):
         raise ValueError("Historical dev exposure")
     formal_rl_users = set()
     formal_rl_manifest = Path(
-        "results/analysis/rl_curriculum50_20260912/manifests/areal_airline_train_seed42.jsonl"
+        "data/manifests/rl_curriculum50_20260912/areal_airline_train_seed42.jsonl"
     )
     for entry in read_manifest(formal_rl_manifest):
         raw = raw_database(
@@ -2406,7 +2406,7 @@ def prepare(output):
     protected = old_dev | selection_users
     # Exclude active formal RL reference entities from the development split.
     for e in read_manifest(
-        "results/analysis/rl_curriculum50_20260912/manifests/areal_airline_train_seed42.jsonl"
+        "data/manifests/rl_curriculum50_20260912/areal_airline_train_seed42.jsonl"
     ):
         raw = raw_database(
             str(ArealTaskRecord.model_validate(e.task).resolve_db_path(AREAL_DB_ROOT))

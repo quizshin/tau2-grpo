@@ -17,7 +17,7 @@ def test_matched_profile_fixed_sampling_and_ray_budget(arm, tmp_path, monkeypatc
     monkeypatch.setenv('PATH', str(Path(sys.executable).parent) + os.pathsep + os.environ['PATH'])
     monkeypatch.setenv('GROUPS_PER_UPDATE', '16')
     monkeypatch.setenv('TOTAL_UPDATES', '40')
-    monkeypatch.syspath_prepend(str(Path(__file__).parents[1] / 'env_info/a800_20260912'))
+    monkeypatch.syspath_prepend(str(Path(__file__).parents[1] / 'scripts/a800_research'))
     prepare = importlib.import_module('prepare_formal50')
     importlib.reload(prepare)
     run = importlib.import_module('run_matched50')

@@ -379,7 +379,7 @@ def test_guard_profile_reaches_real_hydra_and_dataclass(tmp_path, monkeypatch):
     command, env, _ = runner.resolve(tmp_path / "run", estimator="mt_gtpo",
         reward_version="paper_env_split_v4", uncalibrated_exploration=True,
         token_protocol="tau3_token_budget_v1",
-        profile_override=CODE_ROOT / "configs/train/rl/formal50_5090_a45_mt_gtpo_guard_v1.yaml")
+        profile_override=CODE_ROOT / "configs/train/rl/mt_gtpo_2xa800_guard_v1.yaml")
     output = subprocess.check_output(command, env=dict(env, TAU3_DRY_RUN="1"), text=True)
     args = shlex.split(output.splitlines()[-1])
     with initialize_config_dir(config_dir=str(CODE_ROOT / "verl/verl/trainer/config"), version_base=None):

@@ -1,4 +1,4 @@
-# Candidate NVIDIA Qwen3.5 runtime, isolated from a800-constraints.txt.
+# Supported two-A800 Qwen3.5 runtime; use an isolated environment.
 # vLLM 0.20.0 metadata admits Transformers 5.5.1 and pins Torch 2.11.0.
 # Local CPU validation is not a CUDA/vLLM validation; see qwen35.md.
 torch==2.11.0

@@ -384,37 +384,21 @@ def test_one_trajectory_smoke_is_isolated_from_formal_defaults():
     assert '"$@"' in text
 
 
-def test_setup_requires_python_312_for_both_environments():
-    text = (PROJECT_ROOT / "setup.sh").read_text(encoding="utf-8")
+def test_setup_keeps_cpu_and_one_a800_stack():
+    text = (PROJECT_ROOT / "setup.sh").read_text()
     assert "require_python_312" in text
-    assert "sys.version_info[:2] != (3, 12)" in text
     assert 'VENV_DIR="${ROOT_DIR}/.venv-cpu"' in text
-    assert 'TAU3_VENV_DIR:-${ROOT_DIR}/.venv-a800' in text
-    assert "tau3_grpo_local_sources.pth" in text
-    assert "a800-constraints.txt" in text
-    assert 'verl[vllm]' in text
-    assert 'PIP_CACHE_DIR=' in text
-    assert 'TMPDIR=' in text
-    assert 'TAU3_PIP_INDEX_URL' in text
-    assert 'mirrors.aliyun.com/pypi/simple' in text
+    assert "env_info/setup_qwen35.sh" in text
+    assert "a800-constraints.txt" not in text
 
 
-def test_a800_constraints_keep_vllm_on_torch28():
-    root = PROJECT_ROOT
-    constraints = (root / "env_info/a800-constraints.txt").read_text(encoding="utf-8")
-    assert "torch==2.8.0" in constraints
-    assert "vllm==0.10.2" in constraints
-    assert "transformers==4.56.1" in constraints
-    assert "opencv-python-headless==4.11.0.86" in constraints
-    assert "cupy-cuda12x==13.6.0" in constraints
-    assert "scipy==1.14.1" in constraints
-    assert "litellm==1.82.6" in constraints
-    assert "openai==3.3.1" in constraints
-
-    setup = (root / "setup.sh").read_text(encoding="utf-8")
-    assert 'verl[vllm]' in setup
-    assert "sglang" not in setup.lower()
-    assert "flashinfer" not in setup.lower()
+def test_a800_constraints_pin_qwen35_stack():
+    constraints = (PROJECT_ROOT / "env_info/qwen35-constraints.txt").read_text()
+    for requirement in ["torch==2.11.0", "vllm==0.20.0", "transformers==5.5.1", "peft==0.18.1"]:
+        assert requirement in constraints
+    setup = (PROJECT_ROOT / "env_info/setup_qwen35.sh").read_text()
+    assert "qwen35-constraints.txt" in setup
+    assert "verl[qwen35]" in setup
 
 
 def test_sft_config_matches_frozen_45_plus_5_budget():

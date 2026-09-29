@@ -4,8 +4,8 @@ import json
 from pathlib import Path
 
 import pytest
-from env_info.a800_20260912.audit_decision_pairs import anchor, audit, validate
-from env_info.a800_20260912.build_decision_pair_fixture import state, msg
+from scripts.a800_research.audit_decision_pairs import anchor, audit, validate
+from scripts.a800_research.build_decision_pair_fixture import state, msg
 from tau3_grpo.envs.registry import SESSIONS
 
 FIXTURE=Path(__file__).parent/'fixtures/decision_state_pairs_20260914.json'
@@ -67,8 +67,8 @@ def test_duplicate_pairs_and_unknown_relation_rejected():
 
 def test_post_label_outcome_inspection_rejects_changed_annotations(tmp_path):
     import hashlib
-    from env_info.a800_20260912.audit_decision_pairs import digest
-    from env_info.a800_20260912.decision_pair_outcomes import inspect
+    from scripts.a800_research.audit_decision_pairs import digest
+    from scripts.a800_research.decision_pair_outcomes import inspect
     fixture=json.loads(FIXTURE.read_text());fixture['pairs']=fixture['pairs'][:1]
     source=tmp_path/'trajectories.jsonl'
     refs=fixture['pairs'][0]['source_refs']

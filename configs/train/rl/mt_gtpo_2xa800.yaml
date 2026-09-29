@@ -1,0 +1,12 @@
+# Optional two-A800 composition; GPU acceptance is pending.
+# Formal paper reward runs require a passed frozen recipe.
+includes:
+- repair72_grpo_2xa800_shared32_full_eval.yaml
+- ../../algorithms/mt_gtpo.yaml
+- ../../rewards/paper_env_split_v4.yaml
+# Frozen IRC recipes are defined against the native terminal verifier.
+launch:
+  terminal_reward_protocol: tau2_native_v1
+  environment:
+    TAU3_TERMINAL_REWARD_PROTOCOL: tau2_native_v1
+    TAU3_EXPERIMENT_LABEL: mt-gtpo-two-a800

@@ -32,7 +32,7 @@ def test_curriculum_budget_and_resume_profile(size, phase, updates, tmp_path):
         },
     )
     assert env["TRAIN_MANIFEST_DIR"].endswith(
-        f"rl_curriculum{'50' if size == 50 else ''}_20260912/manifests"
+        f"data/manifests/rl_curriculum{'50' if size == 50 else ''}_20260912"
     )
     assert (
         int(env["GROUPS_PER_UPDATE"]) * int(env["GROUP_SIZE"]) * int(env["TOTAL_UPDATES"])

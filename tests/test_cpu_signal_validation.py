@@ -3,7 +3,7 @@ import numpy as np
 import pytest
 import torch
 
-from env_info.a800_20260912.cpu_signal_validation import (
+from scripts.a800_research.cpu_signal_validation import (
     ScopedConfirmation, StepRecord, aligned_candidate, all_success_fixture,
     apply_dynamic_filter, compute_tau_gigpo_advantage, confirmation_flags,
     cross_trajectory_steps, current_anchor, message, observation_fingerprint,

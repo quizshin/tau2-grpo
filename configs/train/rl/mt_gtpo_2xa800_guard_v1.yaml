@@ -1,0 +1,5 @@
+# Optional two-A800 composition; GPU acceptance is pending.
+# Formal paper reward runs require a passed frozen recipe.
+includes:
+- mt_gtpo_2xa800.yaml
+- ../../protocols/harness_guard_v1.yaml

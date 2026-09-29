@@ -59,6 +59,6 @@ def test_incomplete_new_boundary_keeps_previous(tmp_path):
 
 
 def test_old_evaluation_import_is_same_implementation():
-    from env_info.a800_20260912 import run_post_rl_eval
+    from scripts.a800_research import run_post_rl_eval
     from tau3_grpo.evaluation import controller
     assert run_post_rl_eval is controller

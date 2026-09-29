@@ -40,15 +40,7 @@ experiments/**/logs/
 !/data/raw/areal_tau2/
 !/data/manifests/
 !/data/sft/
-/results/*
-!/results/analysis/
-/results/analysis/*
-!/results/analysis/rl_curriculum_20260912/
-!/results/analysis/rl_curriculum50_20260912/
-/results/analysis/rl_curriculum_20260912/*
-/results/analysis/rl_curriculum50_20260912/*
-!/results/analysis/rl_curriculum_20260912/manifests/
-!/results/analysis/rl_curriculum50_20260912/manifests/
+/results/
 build/
 dist/
 

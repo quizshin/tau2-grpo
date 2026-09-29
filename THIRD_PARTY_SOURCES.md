@@ -80,7 +80,7 @@ not a proof of all GPU behavior or an exhaustive inventory.
 The bounded three-algorithm interface checks, GRPO/GiGPO updates, GiGPO resume,
 export/load and independent evaluation, and MT-GTPO reference_write v3 DF off/on
 updates and replay have passed. See
-[the final interface report](docs/architecture/interface_acceptance_20260919.md)
+[the final interface report](https://github.com/quizshin/tau2-grpo/blob/archive/pre-a800-focus-20260929/docs/architecture/interface_acceptance_20260919.md)
 for exact evidence and limitations. Full active-text mapping covers dense TP1,
 no quantization and no LoRA; vision is excluded. Earlier “unverified” statements
 above describe their historical batches, not the final acceptance state. Pinned

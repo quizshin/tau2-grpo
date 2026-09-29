@@ -418,7 +418,7 @@ def verify_completion(result, target, *, world_size=4, engineering_smoke=False):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--estimator', choices=['grpo', 'tau_gigpo', 'mt_gtpo', 'arpo'], default='mt_gtpo')
+    parser.add_argument('--estimator', choices=['grpo', 'tau_gigpo', 'mt_gtpo', 'arpo'], default='grpo')
     parser.add_argument('--result-dir', type=Path, required=True)
     parser.add_argument('--updates', type=int, default=20)
     parser.add_argument('--dynamic-filter', action='store_true')
@@ -432,7 +432,8 @@ def main(argv=None):
     parser.add_argument('--uncalibrated-exploration', action='store_true',
                         help='Explicit uncalibrated split-v4/turn_v1 experiment; saves/evaluates every 10 steps')
     parser.add_argument('--token-protocol', choices=['tau3_token_budget_v1'])
-    parser.add_argument('--profile', type=Path, help='Explicit composed hardware/model profile')
+    parser.add_argument('--profile', type=Path, required=True,
+                        help='Explicit composed hardware/model profile; prevents legacy hardware defaults')
     parser.add_argument('--reward-version', choices=sorted(PROFILES), default='v3')
     parser.add_argument('--reward-recipe', type=Path, help='Passed frozen IRC recipe matching the paper reward version')
     args = parser.parse_args(argv)

@@ -5,7 +5,7 @@ includes:
 launch:
   environment:
     MODEL_PATH: ${CODE_ROOT}/checkpoints/sft-merged/new-off
-    TRAIN_MANIFEST_DIR: ${CODE_ROOT}/results/analysis/rl_curriculum_20260912/manifests
+    TRAIN_MANIFEST_DIR: ${CODE_ROOT}/data/manifests/rl_curriculum_20260912
     RESULTS_DIR: ${TAU3_RUN_ROOT}/rl-curriculum40-20260912/e0_seed42
     GROUPS_PER_UPDATE: '8'
     GROUP_SIZE: '8'

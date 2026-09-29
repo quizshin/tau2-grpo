@@ -8,7 +8,7 @@ from tau3_grpo.integrations.matched_budget import MatchedBudget
 from tau3_grpo.paths import CODE_ROOT
 from tau3_grpo.training.rl import runner
 
-PROFILE = CODE_ROOT / 'configs/train/rl/formal50_5090_a45_mt_gtpo_call_local_v1.yaml'
+PROFILE = CODE_ROOT / 'configs/train/rl/mt_gtpo_2xa800_call_local_v1.yaml'
 
 
 @pytest.fixture
@@ -22,7 +22,7 @@ def local_paths(tmp_path, monkeypatch):
 
 @pytest.mark.parametrize('mode', ['call_local_v1', 'call_residual_v1'])
 def test_two_step_candidate_reaches_hydra_and_worker_environment(local_paths, monkeypatch, mode):
-    profile = PROFILE.with_name(f'formal50_5090_a45_mt_gtpo_{mode}.yaml')
+    profile = PROFILE.with_name(f'mt_gtpo_2xa800_{mode}.yaml')
     command, env, snapshot = runner.resolve(local_paths, updates=2, estimator='mt_gtpo',
         reward_version='paper_env_split_v4', profile_override=profile,
         token_protocol='tau3_token_budget_v1', engineering_smoke=True)
@@ -31,7 +31,7 @@ def test_two_step_candidate_reaches_hydra_and_worker_environment(local_paths, mo
     assert config['algorithm']['adv_estimator'] == 'mt_gtpo'
     assert config['algorithm']['dynamic_filter']['enable'] is False
     assert config['critic']['enable'] is False
-    assert config['trainer']['n_gpus_per_node'] == 8
+    assert config['trainer']['n_gpus_per_node'] == 2
     assert config['trainer']['total_training_steps'] == 2
     assert config['trainer']['save_freq'] == 2
     assert config['trainer']['test_freq'] == -1

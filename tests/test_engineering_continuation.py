@@ -8,7 +8,7 @@ from tau3_grpo.paths import CODE_ROOT
 
 @pytest.fixture
 def controller(monkeypatch):
-    folder = CODE_ROOT / "env_info/a800_20260919"
+    folder = CODE_ROOT / "scripts/engineering_checks"
     monkeypatch.syspath_prepend(str(folder))
     spec = importlib.util.spec_from_file_location("engineering_continuation", folder / "architecture_continuation.py")
     module = importlib.util.module_from_spec(spec)
@@ -81,7 +81,7 @@ def test_data_pointer_and_actual_next_tasks_must_agree(controller, tmp_path):
 
 
 def test_evaluation_rejects_existing_attempt_before_gpu_start(controller, tmp_path):
-    folder = CODE_ROOT / "env_info/a800_20260919"
+    folder = CODE_ROOT / "scripts/engineering_checks"
     spec = importlib.util.spec_from_file_location("engineering_eval", folder / "architecture_evaluation.py")
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)

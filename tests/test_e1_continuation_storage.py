@@ -11,7 +11,7 @@ import pytest
 def continuation(tmp_path, monkeypatch):
     monkeypatch.setenv('TAU3_ROOT', str(tmp_path))
     monkeypatch.setenv('TAU3_RUN_ROOT', str(tmp_path / 'runs'))
-    monkeypatch.syspath_prepend(str(Path(__file__).parents[1] / 'env_info/a800_20260912'))
+    monkeypatch.syspath_prepend(str(Path(__file__).parents[1] / 'scripts/a800_research'))
     module = importlib.import_module('run_e1_after_e0')
     monkeypatch.setattr(module.controller, 'W', tmp_path / 'runs')
     monkeypatch.setattr(module.shutil, 'disk_usage', lambda path: SimpleNamespace(free=200 * 2**30))

@@ -10,7 +10,7 @@ from tau3_grpo.paths import CODE_ROOT
 
 @pytest.fixture
 def controller(monkeypatch):
-    folder = CODE_ROOT / "env_info/a800_20260919"
+    folder = CODE_ROOT / "scripts/engineering_checks"
     monkeypatch.syspath_prepend(str(folder))
     spec = importlib.util.spec_from_file_location("engineering_updates", folder / "architecture_updates.py")
     module = importlib.util.module_from_spec(spec)

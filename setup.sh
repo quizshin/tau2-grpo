@@ -40,28 +40,8 @@ case "${MODE}" in
     "${VENV_DIR}/bin/pip" install -e "${ROOT_DIR}[dev,data]"
     install_source_path_file "${VENV_DIR}"
     ;;
-  a800)
-    # The remote image is expected to provide Torch 2.8 + CUDA 12.8 already.
-    PYTHON_BIN="${PYTHON_BIN:-python3.12}"
-    require_python_312 "${PYTHON_BIN}"
-    VENV_DIR="${TAU3_VENV_DIR:-${ROOT_DIR}/.venv-a800}"
-    CACHE_ROOT="${TAU3_CACHE_ROOT:-${ROOT_DIR}/.cache}"
-    mkdir -p "${CACHE_ROOT}/pip" "${CACHE_ROOT}/tmp"
-    export PIP_CACHE_DIR="${PIP_CACHE_DIR:-${CACHE_ROOT}/pip}"
-    export TMPDIR="${TMPDIR:-${CACHE_ROOT}/tmp}"
-    export PIP_INDEX_URL="${TAU3_PIP_INDEX_URL:-http://mirrors.aliyun.com/pypi/simple}"
-    export PIP_TRUSTED_HOST="${PIP_TRUSTED_HOST:-mirrors.aliyun.com}"
-    "${PYTHON_BIN}" -m venv --system-site-packages "${VENV_DIR}"
-    "${VENV_DIR}/bin/python" -m pip install --upgrade pip
-    "${VENV_DIR}/bin/pip" install -e "${ROOT_DIR}/tau2-bench"
-    "${VENV_DIR}/bin/pip" install \
-      --constraint "${ROOT_DIR}/env_info/a800-constraints.txt" \
-      -e "${ROOT_DIR}/verl[vllm]"
-    "${VENV_DIR}/bin/pip" install -e "${ROOT_DIR}[dev,data,sft,tracking]"
-    install_source_path_file "${VENV_DIR}"
-    ;;
   *)
-    echo "usage: $0 {cpu-test|a800|a800-qwen35}" >&2
+    echo "usage: $0 {cpu-test|a800-qwen35}" >&2
     exit 2
     ;;
 esac

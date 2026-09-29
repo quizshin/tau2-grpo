@@ -90,15 +90,15 @@ def main():
         assert not set(ids) & {r.task_id for r in excluded}
     values = [r.model_dump(mode="json") for r in selected]
     OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / "manifests").mkdir(exist_ok=True)
+    (Path("data/manifests/rl_curriculum50_20260912")).mkdir(exist_ok=True)
 
     def dump(path, value):
         path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n")
 
     payload = "".join(json.dumps(r, ensure_ascii=False, sort_keys=True) + "\n" for r in values)
-    (OUT / "manifests/areal_airline_train_seed42.jsonl").write_text(payload)
+    (Path("data/manifests/rl_curriculum50_20260912/areal_airline_train_seed42.jsonl")).write_text(payload)
     dump(
-        OUT / "manifests/areal_airline_split_seed42.json",
+        Path("data/manifests/rl_curriculum50_20260912/areal_airline_split_seed42.json"),
         dict(
             seed=42,
             split_hash=sha256_json(values),
@@ -125,7 +125,7 @@ def main():
             core_manifest_hash=sha256_file(BASE / "candidate_40_manifest.jsonl"),
             sft_hash=sha256_file(SFT),
             parent_audit_hash=sha256_file(BASE / "audit.json"),
-            manifest_hash=sha256_file(OUT / "manifests/areal_airline_train_seed42.jsonl"),
+            manifest_hash=sha256_file(Path("data/manifests/rl_curriculum50_20260912/areal_airline_train_seed42.jsonl")),
             script_hash=sha256_file(Path(__file__)),
             core_ids=[r.task_id for r in core],
             new_ids=list(REVIEWS),

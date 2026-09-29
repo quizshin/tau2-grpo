@@ -173,7 +173,7 @@ def test_padding_is_excluded_and_corrupt_padding_fails():
 
 
 def test_dialogue_screening_excludes_stop_control_messages(tmp_path):
-    from env_info.a800_20260912.dialogue_anchor_audit import audit
+    from scripts.a800_research.dialogue_anchor_audit import audit
     p=tmp_path/'trajectories.jsonl'
     p.write_text(json.dumps({'task_id':'t','trial':0,'simulation':{'messages':[
         {'role':'assistant','content':'Search first?'},

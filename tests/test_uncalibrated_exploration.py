@@ -10,7 +10,7 @@ from tau3_grpo.evaluation.process_reward import reward_settings
 from tau3_grpo.paths import CODE_ROOT
 from tau3_grpo.training.rl import runner
 
-PROFILE = CODE_ROOT / 'configs/train/rl/formal50_5090_a45_mt_gtpo_v4.yaml'
+PROFILE = CODE_ROOT / 'configs/train/rl/mt_gtpo_2xa800.yaml'
 
 
 @pytest.fixture
@@ -40,15 +40,16 @@ def test_exploration_preserves_training_math_and_ten_step_lifecycle(setup):
     assert config['actor_rollout_ref']['rollout']['trace'].pop('experiment_name') == name
     assert baseline['actor_rollout_ref']['rollout']['trace'].pop('experiment_name') == old_name
     assert config == baseline
-    assert env['MODEL_PATH'].endswith('/A/merged')
+    assert env['MODEL_PATH'].endswith('/sft_decision_repair_pair_20260926/seed42/from_base/merged')
     assert snapshot['uncalibrated_exploration'] and snapshot['uncalibrated_initializer']
     assert snapshot['irc_recipe'] is None and not snapshot['engineering_smoke']
     assert config['trainer']['total_training_steps'] == 30
     assert config['trainer']['save_freq'] == config['trainer']['test_freq'] == 10
     assert config['trainer']['max_actor_ckpt_to_keep'] == 1
     assert config['trainer']['logger'] == ['console', 'swanlab']
-    assert config['trainer']['n_gpus_per_node'] == 8
-    assert config['data']['train_batch_size'] == config['actor_rollout_ref']['rollout']['n'] == 8
+    assert config['trainer']['n_gpus_per_node'] == 2
+    assert config['data']['train_batch_size'] == 4
+    assert config['actor_rollout_ref']['rollout']['n'] == 8
     assert config['algorithm']['dynamic_filter']['enable'] is False
     assert reward_settings(config['algorithm']['process_reward'])['weights']['gold_write'] == 1
     assert env['TAU3_BUDGET_INTERVAL'] == '10'
@@ -92,7 +93,7 @@ def test_exploration_resume_requires_same_run_identity(setup, monkeypatch):
     assert resumed['trainer']['resume_mode'] == 'resume_path'
     assert resumed['trainer']['resume_from_path'] == str(checkpoint)
     assert runner.validate_exploration_config(resumed, config)
-    assert calls[0][1]['world_size'] == 8
+    assert calls[0][1]['world_size'] == 2
     with pytest.raises(ValueError, match='exploration identity'):
         runner.resolve(result, **(args | {'resume_from': checkpoint, 'uncalibrated_exploration': False}))
 
@@ -124,7 +125,7 @@ def test_cli_dry_run_records_exploration_without_starting_services(setup, monkey
     monkeypatch.setattr(runner.subprocess, 'check_output', lambda *a, **kw: next(outputs))
     monkeypatch.setattr(runner, 'active_gpu_pids', lambda: pytest.fail('Dry run queried GPU'))
     monkeypatch.setattr(runner, 'launch_process', lambda *a, **kw: pytest.fail('Started service'))
-    runner.main(['--result-dir', str(result), '--profile', str(PROFILE), '--updates', '30',
+    runner.main(['--estimator', 'mt_gtpo', '--result-dir', str(result), '--profile', str(PROFILE), '--updates', '30',
                  '--reward-version', 'paper_env_split_v4', '--credit-mode', 'turn_v1',
                  '--token-protocol', 'tau3_token_budget_v1', '--uncalibrated-exploration', '--dry-run'])
     launch = json.loads((result / 'launch.json').read_text())

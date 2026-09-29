@@ -21,7 +21,7 @@ def test_prepare_excludes_formal_reference_users_without_private_assets(monkeypa
     def manifest(path):
         if "selection" in path:
             return []
-        if path.startswith("results/"):
+        if path.startswith("data/manifests/rl_curriculum50_20260912/"):
             return [formal]
         return [train]
 

@@ -42,7 +42,7 @@ output:
   dir: /root/autodl-fs/tau3-core/code/results/runs/sft_clean14_v1_100/adapter
 
 includes:
-- ../../hardware/2x5090.yaml
+- ../../hardware/2xa800.yaml
 launch:
   stage: sft
   entrypoint: scripts/train/sft/run_base.sh

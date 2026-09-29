@@ -1,5 +1,5 @@
 # Formal E0: full language-parameter RL from the new non-thinking SFT model.
-# Launch through env_info/a800_20260912/run_full_formal.py after activate.sh.
+# Launch through scripts/a800_research/run_full_formal.py after activate.sh.
 # The controller explicitly sets this environment, overriding activation defaults.
 launch:
   stage: rl

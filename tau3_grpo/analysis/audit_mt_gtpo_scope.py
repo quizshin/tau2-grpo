@@ -32,7 +32,7 @@ def main():
     parser.add_argument('--input', type=Path, action='append', required=True)
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
-    manifest = CODE_ROOT / 'results/analysis/rl_curriculum50_20260912/manifests/areal_airline_train_seed42.jsonl'
+    manifest = CODE_ROOT / 'data/manifests/rl_curriculum50_20260912/areal_airline_train_seed42.jsonl'
     entries = {x['task_id']: x for x in map(json.loads, manifest.read_text().splitlines())}
     tasks = {k: task_model().model_validate(v['task']) for k, v in entries.items()}
     counts, potentials, details = Counter(), [], []

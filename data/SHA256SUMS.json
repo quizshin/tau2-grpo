@@ -67,19 +67,19 @@
     "bytes": 190194,
     "sha256": "9de13c3f1ff3f1029e7fc4599abfed19de39aa1fa2f82574d6161a1854dd4ccb"
   },
-  "results/analysis/rl_curriculum50_20260912/manifests/areal_airline_split_seed42.json": {
+  "data/manifests/rl_curriculum50_20260912/areal_airline_split_seed42.json": {
     "bytes": 272,
     "sha256": "97457389679a7c78d28c08034dd38217f01c20c607dc2cb67923a9ca5763d8b7"
   },
-  "results/analysis/rl_curriculum50_20260912/manifests/areal_airline_train_seed42.jsonl": {
+  "data/manifests/rl_curriculum50_20260912/areal_airline_train_seed42.jsonl": {
     "bytes": 230913,
     "sha256": "641bde73c1495c59b5c0a87cfc84b9e00c0b5ffd2f86d10fd2205aaf2143adae"
   },
-  "results/analysis/rl_curriculum_20260912/manifests/areal_airline_split_seed42.json": {
+  "data/manifests/rl_curriculum_20260912/areal_airline_split_seed42.json": {
     "bytes": 386,
     "sha256": "e67447171c385168a01618082bfc08652afdf571b8cf98b22f197a9512dd41db"
   },
-  "results/analysis/rl_curriculum_20260912/manifests/areal_airline_train_seed42.jsonl": {
+  "data/manifests/rl_curriculum_20260912/areal_airline_train_seed42.jsonl": {
     "bytes": 165405,
     "sha256": "79e317a824e8b55f7ce338c9f30a5811d83f2dce17dd896397eaffb003f5efbb"
   }
