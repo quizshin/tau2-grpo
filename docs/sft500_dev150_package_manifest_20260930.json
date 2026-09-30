@@ -1,0 +1,122 @@
+{
+  "schema": "codex_reviewed_sft_package_v1",
+  "status": "frozen_cpu_verified_gpu_not_started",
+  "audit": {
+    "ready_for_training": true,
+    "train_count": 500,
+    "validation_count": 150,
+    "train_unique_users": 67,
+    "validation_unique_users": 7,
+    "user_overlap_count": 0,
+    "conversation_overlap_count": 0,
+    "train_curriculum": {
+      "foundation": 109,
+      "constraints": 284,
+      "strategy": 107
+    },
+    "validation_curriculum": {
+      "constraints": 51,
+      "strategy": 12,
+      "foundation": 87
+    }
+  },
+  "stage_files": {
+    "data/sft/curriculum_500_dev150_codex_20260930/train_A109.jsonl": 109,
+    "data/sft/curriculum_500_dev150_codex_20260930/train_B393.jsonl": 393,
+    "data/sft/curriculum_500_dev150_codex_20260930/train_C500.jsonl": 500
+  },
+  "token_summary": {
+    "train": {
+      "dialogues": 500,
+      "total_tokens": 3908232,
+      "label_tokens": 354489,
+      "mean_total_tokens": 7816.464,
+      "mean_label_tokens": 708.978
+    },
+    "validation": {
+      "dialogues": 150,
+      "total_tokens": 1029991,
+      "label_tokens": 75693,
+      "mean_total_tokens": 6866.606666666667,
+      "mean_label_tokens": 504.62
+    }
+  },
+  "stage_token_summary": {
+    "A109": {
+      "n_dialogues": 109,
+      "n_total_tokens": 655073,
+      "n_label_tokens": 21529
+    },
+    "B393": {
+      "n_dialogues": 393,
+      "n_total_tokens": 2888964,
+      "n_label_tokens": 224557
+    },
+    "C500": {
+      "n_dialogues": 500,
+      "n_total_tokens": 3908232,
+      "n_label_tokens": 354489
+    }
+  },
+  "semantic_review_modes": {
+    "inherited_exact_hash_bound_codex200_review": 200,
+    "direct_in_thread_goal_claim_confirmation_and_native_state_adjudication": 450
+  },
+  "replaced_train_count": 29,
+  "validation_unique_goal_count": 150,
+  "tokenizer_source": "models/Qwen3.5-4B",
+  "tokenizer_files": {
+    "models/Qwen3.5-4B/tau3_source_revision.json": "ff230f94216fbf8b32048d99529bf3eab916aa8269afaab1942b31c0f7d7863e",
+    "models/Qwen3.5-4B/tokenizer_config.json": "316230d6a809701f4db5ea8f8fc862bc3a6f3229c937c174e674ff3ca0a64ac8",
+    "models/Qwen3.5-4B/config.json": "ddc63e1c717afa86c865bb5e01313d89d72bb53b97ad4a8a03ba8510c0621670",
+    "models/Qwen3.5-4B/tokenizer.json": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42",
+    "models/Qwen3.5-4B/merges.txt": "a9d356d7bdf1ef4949e3e748e95b8e10ad9d4e2e838eddc38a0a7b6b94d1db8d",
+    "models/Qwen3.5-4B/chat_template.jinja": "a4aee8afcf2e0711942cf848899be66016f8d14a889ff9ede07bca099c28f715",
+    "models/Qwen3.5-4B/vocab.json": "ce99b4cb2983d118806ce0a8b777a35b093e2000a503ebde25853284c9dfa003"
+  },
+  "tokenizer_chat_template_sha256": "a4aee8afcf2e0711942cf848899be66016f8d14a889ff9ede07bca099c28f715",
+  "gpu_training_started": false,
+  "manifest_file": "data/sft/curriculum_500_dev150_codex_20260930/manifest.json",
+  "manifest_sha256": "0f5475682f3e498ea0eea4dee6b1e256d964084c69ae6ee61ce93bc7658cb4b0",
+  "files": {
+    "data/sft/curriculum_500_dev150_codex_20260930/train.jsonl": "90052214dd7a2cb57d9c5451d0f25af347721175920395ace04251230262940f",
+    "data/sft/curriculum_500_dev150_codex_20260930/token_mask_audit.json": "3f4f793b6f4b516c3fcb1b1f6c96210815025d7b3fb9c8f7869977def7e050f9",
+    "data/sft/curriculum_500_dev150_codex_20260930/validation_effective.jsonl": "c3812820184d21ce61053264fa23e6f1ff1cc1123fd9b61381b2f4e84e57a734",
+    "data/sft/curriculum_500_dev150_codex_20260930/frozen_prompt_protocols.json": "436302fdc01a8b69993e4027807e65dbfad64200a9dd6d65ed83dd677ef10c9a",
+    "data/sft/curriculum_500_dev150_codex_20260930/stage_token_summary.json": "adddf45027496c289e29f04ff737e741285e03dfdc44f1d6baff29047f8004ed",
+    "data/sft/curriculum_500_dev150_codex_20260930/train_C500.jsonl": "90052214dd7a2cb57d9c5451d0f25af347721175920395ace04251230262940f",
+    "data/sft/curriculum_500_dev150_codex_20260930/train_effective.jsonl": "0beeeb2dc156cfee809c0d324098c2edadb87eeca1fb7316e075f99d310c38d8",
+    "data/sft/curriculum_500_dev150_codex_20260930/train_B393.jsonl": "7691d183650dd2e60f5efdc6647302f987878610d052ae8a8bd0450b4c080e64",
+    "data/sft/curriculum_500_dev150_codex_20260930/rejected_index.json": "757ce00b4112a67247cfdec7811579e7bda243e8f26c6e962e9a8798ff954a1a",
+    "data/sft/curriculum_500_dev150_codex_20260930/train_A109.jsonl": "eaea5a6a5678a5df8b39e01fdd7049015159d5a3c1efeec7f832c9f1cf99fed1",
+    "data/sft/curriculum_500_dev150_codex_20260930/validation.jsonl": "e45d8053cb29c5cae343b262b39bee7cb81eef1c0989f004329051158d0c8b18",
+    "data/sft/curriculum_500_dev150_codex_20260930/token_summary.json": "b409b4513bade03090a0659251a45fb06cd5296c6535646ca1f93bbc14a60ed8",
+    "data/sft/curriculum_500_dev150_codex_20260930/review_index.json": "786eebe6f25e2b2537d46f2792d7cf7d8f341ca21234fe8fc2f45ed11a23d61d"
+  },
+  "billing": {
+    "confirmed_actual_cny": 13.93,
+    "confirmation_source": "User confirmed actual total13.93CNY in this task on2026-09-26; historical939calls; offpeak billing",
+    "new_usage_estimate_or_reservation_cny": 64.071466,
+    "budget_committed_cny": 78.001466,
+    "remaining_budget_cny": 71.998534,
+    "is_provider_invoice": false
+  },
+  "local_cpu_validation": {
+    "tests_passed": 57,
+    "full_650_actual_rendered_ids_and_labels": "passed",
+    "cumulative_stage_checks": "passed",
+    "missing_previous_model_refusal": "passed",
+    "max_actual_context_tokens": 15280,
+    "unique_deepseek_train_goal_texts": 430,
+    "evidence_files": {
+      "results/analysis/sft_deepseek_500_20260927/final_package_cpu_receipt_20260930.json": "9385eeffa3e47f87a5f6d55e5cb89f37710c7c837d22390ad4bc5b327cceb36a",
+      "results/analysis/sft_deepseek_500_20260927/final_previous_stage_guard_receipt_20260930.json": "a95f58b18f32cd6baff65ce656144b0eff603f919ffef9bdb6b7e6c91c1d238b",
+      "results/analysis/sft_deepseek_500_20260927/finalization_cpu_tests_20260930.log": "f66833eac26345783ed717c36734ec0e67ca6022eddf2e7f008190cfc9d77e05",
+      "results/analysis/sft_deepseek_500_20260927/launcher_A109_dryrun_20260930.json": "3147d7d90202d970e4b6de1eccbd2bc00540a123f393492f637c4f869843b8ab",
+      "results/analysis/sft_deepseek_500_20260927/launcher_B393_dryrun_20260930.json": "c9a071b58ef210d33416f8672939abe13d780b7388b49279455ce73898e28b30",
+      "results/analysis/sft_deepseek_500_20260927/launcher_C500_dryrun_20260930.json": "74f09653e5a9c86b07d46116cf045fb6a329bef96be6272e6e5a4f8ba958b189"
+    },
+    "remote_cpu_verified": false,
+    "gpu_started": false
+  }
+}

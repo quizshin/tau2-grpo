@@ -1,4 +1,4 @@
-# Planned cumulative SFT; CPU guard requires the fully frozen package.
+# Frozen reviewed data; GPU training has not started.
 model:
   name_or_path: null
   trust_remote_code: false
@@ -20,6 +20,11 @@ data:
     c0e0f60839a5d0c5c2cf76f6625cc84ce89392a3fcab93ad1696a1a317d3d9e3: airline_sequential_multicall_v1
     35e8e6f2cedeca6363aeeb414d028d5fb8f799ff7ee59e1884084504def8b052: airline_teacher_visible_text_multicall_v2
     f181cc80ea52016f2607a296abf9183b6388c72107e1577ba568e79e92c0e739: airline_teacher_visible_text_multicall_v2
+    2fa07f73348f81b12c8b95739d62bc737324518825aeab6039c654870c210921: airline_teacher_visible_text_multicall_v2
+    926d2edc9e6195b20c42cc090c146a8e21cec33ec62a502b1ed3535c354e8e87: airline_teacher_visible_text_multicall_v2
+    d335d1d954fddb1ad3a0fa22b1ab2db348b4da27646a5d7e3c935e1d430311d2: airline_teacher_visible_text_multicall_v2
+    8ebbe73ae150440921d14d3ae216a04b39d8e2d6a0e825b85b014983fd04049d: airline_teacher_visible_text_multicall_v2
+    f8cbb0ff8375acdb2d3dddf5403cc004f0daf7e7e0958a115c93832a49b4d1b4: airline_teacher_visible_text_multicall_v2
 lora:
   r: 16
   alpha: 32
