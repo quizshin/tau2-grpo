@@ -41,7 +41,8 @@
       "tests/test_rollout_stream.py",
       "tests/test_arpo.py",
       "tests/test_grounded_prepare.py",
-      "tests/test_cpu_release_receipt.py"
+      "tests/test_cpu_release_receipt.py",
+      "tests/test_reviewed_sft.py"
     ],
     "benchmark": [
       "tests/test_anchor_semantic_v3.py",
