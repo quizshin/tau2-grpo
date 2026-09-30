@@ -24,3 +24,14 @@
 
 冻结新版本前必须完成缺口替换、用户隔离、全量 tokenizer 与 loss mask 核验。
 此处不声明新 500/150 已冻结；未启动 GPU、未部署服务器、未推送。
+
+## 训练入口与预算
+
+新累计课程配置为 `configs/train/sft/curriculum_codex_A109_1epoch.yaml`、
+`curriculum_codex_B393_1epoch.yaml`、`curriculum_codex_C500_1epoch.yaml`。
+每阶段 1 epoch、effective batch 8，分别为 14/50/63 次 optimizer 更新；
+这是待 GPU 验证的执行配置，不是已验证的学习效果或 checkpoint 选择规则。
+B/C 必须显式指定前一阶段导出的 merged model，不能默认回到基座。
+新课程入口在模型加载前核验完整包、所有文件与审核证据哈希；
+实际训练 tokenizer 渲染还必须逐条匹配 CPU 记录的 input IDs 和 loss labels。
+新包未冻结时入口拒绝启动。GPU 训练仍须用户另行授权。

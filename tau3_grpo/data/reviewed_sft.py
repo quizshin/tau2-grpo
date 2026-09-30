@@ -4,10 +4,12 @@ This validates recorded evidence, never supplies a semantic review decision.
 The caller must render the actual messages with the training dataset first.
 """
 
+import json
 from collections import Counter
+from pathlib import Path
 
 from tau3_grpo.models.qwen35_template import approved_assistant_indices
-from tau3_grpo.utils.hashing import sha256_json
+from tau3_grpo.utils.hashing import sha256_file, sha256_json
 
 REVIEW_AREAS = {"scope", "evidence", "policy", "arithmetic", "completion"}
 
@@ -100,3 +102,52 @@ def _unique_index(rows, kind):
             raise ValueError(f"Missing/duplicate {kind} identity")
         index[sid] = row
     return index
+
+
+def validate_frozen_package(manifest_path, *, root, train_path, validation_path):
+    """Verify a frozen package and its selected cumulative stage before GPU setup."""
+    root = Path(root)
+    manifest = json.loads(Path(manifest_path).read_text())
+    if manifest.get("ready_for_training") is not True:
+        raise ValueError("Reviewed SFT package is not ready for training")
+    files = manifest["files"]
+    for path, digest in files.items():
+        if sha256_file(root / path) != digest:
+            raise ValueError(f"Frozen SFT file changed: {path}")
+    selected = str(Path(train_path).resolve().relative_to(root.resolve()))
+    validation = str(Path(validation_path).resolve().relative_to(root.resolve()))
+    if selected not in manifest["stage_files"] or validation != manifest["validation_file"]:
+        raise ValueError("Configured data does not belong to the frozen SFT package")
+
+    def read_rows(path):
+        return [json.loads(line) for line in (root / path).read_text().splitlines() if line]
+
+    train = read_rows(manifest["train_file"])
+    dev = read_rows(validation)
+    reviews = json.loads((root / manifest["review_file"]).read_text())
+    tokens = json.loads((root / manifest["token_file"]).read_text())
+    for review in reviews:
+        for evidence in review["evidence"]:
+            if (not isinstance(evidence, dict)
+                    or sha256_file(root / evidence["file"]) != evidence["sha256"]):
+                raise ValueError("Frozen SFT review evidence changed")
+    result = audit_reviewed_package(train, dev, reviews, tokens)
+    if result != manifest["audit"]:
+        raise ValueError("Frozen SFT audit differs from package contents")
+    full_by_id = {row["metadata"]["source_dialog_id"]: row for row in train}
+    stage = read_rows(selected)
+    if (len(stage) != manifest["stage_files"][selected]
+            or len({r["metadata"]["source_dialog_id"] for r in stage}) != len(stage)
+            or any(full_by_id.get(r["metadata"]["source_dialog_id"]) != r for r in stage)):
+        raise ValueError("Cumulative stage differs from the reviewed training package")
+    return manifest
+
+
+def validate_rendered_evidence(dataset, tokens):
+    """Bind real training renders to the CPU-verified token IDs and loss masks."""
+    by_id = _unique_index(tokens, "token")
+    for record, example in zip(dataset.records, dataset.examples, strict=True):
+        token = by_id[record["metadata"]["source_dialog_id"]]
+        if (sha256_json(example["input_ids"]) != token["input_ids_sha256"]
+                or sha256_json(example["labels"]) != token["labels_sha256"]):
+            raise ValueError("Training tokenizer or loss mask differs from frozen evidence")
