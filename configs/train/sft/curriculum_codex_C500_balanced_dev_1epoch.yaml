@@ -1,0 +1,60 @@
+# Frozen reviewed data; GPU training has not started.
+model:
+  name_or_path: null
+  trust_remote_code: false
+  attn_implementation: sdpa
+  requires_previous_stage: B393
+data:
+  train_jsonl: data/sft/curriculum_500_dev150_balanced_codex_20260930/train_C500.jsonl
+  validation_jsonl: data/sft/curriculum_500_dev150_balanced_codex_20260930/validation.jsonl
+  tool_config: configs/envs/tool_config.yaml
+  expected_train_size: 500
+  expected_validation_size: 150
+  max_length: 24576
+  require_approved_targets: true
+  enable_thinking: false
+  supervise_reasoning: false
+  preserve_historical_reasoning: false
+  reviewed_package_manifest: data/sft/curriculum_500_dev150_balanced_codex_20260930/manifest.json
+  frozen_prompt_protocols:
+    c0e0f60839a5d0c5c2cf76f6625cc84ce89392a3fcab93ad1696a1a317d3d9e3: airline_sequential_multicall_v1
+    35e8e6f2cedeca6363aeeb414d028d5fb8f799ff7ee59e1884084504def8b052: airline_teacher_visible_text_multicall_v2
+    f181cc80ea52016f2607a296abf9183b6388c72107e1577ba568e79e92c0e739: airline_teacher_visible_text_multicall_v2
+    2fa07f73348f81b12c8b95739d62bc737324518825aeab6039c654870c210921: airline_teacher_visible_text_multicall_v2
+    926d2edc9e6195b20c42cc090c146a8e21cec33ec62a502b1ed3535c354e8e87: airline_teacher_visible_text_multicall_v2
+    d335d1d954fddb1ad3a0fa22b1ab2db348b4da27646a5d7e3c935e1d430311d2: airline_teacher_visible_text_multicall_v2
+    8ebbe73ae150440921d14d3ae216a04b39d8e2d6a0e825b85b014983fd04049d: airline_teacher_visible_text_multicall_v2
+    f8cbb0ff8375acdb2d3dddf5403cc004f0daf7e7e0958a115c93832a49b4d1b4: airline_teacher_visible_text_multicall_v2
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules: qwen35_language_linear
+train:
+  method: lora
+  evaluate_before_train: true
+  load_best_model_at_end: false
+  num_epochs: 1
+  max_steps: -1
+  expected_optimizer_steps: 63
+  expected_effective_batch_size: 8
+  per_device_batch_size: 1
+  gradient_accumulation_steps: 8
+  learning_rate: 3.0e-05
+  lr_scheduler_type: cosine
+  warmup_ratio: 0.05
+  weight_decay: 0.0
+  max_grad_norm: 1.0
+  logging_steps: 1
+  save_strategy: epoch
+  eval_strategy: epoch
+  seed: 42
+output:
+  dir: results/runs/sft_curriculum_C500_balanced_codex_20260930/seed42/adapter
+includes:
+- ../../hardware/2xa800.yaml
+launch:
+  stage: sft
+  entrypoint: scripts/train/sft/run_base.sh
+  environment:
+    TAU3_TRACKING_BACKEND: none

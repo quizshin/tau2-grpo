@@ -58,6 +58,17 @@ historical:
   removal: retain_until_all_compatibility_and_evidence_references_are_resolved
   reference_audit: docs/architecture/cleanup_20260919.md
 candidates:
+  curriculum_codex_500_balanced_dev150:
+    purpose: unchanged_train500_with_balanced_foundation_constraints_strategy_dev50_each
+    enabled_by_default: false
+    status: cpu_verified
+    profiles:
+      A109: configs/train/sft/curriculum_codex_A109_balanced_dev_1epoch.yaml
+      B393: configs/train/sft/curriculum_codex_B393_balanced_dev_1epoch.yaml
+      C500: configs/train/sft/curriculum_codex_C500_balanced_dev_1epoch.yaml
+    evidence: docs/sft_balanced_dev_finalization_20260930.md
+    package_identity: docs/sft500_dev150_balanced_package_manifest_20260930.json
+    gpu_validation: not_started
   curriculum_codex_500_dev150:
     purpose: frozen_cumulative_sft_A109_B393_C500_with_user_disjoint_dev150
     enabled_by_default: false

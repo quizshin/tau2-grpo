@@ -1,0 +1,265 @@
+{
+  "schema": "codex_reviewed_sft_package_v1",
+  "ready_for_training": true,
+  "status": "frozen_cpu_verified_gpu_not_started",
+  "audit": {
+    "ready_for_training": true,
+    "train_count": 500,
+    "validation_count": 150,
+    "train_unique_users": 67,
+    "validation_unique_users": 16,
+    "user_overlap_count": 0,
+    "conversation_overlap_count": 0,
+    "train_curriculum": {
+      "foundation": 109,
+      "constraints": 284,
+      "strategy": 107
+    },
+    "validation_curriculum": {
+      "foundation": 50,
+      "constraints": 50,
+      "strategy": 50
+    }
+  },
+  "token_summary": {
+    "train": {
+      "dialogues": 500,
+      "total_tokens": 3908232,
+      "label_tokens": 354489,
+      "mean_total_tokens": 7816.464,
+      "mean_label_tokens": 708.978
+    },
+    "validation": {
+      "dialogues": 150,
+      "total_tokens": 1196148,
+      "label_tokens": 117593,
+      "mean_total_tokens": 7974.32,
+      "mean_label_tokens": 783.9533333333334
+    }
+  },
+  "stage_token_summary": {
+    "A109": {
+      "n_dialogues": 109,
+      "n_total_tokens": 655073,
+      "n_label_tokens": 21529
+    },
+    "B393": {
+      "n_dialogues": 393,
+      "n_total_tokens": 2888964,
+      "n_label_tokens": 224557
+    },
+    "C500": {
+      "n_dialogues": 500,
+      "n_total_tokens": 3908232,
+      "n_label_tokens": 354489
+    }
+  },
+  "tokenizer_files": {
+    "models/Qwen3.5-4B/tau3_source_revision.json": "ff230f94216fbf8b32048d99529bf3eab916aa8269afaab1942b31c0f7d7863e",
+    "models/Qwen3.5-4B/tokenizer_config.json": "316230d6a809701f4db5ea8f8fc862bc3a6f3229c937c174e674ff3ca0a64ac8",
+    "models/Qwen3.5-4B/config.json": "ddc63e1c717afa86c865bb5e01313d89d72bb53b97ad4a8a03ba8510c0621670",
+    "models/Qwen3.5-4B/tokenizer.json": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42",
+    "models/Qwen3.5-4B/merges.txt": "a9d356d7bdf1ef4949e3e748e95b8e10ad9d4e2e838eddc38a0a7b6b94d1db8d",
+    "models/Qwen3.5-4B/chat_template.jinja": "a4aee8afcf2e0711942cf848899be66016f8d14a889ff9ede07bca099c28f715",
+    "models/Qwen3.5-4B/vocab.json": "ce99b4cb2983d118806ce0a8b777a35b093e2000a503ebde25853284c9dfa003"
+  },
+  "tokenizer_source": "models/Qwen3.5-4B",
+  "tokenizer_chat_template_sha256": "a4aee8afcf2e0711942cf848899be66016f8d14a889ff9ede07bca099c28f715",
+  "semantic_review_modes": {
+    "inherited_exact_hash_bound_codex200_review": 200,
+    "direct_in_thread_goal_claim_confirmation_and_native_state_adjudication": 450
+  },
+  "validation_unique_goal_count": 150,
+  "gpu_training_started": false,
+  "parent_package_manifest_sha256": "0f5475682f3e498ea0eea4dee6b1e256d964084c69ae6ee61ce93bc7658cb4b0",
+  "selection": {
+    "parent_manifest_file": "data/sft/curriculum_500_dev150_codex_20260930/manifest.json",
+    "parent_manifest_sha256": "0f5475682f3e498ea0eea4dee6b1e256d964084c69ae6ee61ce93bc7658cb4b0",
+    "unchanged_train_files": {
+      "train.jsonl": "90052214dd7a2cb57d9c5451d0f25af347721175920395ace04251230262940f",
+      "train_A109.jsonl": "eaea5a6a5678a5df8b39e01fdd7049015159d5a3c1efeec7f832c9f1cf99fed1",
+      "train_B393.jsonl": "7691d183650dd2e60f5efdc6647302f987878610d052ae8a8bd0450b4c080e64",
+      "train_C500.jsonl": "90052214dd7a2cb57d9c5451d0f25af347721175920395ace04251230262940f"
+    },
+    "old_dev_retained": 112,
+    "new_strategy_count": 38,
+    "old_dev_reserved": 38,
+    "new_accepted_pool_count": 41,
+    "new_strategy_selected_ids": [
+      "sft_deepseek500_finalize_balanced_strategy_01_20260930_015_a1",
+      "sft_deepseek500_finalize_balanced_strategy_03_20260930_001_a1",
+      "sft_deepseek500_finalize_balanced_strategy_03_20260930_005_a1",
+      "sft_deepseek500_finalize_balanced_strategy_01_20260930_013_a1",
+      "sft_deepseek500_finalize_balanced_strategy_01_20260930_010_a1",
+      "sft_deepseek500_finalize_balanced_strategy_01_20260930_007_a1",
+      "sft_deepseek500_finalize_balanced_strategy_01_20260930_004_a1",
+      "sft_deepseek500_finalize_balanced_strategy_01_20260930_006_a1",
+      "sft_deepseek500_finalize_balanced_strategy_03_20260930_013_a1",
+      "sft_deepseek500_finalize_balanced_strategy_01_20260930_008_a1",
+      "sft_deepseek500_finalize_balanced_strategy_01_20260930_002_a1",
+      "sft_deepseek500_finalize_balanced_strategy_01_20260930_009_a1",
+      "sft_deepseek500_finalize_balanced_strategy_03_20260930_000_a1",
+      "sft_deepseek500_finalize_balanced_strategy_02_20260930_004_a1",
+      "sft_deepseek500_finalize_balanced_strategy_03_20260930_002_a1",
+      "sft_deepseek500_finalize_balanced_strategy_02_20260930_017_a1",
+      "sft_deepseek500_finalize_balanced_strategy_02_20260930_018_a1",
+      "sft_deepseek500_finalize_balanced_strategy_02_20260930_001_a1",
+      "sft_deepseek500_finalize_balanced_strategy_01_20260930_018_a1",
+      "sft_deepseek500_finalize_balanced_strategy_02_20260930_009_a1",
+      "sft_deepseek500_finalize_balanced_strategy_01_20260930_012_a1",
+      "sft_deepseek500_finalize_balanced_strategy_03_20260930_011_a1",
+      "sft_deepseek500_finalize_balanced_strategy_01_20260930_016_a1",
+      "sft_deepseek500_finalize_balanced_strategy_03_20260930_010_a1",
+      "sft_deepseek500_finalize_balanced_strategy_01_20260930_003_a1",
+      "sft_deepseek500_finalize_balanced_strategy_02_20260930_016_a1",
+      "sft_deepseek500_finalize_balanced_strategy_03_20260930_006_a1",
+      "sft_deepseek500_finalize_balanced_strategy_01_20260930_019_a1",
+      "sft_deepseek500_finalize_balanced_strategy_02_20260930_019_a1",
+      "sft_deepseek500_finalize_balanced_strategy_02_20260930_012_a1",
+      "sft_deepseek500_finalize_balanced_strategy_03_20260930_003_a1",
+      "sft_deepseek500_finalize_balanced_strategy_02_20260930_008_a1",
+      "sft_deepseek500_finalize_balanced_strategy_01_20260930_001_a1",
+      "sft_deepseek500_finalize_balanced_strategy_02_20260930_002_a1",
+      "sft_deepseek500_finalize_balanced_strategy_02_20260930_007_a1",
+      "sft_deepseek500_finalize_balanced_strategy_02_20260930_000_a1",
+      "sft_deepseek500_finalize_balanced_strategy_01_20260930_005_a1",
+      "sft_deepseek500_finalize_balanced_strategy_03_20260930_007_a1"
+    ],
+    "new_accepted_reserved_ids": [
+      "sft_deepseek500_finalize_balanced_strategy_03_20260930_009_a1",
+      "sft_deepseek500_finalize_balanced_strategy_02_20260930_010_a1",
+      "sft_deepseek500_finalize_balanced_strategy_02_20260930_014_a1"
+    ],
+    "selection_rule": "Within foundation/constraints old accepted rows and new accepted strategy rows: greedy least-used source kind, then least-used source user, then sha256_text of source dialog ID. No metric scores used. All12 old strategy retained.",
+    "dev_source_kind_counts": {
+      "search_morning": 5,
+      "search_afternoon": 4,
+      "allowance_quote": 5,
+      "payment_inventory": 4,
+      "bag_removal_refusal": 5,
+      "certificate_update_refusal": 5,
+      "reservation_summary": 4,
+      "passenger_count_refusal": 5,
+      "search_price": 4,
+      "passenger_identity": 4,
+      "search_evening": 5,
+      "cancel_after24": 7,
+      "book_direct_credit": 7,
+      "passenger_correction": 5,
+      "cancel_allowed": 5,
+      "card_tail_binding": 2,
+      "flight_refusal": 2,
+      "historical_upgrade": 3,
+      "baggage_paid": 4,
+      "baggage_free": 5,
+      "flight_change": 1,
+      "book_direct_split": 6,
+      "downgrade_refund": 1,
+      "cabin_economy_upgrade": 2,
+      "book_connection_split": 3,
+      "downgrade_gift_bags": 9,
+      "book_roundtrip_split": 13,
+      "upgrade_then_bags": 11,
+      "gift_limit_upgrade_bags": 9,
+      "partial_change_bags": 3,
+      "book_date_replan": 1,
+      "no_inventory_cabin_bags": 1
+    },
+    "dev_user_counts": {
+      "chen_davis_2676": 15,
+      "isabella_muller_2311": 31,
+      "mason_garcia_8795": 10,
+      "chen_jackson_3290": 10,
+      "lucas_hernandez_9581": 24,
+      "aarav_nguyen_1055": 26,
+      "raj_khan_9352": 10,
+      "james_lopez_2996": 1,
+      "lei_ito_5790": 5,
+      "sophia_muller_9002": 4,
+      "sofia_white_f1200a": 2,
+      "sophia_jackson_1792": 6,
+      "matthew_santos_84f07e": 1,
+      "emma_mitchell_2867b5": 1,
+      "ronald_ahmed_242159": 2,
+      "isabella_khan_3247": 2
+    },
+    "new_user_ids": [
+      "emma_mitchell_2867b5",
+      "isabella_khan_3247",
+      "james_lopez_2996",
+      "lei_ito_5790",
+      "matthew_santos_84f07e",
+      "ronald_ahmed_242159",
+      "sofia_white_f1200a",
+      "sophia_jackson_1792",
+      "sophia_muller_9002"
+    ]
+  },
+  "manifest_file": "data/sft/curriculum_500_dev150_balanced_codex_20260930/manifest.json",
+  "manifest_sha256": "6dccb3050b0e51e9426fb3b68ea5d43ee87ecb2d31fe3db35d50374f1c99bdbd",
+  "bound_file_count": 2255,
+  "package_files": {
+    "data/sft/curriculum_500_dev150_balanced_codex_20260930/train.jsonl": "90052214dd7a2cb57d9c5451d0f25af347721175920395ace04251230262940f",
+    "data/sft/curriculum_500_dev150_balanced_codex_20260930/token_mask_audit.json": "83d1fe1a5dc31e43254c5f86040e00a6c2b4064152f2669d4321e9b557519450",
+    "data/sft/curriculum_500_dev150_balanced_codex_20260930/validation_effective.jsonl": "9a4f4a45db184436cf32e888c620144f8d93efe27b3bd0d8b0addd0708f538a0",
+    "data/sft/curriculum_500_dev150_balanced_codex_20260930/frozen_prompt_protocols.json": "436302fdc01a8b69993e4027807e65dbfad64200a9dd6d65ed83dd677ef10c9a",
+    "data/sft/curriculum_500_dev150_balanced_codex_20260930/stage_token_summary.json": "adddf45027496c289e29f04ff737e741285e03dfdc44f1d6baff29047f8004ed",
+    "data/sft/curriculum_500_dev150_balanced_codex_20260930/train_C500.jsonl": "90052214dd7a2cb57d9c5451d0f25af347721175920395ace04251230262940f",
+    "data/sft/curriculum_500_dev150_balanced_codex_20260930/train_effective.jsonl": "5acc1ed14e046ec5e46d1ec7b3ff4c355331a014e67ec39013a403660764b3f9",
+    "data/sft/curriculum_500_dev150_balanced_codex_20260930/train_B393.jsonl": "7691d183650dd2e60f5efdc6647302f987878610d052ae8a8bd0450b4c080e64",
+    "data/sft/curriculum_500_dev150_balanced_codex_20260930/rejected_index.json": "609fc1cf2b3a91cbc12952f9159bb8b0aac12df4d8fb5bc541f66d5d3893229a",
+    "data/sft/curriculum_500_dev150_balanced_codex_20260930/train_A109.jsonl": "eaea5a6a5678a5df8b39e01fdd7049015159d5a3c1efeec7f832c9f1cf99fed1",
+    "data/sft/curriculum_500_dev150_balanced_codex_20260930/validation.jsonl": "2e6d519cca975dd53df274f3ef0d9f338636ac21754aaf393ba57006f47ff09f",
+    "data/sft/curriculum_500_dev150_balanced_codex_20260930/selection.json": "8258f979a85f66b2f7daa8ae2826f335ce8ba1448bae80313dd3f946d3877344",
+    "data/sft/curriculum_500_dev150_balanced_codex_20260930/token_summary.json": "8ee0201ddfb06f0e78f897f82f207dcaa7ba2bec3d55cfbe0285d488f23bf0ac",
+    "data/sft/curriculum_500_dev150_balanced_codex_20260930/review_index.json": "e249f722290c1fb04a637827ff045191c1d358c1f17375af9857a79e44f64f08"
+  },
+  "cpu_receipt_file": "results/analysis/sft_deepseek_500_20260927/balanced_package_cpu_receipt_20260930.json",
+  "cpu_receipt_sha256": "ba0a1f7b6781b9fb31b57d0190b38779194d41d55243c8aa90dc0bc2bd73bf3f",
+  "cpu_test_log": "results/analysis/sft_deepseek_500_20260927/balanced_dev_cpu_tests_20260930.log",
+  "cpu_test_log_sha256": "a86d5c04d6bec3e3d2e35ad28ce80a2d885099cb794c495d735e2b96f184eecf",
+  "generation_review_counts": {
+    "accepted_codex": 41,
+    "reject_codex": 13
+  },
+  "budget": {
+    "confirmed_actual_cny": 13.93,
+    "confirmation_source": "User confirmed actual total13.93CNY in this task on2026-09-26; historical939calls; offpeak billing",
+    "new_usage_estimate_or_reservation_cny": 67.623332,
+    "budget_committed_cny": 81.55333200000001,
+    "remaining_budget_cny": 68.44666799999999,
+    "is_provider_invoice": false
+  },
+  "generation_runs": [
+    {
+      "directory": "results/analysis/sft_deepseek500_finalize_balanced_strategy_01_20260930",
+      "run_status": "complete_candidates_only",
+      "run_file_sha256": "2f3763b8041494e2081d1e5a5caf86c00eb935a3eb4faddaf3586204bf1eca6c",
+      "tasks_file_sha256": "578e2543070884b0f7524bf5224b2959edfccb0cd5cd91f8232cc9bd7fc60ab2",
+      "candidate_status_counts": {
+        "user_stop": 20
+      },
+      "wrapper_provenance_sha256": "2500bd73fea7e8fae38d0bd854d92f5df1d7bb082067131b7dc1db41543621ae"
+    },
+    {
+      "directory": "results/analysis/sft_deepseek500_finalize_balanced_strategy_02_20260930",
+      "run_status": "complete_candidates_only",
+      "run_file_sha256": "7e752d791026a184b6aaa892a9aa68ed83466e64c74aa2b1153c3bdcab26ea52",
+      "tasks_file_sha256": "2a33b72304146eb71b1345a9ca84ad8cf698f4377ab90c2a62dd0ae676121c30",
+      "candidate_status_counts": {
+        "user_stop": 20
+      },
+      "wrapper_provenance_sha256": "2500bd73fea7e8fae38d0bd854d92f5df1d7bb082067131b7dc1db41543621ae"
+    },
+    {
+      "directory": "results/analysis/sft_deepseek500_finalize_balanced_strategy_03_20260930",
+      "run_status": "complete_candidates_only",
+      "run_file_sha256": "47652ae290e38f64a6909613e5ac2dc1caf8bd03f2667239a18db4d24a6d76ce",
+      "tasks_file_sha256": "61f08f568bbe21dc7a1d5b14a3e10cecc5e2c87ced9da6f04d67db83205c0e28",
+      "candidate_status_counts": {
+        "user_stop": 14
+      },
+      "wrapper_provenance_sha256": "2500bd73fea7e8fae38d0bd854d92f5df1d7bb082067131b7dc1db41543621ae"
+    }
+  ]
+}

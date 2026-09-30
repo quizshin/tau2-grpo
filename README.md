@@ -2,7 +2,7 @@
 
 基于固定版本的 **veRL + Tau3 benchmark**，支持 **GRPO、GiGPO、MT-GTPO 和 ARPO（CPU 已验收）**：策略模型在独立任务环境中调用工具、与模拟用户交互，验证器判定结果，算法计算优势，veRL 更新策略。项目同时提供 SFT、独立评测、轨迹重放和实验记录。
 
-**当前主线（2026-09-30）：Codex 审核的 train500/dev150 已冻结，下一步为 A109 → B393 → C500 三阶段 SFT 与同起点 GRPO / ARPO 对照。** 新包已通过本地 CPU 验收；旧包 ready 声明已撤回。新课程尚未开始训练。此前的三算法工程验收与旧 repair72 GRPO 结果分别保留，不能当作新课程或 ARPO 的效果证据。
+**当前主线（2026-09-30）：Codex 审核的 train500/dev150 已冻结，dev 基础/多约束/多步策略各50条，下一步为 A109 → B393 → C500 三阶段 SFT 与同起点 GRPO / ARPO 对照。** 新包已通过本地 CPU 验收；2026-09-29 的旧包 ready 声明已撤回。新课程尚未开始训练。此前的三算法工程验收与旧 repair72 GRPO 结果分别保留，不能当作新课程或 ARPO 的效果证据。
 
 |入口|用途|
 |---|---|
@@ -19,7 +19,7 @@
 
 ### SFT：按能力递进，后阶段保留前阶段数据
 
-已冻结 **500 条训练对话 + 150 条独立开发对话**；当前收尾状态和历史 ready 声明撤回原因见 [收尾记录](docs/sft_finalization_20260930.md)。新的 Codex-only 500/150 已冻结，历史 500/37 混合审核包另存。训练集由基础 109、多约束 284、多步策略 107 条组成；累计子集是 **A109 → B393 → C500**，不是三份互不重叠的数据。
+已冻结 **500 条训练对话 + 150 条独立开发对话**；最新补齐见 [均衡收尾记录](docs/sft_balanced_dev_finalization_20260930.md)，历史 ready 声明撤回原因见 [原收尾记录](docs/sft_finalization_20260930.md)。新的 Codex-only 500/150 已冻结，历史 500/37 混合审核包另存。训练集由基础 109、多约束 284、多步策略 107 条组成；累计子集是 **A109 → B393 → C500**，不是三份互不重叠的数据。
 
 |阶段|累计训练数据|训练重点|验证重点|
 |---|---:|---|---|
@@ -34,7 +34,7 @@
 ### 开发集：37 → 150，阶段诊断与共同评测并存
 
 - **当前已冻结 150 条 Codex 审核 dev**，与 train 的用户交集为 0。完整 tokenizer 与监督 mask 已核验；原始候选和拒绝记录保留。
-- 按五维 rubric、[九类能力](configs/analysis/airline_capability_taxonomy.yaml)和 [badcase 回放分类](configs/analysis/airline_badcase_replay_20260925.json)补覆盖，重点补多约束、费用与政策边界、状态依赖和重规划。实际基础/约束/策略为 87/51/12，覆盖 7 个独立用户；分布不均衡，须报告各能力切片，不能称为均衡开发集。
+- 按五维 rubric、[九类能力](configs/analysis/airline_capability_taxonomy.yaml)和 [badcase 回放分类](configs/analysis/airline_badcase_replay_20260925.json)补覆盖，重点补多约束、费用与政策边界、状态依赖和重规划。实际基础/约束/策略为 **50/50/50**，覆盖 **16 个来源用户**；新增38条策略对话均经直接Codex审核与native重放。须同时报告能力切片；均衡样本数不等于token等权。
 - A/B/C 阶段各看相应能力切片，但五维标准始终保留；关键 checkpoint 用**同一套冻结的完整 dev150**比较，并检查前阶段能力退化。不能只比较各阶段自身 loss。
 - 已核验 train/dev 来源用户隔离和完整对话去重；150 个开发目标互不重复。旧 **selection60** 已有开发曝光，保留为独立的历史回归面板，**不并入新 dev150，也不称为盲测**；已有用户隔离检查不等同于全部泄漏检查完成。
 - **官方 final50** 在模型和协议冻结后做最终测试，不用于课程选型或调参。
@@ -62,7 +62,7 @@ ARPO 依据 [论文](https://arxiv.org/abs/2507.19849)和[官方实现](https://
 
 正式对照前，除起点、任务和奖励外，还须显式对齐 **loss 归约与模拟器种子策略**；现有 ARPO/GRPO 默认值并不完全相同。相同最终轨迹数也不等于相同计算成本，应同时记录生成 token、工具调用和 GPU 时间。课程 RL 起点和新 dev150 的交互评测接入，以及 ARPO GPU 验收仍需完成后再开展效果比较。
 
-计划来源为任务“2卡a800训练实战”的最新确认与本地验收回执；更多历史见 [SFT 数据记录](docs/sft_curriculum_evidence_build_20260927.md)、[GRPO 执行记录](docs/repair72_rl_and_curriculum_plan_20260927.md)和[实验索引](EXPERIMENTS.md)。完整数据/审核回执属于运行资产，未上传 GitHub；当前本地包为 `data/sft/curriculum_500_dev150_codex_20260930/`，精确身份见 [当前数据包清单](docs/sft500_dev150_package_manifest_20260930.json)；旧混合审核包与历史身份清单保留。
+计划来源为任务“2卡a800训练实战”的最新确认与本地验收回执；更多历史见 [SFT 数据记录](docs/sft_curriculum_evidence_build_20260927.md)、[GRPO 执行记录](docs/repair72_rl_and_curriculum_plan_20260927.md)和[实验索引](EXPERIMENTS.md)。完整数据/审核回执属于运行资产，未上传 GitHub；当前本地包为 `data/sft/curriculum_500_dev150_balanced_codex_20260930/`，精确身份见 [当前数据包清单](docs/sft500_dev150_balanced_package_manifest_20260930.json)；旧混合审核包与历史身份清单保留。
 
 ## 架构与 harness
 

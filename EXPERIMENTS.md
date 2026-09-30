@@ -808,3 +808,8 @@ SFT新方法运行更新：15:15首20任务DeepSeek teacher/独立user候选生�
 ## 2026-09-30 Codex SFT500 / dev150 最终数据收尾
 
 状态 `cpu_verified`，SFT 未训练。旧 Codex-only ready 声明因验证来源缺失、39 条用户重叠及空 token 证据撤回；新包替换29条训练对话，冻结500/150、累计A109/B393/C500、用户及消息交集0。650条均有完整Codex审核绑定及真实tokenizer/mask证据；200条历史审核精确继承，450条本轮审核。dev分布87/51/12、7用户，须报告能力切片。57项本地CPU回归通过，训练入口拒绝缺证据或变化数据，B/C强制显式前阶段模型。无GPU、部署或推送；见[收尾记录](docs/sft_finalization_20260930.md)及[身份清单](docs/sft500_dev150_package_manifest_20260930.json)。
+
+
+## 2026-09-30 SFT dev150 均衡补齐
+
+状态cpu_verified，GPU未启动。train500及累计子集逐字节保持上一包；dev保留112条旧接受样本并新增38条直接Codex审核策略对话，冻结50/50/50、16个来源用户、用户与消息交集0及150不同目标。完整650条实际tokenizer/监督哈希、三阶段守卫和launcher dry-run通过，67项本地CPU回归通过；旧87/51/12包及配置保留。见[均衡收尾记录](docs/sft_balanced_dev_finalization_20260930.md)和[身份清单](docs/sft500_dev150_balanced_package_manifest_20260930.json)。

@@ -1,6 +1,6 @@
 # SFT 500 / dev150 收尾核验（2026-09-30）
 
-状态：`frozen_cpu_verified_gpu_not_started`。当前包为
+状态：`frozen_cpu_verified_gpu_not_started`。该次收尾包为
 `data/sft/curriculum_500_dev150_codex_20260930/`，完整 manifest 及逐文件 SHA256 已核验。
 Git 内的小型身份清单见 [数据包清单](sft500_dev150_package_manifest_20260930.json)。
 
@@ -68,3 +68,6 @@ A 从 Qwen3.5-4B 开始；B/C 必须显式传入上一阶段 merged model，
 共享 API 上限 150 CNY；本轮收尾时账本占用约 78.00 CNY，
 余额约 72.00 CNY。其中历史用户确认实付 13.93，
 其余为 usage 估算或保守预留，不是供应商实付账单。未调用 Kimi 或子代理。
+
+
+后续：保持本包及训练文件不变，已另行补齐均衡dev150（50/50/50）；当前主线转为[均衡收尾记录](sft_balanced_dev_finalization_20260930.md)中的独立数据包与配置。上面的87/51/12为本历史版本实际分布。
