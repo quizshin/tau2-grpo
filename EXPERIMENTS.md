@@ -813,3 +813,7 @@ SFT新方法运行更新：15:15首20任务DeepSeek teacher/独立user候选生�
 ## 2026-09-30 SFT dev150 均衡补齐
 
 状态cpu_verified，GPU未启动。train500及累计子集逐字节保持上一包；dev保留112条旧接受样本并新增38条直接Codex审核策略对话，冻结50/50/50、16个来源用户、用户与消息交集0及150不同目标。完整650条实际tokenizer/监督哈希、三阶段守卫和launcher dry-run通过，67项本地CPU回归通过；旧87/51/12包及配置保留。见[均衡收尾记录](docs/sft_balanced_dev_finalization_20260930.md)和[身份清单](docs/sft500_dev150_balanced_package_manifest_20260930.json)。
+
+## 2026-10-01 SFT 正式包与历史目录解耦
+
+状态 `cpu_verified`，GPU 未启动。将均衡 train500/dev150 导出为独立 v2 包，13 个包内保护文件加 manifest，约24.1 MB；保留完整接受记录、token/mask及原来源身份清单。导出时一次核验旧2255文件，训练时不再打开历史路径。train/dev及A/B累计文件逐字节不变，C500直接使用同一train500，监督与协议不变。旧包和历史实验保留原样，新配置及证据见[迁移记录](docs/sft_portable_package_20261001.md)。

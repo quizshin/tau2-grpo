@@ -48,7 +48,7 @@ evaluation:
     seed: 42
     max_concurrency_per_model: 4
   trajectory_error_policy: preserve_observed_state_continue_other_trials_no_replacement
-  selection_status: cpu_revision_gpu_not_started
+  selection_status: historical_complete
   selection_evidence: docs/grpo_improvement_evidence_20260920.md
   final_policy: after_model_and_protocol_selection_only
 historical:
@@ -58,7 +58,19 @@ historical:
   removal: retain_until_all_compatibility_and_evidence_references_are_resolved
   reference_audit: docs/architecture/cleanup_20260919.md
 candidates:
+  curriculum_codex_500_portable_dev150:
+    purpose: self_contained_train500_and_balanced_dev150_without_live_history_dependencies
+    enabled_by_default: false
+    status: cpu_verified
+    profiles:
+      A109: configs/train/sft/curriculum_codex_A109_portable_dev_1epoch.yaml
+      B393: configs/train/sft/curriculum_codex_B393_portable_dev_1epoch.yaml
+      C500: configs/train/sft/curriculum_codex_C500_portable_dev_1epoch.yaml
+    evidence: docs/sft_portable_package_20261001.md
+    package_identity: docs/sft500_dev150_portable_package_manifest_20261001.json
+    gpu_validation: not_started
   curriculum_codex_500_balanced_dev150:
+    superseded_by: curriculum_codex_500_portable_dev150
     purpose: unchanged_train500_with_balanced_foundation_constraints_strategy_dev50_each
     enabled_by_default: false
     status: cpu_verified
@@ -159,4 +171,4 @@ arpo:
   status: cpu_verified
   reference: docs/architecture/arpo_tau_v1.md
   gpu_validation: pending_separate_authorization
-  deployment: deferred_while_canonical_checkout_is_active
+  deployment: pending_remote_state_check_and_authorized_deployment

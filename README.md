@@ -2,7 +2,7 @@
 
 基于固定版本的 **veRL + Tau3 benchmark**，支持 **GRPO、GiGPO、MT-GTPO 和 ARPO（CPU 已验收）**：策略模型在独立任务环境中调用工具、与模拟用户交互，验证器判定结果，算法计算优势，veRL 更新策略。项目同时提供 SFT、独立评测、轨迹重放和实验记录。
 
-**当前主线（2026-09-30）：Codex 审核的 train500/dev150 已冻结，dev 基础/多约束/多步策略各50条，下一步为 A109 → B393 → C500 三阶段 SFT 与同起点 GRPO / ARPO 对照。** 新包已通过本地 CPU 验收；2026-09-29 的旧包 ready 声明已撤回。新课程尚未开始训练。此前的三算法工程验收与旧 repair72 GRPO 结果分别保留，不能当作新课程或 ARPO 的效果证据。
+**当前主线（2026-10-01）：Codex 审核的 train500/dev150 已冻结，dev 基础/多约束/多步策略各50条，下一步为 A109 → B393 → C500 三阶段 SFT 与同起点 GRPO / ARPO 对照。** 新包已通过本地 CPU 验收；2026-09-29 的旧包 ready 声明已撤回。新课程尚未开始训练。此前的三算法工程验收与旧 repair72 GRPO 结果分别保留，不能当作新课程或 ARPO 的效果证据。
 
 |入口|用途|
 |---|---|
@@ -13,7 +13,9 @@
 |[活动配置索引](configs/experiments/catalog.yaml)|正式入口、算法、奖励配方和候选状态|
 |[剩余工作](docs/architecture/remaining_work_20260919.md) / [消融计划](docs/architecture/ablation_plan_20260918.md)|正式效果研究、消融与后续工程事项|
 
-## 当前计划：三阶段 SFT → GRPO / ARPO（2026-09-28）
+## 当前计划：三阶段 SFT → GRPO / ARPO（2026-10-01）
+
+当前训练使用[独立数据包](docs/sft_portable_package_20261001.md)：13 个包内保护文件加 manifest，约 24.1 MB。训练不再读取分散的历史候选和审核目录；最终对话、接受结论和 token/mask 逐字节保持不变。三阶段配置为 `curriculum_codex_{A109,B393,C500}_portable_dev_1epoch.yaml`。
 
 当前主线是先完成课程 SFT，再从**相同的 SFT checkpoint**分别运行 GRPO 和 ARPO。已完成的是数据验收、旧 repair72 GRPO 实验和 ARPO 的 CPU 接入；新的三阶段 SFT、课程起点的 RL 对照及 ARPO GPU 实验尚未执行。
 
@@ -62,7 +64,7 @@ ARPO 依据 [论文](https://arxiv.org/abs/2507.19849)和[官方实现](https://
 
 正式对照前，除起点、任务和奖励外，还须显式对齐 **loss 归约与模拟器种子策略**；现有 ARPO/GRPO 默认值并不完全相同。相同最终轨迹数也不等于相同计算成本，应同时记录生成 token、工具调用和 GPU 时间。课程 RL 起点和新 dev150 的交互评测接入，以及 ARPO GPU 验收仍需完成后再开展效果比较。
 
-计划来源为任务“2卡a800训练实战”的最新确认与本地验收回执；更多历史见 [SFT 数据记录](docs/sft_curriculum_evidence_build_20260927.md)、[GRPO 执行记录](docs/repair72_rl_and_curriculum_plan_20260927.md)和[实验索引](EXPERIMENTS.md)。完整数据/审核回执属于运行资产，未上传 GitHub；当前本地包为 `data/sft/curriculum_500_dev150_balanced_codex_20260930/`，精确身份见 [当前数据包清单](docs/sft500_dev150_balanced_package_manifest_20260930.json)；旧混合审核包与历史身份清单保留。
+计划来源为任务“2卡a800训练实战”的最新确认与本地验收回执；更多历史见 [SFT 数据记录](docs/sft_curriculum_evidence_build_20260927.md)、[GRPO 执行记录](docs/repair72_rl_and_curriculum_plan_20260927.md)和[实验索引](EXPERIMENTS.md)。完整数据/审核回执属于运行资产，未上传 GitHub；当前本地包为 `data/sft/curriculum_500_dev150_portable_codex_20261001/`，精确身份见 [当前数据包清单](docs/sft500_dev150_portable_package_manifest_20261001.json)；旧混合审核包与历史身份清单保留。
 
 ## 架构与 harness
 

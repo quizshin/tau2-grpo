@@ -12,6 +12,103 @@ from tau3_grpo.models.qwen35_template import approved_assistant_indices
 from tau3_grpo.utils.hashing import sha256_file, sha256_json
 
 REVIEW_AREAS = {"scope", "evidence", "policy", "arithmetic", "completion"}
+PORTABLE_SCHEMA = "codex_reviewed_sft_package_v2"
+
+
+def package_path(directory, name):
+    """Resolve a relative artifact without allowing traversal or escaping symlinks."""
+    directory = Path(directory).resolve()
+    path = Path(name)
+    if path.is_absolute() or ".." in path.parts:
+        raise ValueError("Frozen package paths must stay inside the package")
+    resolved = (directory / path).resolve()
+    if not resolved.is_relative_to(directory) or resolved == directory:
+        raise ValueError("Frozen package paths must stay inside the package")
+    return resolved
+
+
+def load_frozen_tokens(manifest_path, manifest, *, root):
+    """Read the verified token inventory under the manifest's declared path scope."""
+    directory = Path(manifest_path).resolve().parent if manifest.get("schema") == PORTABLE_SCHEMA else Path(root)
+    path = package_path(directory, manifest["token_file"])
+    if sha256_file(path) != manifest["files"][manifest["token_file"]]:
+        raise ValueError("Frozen SFT token evidence changed")
+    return json.loads(path.read_text())
+
+
+def _portable_source_binding(manifest, directory, reviews):
+    """Check the exact accepted ledger inherited at migration, without live archives.
+
+    Historical paths in the source manifest are provenance identifiers only.
+    The original source files were verified by the exporter before freezing v2;
+    detailed replay inputs are no longer a prerequisite for gradient training.
+    """
+    source = manifest["source_package"]
+    snapshot_path = package_path(directory, source["manifest_file"])
+    if sha256_file(snapshot_path) != source["manifest_sha256"]:
+        raise ValueError("Frozen source manifest identity changed")
+    previous = json.loads(snapshot_path.read_text())
+    if previous.get("ready_for_training") is not True or previous["audit"] != manifest["audit"]:
+        raise ValueError("Portable package differs from its accepted source audit")
+    bindings = {
+        manifest["train_file"]: previous["train_file"],
+        manifest["validation_file"]: previous["validation_file"],
+        manifest["review_file"]: previous["review_file"],
+        manifest["token_file"]: previous["token_file"],
+    }
+    # Check every binding independently: auxiliary or stage mappings must never
+    # replace the required identities of the final data and accepted ledgers.
+    pairs = list(bindings.items()) + list(source["artifact_bindings"].items())
+    if set(source["stage_bindings"]) != set(manifest["stage_files"]):
+        raise ValueError("Portable stage inventory differs from source")
+    for name, original in source["stage_bindings"].items():
+        if previous["stage_files"].get(original) != manifest["stage_files"][name]:
+            raise ValueError("Portable stage budget differs from source")
+        pairs.append((name, original))
+    for name, original in pairs:
+        if (name not in manifest["files"] or original not in previous["files"]
+                or manifest["files"][name] != previous["files"][original]):
+            raise ValueError("Portable SFT artifact differs from its frozen source")
+    for review in reviews:
+        for evidence in review["evidence"]:
+            if (not isinstance(evidence, dict) or not evidence.get("sha256")
+                    or previous["files"].get(evidence.get("file")) != evidence["sha256"]):
+                raise ValueError("Unbound inherited SFT review evidence")
+
+
+def _validate_portable_package(manifest_path, manifest, train_path, validation_path):
+    directory = Path(manifest_path).resolve().parent
+    if manifest.get("path_scope") != "package":
+        raise ValueError("Portable SFT manifest requires package-relative paths")
+    required = {manifest[key] for key in (
+        "train_file", "validation_file", "review_file", "token_file", "tool_config_file",
+    )} | set(manifest["stage_files"]) | {manifest["source_package"]["manifest_file"]}
+    if not required <= manifest["files"].keys():
+        raise ValueError("Missing protected portable package artifact")
+    for name, digest in manifest["files"].items():
+        if sha256_file(package_path(directory, name)) != digest:
+            raise ValueError(f"Frozen SFT file changed: {name}")
+    stages = {package_path(directory, name): name for name in manifest["stage_files"]}
+    selected = stages.get(Path(train_path).resolve())
+    if selected is None or Path(validation_path).resolve() != package_path(directory, manifest["validation_file"]):
+        raise ValueError("Configured data does not belong to the frozen SFT package")
+
+    def read_rows(name):
+        return [json.loads(line) for line in package_path(directory, name).read_text().splitlines() if line]
+
+    train, dev = read_rows(manifest["train_file"]), read_rows(manifest["validation_file"])
+    reviews = json.loads(package_path(directory, manifest["review_file"]).read_text())
+    tokens = load_frozen_tokens(manifest_path, manifest, root=directory)
+    _portable_source_binding(manifest, directory, reviews)
+    if audit_reviewed_package(train, dev, reviews, tokens) != manifest["audit"]:
+        raise ValueError("Frozen SFT audit differs from package contents")
+    full = {row["metadata"]["source_dialog_id"]: row for row in train}
+    stage = read_rows(selected)
+    if (len(stage) != manifest["stage_files"][selected]
+            or len({r["metadata"]["source_dialog_id"] for r in stage}) != len(stage)
+            or any(full.get(r["metadata"]["source_dialog_id"]) != r for r in stage)):
+        raise ValueError("Cumulative stage differs from the reviewed training package")
+    return manifest
 
 
 def audit_reviewed_package(train, validation, reviews, tokens, *, sizes=(500, 150)):
@@ -110,6 +207,10 @@ def validate_frozen_package(manifest_path, *, root, train_path, validation_path)
     manifest = json.loads(Path(manifest_path).read_text())
     if manifest.get("ready_for_training") is not True:
         raise ValueError("Reviewed SFT package is not ready for training")
+    if manifest.get("schema") == PORTABLE_SCHEMA:
+        return _validate_portable_package(manifest_path, manifest, train_path, validation_path)
+    if manifest.get("schema") not in (None, "codex_reviewed_sft_package_v1"):
+        raise ValueError("Unknown reviewed SFT package schema")
     files = manifest["files"]
     for path, digest in files.items():
         if sha256_file(root / path) != digest:

@@ -97,3 +97,7 @@ Harness 是组织一次 agent 与环境交互的执行流程：建立任务和�
 |补丁与测试|`env_info/vendor_patches.json` 固定 revision 对照；`cpu_test_suites.json` 分类执行；`lint_debt.json` 显式旧债务与新增拒绝|
 
 harness 差分测试已经覆盖固定回复下的数据库写入、写后读取、错误响应、顺序、终止和官方成功/失败分数。它不证明真实模型下两套 executor 的全部分布相同：训练采用 assistant/user 各 15 轮与 token 上限，独立评测使用 Orchestrator step/error 上限；真实服务解析、生成/恢复和成本开销仍需 GPU 证据。
+
+## SFT 正式包与研究归档（2026-10-01）
+
+`data/compact_sft.py`将已完整验收的v1包导出为包内相对路径的v2；`data/reviewed_sft.py`同时保留v1历史检查和v2独立检查。`training/sft/train.py`根据schema读取受保护token库存并核验实际渲染。接受结论原样继承，不重新生成；历史候选和完整状态重放属于研究归档，不是正式SFT启动依赖。当前入口与证据见[独立包说明](../sft_portable_package_20261001.md)。

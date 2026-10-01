@@ -146,9 +146,11 @@ def main(argv: list[str] | None = None) -> int:
         **options,
     )
     if reviewed is not None:
-        from tau3_grpo.data.reviewed_sft import validate_rendered_evidence
+        from tau3_grpo.data.reviewed_sft import load_frozen_tokens, validate_rendered_evidence
 
-        tokens = json.loads(_resolve(reviewed["token_file"]).read_text())
+        tokens = load_frozen_tokens(
+            _resolve(config["data"]["reviewed_package_manifest"]), reviewed, root=PROJECT_ROOT,
+        )
         validate_rendered_evidence(train_dataset, tokens)
         validate_rendered_evidence(validation_dataset, tokens)
 

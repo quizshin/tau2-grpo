@@ -153,3 +153,186 @@ def test_changed_training_tokens_fail_even_if_counts_match():
     example["labels"] = [-100, 2, -100]
     with pytest.raises(ValueError, match="loss mask"):
         validate_rendered_evidence(dataset, tokens)
+
+
+@pytest.fixture
+def portable_package(tmp_path):
+    import json
+
+    from tau3_grpo.data.compact_sft import export_package
+    from tau3_grpo.utils.hashing import sha256_file
+
+    root = tmp_path / "original"
+    source = root / "data/old"
+    source.mkdir(parents=True)
+    archived = root / "results/original_review.txt"
+    archived.parent.mkdir()
+    archived.write_text("original accepted review and native receipt")
+    tools = root / "configs/envs/tool_config.yaml"
+    tools.parent.mkdir(parents=True)
+    tools.write_text("tools: []\n")
+    rows, reviews, tokens = [], [], []
+    for split, count in (("train", 500), ("validation", 150)):
+        for number in range(count):
+            parts = deepcopy(package())
+            index = 0 if split == "train" else 1
+            row, review, token = parts[index][0], parts[2][index], parts[3][index]
+            sid = f"{split}-{number}"
+            row["metadata"]["source_dialog_id"] = sid
+            row["messages"][1]["content"] = sid
+            identity = sha256_json([row["messages"], [2]])
+            for item in (review, token):
+                item.update(sample_id=sid, messages_mask_sha256=identity)
+            review["evidence"] = [{"file": str(archived.relative_to(root)),
+                                   "sha256": sha256_file(archived)}]
+            rows.append(row)
+            reviews.append(review)
+            tokens.append(token)
+
+    def jsonl(name, selected):
+        (source / name).write_text("".join(json.dumps(row) + "\n" for row in selected))
+
+    jsonl("train.jsonl", rows[:500])
+    jsonl("validation.jsonl", rows[500:])
+    for stage, count in (("A109", 109), ("B393", 393), ("C500", 500)):
+        jsonl(f"train_{stage}.jsonl", rows[:count])
+    (source / "review_index.json").write_text(json.dumps(reviews))
+    (source / "token_mask_audit.json").write_text(json.dumps(tokens))
+    manifest = {
+        "schema": "codex_reviewed_sft_package_v1", "ready_for_training": True,
+        "train_file": "data/old/train.jsonl", "validation_file": "data/old/validation.jsonl",
+        "review_file": "data/old/review_index.json", "token_file": "data/old/token_mask_audit.json",
+        "stage_files": {f"data/old/train_{stage}.jsonl": count
+                        for stage, count in (("A109", 109), ("B393", 393), ("C500", 500))},
+        "audit": audit_reviewed_package(rows[:500], rows[500:], reviews, tokens),
+        "files": {str(p.relative_to(root)): sha256_file(p)
+                  for p in [*source.iterdir(), tools, archived]},
+    }
+    (source / "manifest.json").write_text(json.dumps(manifest))
+    output = tmp_path / "portable"
+    receipt = export_package(source / "manifest.json", output, root=root)
+    return root, source, output, receipt
+
+
+def test_portable_package_remains_valid_after_removing_all_history(portable_package, tmp_path):
+    import json
+    import shutil
+
+    from tau3_grpo.data.reviewed_sft import load_frozen_tokens
+
+    root, source, output, receipt = portable_package
+    assert receipt["history_required_at_training"] is False
+    assert (output / "train.jsonl").read_bytes() == (source / "train.jsonl").read_bytes()
+    assert (output / "validation.jsonl").read_bytes() == (source / "validation.jsonl").read_bytes()
+    assert not (output / "train_C500.jsonl").exists()  # byte-identical duplicate removed
+    relocated = tmp_path / "isolated/assets/sft"
+    shutil.copytree(output, relocated)
+    shutil.rmtree(root)
+    shutil.rmtree(output)
+    manifest = json.loads((relocated / "manifest.json").read_text())
+    for stage in manifest["stage_files"]:
+        checked = validate_frozen_package(
+            relocated / "manifest.json", root=tmp_path / "isolated",
+            train_path=relocated / stage, validation_path=relocated / "validation.jsonl",
+        )
+        assert len(load_frozen_tokens(relocated / "manifest.json", checked,
+                                      root=tmp_path / "isolated")) == 650
+
+
+@pytest.mark.parametrize("name", ["train.jsonl", "review_index.json", "token_mask_audit.json"])
+def test_portable_artifact_cannot_be_replaced_by_merely_rehashing_it(portable_package, name):
+    import json
+
+    from tau3_grpo.utils.hashing import sha256_file
+
+    _, _, output, _ = portable_package
+    path = output / name
+    path.write_text(path.read_text() + "\n")
+    manifest_path = output / "manifest.json"
+    manifest = json.loads(manifest_path.read_text())
+    manifest["files"][name] = sha256_file(path)
+    manifest_path.write_text(json.dumps(manifest))
+    with pytest.raises(ValueError, match="differs from its frozen source"):
+        validate_frozen_package(manifest_path, root=output,
+                                train_path=output / "train.jsonl",
+                                validation_path=output / "validation.jsonl")
+
+
+def test_portable_missing_protected_artifact_is_rejected(portable_package):
+    import json
+
+    _, _, output, _ = portable_package
+    manifest_path = output / "manifest.json"
+    manifest = json.loads(manifest_path.read_text())
+    del manifest["files"]["review_index.json"]
+    manifest_path.write_text(json.dumps(manifest))
+    with pytest.raises(ValueError, match="Missing protected"):
+        validate_frozen_package(manifest_path, root=output,
+                                train_path=output / "train.jsonl",
+                                validation_path=output / "validation.jsonl")
+
+
+def test_portable_auxiliary_binding_cannot_override_token_identity(portable_package):
+    import json
+
+    from tau3_grpo.data.reviewed_sft import _portable_source_binding
+
+    _, _, output, _ = portable_package
+    manifest = json.loads((output / "manifest.json").read_text())
+    source = json.loads((output / "source_manifest.json").read_text())
+    manifest["source_package"]["artifact_bindings"]["token_mask_audit.json"] = "configs/envs/tool_config.yaml"
+    manifest["files"]["token_mask_audit.json"] = source["files"]["configs/envs/tool_config.yaml"]
+    reviews = json.loads((output / "review_index.json").read_text())
+    with pytest.raises(ValueError, match="differs from its frozen source"):
+        _portable_source_binding(manifest, output, reviews)
+
+
+@pytest.mark.parametrize("name", ["../outside.json", "/outside.json"])
+def test_portable_paths_cannot_escape_package(portable_package, name):
+    import json
+
+    _, _, output, _ = portable_package
+    manifest_path = output / "manifest.json"
+    manifest = json.loads(manifest_path.read_text())
+    manifest["files"] = {name: "fake"}
+    manifest["files"].update({key: "fake" for key in [
+        manifest["train_file"], manifest["validation_file"], manifest["review_file"],
+        manifest["token_file"], manifest["tool_config_file"],
+        manifest["source_package"]["manifest_file"], *manifest["stage_files"],
+    ]})
+    manifest_path.write_text(json.dumps(manifest))
+    with pytest.raises(ValueError, match="inside the package"):
+        validate_frozen_package(manifest_path, root=output,
+                                train_path=output / "train.jsonl",
+                                validation_path=output / "validation.jsonl")
+
+
+def test_portable_export_never_overwrites_a_frozen_package(portable_package):
+    from tau3_grpo.data.compact_sft import export_package
+
+    root, source, output, _ = portable_package
+    with pytest.raises(FileExistsError):
+        export_package(source / "manifest.json", output, root=root)
+
+
+@pytest.mark.parametrize("stage", ["A109", "B393", "C500"])
+def test_portable_profiles_change_storage_only(stage):
+    from pathlib import Path
+
+    import yaml
+
+    from tau3_grpo.launch import prepare
+
+    folder = Path("configs/train/sft")
+    old = yaml.safe_load((folder / f"curriculum_codex_{stage}_balanced_dev_1epoch.yaml").read_text())
+    path = folder / f"curriculum_codex_{stage}_portable_dev_1epoch.yaml"
+    new = yaml.safe_load(path.read_text())
+    for key in ("model", "train", "lora", "includes", "launch"):
+        assert new[key] == old[key]
+    for key in old["data"].keys() - {
+        "train_jsonl", "validation_jsonl", "tool_config", "reviewed_package_manifest",
+    }:
+        assert new["data"][key] == old["data"][key]
+    assert "portable_codex_20261001" in new["data"]["reviewed_package_manifest"]
+    command, _, snapshot = prepare("sft", path, "e0", 42, [], {})
+    assert command and snapshot["configuration"]["data"] == new["data"]
