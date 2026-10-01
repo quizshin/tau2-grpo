@@ -28,7 +28,7 @@
 |四模型统一selection 9/20|Base/SFT/GRPO/MT各240条；pass@1为50.00%/45.00%/41.25%/39.58%|[研究记录](grpo_improvement_evidence_20260920.md)|
 |E0–E3与MT reference_write v3|各20step；旧E2独立selection有一条异常，原汇总无效|[信号审计](training_signal_audit_20260914.md)、[异常口径](post_rl_selection_20260914.md)|
 |三算法GPU接口验收|限定配置的采样、更新、保存、恢复、导出及独立评测证据已登记|[验收范围](architecture/interface_acceptance_20260919.md)|
-|SFT 9/30均衡包v1|650条已接受并冻结；仍保留，当前改用数据逐字节一致的独立v2包|[均衡收尾](sft_balanced_dev_finalization_20260930.md)|
+|SFT 9/30均衡包v1|最终JSON及身份保留；本地历史构建依赖已清理，旧配置不可启动，当前使用独立v2包|[均衡收尾](sft_balanced_dev_finalization_20260930.md)、[清理记录](sft_portable_package_20261001.md)|
 |SFT 9/30初版dev|87/51/12，保留为历史分布版本|[初版收尾](sft_finalization_20260930.md)|
 |9/29旧ready包|ready声明已撤回，不能用于训练|[撤回原因](sft_finalization_20260930.md#撤回旧包)|
 

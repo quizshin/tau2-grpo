@@ -817,3 +817,7 @@ SFT新方法运行更新：15:15首20任务DeepSeek teacher/独立user候选生�
 ## 2026-10-01 SFT 正式包与历史目录解耦
 
 状态 `cpu_verified`，GPU 未启动。将均衡 train500/dev150 导出为独立 v2 包，13 个包内保护文件加 manifest，约24.1 MB；保留完整接受记录、token/mask及原来源身份清单。导出时一次核验旧2255文件，训练时不再打开历史路径。train/dev及A/B累计文件逐字节不变，C500直接使用同一train500，监督与协议不变。旧包和历史实验保留原样，新配置及证据见[迁移记录](docs/sft_portable_package_20261001.md)。
+
+## 2026-10-01 本地 SFT 构建历史清理
+
+用户要求删除已脱离训练依赖的本地构建产物。永久删除`results/analysis/`下91个精确核对的`sft_deepseek*`目录，14,682文件，24.09 GB；未删除其他训练/评测日志、模型或检查点。原始数据和当前portable包共25个文件SHA256前后一致，A/B/C包校验全部通过。旧v1最终JSON及manifest保留，但历史依赖已不在本地，旧配置不可用于训练；当前v2不受影响。删除清单和结果位于`results/maintenance/retire-sft-build-history-20261001/`，见[当前包说明](docs/sft_portable_package_20261001.md)。未启动GPU或操作远程服务器。
