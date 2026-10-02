@@ -61,6 +61,11 @@ def stop_process(process, *, timeout=30):
             os.killpg(group, 0)
         except ProcessLookupError:
             break
+        except PermissionError:
+            # A Darwin group containing only an unreaped zombie may reject
+            # signal 0. Keep reaping and waiting; this is not proof of exit.
+            # Permission failures during TERM/KILL still propagate below.
+            pass
         time.sleep(min(.05, max(0, deadline - time.monotonic())))
     else:
         try:

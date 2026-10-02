@@ -60,3 +60,64 @@ def test_cleanup_reaches_child_after_leader_exits(tmp_path):
         wait_file(tmp_path / "stopped")
     finally:
         stop_process(process, timeout=.2)
+
+
+
+def test_denied_group_probe_waits_until_group_disappears(monkeypatch):
+    import signal
+    from unittest.mock import Mock
+
+    from tau3_grpo.training import services
+
+    process = Mock(pid=12345)
+    process.poll.side_effect = [None, None, 0]
+    services._OWNED.add(process)
+    services._GROUPS[process] = process.pid
+    monkeypatch.setattr(services.os, "getpgid", lambda pid: pid)
+    calls = []
+
+    def killpg(group, sig):
+        calls.append((group, sig))
+        if len(calls) == 2:
+            raise PermissionError("zombie group")
+        if len(calls) == 3:
+            raise ProcessLookupError("reaped")
+
+    monkeypatch.setattr(services.os, "killpg", killpg)
+    monkeypatch.setattr(services.time, "sleep", lambda _: None)
+    stop_process(process, timeout=1)
+    assert calls == [(12345, signal.SIGTERM), (12345, 0), (12345, 0)]
+    assert process.poll.call_count == 3
+    process.wait.assert_called_once_with(timeout=10)
+    assert process not in services._GROUPS
+    stop_process(process, timeout=1)
+    assert len(calls) == 3
+
+
+def test_denied_group_probe_does_not_hide_failed_force_stop(monkeypatch):
+    import signal
+    from unittest.mock import Mock
+
+    from tau3_grpo.training import services
+
+    process = Mock(pid=12345)
+    process.poll.return_value = None
+    services._OWNED.add(process)
+    services._GROUPS[process] = process.pid
+    monkeypatch.setattr(services.os, "getpgid", lambda pid: pid)
+    clock = iter([0, 0, 0, 1])
+    monkeypatch.setattr(services.time, "monotonic", lambda: next(clock))
+    monkeypatch.setattr(services.time, "sleep", lambda _: None)
+    calls = []
+
+    def killpg(group, sig):
+        calls.append((group, sig))
+        if sig != signal.SIGTERM:
+            raise PermissionError("group still inaccessible")
+
+    monkeypatch.setattr(services.os, "killpg", killpg)
+    with pytest.raises(PermissionError, match="inaccessible"):
+        stop_process(process, timeout=.2)
+    assert calls == [(12345, signal.SIGTERM), (12345, 0), (12345, signal.SIGKILL)]
+    process.wait.assert_not_called()
+    assert process in services._GROUPS

@@ -10,3 +10,5 @@
 历史故障的影响、修复及实验身份见[归档完整记录](https://github.com/quizshin/tau2-grpo/blob/archive/pre-a800-focus-20260929/ERRORS.md)。
 
 - SFT包的ready标记不能替代文件、审核和实际token/mask校验；旧v1历史依赖清理后使用portable v2包，不能仅改路径绕过验收。
+
+- macOS子进程退出期间，僵尸进程组的signal 0探测可能返回权限错误。清理循环继续回收并等待组消失；TERM/KILL的真实权限失败仍抛出，不能提前标记停止成功。
