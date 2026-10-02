@@ -62,7 +62,21 @@ catalog增加`current_sft`，唯一当前课程候选为portable train500/dev150
 
 ## 5. 结果目录中的脚本
 
-待完成。
+逐文件登记770份Python历史产物的路径、SHA256、大小和直接引用：350份源码证据、
+192份维护/验证证据、7份有直接引用的历史辅助脚本、221份未发现直接引用的历史辅助脚本。
+直接字符串检索不证明无动态依赖，因此这些分类不用于批量删除。
+完整索引位于本地`results/maintenance/local-code-cleanup-20261002/results-script-inventory.json`。
+
+可复用的源码库存统计迁入`analysis/sft_source_inventory.py`，两个课程构建工具迁入
+`data/rl_curriculum_screen.py`和`data/rl_curriculum_extend.py`；scripts目录仅保留薄CLI。
+当前review配方位于configs/data，旧脚本目录的配方JSON仍保留其历史身份。
+三个公共工具均要求新输出位置，不覆盖旧输入/报告。
+
+已退役results中的inventory_source.py及一份与原v4完全一致的teacher副本；
+原字节均有维护回执前像，新公共入口见retired-scripts.json。剩余768份原产物明确登记
+为历史证据，保留原文件身份，不再把它们列为当前执行入口。没有删除实验轨迹、指标或日志。
+验证：能力/新工具11项通过，源码库存的旧脚本与新函数在固定输入上完整JSON一致；
+三份CLI在checkout之外可运行help，未采样、未重建正式清单。
 
 ## 6. 文档与最终验证
 

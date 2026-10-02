@@ -661,3 +661,9 @@ https://github.com/YYHDBL/shopping-grpo-longhorizon/blob/main/scripts/label_sft_
 ```
 
 本轮完成了阅读、只读CPU源盘点和飞轮计划落盘；没有把“875个源标签合格”写成“875条经judge/环境确认合格”，没有修改现有训练/评分逻辑，也没有执行本次计划中的新SFT/RL训练。
+
+## 2026-10-02 源码统计入口迁移
+
+上文inventory_source.py为当时的历史脚本，原字节已归入本地维护前像。当前入口为
+`python -m tau3_grpo.analysis.sft_source_inventory --data-root RAW_DIR --output NEW_FILE`，
+源码统计逻辑未变，固定输入旧/新完整JSON对照一致。此迁移不改变原报告数据或质量结论。
