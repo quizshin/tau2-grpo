@@ -219,3 +219,17 @@ def test_selection_replay_order_is_distinct_from_content():
     assert differences(a, b)[0]["kind"] == "list_order_only"
     b["passengers"][0]["name"] = "C"
     assert differences(a, b)[0]["kind"] == "list_content"
+
+
+@pytest.mark.parametrize('module', ['rubric_pilot', 'rubric_batch'])
+def test_legacy_cli_requires_explicit_historical_opt_in(module):
+    import subprocess
+    import sys
+
+    args = ['--output', '/unused']
+    if module == 'rubric_batch':
+        args += ['--input', '/unused', '--batch', 'test']
+    result = subprocess.run([sys.executable, '-m', 'tau3_grpo.analysis.legacy.' + module, *args],
+                            text=True, capture_output=True, timeout=30)
+    assert result.returncode == 2
+    assert 'required: --legacy-review' in result.stderr

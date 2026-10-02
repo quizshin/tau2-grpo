@@ -97,6 +97,8 @@ def main():
     p.add_argument('--budget-directory', type=Path,
                    default=Path('results/analysis/deepseek_rubric_pilot_20260925'))
     p.add_argument('--tools', type=Path, default=Path('configs/envs/tool_config.yaml'))
+    p.add_argument('--legacy-review', action='store_true', required=True,
+                   help='Explicitly run the retired historical protocol')
     args = p.parse_args()
     if not args.batch.replace('_', '').isalnum():
         p.error('Batch must be an alphanumeric namespace')
