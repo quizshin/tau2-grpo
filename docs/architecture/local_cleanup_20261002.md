@@ -80,4 +80,9 @@ catalog增加`current_sft`，唯一当前课程候选为portable train500/dev150
 
 ## 6. 文档与最终验证
 
-待完成。
+当前入口/资产与实验状态归CURRENT_EXPERIMENT和catalog；历史实验事实归EXPERIMENTS；
+README、layout、环境入口说明同步这些索引。本报告记录代码维护，不另造竞争的实验总表。
+本轮最终检查回执位于`results/maintenance/local-code-cleanup-20261002/`，包括干净CI依赖
+环境的core，以及既有资产环境的benchmark/verl CPU分层回执。各层结果以receipt.json为准；
+CPU条件跳过的CUDA验证、远程服务/环境及GPU训练未执行，不能声称全部平台通过。
+全仓lint仍有381项已登记债务，本轮不得引入新债务；模型和数据身份独立校验。

@@ -821,3 +821,7 @@ SFT新方法运行更新：15:15首20任务DeepSeek teacher/独立user候选生�
 ## 2026-10-01 本地 SFT 构建历史清理
 
 用户要求删除已脱离训练依赖的本地构建产物。永久删除`results/analysis/`下91个精确核对的`sft_deepseek*`目录，14,682文件，24.09 GB；未删除其他训练/评测日志、模型或检查点。原始数据和当前portable包共25个文件SHA256前后一致，A/B/C包校验全部通过。旧v1最终JSON及manifest保留，但历史依赖已不在本地，旧配置不可用于训练；当前v2不受影响。删除清单和结果位于`results/maintenance/retire-sft-build-history-20261001/`，见[当前包说明](docs/sft_portable_package_20261001.md)。未启动GPU或操作远程服务器。
+
+## 2026-10-02 本地代码六批整理
+
+工程维护，无新训练/模型成绩。明确当前portable SFT入口和旧v1不可启动状态；teacher生成共用实现，保持train/validation及100/150元预算差异；数据层消除analysis反向依赖；40/50任务清单复制到data根并保持原SHA；公共源码库存/课程工具归包内，历史results脚本逐项登记，仅退役两份已替代入口且原字节保留。原始数据、当前SFT包、算法/奖励参数及其他实验轨迹/日志保留。每批已独立验证/提交，最终分层回执见本地维护目录；远程/GPU未运行、未部署或推送。详见[六批整理及验证范围](docs/architecture/local_cleanup_20261002.md)。

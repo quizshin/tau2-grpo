@@ -1,6 +1,6 @@
 # 当前实验与开发入口
 
-更新日期：2026-10-01。当前本地提交中的主线是独立 SFT 数据包与三阶段课程训练。历史实验状态只表示各自归档时的事实。
+更新日期：2026-10-02。当前本地提交中的主线是独立 SFT 数据包与三阶段课程训练。历史实验状态只表示各自归档时的事实。
 
 ## 当前正式数据与配置
 
@@ -41,4 +41,8 @@
 - RL公共runner：`python -m tau3_grpo.training.rl.runner`，支持GRPO/GiGPO/MT-GTPO/ARPO的显式分支。
 - 独立评测：`python -m tau3_grpo.evaluation.run`；离线比较：`python -m tau3_grpo.evaluation.compare`。
 - 独立包导出：`python -m tau3_grpo.data.compact_sft --source-manifest SOURCE --output NEW_DIR`，只做已有证据迁移，不生成新接受结论。
+- teacher候选生成：`python -m tau3_grpo.data.teacher_rollout --split train|validation --limit-cny 100|150`，默认train/100，既有预算账本禁止提额；这是生成候选入口，不是接受审核。
+- 正式RL50任务清单：`data/manifests/rl_curriculum50_seed42/`；原字节不变。selection parquet位于`data/parquet/`，当前本地尚未生成；正式训练仍需按冻结协议准备该运行资产。
+- 源码库存统计：`python -m tau3_grpo.analysis.sft_source_inventory --output NEW_FILE`；课程构建实现：`data.rl_curriculum_screen` / `data.rl_curriculum_extend`，输出必须新建。
+- 本地整理与历史脚本分类：[整理记录](architecture/local_cleanup_20261002.md)。
 - 原始数据、模型、冻结包和运行产物独立管理；本地当前版本不意味着服务器已同步或GPU已验收。

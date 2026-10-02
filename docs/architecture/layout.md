@@ -71,7 +71,7 @@ Harness 是组织一次 agent 与环境交互的执行流程：建立任务和�
 
 |入口 / 接口|当前实现与范围|
 |---|---|
-|正式单实验|`training/rl/runner.py`，三种 estimator + DF，默认 20 step；旧 MT 脚本转发|
+|正式单实验|`training/rl/runner.py`，GRPO/GiGPO/MT-GTPO/ARPO显式分支 + DF，默认 20 step；旧 MT 脚本转发|
 |子进程所有权|`training/services.py`，正式 runner、旧 matched 队列、独立评测 controller 复用|
 |veRL adapter|`integrations/verl/{gigpo,mt_gtpo}.py`；旧路径是同一模块对象，避免双份全局统计|
 |可见消息|`data/messages.py`，语义模型和离线分析共用，去掉隐藏 reward/gold 字段|
@@ -101,3 +101,16 @@ harness 差分测试已经覆盖固定回复下的数据库写入、写后读取
 ## SFT 正式包与研究归档（2026-10-01）
 
 `data/compact_sft.py`将已完整验收的v1包导出为包内相对路径的v2；`data/reviewed_sft.py`同时保留v1历史检查和v2独立检查。`training/sft/train.py`根据schema读取受保护token库存并核验实际渲染。接受结论原样继承，不重新生成；历史候选和完整状态重放属于研究归档，不是正式SFT启动依赖。当前入口与证据见[独立包说明](../sft_portable_package_20261001.md)。
+
+## 本地公共源码与历史证据（2026-10-02）
+
+数据构建不导入analysis：公共可见事件在`data/messages.py`、前缀证据检查在
+`data/sft_evidence.py`、能力特征在`data/capability_features.py`、既有参考动作配方在
+`data/outcome_recipes.py`。原analysis公开函数保留同一函数对象转发，判定/编码不变。
+Teacher候选生成只有`data/teacher_rollout.py`维护实现，三个旧validation路径为薄入口，
+通过显式split和预算选择差异，默认及累计账本防护保留。
+
+40/50任务清单当前归`data/manifests/rl_curriculum{40,50}_seed42/`；旧结果路径中的
+四份小型输入仍保留历史身份。当前源码入口只能从包内、scripts或catalog查找，
+results中的脚本和备份按维护索引作为历史证据，不作为第二套开发实现。
+功能迁移、删除范围、CPU检查与未验收的远程/GPU范围见[整理记录](local_cleanup_20261002.md)。

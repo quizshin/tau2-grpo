@@ -66,6 +66,8 @@ ARPO 依据 [论文](https://arxiv.org/abs/2507.19849)和[官方实现](https://
 
 计划来源为任务“2卡a800训练实战”的最新确认与本地验收回执；更多历史见 [SFT 数据记录](docs/sft_curriculum_evidence_build_20260927.md)、[GRPO 执行记录](docs/repair72_rl_and_curriculum_plan_20260927.md)和[实验索引](EXPERIMENTS.md)。完整数据/审核回执属于运行资产，未上传 GitHub；当前本地包为 `data/sft/curriculum_500_dev150_portable_codex_20261001/`，精确身份见 [当前数据包清单](docs/sft500_dev150_portable_package_manifest_20261001.json)；旧混合审核包与历史身份清单保留。
 
+本地源码已按[2026-10-02整理记录](docs/architecture/local_cleanup_20261002.md)收敛：teacher生成实现共用、数据层不依赖离线分析、正式任务清单归data目录，历史脚本身份独立登记。
+
 ## 架构与 harness
 
 ```mermaid
