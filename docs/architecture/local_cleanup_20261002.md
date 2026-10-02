@@ -86,3 +86,15 @@ README、layout、环境入口说明同步这些索引。本报告记录代码�
 环境的core，以及既有资产环境的benchmark/verl CPU分层回执。各层结果以receipt.json为准；
 CPU条件跳过的CUDA验证、远程服务/环境及GPU训练未执行，不能声称全部平台通过。
 全仓lint仍有381项已登记债务，本轮不得引入新债务；模型和数据身份独立校验。
+
+最终分层初验（提交88830c8）：benchmark 741通过、零跳过；core 539通过、1失败，
+失败为测试替身仍按旧results路径识别正式清单。已改为Path匹配canonical manifest，
+增加确实读取该清单的断言，原有用户隔离断言保持；定向1项通过，完整重验见core-final回执。
+本地verl为634通过、1失败、16项CUDA跳过；单独重验FSDP仍为2通过、1失败。
+该Torch 2.8 CPU形状问题与既有记录一致，见
+[此前核对](../airline_badcase_repair_20260925.md)及
+[服务器历史环境验证](interface_acceptance_20260919.md)。本轮未修改该测试/模型/FSDP/vendor，
+不把macOS失败标为通过，也不以历史服务器通过代替本轮远程验收。
+CUDA未执行项为CPU saved tensors 1、compact head 7、loss projection 4、padding 4；
+逐用例名称与原因在verl/receipt.json。lint无新增债务、23份shell语法通过、vendor清单通过；
+172个文档内部链接、25份冻结输入及portable三阶段包守卫通过，数据manifest hash未变。

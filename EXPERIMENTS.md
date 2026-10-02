@@ -825,3 +825,5 @@ SFT新方法运行更新：15:15首20任务DeepSeek teacher/独立user候选生�
 ## 2026-10-02 本地代码六批整理
 
 工程维护，无新训练/模型成绩。明确当前portable SFT入口和旧v1不可启动状态；teacher生成共用实现，保持train/validation及100/150元预算差异；数据层消除analysis反向依赖；40/50任务清单复制到data根并保持原SHA；公共源码库存/课程工具归包内，历史results脚本逐项登记，仅退役两份已替代入口且原字节保留。原始数据、当前SFT包、算法/奖励参数及其他实验轨迹/日志保留。每批已独立验证/提交，最终分层回执见本地维护目录；远程/GPU未运行、未部署或推送。详见[六批整理及验证范围](docs/architecture/local_cleanup_20261002.md)。
+
+本地整理最终核对：benchmark 741通过；core初验遗漏一个旧路径测试替身，修正后以`core-final/receipt.json`为准。本地verl 634通过/1失败/16 CUDA跳过，失败是此前已登记的Torch 2.8 CPU FSDP形状问题，定向复现；没有更改训练/vendor或启动GPU，未进行本轮远程验收。完整证据与跳过项目见整理记录及维护回执。
