@@ -11,6 +11,7 @@ sft:
     B393: configs/train/sft/curriculum_codex_B393_portable_dev_1epoch.yaml
     C500: configs/train/sft/curriculum_codex_C500_portable_dev_1epoch.yaml
   entrypoint: scripts/train/sft/run.sh
+  # 新课程RL默认使用C500最后一个merged checkpoint；后续根据同一课程评测挑选表现较好的merged checkpoint。
   checkpoint_selection: pending_gpu_training
 rl:
   grpo:
