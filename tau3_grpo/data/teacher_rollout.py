@@ -1,6 +1,6 @@
 """CPU native-tool DeepSeek teacher/user candidates; never a quality acceptance gate.
 
-Task manifests contain task_id, split=train, db_path, db_hash,
+Task manifests contain task_id, an explicit train/validation split, db_path, db_hash,
 user_instructions and initial_user_text. Other provenance stays in artifacts,
 never in teacher prompts. Rubric/gold must be stored separately by the caller.
 """
@@ -65,8 +65,8 @@ USER_PROTOCOL = """You are an independent airline customer, not the airline assi
 class IncrementBudget(Budget):
     """Shared cumulative ledger plus a frozen pilot-only conservative ceiling."""
 
-    def __init__(self, path, *, max_calls, base_accounted, increment_cny):
-        super().__init__(path, limit=100.0, max_calls=max_calls)
+    def __init__(self, path, *, max_calls, base_accounted, increment_cny, limit_cny=100.0):
+        super().__init__(path, limit=limit_cny, max_calls=max_calls)
         self.increment_ceiling = base_accounted + increment_cny
 
     def reserve(self, request_id, system, payload, max_tokens):
@@ -77,9 +77,9 @@ class IncrementBudget(Budget):
         return super().reserve(request_id, system, payload, max_tokens)
 
 
-def validate_task(task, db_root):
-    if task.get("split") != "train":
-        raise ValueError("Only explicitly frozen train tasks supported")
+def validate_task(task, db_root, *, split="train"):
+    if split not in {"train", "validation"} or task.get("split") != split:
+        raise ValueError(f"Only explicitly frozen {split} tasks supported")
     for field in ("task_id", "user_instructions", "initial_user_text", "db_hash"):
         if not isinstance(task.get(field), str) or not task[field].strip():
             raise ValueError(f"Missing {field}")
@@ -154,6 +154,7 @@ async def generate_candidate(
     max_turns=40,
     max_tokens=4096,
     model_call=call_json,
+    split="train",
 ):
     """Fresh native DB per candidate. Persist every failure, then propagate it.
 
@@ -165,7 +166,7 @@ async def generate_candidate(
         raise FileExistsError("Candidate already exists; no implicit retry/resume")
     target.parent.mkdir(parents=True, exist_ok=True)
     (output / "calls").mkdir(parents=True, exist_ok=True)
-    path = validate_task(task, Path(db_root))
+    path = validate_task(task, Path(db_root), split=split)
     db = load_flight_db(path)
     environment = build_environment(db)
     tools = [t.openai_schema for t in environment.get_tools()]
@@ -387,7 +388,11 @@ def known_format_failure(exc, candidate_path, budget):
     )
 
 
-async def run(args):
+async def run(args, *, default_split="train", default_limit_cny=100.0, entrypoint=None):
+    split = getattr(args, "split", default_split)
+    limit_cny = getattr(args, "limit_cny", default_limit_cny)
+    if split not in {"train", "validation"} or limit_cny not in {100.0, 150.0}:
+        raise ValueError("Explicit train/validation split and supported 100/150 CNY limit required")
     tasks = [json.loads(line) for line in args.tasks.read_text().splitlines() if line.strip()]
     if not 1 <= len(tasks) <= 20 or len({t["task_id"] for t in tasks}) != len(tasks):
         raise ValueError("Pilot requires 1–20 unique tasks")
@@ -404,11 +409,11 @@ async def run(args):
             "Use a fresh output directory; failed runs are not automatically retried"
         )
     for task in tasks:
-        validate_task(task, args.db_root)
+        validate_task(task, args.db_root, split=split)
     # Same lock as rubric_batch.py. Hold throughout all paid requests.
     with (args.budget.parent / ".run.lock").open("a+") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        initial = Budget(args.budget, limit=100.0, max_calls=args.max_calls)
+        initial = Budget(args.budget, limit=limit_cny, max_calls=args.max_calls)
         if not len(initial.state["calls"]) < args.max_calls <= len(initial.state["calls"]) + 2000:
             raise ValueError("Absolute request cap must add at most 2000 requests")
         args.output.mkdir(parents=True)
@@ -417,6 +422,7 @@ async def run(args):
             max_calls=args.max_calls,
             base_accounted=initial.accounted,
             increment_cny=args.increment_cny,
+            limit_cny=limit_cny,
         )
         source_root = Path(__file__).resolve().parents[1]
         sources = [
@@ -426,6 +432,8 @@ async def run(args):
             source_root / "prompts.py",
             source_root / "models/semantic_api.py",
         ]
+        if entrypoint is not None and Path(entrypoint).resolve() != Path(__file__).resolve():
+            sources.append(Path(entrypoint).resolve())
         code_files = {}
         for source in sources:
             relative = source.relative_to(source_root)
@@ -461,6 +469,8 @@ async def run(args):
             "budget_path": str(args.budget.resolve()),
             "base_accounted_cny": initial.accounted,
             "increment_cny": args.increment_cny,
+            "task_split": split,
+            "total_limit_cny": limit_cny,
             "max_calls_absolute": args.max_calls,
             "attempts": args.attempts,
             "max_turns": args.max_turns,
@@ -484,6 +494,7 @@ async def run(args):
                             budget=budget,
                             max_turns=args.max_turns,
                             max_tokens=args.max_tokens,
+                            split=split,
                         )
                     except (ValueError, SemanticAPIError) as exc:
                         candidate_path = args.output / "candidates" / f"{cid}.json"
@@ -509,8 +520,10 @@ async def run(args):
             dump(args.output / "run.json", manifest)
 
 
-def main(argv=None):
+def build_parser(*, default_split="train", default_limit_cny=100.0):
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--split", choices=("train", "validation"), default=default_split)
+    parser.add_argument("--limit-cny", type=float, choices=(100.0, 150.0), default=default_limit_cny)
     for name in ("tasks", "db-root", "output", "budget"):
         parser.add_argument("--" + name, type=Path, required=True)
     parser.add_argument(
@@ -523,7 +536,12 @@ def main(argv=None):
     parser.add_argument("--max-turns", type=int, default=40)
     parser.add_argument("--max-tokens", type=int, default=4096)
     parser.add_argument("--increment-cny", type=float, default=10)
-    asyncio.run(run(parser.parse_args(argv)))
+    return parser
+
+
+def main(argv=None, *, default_split="train", default_limit_cny=100.0, entrypoint=None):
+    parser = build_parser(default_split=default_split, default_limit_cny=default_limit_cny)
+    asyncio.run(run(parser.parse_args(argv), entrypoint=entrypoint))
 
 
 if __name__ == "__main__":
