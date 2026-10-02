@@ -8,10 +8,11 @@ import json
 from collections import Counter
 from pathlib import Path
 
+from tau3_grpo.evaluation.rubric_contract import DIMENSIONS
 from tau3_grpo.models.qwen35_template import approved_assistant_indices
 from tau3_grpo.utils.hashing import sha256_file, sha256_json
 
-REVIEW_AREAS = {"scope", "evidence", "policy", "arithmetic", "completion"}
+REVIEW_AREAS = set(DIMENSIONS)
 PORTABLE_SCHEMA = "codex_reviewed_sft_package_v2"
 
 

@@ -13,10 +13,10 @@ import json
 from collections import Counter
 from pathlib import Path
 
-from tau3_grpo.analysis.rubric_pilot import Budget, call_json, dump
 from tau3_grpo.analysis.selection_audit import public_events
 from tau3_grpo.models.semantic_api import SemanticAPIError
 from tau3_grpo.prompts import build_system_prompt
+from tau3_grpo.tracking.judge_budget import Budget, call_json, dump
 from tau3_grpo.utils.hashing import sha256_file, sha256_json
 
 VERSION = "simulator_behavior_census_v4"
@@ -298,7 +298,7 @@ async def run(args):
         author_hash=sha256_json(AUTHOR),
         review_hash=sha256_json(REVIEW),
         source_sha256=sha256_file(Path(__file__)),
-        billing_source_sha256=sha256_file(Path(__file__).with_name("rubric_pilot.py")),
+        billing_source_sha256=sha256_file(Path(__file__).parents[1] / "tracking/judge_budget.py"),
         policy_sha256=sha256_json(build_system_prompt()),
         json_mode=True,
         planned_tasks=60,

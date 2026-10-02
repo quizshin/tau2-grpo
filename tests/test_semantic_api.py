@@ -339,3 +339,39 @@ def test_supplement_only_replaces_missing_packets(tmp_path):
     with pytest.raises(ValueError, match='only replace'):
         replay({**config(), 'limit': 1}, extra, tmp_path / 'not_created', supplements=[extra])
     assert not (tmp_path / 'not_created').exists()
+
+
+def test_unified_rubric_uses_transport_without_semantic_anchor_schema(tmp_path):
+    import asyncio
+
+    from tau3_grpo.evaluation.rubric import judge
+    from tau3_grpo.evaluation.rubric_contract import DIMENSIONS, PROMPT, VERSION
+    from tau3_grpo.models.semantic_api import OpenAICompatibleSemanticModel
+    from tau3_grpo.utils.hashing import sha256_json
+
+    events = [{'event_id': 'm0001', 'role': 'assistant', 'content': 'Done'}]
+    req = {'task_id': 't', 'trial': 0, 'seed': 42, 'version': VERSION, 'system': PROMPT,
+           'policy': 'Frozen policy', 'tool_schemas': [], 'criteria': {}, 'events': events,
+           'bundle_sha256': 'frozen'}
+    req['request_sha256'] = sha256_json(req)
+    package = {'version': VERSION, 'prompt_sha256': sha256_json(PROMPT),
+               'bundle_sha256': 'frozen', 'requests': [req], 'unavailable': [],
+               'planned': [{'task_id': 't', 'trial': 0, 'seed': 42}]}
+    package['package_sha256'] = sha256_json(package)
+    verdict = {'dimensions': {d: {'status': 'satisfied', 'reason': 'mock', 'evidence': ['m0001']}
+                             for d in DIMENSIONS}}
+
+    def handler(request):
+        payload = json.loads(request.content)
+        assert payload['response_format'] == {'type': 'json_object'}
+        assert json.loads(payload['messages'][1]['content'])['events'] == events
+        return httpx.Response(200, json={
+            'model': 'mock', 'choices': [{'finish_reason': 'stop', 'message': {'content': json.dumps(verdict)}}],
+            'usage': {'prompt_tokens': 1, 'completion_tokens': 2, 'total_tokens': 3},
+        })
+
+    client = OpenAICompatibleSemanticModel(base_url='https://judge.invalid/v1', model='mock',
+                api_key='fixture', transport=httpx.MockTransport(handler), response_format_json=True)
+    asyncio.run(judge(package, tmp_path / 'reviews', client=client, max_calls=1))
+    saved = json.loads(next((tmp_path / 'reviews').glob('*.response.json')).read_text())
+    assert saved['status'] == 'reviewed' and saved['usage']['usage']['total_tokens'] == 3

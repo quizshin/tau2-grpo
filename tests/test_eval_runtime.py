@@ -253,3 +253,54 @@ def test_simulator_v2_rejected_without_contract_before_endpoint(tmp_path, monkey
             user=Endpoint("u", "http://u"),
             output_dir=tmp_path,
         )
+
+
+def test_rubric_preflight_and_automatic_offline_requests(monkeypatch, tmp_path):
+    from tau3_grpo.envs.adapter import airline_tool_schemas
+    from tau3_grpo.evaluation.rubric import schema_provenance
+    from tau3_grpo.evaluation.rubric_contract import DEFINITIONS, VERSION, freeze_bundle, write_json
+    from tau3_grpo.prompts import build_system_prompt, prompt_provenance
+    from tau3_grpo.utils.hashing import sha256_json
+
+    jobs = [{"task_id": "t1", "trial": 0, "seed": 42, "task": object(), "db_path": None}]
+    monkeypatch.setattr(eval_runtime, '_selection_jobs', lambda *args: jobs)
+    provenance = {'task_definition_sha256': {'t1': 'a' * 64},
+                  'task_db_sha256': {'t1': {'representation': 'canonical_model_json', 'sha256': 'b' * 64}}}
+    monkeypatch.setattr(eval_runtime, 'evaluation_provenance', lambda _: provenance)
+    bundle = freeze_bundle({
+        'version': VERSION, 'policy': build_system_prompt(),
+        'agent_system_prompt_sha256': prompt_provenance()['agent_system_prompt_sha256'],
+        'tool_schemas': airline_tool_schemas(),
+        'tool_schemas_sha256': schema_provenance()['rubric_tool_schemas_sha256'],
+        'tasks': {'t1': {'criteria': dict(DEFINITIONS), 'reviewed_by': 'fixture_only',
+                         'capabilities': ['state_reading'], 'bucket': 'unclassified',
+                         'task_definition_sha256': 'a' * 64,
+                         'task_db_sha256': provenance['task_db_sha256']['t1']}},
+    })
+    write_json(tmp_path / 'bundle.json', bundle)
+    calls = []
+
+    def sample(**kwargs):
+        calls.append(kwargs)
+        return SimpleNamespace(
+            reward_info=SimpleNamespace(reward=1),
+            termination_reason=SimpleNamespace(value='user_stop'),
+            model_dump=lambda mode: {'messages': [{'role': 'assistant', 'content': 'Done.'}]},
+        )
+
+    monkeypatch.setattr(eval_runtime, '_run_one', sample)
+    arguments = dict(spec=EvalSpec(target='selection', trials=1, rubric_bundle=str(tmp_path / 'bundle.json')),
+                     policy=Endpoint('policy', 'http://policy'), user=Endpoint('user', 'http://user'))
+    summary = run_evaluation(**arguments, output_dir=tmp_path / 'valid')
+    assert summary['metrics_valid'] and len(calls) == 1
+    package = json.loads((tmp_path / 'valid/rubric_requests.json').read_text())
+    assert package['pre_run_bound'] and len(package['requests']) == 1
+    assert (tmp_path / 'valid/rubric_bundle.json').exists()
+    assert not (tmp_path / 'valid/reviews').exists()  # never silently call an online judge
+    bundle['tasks']['t1']['task_definition_sha256'] = 'c' * 64
+    bundle = freeze_bundle(bundle)
+    (tmp_path / 'bundle.json').write_text(json.dumps(bundle))
+    with pytest.raises(ValueError, match='task_definition_sha256 differs'):
+        run_evaluation(**arguments, output_dir=tmp_path / 'invalid')
+    assert len(calls) == 1
+    assert sha256_json(bundle['tool_schemas']) == bundle['tool_schemas_sha256']

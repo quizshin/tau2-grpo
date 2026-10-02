@@ -95,6 +95,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--harness-protocol", choices=PROTOCOLS, default=LEGACY)
     parser.add_argument('--quality-bundle', type=Path, default=None,
                         help='Frozen complete task/outcome contract; fails before calls if any task is unresolved')
+    parser.add_argument("--rubric-bundle", type=Path, help="Frozen five-dimension rubric; prepares offline judge requests after rollout")
     parser.add_argument("--output-dir", type=Path, default=None)
     parser.add_argument("--recovery-input", type=Path, default=None,
                         help="Sealed rescored saved trajectories; preserve all planned identities")
@@ -213,6 +214,17 @@ def main(argv: list[str] | None = None) -> int:
         from tau3_grpo.utils.hashing import sha256_json
         quality = load_bundle(args.quality_bundle, selection_entries)
         payload['quality_bundle_sha256'] = sha256_json(quality)
+    if args.rubric_bundle:
+        from tau3_grpo.evaluation.provenance import evaluation_provenance
+        from tau3_grpo.evaluation.rubric import schema_provenance
+        from tau3_grpo.evaluation.rubric_contract import bind_bundle, load_bundle
+        from tau3_grpo.evaluation.runtime import _official_jobs, _selection_jobs
+        from tau3_grpo.prompts import prompt_provenance
+
+        jobs = list(_selection_jobs(selection_entries, args.trials, args.seed)) if args.target == "selection" else list(_official_jobs(args.trials, args.seed))
+        rubric = load_bundle(args.rubric_bundle)
+        bind_bundle(rubric, {**prompt_provenance(), **evaluation_provenance(jobs), **schema_provenance()}, task_ids)
+        payload["rubric_bundle_sha256"] = rubric["bundle_sha256"]
     if args.dry_run:
         payload["dry_run"] = True
         print(json.dumps(payload, indent=2, sort_keys=True))
@@ -261,6 +273,7 @@ def main(argv: list[str] | None = None) -> int:
                 max_steps=args.max_steps,
                 max_errors=args.max_errors,
                 harness_protocol=args.harness_protocol,
+                rubric_bundle=str(args.rubric_bundle) if args.rubric_bundle else None,
                 quality_bundle=str(args.quality_bundle) if args.quality_bundle else None,
                 user_protocol=args.user_protocol,
                 recovery_input=str(args.recovery_input) if args.recovery_input else None,

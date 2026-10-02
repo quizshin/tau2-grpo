@@ -43,7 +43,8 @@
       "tests/test_grounded_prepare.py",
       "tests/test_cpu_release_receipt.py",
       "tests/test_publication_layout.py",
-      "tests/test_reviewed_sft.py"
+      "tests/test_reviewed_sft.py",
+      "tests/test_unified_rubric.py"
     ],
     "benchmark": [
       "tests/test_anchor_semantic_v3.py",

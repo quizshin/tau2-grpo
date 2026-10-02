@@ -77,6 +77,7 @@ class EvalSpec:
     harness_protocol: str = LEGACY
     tokenizer_path: str | None = None
     token_request_timeout: float = 120
+    rubric_bundle: str | None = None
     quality_bundle: str | None = None
     recovery_input: str | None = None
     user_protocol: str = "scope_v1"
@@ -343,6 +344,18 @@ def run_evaluation(
             for job in jobs
         ]
 
+    rubric = None
+    rubric_provenance = {}
+    if spec.rubric_bundle:
+        from tau3_grpo.evaluation.rubric import schema_provenance
+        from tau3_grpo.evaluation.rubric_contract import bind_bundle, load_bundle
+
+        rubric = load_bundle(spec.rubric_bundle)
+        bind_bundle(rubric, {**prompt_provenance(), **evaluation_provenance(jobs), **schema_provenance()},
+                    [j["task_id"] for j in jobs])
+        rubric_provenance.update(schema_provenance())
+        rubric_provenance["rubric_bundle_sha256"] = rubric["bundle_sha256"]
+
     token_runtime = None
     tokenizer = None
     token_provenance = {}
@@ -386,6 +399,7 @@ def run_evaluation(
         "provenance": {
             **(provenance or {}),
             **token_provenance,
+            **rubric_provenance,
             **prompt_provenance(),
             **evaluation_provenance(jobs),
             "harness_protocol": protocol,
@@ -410,11 +424,16 @@ def run_evaluation(
     pending_jobs = [j for j in jobs if (j["task_id"], j["trial"], j["seed"]) not in completed_keys]
     out = Path(output_dir)
     out.mkdir(parents=True, exist_ok=True)
-    for name in ("run.json", "trajectories.jsonl", "errors.jsonl", "summary.json"):
+    for name in ("run.json", "trajectories.jsonl", "errors.jsonl", "summary.json", "rubric_bundle.json", "rubric_requests.json"):
         if (out / name).exists():
             raise ValueError(f"evaluation output already exists: {out / name}; use a new directory")
     with (out / "run.json").open("x", encoding="utf-8") as handle:
         handle.write(json.dumps(metadata, indent=2, sort_keys=True) + "\n")
+
+    if rubric is not None:
+        from tau3_grpo.evaluation.rubric_contract import write_json
+
+        write_json(out / "rubric_bundle.json", rubric)
 
     results: list[dict[str, Any]] = list(recovered)
     errors: list[dict[str, Any]] = []
@@ -557,4 +576,9 @@ def run_evaluation(
     (out / "summary.json").write_text(
         json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
+    if rubric is not None:
+        from tau3_grpo.evaluation.rubric import prepare
+        from tau3_grpo.evaluation.rubric_contract import write_json
+
+        write_json(out / "rubric_requests.json", prepare(out, rubric))
     return summary

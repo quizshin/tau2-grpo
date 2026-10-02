@@ -24,3 +24,6 @@ token/mask校验、提示/工具协议和来源身份；C500直接使用train.js
 真实tokenizer测试使用已有 `models/Qwen3.5-4B/tokenizer.json`，不自动下载。
 部分harness测试接受 `TAU3_TEST_TOKENIZERS` 指向已有tokenizer目录；
 框架测试还需要其余固定型号的资产。测试用小型合成数据不代替真实包/tokenizer验收。
+
+包内五维审核记录仅说明冻结样本的接受状态；模型新回复使用[五维轨迹评测链路](evaluation.md)，
+另行输出证据判断，不能复用样本 accepted 结论。
