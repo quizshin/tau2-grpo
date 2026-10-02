@@ -15,6 +15,7 @@ from difflib import SequenceMatcher
 from pathlib import Path
 
 from tau3_grpo.data.manifest import build_airline_splits, load_areal_records, read_manifest
+from tau3_grpo.paths import MANIFEST_ROOT
 from tau3_grpo.utils.hashing import sha256_file, sha256_json
 
 WRITE = {
@@ -75,7 +76,7 @@ def mutations(actions):
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--raw", type=Path, default=Path("data/raw/areal_tau2/tau2_rl_train.jsonl"))
-    ap.add_argument("--frozen-dir", type=Path, default=Path("../code_pytrio/data/manifests"))
+    ap.add_argument("--frozen-dir", type=Path, default=MANIFEST_ROOT)
     ap.add_argument(
         "--sft-dir", type=Path, default=Path("results/analysis/sft4b_data_audit_20260911")
     )

@@ -45,7 +45,20 @@ catalog增加`current_sft`，唯一当前课程候选为portable train500/dev150
 
 ## 4. 正式路径与数据清单
 
-待完成。
+40/50任务清单及sidecar逐字节复制到`data/manifests/rl_curriculum{40,50}_seed42/`，
+正式组件和当前数据构建/审计读取新路径；四份旧路径文件仅保留作历史输入，旧日期profile参数不改。
+`data/SHA256SUMS.json`登记25份输入身份，全部核验；50任务hash仍为
+`641bde73c1495c59b5c0a87cfc84b9e00c0b5ffd2f86d10fd2205aaf2143adae`。
+正式selection parquet路径改为数据根目录，当前本地未生成该parquet，训练前仍需按冻结协议准备。
+共享`paths.runtime_environment`统一launcher和formal runner的外部存储根默认/相对路径解析。
+模拟器默认模型/环境/cache使用当前根目录，显式旧环境覆盖仍生效。
+旧curriculum脚本解除`../code_pytrio`依赖，扩展入口强制新输出目录，不覆盖冻结输入。
+
+验证：相关135项最终通过（首次重跑121项通过，修正路径比较测试的类型断言后14项通过），
+覆盖GRPO/GiGPO/MT-GTPO/ARPO、实际Hydra、DF、恢复防护、外部data root、模拟器dry-run。
+与旧Hydra对照仅允许已登记的温度和数据存储路径差异，其余配置逐项相同。
+首轮发现formal runner未初始化TAU3_DATA_ROOT，新旧启动器改用同一公共解析函数后修复。
+未启动任何服务、采样或GPU；远程资产未迁移。
 
 ## 5. 结果目录中的脚本
 

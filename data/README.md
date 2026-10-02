@@ -8,10 +8,10 @@ These inputs are committed for handoff at the user's request. They are benchmark
 - `raw/areal_tau2/`: original `tau2_rl_train.jsonl` and nine database files (Airline, Retail and Telecom). Original bytes preserved.
 - `manifests/`: frozen Airline train200 / selection60 / reserve888 and seed42 split metadata.
 - `sft/`: server's actual SFT train45 / validation5 inputs and split metadata. The train input SHA256 is `e0aec9fb93c25f4f63e6580f6cdfcc0b95c1dfabe47bdf284745fa1759d1384b`, matching the input previously audited for `new-off`. This is not the older audit snapshot with hash `a930dbff...`.
-- `../results/analysis/rl_curriculum_20260912/manifests/`: 40-task curriculum plus sidecar.
-- `../results/analysis/rl_curriculum50_20260912/manifests/`: current 50-task curriculum plus sidecar. Existing paths are retained so current configs resolve without edits.
+- `manifests/rl_curriculum40_seed42/`: frozen 40-task curriculum plus sidecar.
+- `manifests/rl_curriculum50_seed42/`: current 50-task curriculum plus sidecar; original bytes unchanged. The former `results/analysis/rl_curriculum*` copies remain historical evidence, while current configs use the data root.
 
-On 2026-09-12, all 17 raw/base-split/SFT files were compared byte-for-byte by SHA256 with `/root/autodl-fs/tau3-core-20260912/code/data` on the training server. The two curriculum task pools retain their verified 40/50 hashes. `SHA256SUMS.json` lists repository-relative paths, sizes, and hashes for all 21 data files, including sidecars.
+On 2026-09-12, all 17 raw/base-split/SFT files were compared byte-for-byte by SHA256 with `/root/autodl-fs/tau3-core-20260912/code/data` on the training server. The two curriculum task pools retain their verified 40/50 hashes. `SHA256SUMS.json` lists repository-relative paths, sizes, and hashes for all 25 data files, including sidecars and the four retained historical curriculum copies.
 
 ## Verify after cloning
 

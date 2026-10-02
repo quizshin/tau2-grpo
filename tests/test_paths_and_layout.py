@@ -85,3 +85,15 @@ def test_no_day_directories_exist():
         if path.is_dir() and path.name[3:].isdigit()
     ]
     assert offenders == [], f"temporary day directories found: {offenders}"
+
+
+def test_frozen_curriculum_inputs_are_identical_under_data_root():
+    from tau3_grpo.paths import RL_CURRICULUM40_MANIFEST_ROOT, RL_CURRICULUM50_MANIFEST_ROOT
+
+    for current, historical in [
+        (RL_CURRICULUM40_MANIFEST_ROOT, 'rl_curriculum_20260912'),
+        (RL_CURRICULUM50_MANIFEST_ROOT, 'rl_curriculum50_20260912'),
+    ]:
+        for name in ('areal_airline_train_seed42.jsonl', 'areal_airline_split_seed42.json'):
+            assert (current / name).read_bytes() == (
+                CODE_ROOT / 'results/analysis' / historical / 'manifests' / name).read_bytes()

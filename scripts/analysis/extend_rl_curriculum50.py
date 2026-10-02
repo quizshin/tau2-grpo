@@ -1,10 +1,12 @@
 """Freeze the reviewed 40+10 curriculum; no model calls or source mutations."""
 
+import argparse
 import json
 from pathlib import Path
 
 from tau3_grpo.data.manifest import read_manifest
 from tau3_grpo.experiments.manifest import build_schedule
+from tau3_grpo.paths import MANIFEST_ROOT
 from tau3_grpo.utils.hashing import sha256_file, sha256_json
 
 BASE = Path("results/analysis/rl_curriculum_20260912")
@@ -37,25 +39,35 @@ def read_rows(path):
     return [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
 
 
-def main():
-    core = read_manifest(BASE / "candidate_40_manifest.jsonl")
-    original_path = Path("../code_pytrio/data/manifests/areal_airline_train_seed42.jsonl")
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--base', type=Path, default=BASE)
+    parser.add_argument('--sft', type=Path, default=SFT)
+    parser.add_argument('--output', type=Path, default=OUT)
+    parser.add_argument('--original-manifest', type=Path,
+                        default=MANIFEST_ROOT / 'areal_airline_train_seed42.jsonl')
+    args = parser.parse_args(argv)
+    base, sft, output = args.base, args.sft, args.output
+    if output.exists():
+        raise FileExistsError('Use a fresh output directory; preserve the frozen curriculum')
+    core = read_manifest(base / "candidate_40_manifest.jsonl")
+    original_path = args.original_manifest
     original = read_manifest(original_path)
-    audit = json.loads((BASE / "audit.json").read_text())
+    audit = json.loads((base / "audit.json").read_text())
     assert sha256_file(original_path) == audit["frozen_manifest_hash"]
-    assert sha256_file(SFT) == audit["sft_hash"]
+    assert sha256_file(sft) == audit["sft_hash"]
     byid = {r.task_id: r for r in original}
-    classified = {r["task_id"]: r for r in read_rows(BASE / "all_200_classified.jsonl")}
+    classified = {r["task_id"]: r for r in read_rows(base / "all_200_classified.jsonl")}
     sft_seqs = [
         tuple(
             c["name"] for m in d["messages"] for c in m.get("tool_calls", []) if c["name"] in TOOLS
         )
-        for d in read_rows(SFT)
+        for d in read_rows(sft)
     ]
     sft_sets = {frozenset(seq) for seq in sft_seqs}
     clean_tools = {
         tool
-        for r in read_rows(BASE / "sft_45_classified.jsonl")
+        for r in read_rows(base / "sft_45_classified.jsonl")
         if r["source_correct"] == 1
         for tool in r["actions"]
     }
@@ -89,16 +101,16 @@ def main():
         excluded = read_manifest(original_path.parent / f"areal_airline_{split}_seed42.jsonl")
         assert not set(ids) & {r.task_id for r in excluded}
     values = [r.model_dump(mode="json") for r in selected]
-    OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / "manifests").mkdir(exist_ok=True)
+    output.mkdir(parents=True, exist_ok=True)
+    (output / "manifests").mkdir(exist_ok=True)
 
     def dump(path, value):
         path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n")
 
     payload = "".join(json.dumps(r, ensure_ascii=False, sort_keys=True) + "\n" for r in values)
-    (OUT / "manifests/areal_airline_train_seed42.jsonl").write_text(payload)
+    (output / "manifests/areal_airline_train_seed42.jsonl").write_text(payload)
     dump(
-        OUT / "manifests/areal_airline_split_seed42.json",
+        output / "manifests/areal_airline_split_seed42.json",
         dict(
             seed=42,
             split_hash=sha256_json(values),
@@ -107,7 +119,7 @@ def main():
             train=50,
         ),
     )
-    dump(OUT / "new_combinations.json", records)
+    dump(output / "new_combinations.json", records)
     schedules = {
         str(n): [
             s.to_dict()
@@ -118,14 +130,14 @@ def main():
         for n in [10, 25, 50, 75, 100]
     }
     assert schedules["10"] == schedules["100"][:10]
-    dump(OUT / "schedule_preview.json", schedules)
+    dump(output / "schedule_preview.json", schedules)
     dump(
-        OUT / "audit.json",
+        output / "audit.json",
         dict(
-            core_manifest_hash=sha256_file(BASE / "candidate_40_manifest.jsonl"),
-            sft_hash=sha256_file(SFT),
-            parent_audit_hash=sha256_file(BASE / "audit.json"),
-            manifest_hash=sha256_file(OUT / "manifests/areal_airline_train_seed42.jsonl"),
+            core_manifest_hash=sha256_file(base / "candidate_40_manifest.jsonl"),
+            sft_hash=sha256_file(sft),
+            parent_audit_hash=sha256_file(base / "audit.json"),
+            manifest_hash=sha256_file(output / "manifests/areal_airline_train_seed42.jsonl"),
             script_hash=sha256_file(Path(__file__)),
             core_ids=[r.task_id for r in core],
             new_ids=list(REVIEWS),

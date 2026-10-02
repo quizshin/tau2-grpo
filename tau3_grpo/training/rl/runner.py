@@ -28,7 +28,7 @@ from tau3_grpo.data.manifest import read_manifest as read_data_manifest
 from tau3_grpo.experiments.manifest import read_manifest
 from tau3_grpo.experiments.prepare import prepare_experiment_inputs
 from tau3_grpo.launch import prepare
-from tau3_grpo.paths import CODE_ROOT, DATA_ROOT
+from tau3_grpo.paths import CODE_ROOT, DATA_ROOT, runtime_environment
 from tau3_grpo.tracking.rl_continuity import atomic_json
 from tau3_grpo.tracking.swanlab import load_tracking_env, redact_config
 from tau3_grpo.training.rl.checkpoints import validate_checkpoint
@@ -116,7 +116,7 @@ def resolve(result, *, updates=20, dynamic_filter=False, resume_from=None, rewar
         reward_label += '-engineering-smoke'
     if uncalibrated_exploration:
         reward_label += '-uncalibrated-exploration'
-    env = dict(os.environ, CODE_ROOT=str(CODE_ROOT))
+    env = runtime_environment(os.environ)
     for key in ('TRAIN_PARQUET', 'ROLLOUT_DATA_DIR', 'RAY_ADDRESS', 'TAU3_E0_DISCOVERY_SECONDS',
                 'TAU3_BUDGET_STARTED_AT', 'TAU3_DRY_RUN'):
         env.pop(key, None)

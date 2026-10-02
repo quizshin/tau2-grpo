@@ -30,6 +30,8 @@ AREAL_SFT_JSONL = AREAL_RAW_ROOT / "tau2_sft_train.jsonl"
 AREAL_DB_ROOT = AREAL_RAW_ROOT
 
 MANIFEST_ROOT = DATA_ROOT / "manifests"
+RL_CURRICULUM40_MANIFEST_ROOT = MANIFEST_ROOT / "rl_curriculum40_seed42"
+RL_CURRICULUM50_MANIFEST_ROOT = MANIFEST_ROOT / "rl_curriculum50_seed42"
 PARQUET_ROOT = DATA_ROOT / "parquet"
 SFT_DATA_ROOT = DATA_ROOT / "sft"
 RESULTS_ROOT = runtime_root("TAU3_RUN_ROOT", "results")
@@ -73,6 +75,16 @@ def resolve_under(root: str | Path, relative: str) -> Path:
     if candidate != base and base not in candidate.parents:
         raise ValueError(f"path escapes root {base}: {relative}")
     return candidate
+
+
+def runtime_environment(inherited: dict) -> dict:
+    """Resolve storage roots identically for generic and formal launchers."""
+    env = dict(inherited, CODE_ROOT=str(CODE_ROOT))
+    for name, default in (("TAU3_DATA_ROOT", "data"), ("TAU3_MODEL_ROOT", "models"),
+                          ("TAU3_RUN_ROOT", "results"), ("TAU3_CACHE_ROOT", ".cache")):
+        value = Path(env.get(name, str(CODE_ROOT / default))).expanduser()
+        env[name] = str(value if value.is_absolute() else CODE_ROOT / value)
+    return env
 
 
 def resolve_project_path(path: str | Path) -> Path:

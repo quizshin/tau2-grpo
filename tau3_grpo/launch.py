@@ -12,7 +12,7 @@ from string import Template
 from tau3_grpo.configuration import load_config as load_config
 from tau3_grpo.configuration import load_config_with_sources, resolve_arm
 from tau3_grpo.configuration import merge as merge
-from tau3_grpo.paths import CODE_ROOT
+from tau3_grpo.paths import CODE_ROOT, runtime_environment
 from tau3_grpo.tracking.swanlab import load_tracking_env, redact_config
 
 
@@ -22,12 +22,7 @@ def prepare(stage: str, path: Path, experiment: str, seed: int | None,
     launch = config.get("launch", {})
     if launch.get("stage") != stage:
         raise ValueError(f"expected launch.stage={stage!r} in {path}")
-    env = dict(inherited)
-    env["CODE_ROOT"] = str(CODE_ROOT)
-    for name, default in (("TAU3_DATA_ROOT", "data"), ("TAU3_MODEL_ROOT", "models"),
-                          ("TAU3_RUN_ROOT", "results"), ("TAU3_CACHE_ROOT", ".cache")):
-        value = Path(env.get(name, str(CODE_ROOT / default))).expanduser()
-        env[name] = str(value if value.is_absolute() else CODE_ROOT / value)
+    env = runtime_environment(inherited)
     for key, value in launch.get("environment", {}).items():
         # Explicit shell/.env settings override profile defaults.
         if key not in env:

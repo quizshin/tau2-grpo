@@ -16,7 +16,7 @@ from tau3_grpo.envs.adapter import airline_tool_schemas, build_environment, load
 from tau3_grpo.envs.generate_tool_config import _schema_for_verl
 from tau3_grpo.envs.tau2_bridge import message_models, task_model
 from tau3_grpo.evaluation.process_reward import DB_WRITE_TOOLS, score_turns
-from tau3_grpo.paths import CODE_ROOT, DATA_ROOT
+from tau3_grpo.paths import DATA_ROOT, RL_CURRICULUM50_MANIFEST_ROOT
 from tau3_grpo.utils.hashing import sha256_file
 
 RECIPE = {"mode": "reference_write", "version": "v2"}
@@ -32,7 +32,7 @@ def main():
     parser.add_argument('--input', type=Path, action='append', required=True)
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
-    manifest = CODE_ROOT / 'results/analysis/rl_curriculum50_20260912/manifests/areal_airline_train_seed42.jsonl'
+    manifest = RL_CURRICULUM50_MANIFEST_ROOT / 'areal_airline_train_seed42.jsonl'
     entries = {x['task_id']: x for x in map(json.loads, manifest.read_text().splitlines())}
     tasks = {k: task_model().model_validate(v['task']) for k, v in entries.items()}
     counts, potentials, details = Counter(), [], []

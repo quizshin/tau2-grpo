@@ -72,3 +72,30 @@ def test_unified_dry_run_from_other_directory_does_not_expose_credentials(tmp_pa
     assert output["stage"] == "simulator"
     assert "test-secret-never-print" not in result.stdout
     assert not list(tmp_path.iterdir())
+
+
+def test_formal_input_paths_follow_external_data_root_without_changing_pool(tmp_path):
+    from tau3_grpo.data.manifest import read_manifest
+    from tau3_grpo.paths import RL_CURRICULUM50_MANIFEST_ROOT
+    from tau3_grpo.utils.hashing import sha256_file
+
+    profile = CODE_ROOT / 'configs/train/rl/formal50_a800.yaml'
+    _, env, _ = prepare('rl', profile, 'e0', 42, [], {'TAU3_DATA_ROOT': str(tmp_path / 'assets'), 'TAU3_ROOT': str(tmp_path / 'runtime')})
+    assert env['TRAIN_MANIFEST_DIR'] == str(tmp_path / 'assets/manifests/rl_curriculum50_seed42')
+    assert env['VAL_PARQUET'] == str(tmp_path / 'assets/parquet/airline_selection_seed42.parquet')
+    path = RL_CURRICULUM50_MANIFEST_ROOT / 'areal_airline_train_seed42.jsonl'
+    assert sha256_file(path) == '641bde73c1495c59b5c0a87cfc84b9e00c0b5ffd2f86d10fd2205aaf2143adae'
+    assert len(read_manifest(path)) == 50
+
+
+def test_qwen38_simulator_dry_run_uses_current_roots_and_preserves_explicit_runtime(tmp_path):
+    script = CODE_ROOT / 'scripts/serve/simulator_qwen38.sh'
+    inherited = {k: v for k, v in os.environ.items() if not k.startswith('TAU3_')}
+    env = dict(inherited, TAU3_DRY_RUN='1', TAU3_ROOT=str(tmp_path / 'runtime'),
+               TAU3_MODEL_ROOT=str(tmp_path / 'models'), TAU3_CACHE_ROOT=str(tmp_path / 'cache'))
+    command = shlex.split(subprocess.check_output(['bash', str(script)], env=env, text=True))
+    assert command[0] == str(tmp_path / 'runtime/environment/venvs/qwen38-sim/bin/python')
+    assert command[command.index('serve') + 1] == str(tmp_path / 'models/Qwen3.8-27B-AWQ-INT4')
+    env.update(TAU3_SIM_PYTHON='/custom/python', TAU3_USER_MODEL='/custom/model')
+    command = shlex.split(subprocess.check_output(['bash', str(script)], env=env, text=True))
+    assert command[0] == '/custom/python' and command[command.index('serve') + 1] == '/custom/model'
