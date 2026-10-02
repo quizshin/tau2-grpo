@@ -227,7 +227,7 @@ def test_v3_canonical_match_has_same_real_tool_effect(requires_tau2):
     from tau3_grpo.envs.tau2_bridge import message_models
     from tau3_grpo.paths import CODE_ROOT, DATA_ROOT
 
-    manifest = CODE_ROOT / 'data/manifests/rl_curriculum50_20260912/areal_airline_train_seed42.jsonl'
+    manifest = CODE_ROOT / 'data/manifests/rl_curriculum50_seed42/areal_airline_train_seed42.jsonl'
     if not manifest.is_file():
         pytest.skip('formal training manifest unavailable')
     entry = next(x for x in map(json.loads, manifest.read_text().splitlines()) if x['task_id'] == 'airline_803')

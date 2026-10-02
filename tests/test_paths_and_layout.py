@@ -85,3 +85,25 @@ def test_no_day_directories_exist():
         if path.is_dir() and path.name[3:].isdigit()
     ]
     assert offenders == [], f"temporary day directories found: {offenders}"
+
+
+def test_frozen_curriculum_inputs_are_identical_under_data_root():
+    import hashlib
+
+    from tau3_grpo.paths import RL_CURRICULUM40_MANIFEST_ROOT, RL_CURRICULUM50_MANIFEST_ROOT
+
+    expected = {
+        RL_CURRICULUM40_MANIFEST_ROOT: (
+            "79e317a824e8b55f7ce338c9f30a5811d83f2dce17dd896397eaffb003f5efbb",
+            "e67447171c385168a01618082bfc08652afdf571b8cf98b22f197a9512dd41db",
+        ),
+        RL_CURRICULUM50_MANIFEST_ROOT: (
+            "641bde73c1495c59b5c0a87cfc84b9e00c0b5ffd2f86d10fd2205aaf2143adae",
+            "97457389679a7c78d28c08034dd38217f01c20c607dc2cb67923a9ca5763d8b7",
+        ),
+    }
+    for current, hashes in expected.items():
+        for name, digest in zip(
+            ("areal_airline_train_seed42.jsonl", "areal_airline_split_seed42.json"), hashes
+        ):
+            assert hashlib.sha256((current / name).read_bytes()).hexdigest() == digest

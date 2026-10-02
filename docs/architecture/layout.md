@@ -20,3 +20,12 @@ SFT调用：`scripts/train/sft → training.sft.train → dataset / tokenizer监
 `scripts/a800_research`和`scripts/engineering_checks`保留少量回归测试依赖的旧控制器/离线诊断，不作为公开生产入口。核心实现不放入env_info；vendor目录保留固定来源和必要补丁，不裁剪上游许可证。
 
 运行数据放results/runs，固定输入放data/manifests。没有模型权重、tokenizer或本地机器环境快照进入Git。
+
+数据层的能力特征、可见消息、证据编码和参考动作配方分别位于
+`data/capability_features.py`、`data/messages.py`、`data/sft_evidence.py`、`data/outcome_recipes.py`；
+离线analysis复用这些函数，数据构建不反向导入analysis。
+Teacher rollout共享一个实现，通过split和预算参数选择行为；旧validation入口仅薄转发，
+保持预算默认值、账本锁和train/validation隔离。历史结果中的源码快照不作为当前程序入口。
+
+外部存储根由 `paths.runtime_environment` 在launcher与正式runner中统一解析；
+原始模型/数据和运行结果独立管理，源码发布不迁移资产。

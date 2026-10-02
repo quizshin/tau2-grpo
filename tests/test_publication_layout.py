@@ -32,7 +32,7 @@ def test_all_config_include_chains_exist():
 def test_frozen_reference_manifests_are_source_inputs():
     from tau3_grpo.data.manifest import read_manifest
 
-    path = CODE_ROOT / "data/manifests/rl_curriculum50_20260912/areal_airline_train_seed42.jsonl"
+    path = CODE_ROOT / "data/manifests/rl_curriculum50_seed42/areal_airline_train_seed42.jsonl"
     rows = read_manifest(path)
     assert len(rows) == 50
     assert len({row.task_id for row in rows}) == 50
@@ -67,3 +67,15 @@ def test_publication_has_no_retired_hardware_install_tree():
     assert not (CODE_ROOT / "requirements-local.txt").exists()
     profiles = list((CODE_ROOT / "configs").rglob("*.yaml"))
     assert not [str(path) for path in profiles if "5090" in path.name or "paratera" in path.name]
+
+
+@pytest.mark.parametrize("stage,size,steps", [("A109", 109, 14), ("B393", 393, 50), ("C500", 500, 63)])
+def test_catalog_sft_uses_frozen_portable_recipe(stage, size, steps):
+    catalog = yaml.safe_load((CODE_ROOT / "configs/experiments/catalog.yaml").read_text())
+    config, _ = load_config_with_sources(CODE_ROOT / catalog["sft"]["profiles"][stage])
+    assert config["data"]["reviewed_package_manifest"] == catalog["sft"]["package"]
+    assert config["data"]["expected_train_size"] == size
+    assert config["data"]["expected_validation_size"] == 150
+    assert config["train"]["expected_optimizer_steps"] == steps
+    assert config["train"]["expected_effective_batch_size"] == 8
+    assert str(config["launch"]["environment"]["SFT_GPU"]) == "0"

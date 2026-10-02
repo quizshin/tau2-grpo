@@ -1,5 +1,6 @@
 """Repair split selection must exclude prior evaluation/training reference users."""
 
+from pathlib import Path
 from types import SimpleNamespace
 
 from tau3_grpo.data import grounded_repair as repair
@@ -18,11 +19,17 @@ def test_prepare_excludes_formal_reference_users_without_private_assets(monkeypa
         "evaluation_criteria": {"actions": [{"arguments": {"user_id": "formal_action"}}]},
     })
 
+    formal_path = repair.RL_CURRICULUM50_MANIFEST_ROOT / "areal_airline_train_seed42.jsonl"
+    seen = []
+
     def manifest(path):
-        if "selection" in path:
+        path = Path(path)
+        seen.append(path)
+        if "selection" in path.name:
             return []
-        if path.startswith("data/manifests/rl_curriculum50_20260912/"):
+        if path == formal_path:
             return [formal]
+        assert path == Path("data/manifests/areal_airline_train_seed42.jsonl")
         return [train]
 
     monkeypatch.setattr(repair, "read_manifest", manifest)
@@ -37,6 +44,7 @@ def test_prepare_excludes_formal_reference_users_without_private_assets(monkeypa
     monkeypatch.setattr(repair, "suitable", lambda *args: True)
 
     plan, entries = repair.prepare(tmp_path / "plan")
+    assert formal_path in seen
     expected_protected = {"formal_reservation", "formal_action", "old_dev"}
     assert set(plan["protected_users"]) == expected_protected
     assert entries == {"source": train}

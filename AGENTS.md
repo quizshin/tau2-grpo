@@ -102,7 +102,7 @@ cd "$CODE_ROOT"
 ## 6. 双 A800 公开版范围
 
 - 2026-09-29用户限定：三阶段SFT、GRPO、ARPO、可选MT-GTPO，维护一个双A800部署方案。GiGPO等共享兼容实现可保留，不新增非A800硬件路线。
-- SFT课程A109/B393/C500尚需冻结预算和选定阶段checkpoint，不能将旧A100配置当作新课程。
+- SFT课程A109/B393/C500使用已冻结portable train500/dev150包及14/50/63次更新配方；GPU训练未开始，阶段checkpoint尚未选定，不能将旧A100配置当作新课程。
 - 默认公开RL入口见configs/experiments/catalog.yaml；双卡策略0,1、模拟器1通过sleep manager分阶段使用。旧四策略卡加独立模拟器卡的结果不构成双卡协议。
 - MT-GTPO的过程奖励、动态过滤与credit模式须显式版本化；ARPO的共享token前缀和环境隔离必须保留。
 - 正式保存、评测、SwanLab步数及续训默认遵循运行维护文档；具体数据/奖励/预算以冻结的实验配置为准。

@@ -8,3 +8,5 @@
 - 训练checkpoint、云端step和实际更新须分别验收；保存成功不代表可恢复。
 
 历史故障的影响、修复及实验身份见[归档完整记录](https://github.com/quizshin/tau2-grpo/blob/archive/pre-a800-focus-20260929/ERRORS.md)。
+
+- SFT包的ready标记不能替代文件、审核和实际token/mask校验；旧v1历史依赖清理后使用portable v2包，不能仅改路径绕过验收。

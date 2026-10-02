@@ -11,7 +11,7 @@ import json
 from collections import Counter, defaultdict
 from pathlib import Path
 
-from tau3_grpo.analysis.rubric_pilot import visible_events
+from tau3_grpo.data.messages import visible_events
 from tau3_grpo.data.sft import load_complete_airline_dialogues
 from tau3_grpo.utils.hashing import sha256_file, sha256_json
 
@@ -27,9 +27,9 @@ def evidence_ledger(config, reviews):
     variants and historical memberships survive. Template overlap is a diagnostic,
     not proof of leakage or a reason to discard accepted training examples.
     """
-    from tau3_grpo.analysis.sft_coldstart_audit import digest as legacy_audit_digest
     from tau3_grpo.data.curriculum_split import BUCKETS, assign_bucket, build_split
     from tau3_grpo.data.finalize_staged_sft import visible_user_ids
+    from tau3_grpo.data.sft_evidence import digest as legacy_audit_digest
     from tau3_grpo.data.staged_sft import ordered_tool_receipts
 
     records, payloads, hashes = {}, {}, {}

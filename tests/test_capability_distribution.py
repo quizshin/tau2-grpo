@@ -1,5 +1,7 @@
 import json
 
+import pytest
+
 from tau3_grpo.analysis.capability_distribution import confirmation_screen, features, summarize
 
 
@@ -185,3 +187,46 @@ def test_decision_repair_filters_nonavailable_fares_and_time_boundary():
     cancelled = copy.deepcopy(db)
     cancelled["flights"]["F"]["dates"]["2024-05-17"] = {"status": "cancelled"}
     assert not eligible(cancelled, "r", "historical_upgrade")
+
+
+def test_source_inventory_preserves_target_positions_and_reason_join(tmp_path):
+    from tau3_grpo.analysis.sft_source_inventory import inventory
+
+    prefix = [{'role': 'system', 'content': 'policy'}, {'role': 'user', 'content': 'Check account'}]
+    first_answer = {'role': 'assistant', 'content': 'Please provide your user ID.'}
+    second_prefix = prefix + [first_answer, {'role': 'user', 'content': 'U'}]
+    answer = {'role': 'assistant', 'content': '', 'tool_calls': [
+        {'function': {'name': 'get_user_details', 'arguments': {'user_id': 'U'}}}]}
+    source = []
+    for turn, messages, reply in [(0, prefix, first_answer), (1, second_prefix, answer)]:
+        source.append({'metadata': {'source_dialog_id': 'airline_dialog_1', 'turn_index': turn,
+                                   'correct': 1, 'reward': 1.0, 'reason_for_call': 'Check account'},
+                       'messages': messages, 'answer': reply})
+    (tmp_path / 'tau2_sft_train.jsonl').write_text(''.join(json.dumps(r) + '\n' for r in source))
+    (tmp_path / 'tau2_rl_train.jsonl').write_text(json.dumps({
+        'id': 'airline_1', 'user_scenario': {'instructions': {'domain': 'airline',
+                                                           'reason_for_call': 'Check account'}}}) + '\n')
+    result = inventory(tmp_path)
+    assert result['summary']['prefix_mismatch_rows'] == 0
+    assert result['summary']['answer_mismatch_rows'] == 0
+    assert result['records'][0]['provided_target_message_indices'] == [2, 4]
+    assert result['records'][0]['exact_reason_rl_ids'] == ['airline_1']
+    # Source flags remain source flags, never frozen semantic acceptance.
+    assert 'quality_accepted' not in result['records'][0]
+
+
+@pytest.mark.parametrize('module,option', [
+    ('tau3_grpo.data.rl_curriculum_screen', '--out'),
+    ('tau3_grpo.data.rl_curriculum_extend', '--output'),
+    ('tau3_grpo.analysis.sft_source_inventory', '--output'),
+])
+def test_promoted_commands_reject_existing_outputs_before_reading_sources(module, option, tmp_path):
+    import importlib
+
+    from pytest import raises
+
+    existing = tmp_path / 'frozen'
+    existing.mkdir()
+    with raises(FileExistsError, match='new|fresh'):
+        importlib.import_module(module).main([option, str(existing)])
+    assert list(existing.iterdir()) == []

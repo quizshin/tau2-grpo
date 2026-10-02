@@ -477,3 +477,73 @@ def test_exact_response_format_echo_is_traceable_not_general_key_repair(task, tm
         )
     with pytest.raises(ValueError, match="fields"):
         normalize_teacher_action(dict(raw, unrecognized="still forbidden"))
+
+
+@pytest.mark.parametrize('name,split,limit', [
+    ('teacher_rollout', 'train', 100.0),
+    ('teacher_rollout_validation', 'validation', 100.0),
+    ('teacher_rollout_validation_v4', 'validation', 150.0),
+    ('teacher_rollout_validation_v4_retry', 'validation', 150.0),
+])
+def test_legacy_entries_preserve_defaults_and_snapshot_common_code(
+    name, split, limit, task, tmp_path, monkeypatch,
+):
+    import importlib
+
+    from tau3_grpo.data import teacher_rollout as core
+    from tau3_grpo.tracking.judge_budget import Budget
+
+    module = importlib.import_module('tau3_grpo.data.' + name)
+    task['split'] = split
+    tasks = tmp_path / 'tasks.jsonl'
+    tasks.write_text(json.dumps(task) + '\n')
+    ledger = tmp_path / 'budget.json'
+    Budget(ledger, limit=limit, max_calls=10)
+    output = tmp_path / 'run'
+
+    async def fake_candidate(*args, **kwargs):
+        assert kwargs['split'] == split
+        assert kwargs['budget'].state['limit_cny'] == limit
+        return {}
+
+    monkeypatch.setattr(core, 'generate_candidate', fake_candidate)
+    module.main(['--tasks', str(tasks), '--db-root', str(tmp_path), '--output', str(output),
+                 '--budget', str(ledger), '--max-calls', '20'])
+    saved = json.loads((output / 'run.json').read_text())
+    assert saved['task_split'] == split and saved['total_limit_cny'] == limit
+    assert saved['code_files']['data/teacher_rollout.py']
+    if name != 'teacher_rollout':
+        assert saved['code_files'][f'data/{name}.py']
+    assert saved['status'] == 'complete_candidates_only'
+
+
+@pytest.mark.parametrize('name', [
+    'teacher_rollout', 'teacher_rollout_validation',
+    'teacher_rollout_validation_v4', 'teacher_rollout_validation_v4_retry',
+])
+def test_legacy_entries_reject_other_split_before_model_call(name, task, tmp_path):
+    import importlib
+
+    module = importlib.import_module('tau3_grpo.data.' + name)
+    task['split'] = 'validation' if name == 'teacher_rollout' else 'train'
+
+    async def must_not_call(*args, **kwargs):
+        raise AssertionError('Wrong split reached model')
+
+    with pytest.raises(ValueError, match='explicitly frozen'):
+        asyncio.run(module.generate_candidate(task, db_root=tmp_path, output=tmp_path / 'run',
+                                             candidate_id='x', budget=None, model_call=must_not_call))
+
+
+def test_budget_limit_requires_explicit_choice_and_cannot_change_existing_ledger(tmp_path):
+    from tau3_grpo.data.teacher_rollout import build_parser
+    from tau3_grpo.tracking.judge_budget import Budget
+
+    parser = build_parser()
+    args = parser.parse_args(['--tasks', 't', '--db-root', 'd', '--output', 'o', '--budget', 'b',
+                              '--max-calls', '10'])
+    assert args.split == 'train' and args.limit_cny == 100.0
+    ledger = tmp_path / 'budget.json'
+    Budget(ledger, limit=100.0)
+    with pytest.raises(ValueError, match='Cannot change a run budget'):
+        IncrementBudget(ledger, max_calls=10, base_accounted=0, increment_cny=10, limit_cny=150.0)

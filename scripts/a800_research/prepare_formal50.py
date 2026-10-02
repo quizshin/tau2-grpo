@@ -17,7 +17,7 @@ from tau3_grpo.paths import CODE_ROOT, DATA_ROOT
 
 R = Path(os.environ['TAU3_ROOT'])
 W = Path(os.environ['TAU3_RUN_ROOT']) / 'formal50-preflight-20260912'
-CANDIDATES = CODE_ROOT / 'data/manifests/rl_curriculum50_20260912'
+CANDIDATES = CODE_ROOT / 'data/manifests/rl_curriculum50_seed42'
 EXPECTED_MANIFEST_SHA = '641bde73c1495c59b5c0a87cfc84b9e00c0b5ffd2f86d10fd2205aaf2143adae'
 
 

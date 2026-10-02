@@ -96,6 +96,18 @@ def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     config = yaml.safe_load(args.config.read_text(encoding="utf-8"))
 
+    reviewed = None
+    if config["data"].get("reviewed_package_manifest"):
+        from tau3_grpo.data.reviewed_sft import validate_frozen_package
+
+        reviewed = validate_frozen_package(
+            _resolve(config["data"]["reviewed_package_manifest"]), root=PROJECT_ROOT,
+            train_path=_resolve(config["data"]["train_jsonl"]),
+            validation_path=_resolve(config["data"]["validation_jsonl"]),
+        )
+    if config["model"].get("requires_previous_stage") and not args.model_name_or_path:
+        raise ValueError("This cumulative SFT stage requires an explicit previous merged model")
+
     import torch
     from transformers import AutoTokenizer, Trainer, TrainingArguments, set_seed
 
@@ -133,6 +145,14 @@ def main(argv: list[str] | None = None) -> int:
         expected_size=int(config["data"].get("expected_validation_size", 5)),
         **options,
     )
+    if reviewed is not None:
+        from tau3_grpo.data.reviewed_sft import load_frozen_tokens, validate_rendered_evidence
+
+        tokens = load_frozen_tokens(
+            _resolve(config["data"]["reviewed_package_manifest"]), reviewed, root=PROJECT_ROOT,
+        )
+        validate_rendered_evidence(train_dataset, tokens)
+        validate_rendered_evidence(validation_dataset, tokens)
 
     train_config = config["train"]
     method = args.method or train_config.get("method", "lora")

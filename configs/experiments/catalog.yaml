@@ -3,8 +3,15 @@ schema: tau3_a800_catalog_v1
 hardware: 2xa800
 sft:
   curriculum: [A109, B393, C500]
-  status: planned_budget_and_stage_checkpoints_not_frozen
-  base_profile: configs/train/sft/qwen35_lora.yaml
+  status: frozen_cpu_verified_gpu_not_started
+  package: data/sft/curriculum_500_dev150_portable_codex_20261001/manifest.json
+  package_identity: docs/sft500_dev150_portable_package_manifest_20261001.json
+  profiles:
+    A109: configs/train/sft/curriculum_codex_A109_portable_dev_1epoch.yaml
+    B393: configs/train/sft/curriculum_codex_B393_portable_dev_1epoch.yaml
+    C500: configs/train/sft/curriculum_codex_C500_portable_dev_1epoch.yaml
+  entrypoint: scripts/train/sft/run.sh
+  checkpoint_selection: pending_gpu_training
 rl:
   grpo:
     profile: configs/train/rl/repair72_grpo_2xa800_shared32_full_eval.yaml

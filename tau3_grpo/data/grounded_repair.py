@@ -13,7 +13,7 @@ import json
 from collections import Counter
 from pathlib import Path
 
-from tau3_grpo.analysis.capability_distribution import task_feature
+from tau3_grpo.data.capability_features import task_feature
 from tau3_grpo.data.grounded_gap_pilot import Builder, build_case, feasible, raw_database, read_rows
 from tau3_grpo.data.manifest import read_manifest
 from tau3_grpo.data.schema import ArealTaskRecord
@@ -21,7 +21,7 @@ from tau3_grpo.data.sft_expansion import audit_tool_calls
 from tau3_grpo.data.sft_policy_checks import ALLOWANCE
 from tau3_grpo.data.staged_sft import ordered_tool_receipts
 from tau3_grpo.envs.adapter import adapt_record
-from tau3_grpo.paths import AREAL_DB_ROOT
+from tau3_grpo.paths import AREAL_DB_ROOT, RL_CURRICULUM50_MANIFEST_ROOT
 from tau3_grpo.utils.hashing import sha256_file, sha256_json
 
 KINDS = (
@@ -164,7 +164,7 @@ def curriculum_pool():
     )
     # Exclude active formal RL reference entities from the development split.
     for e in read_manifest(
-        "data/manifests/rl_curriculum50_20260912/areal_airline_train_seed42.jsonl"
+        RL_CURRICULUM50_MANIFEST_ROOT / "areal_airline_train_seed42.jsonl"
     ):
         raw = raw_database(
             str(ArealTaskRecord.model_validate(e.task).resolve_db_path(AREAL_DB_ROOT))
@@ -1590,7 +1590,7 @@ def finalize_curriculum(output):
         raise ValueError("Historical dev exposure")
     formal_rl_users = set()
     formal_rl_manifest = Path(
-        "data/manifests/rl_curriculum50_20260912/areal_airline_train_seed42.jsonl"
+        RL_CURRICULUM50_MANIFEST_ROOT / "areal_airline_train_seed42.jsonl"
     )
     for entry in read_manifest(formal_rl_manifest):
         raw = raw_database(
@@ -2406,7 +2406,7 @@ def prepare(output):
     protected = old_dev | selection_users
     # Exclude active formal RL reference entities from the development split.
     for e in read_manifest(
-        "data/manifests/rl_curriculum50_20260912/areal_airline_train_seed42.jsonl"
+        RL_CURRICULUM50_MANIFEST_ROOT / "areal_airline_train_seed42.jsonl"
     ):
         raw = raw_database(
             str(ArealTaskRecord.model_validate(e.task).resolve_db_path(AREAL_DB_ROOT))

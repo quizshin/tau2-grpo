@@ -105,3 +105,41 @@ def test_resume_rejects_cross_algorithm_or_missing_identity(tmp_path, monkeypatc
         f"algorithm:\n  adv_estimator: '{previous}'\n  dynamic_filter:\n    enable: false\n")
     with pytest.raises(ValueError, match="estimator"):
         resolve(tmp_path, estimator="tau_gigpo", resume_from=tmp_path / "global_step_10")
+
+
+def test_data_builders_import_without_loading_analysis():
+    # A fresh interpreter catches transitive imports, including lazy imports.
+    code = '''
+import importlib
+import importlib.abc
+import sys
+class RejectAnalysis(importlib.abc.MetaPathFinder):
+    def find_spec(self, fullname, path=None, target=None):
+        if fullname == 'tau3_grpo.analysis' or fullname.startswith('tau3_grpo.analysis.'):
+            raise AssertionError('Data layer imported offline analysis: ' + fullname)
+sys.meta_path.insert(0, RejectAnalysis())
+for name in ('grounded_gap_pilot', 'grounded_repair', 'source_reuse',
+             'finalize_staged_sft', 'selection_repair'):
+    importlib.import_module('tau3_grpo.data.' + name)
+'''
+    subprocess.run([sys.executable, '-c', code], cwd=CODE_ROOT, check=True, timeout=30)
+    import ast
+
+    for path in (CODE_ROOT / 'tau3_grpo/data').glob('*.py'):
+        for node in ast.walk(ast.parse(path.read_text())):
+            modules = [node.module or ''] if isinstance(node, ast.ImportFrom) else (
+                [alias.name for alias in node.names] if isinstance(node, ast.Import) else [])
+            assert not any(m.startswith('tau3_grpo.analysis') for m in modules), path
+
+
+@pytest.mark.parametrize('old,new,names', [
+    ('capability_distribution', 'capability_features', ('features', 'task_feature', 'sft_feature', 'summarize')),
+    ('sft_coldstart_audit', 'sft_evidence', ('digest', 'function', 'audit_record')),
+    ('prepare_outcome_contract', 'outcome_recipes', ('variants', 'duplicate_cancellation_allowed',
+                                                  'repair_known_reference_actions')),
+    ('rubric_pilot', 'messages', ('visible_events',)),
+])
+def test_analysis_compatibility_uses_same_data_functions(old, new, names):
+    analysis = importlib.import_module('tau3_grpo.analysis.' + old)
+    data = importlib.import_module('tau3_grpo.data.' + new)
+    assert all(getattr(analysis, name) is getattr(data, name) for name in names)

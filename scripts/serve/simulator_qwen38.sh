@@ -1,16 +1,18 @@
 #!/usr/bin/env bash
 # External simulator only: keep the policy's training environment unchanged.
 set -euo pipefail
-TAU3_ROOT="${TAU3_ROOT:-/root/autodl-fs/tau3_grpo_fix}"
-SIM_PYTHON="${TAU3_SIM_PYTHON:-${TAU3_ROOT}/runtime/venvs/qwen38-sim/bin/python}"
-MODEL="${TAU3_USER_MODEL:-${TAU3_ROOT}/model_store/Qwen3.8-27B-AWQ-INT4}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/../lib/paths.sh"
+TAU3_ROOT="${TAU3_ROOT:-$(dirname "${CODE_ROOT}")}"
+SIM_PYTHON="${TAU3_SIM_PYTHON:-${TAU3_ROOT}/environment/venvs/qwen38-sim/bin/python}"
+MODEL="${TAU3_USER_MODEL:-${TAU3_MODEL_ROOT}/Qwen3.8-27B-AWQ-INT4}"
 export CUDA_VISIBLE_DEVICES="${TAU3_USER_CUDA_DEVICES:-1}"
 export TOKENIZERS_PARALLELISM=false
 export PYTHONDONTWRITEBYTECODE=1
 export HF_HUB_OFFLINE=1
 export HF_HUB_DISABLE_TELEMETRY=1
 export VLLM_NO_USAGE_STATS=1
-export TAU3_SIM_CACHE_ROOT="${TAU3_SIM_CACHE_ROOT:-${TAU3_SCRATCH_ROOT:-/root/autodl-tmp/tau3}/cache/qwen38-sim}"
+export TAU3_SIM_CACHE_ROOT="${TAU3_SIM_CACHE_ROOT:-${TAU3_CACHE_ROOT}/qwen38-sim}"
 if [[ -n "${TAU3_SIM_CACHE_ROOT:-}" ]]; then
   export XDG_CACHE_HOME="${TAU3_SIM_CACHE_ROOT}"
   export VLLM_CACHE_ROOT="${TAU3_SIM_CACHE_ROOT}/vllm"

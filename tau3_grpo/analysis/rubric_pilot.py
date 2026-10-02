@@ -9,6 +9,7 @@ import json
 from collections import Counter
 from pathlib import Path
 
+from tau3_grpo.data.messages import visible_events as visible_events
 from tau3_grpo.data.sft import load_complete_airline_dialogues
 from tau3_grpo.models.semantic_api import SemanticAPIError
 from tau3_grpo.tracking.judge_budget import Budget, call_json, dump
@@ -129,15 +130,6 @@ Example shape (use actual rubric IDs):
         + json.dumps(example)
     )
     return author, audit
-
-
-def visible_events(messages):
-    """An allowlist excludes private thinking, source labels and dataset metadata."""
-    fields = ("role", "content", "tool_calls", "tool_call_id", "name")
-    return [
-        dict(event_id=f"m{i:03d}", **{k: m[k] for k in fields if k in m})
-        for i, m in enumerate(messages)
-    ]
 
 
 def validate_rubric(packet, events):

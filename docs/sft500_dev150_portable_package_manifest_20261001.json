@@ -1,0 +1,87 @@
+{
+  "schema": "codex_reviewed_sft_package_v2",
+  "path_scope": "package",
+  "status": "frozen_cpu_verified_gpu_not_started",
+  "ready_for_training": true,
+  "audit": {
+    "ready_for_training": true,
+    "train_count": 500,
+    "validation_count": 150,
+    "train_unique_users": 67,
+    "validation_unique_users": 16,
+    "user_overlap_count": 0,
+    "conversation_overlap_count": 0,
+    "train_curriculum": {
+      "foundation": 109,
+      "constraints": 284,
+      "strategy": 107
+    },
+    "validation_curriculum": {
+      "foundation": 50,
+      "constraints": 50,
+      "strategy": 50
+    }
+  },
+  "token_summary": {
+    "train": {
+      "dialogues": 500,
+      "total_tokens": 3908232,
+      "label_tokens": 354489,
+      "mean_total_tokens": 7816.464,
+      "mean_label_tokens": 708.978
+    },
+    "validation": {
+      "dialogues": 150,
+      "total_tokens": 1196148,
+      "label_tokens": 117593,
+      "mean_total_tokens": 7974.32,
+      "mean_label_tokens": 783.9533333333334
+    }
+  },
+  "stage_token_summary": {
+    "A109": {
+      "n_dialogues": 109,
+      "n_total_tokens": 655073,
+      "n_label_tokens": 21529
+    },
+    "B393": {
+      "n_dialogues": 393,
+      "n_total_tokens": 2888964,
+      "n_label_tokens": 224557
+    },
+    "C500": {
+      "n_dialogues": 500,
+      "n_total_tokens": 3908232,
+      "n_label_tokens": 354489
+    }
+  },
+  "semantic_review_modes": {
+    "inherited_exact_hash_bound_codex200_review": 200,
+    "direct_in_thread_goal_claim_confirmation_and_native_state_adjudication": 450
+  },
+  "package": "data/sft/curriculum_500_dev150_portable_codex_20261001",
+  "manifest_sha256": "32430e35051520fbe96bbf3e3b63f5c8b060a978edd701482c787ce052897683",
+  "parent_manifest_sha256": "6dccb3050b0e51e9426fb3b68ea5d43ee87ecb2d31fe3db35d50374f1c99bdbd",
+  "protected_files": {
+    "frozen_prompt_protocols.json": "436302fdc01a8b69993e4027807e65dbfad64200a9dd6d65ed83dd677ef10c9a",
+    "rejected_index.json": "609fc1cf2b3a91cbc12952f9159bb8b0aac12df4d8fb5bc541f66d5d3893229a",
+    "review_index.json": "e249f722290c1fb04a637827ff045191c1d358c1f17375af9857a79e44f64f08",
+    "selection.json": "8258f979a85f66b2f7daa8ae2826f335ce8ba1448bae80313dd3f946d3877344",
+    "source_manifest.json": "6dccb3050b0e51e9426fb3b68ea5d43ee87ecb2d31fe3db35d50374f1c99bdbd",
+    "stage_token_summary.json": "adddf45027496c289e29f04ff737e741285e03dfdc44f1d6baff29047f8004ed",
+    "token_mask_audit.json": "83d1fe1a5dc31e43254c5f86040e00a6c2b4064152f2669d4321e9b557519450",
+    "token_summary.json": "8ee0201ddfb06f0e78f897f82f207dcaa7ba2bec3d55cfbe0285d488f23bf0ac",
+    "tool_config.yaml": "69fb766ffa26c1b63c35bf97701a489dd302ba612195d0c71af0a946a4e5407f",
+    "train.jsonl": "90052214dd7a2cb57d9c5451d0f25af347721175920395ace04251230262940f",
+    "train_A109.jsonl": "eaea5a6a5678a5df8b39e01fdd7049015159d5a3c1efeec7f832c9f1cf99fed1",
+    "train_B393.jsonl": "7691d183650dd2e60f5efdc6647302f987878610d052ae8a8bd0450b4c080e64",
+    "validation.jsonl": "2e6d519cca975dd53df274f3ef0d9f338636ac21754aaf393ba57006f47ff09f"
+  },
+  "training_dependencies": "package_files_and_normal_runtime_only",
+  "historical_paths": "provenance_only",
+  "profiles": {
+    "A109": "configs/train/sft/curriculum_codex_A109_portable_dev_1epoch.yaml",
+    "B393": "configs/train/sft/curriculum_codex_B393_portable_dev_1epoch.yaml",
+    "C500": "configs/train/sft/curriculum_codex_C500_portable_dev_1epoch.yaml"
+  }
+}

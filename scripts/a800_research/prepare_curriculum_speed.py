@@ -14,7 +14,7 @@ from tau3_grpo.experiments.manifest import read_manifest, flatten_schedule, veri
 
 R=Path(os.environ['TAU3_ROOT'])
 W=R / 'code/results/runs/curriculum-speed-20260912'
-C=CODE_ROOT/'data/manifests/rl_curriculum_20260912'
+C=CODE_ROOT/'data/manifests/rl_curriculum40_seed42'
 
 
 def sha(p):

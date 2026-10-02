@@ -151,16 +151,21 @@ def test_current_formal_hydra_matches_historical(estimator, version, df, tmp_pat
             f"configs/train/rl/qwen35_4b_full_a800_c50_matched6h_{arm}_20260912.yaml"))
     old_command, old_env, _ = runner.resolve(tmp_path / "same-run", **args)
     historical = resolved(old_command, old_env)
-    # Only sampling defaults intentionally changed on 2026-09-20.
+    # Sampling changed on 2026-09-20; storage paths moved on 2026-10-02.
     assert current["actor_rollout_ref"]["rollout"]["temperature"] == 0.7
     assert current["actor_rollout_ref"]["rollout"]["val_kwargs"]["temperature"] == 0.7
     assert historical["actor_rollout_ref"]["rollout"]["temperature"] == 1.0
     assert historical["actor_rollout_ref"]["rollout"]["val_kwargs"]["temperature"] == 0.4
     historical["actor_rollout_ref"]["rollout"]["temperature"] = 0.7
     historical["actor_rollout_ref"]["rollout"]["val_kwargs"]["temperature"] = 0.7
+    assert env['TRAIN_MANIFEST_DIR'].endswith('/data/manifests/rl_curriculum50_seed42')
+    assert old_env['TRAIN_MANIFEST_DIR'].endswith('/data/manifests/rl_curriculum50_seed42')
+    assert current['data']['val_files'] == env['VAL_PARQUET']
+    assert historical['data']['val_files'] == old_env['VAL_PARQUET']
+    historical['data']['val_files'] = current['data']['val_files']
     assert current == historical
     for key in env:
-        if key not in os.environ and key not in {"PYTHONPATH", "TRAIN_TEMP"}:
+        if key not in os.environ and key not in {"PYTHONPATH", "TRAIN_TEMP", "TRAIN_MANIFEST_DIR", "VAL_PARQUET"}:
             assert env[key] == old_env[key], key
 
 
