@@ -1,5 +1,10 @@
 # Active entry points and evidence status. Status does not imply future GPU permission.
 schema: tau3_experiment_catalog_v1
+current_sft:
+  candidate: curriculum_codex_500_portable_dev150
+  entrypoint: scripts/train/sft/run.sh
+  package: data/sft/curriculum_500_dev150_portable_codex_20261001/manifest.json
+  validation: local_cpu_verified_gpu_not_started
 sampling_defaults:
   version: sampling_t07_v1
   agreed_on: '2026-09-20'
@@ -73,7 +78,10 @@ candidates:
     superseded_by: curriculum_codex_500_portable_dev150
     purpose: unchanged_train500_with_balanced_foundation_constraints_strategy_dev50_each
     enabled_by_default: false
-    status: cpu_verified
+    status: historical
+    validation_at_freeze: cpu_verified
+    local_training_available: false
+    unavailable_reason: historical_build_dependencies_deleted_by_user_20261001
     profiles:
       A109: configs/train/sft/curriculum_codex_A109_balanced_dev_1epoch.yaml
       B393: configs/train/sft/curriculum_codex_B393_balanced_dev_1epoch.yaml
@@ -82,9 +90,13 @@ candidates:
     package_identity: docs/sft500_dev150_balanced_package_manifest_20260930.json
     gpu_validation: not_started
   curriculum_codex_500_dev150:
+    superseded_by: curriculum_codex_500_portable_dev150
     purpose: frozen_cumulative_sft_A109_B393_C500_with_user_disjoint_dev150
     enabled_by_default: false
-    status: cpu_verified
+    status: historical
+    validation_at_freeze: cpu_verified
+    local_training_available: false
+    unavailable_reason: historical_build_dependencies_deleted_by_user_20261001
     profiles:
       A109: configs/train/sft/curriculum_codex_A109_1epoch.yaml
       B393: configs/train/sft/curriculum_codex_B393_1epoch.yaml
