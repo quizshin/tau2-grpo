@@ -1,0 +1,13 @@
+{
+  "schema": "tau3_sft_release_v1",
+  "release_tag": "sft-train500-dev150-20261001",
+  "package": "data/sft/curriculum_500_dev150_portable_codex_20261001",
+  "download_url": "https://github.com/quizshin/tau2-grpo/releases/download/sft-train500-dev150-20261001/curriculum_500_dev150_portable_codex_20261001.tar.gz",
+  "archive_filename": "curriculum_500_dev150_portable_codex_20261001.tar.gz",
+  "archive_sha256": "52a5224092d49cdc9285013407a736209eff3ba80830999a0162ce291d5c4653",
+  "archive_bytes": 2037186,
+  "unpacked_bytes": 24106299,
+  "file_count": 14,
+  "manifest_sha256": "32430e35051520fbe96bbf3e3b63f5c8b060a978edd701482c787ce052897683",
+  "identity_file": "docs/sft500_dev150_portable_package_manifest_20261001.json"
+}

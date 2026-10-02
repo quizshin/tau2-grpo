@@ -21,18 +21,18 @@ Transformers >= 5.8.0。本配置使用独立的 Transformers 5.8.0 覆盖环境
 
 ## 下载与启动
 
-以下路径用于当前 AutoDL 布局。fs 上保存代码、环境与模型的持久副本；
-运行时可将依赖缓存到数据盘，并通过变量指定。2026-09-08 准备部署时 fs
-发生过小文件写入 `errno 5`，因此下载与覆盖环境临时使用 `/root/tau3-staging`。
-系统盘临时副本不保证跨服务器保留，不能代替 fs 上已校验的持久副本。
+当前目录与固定下载入口见[模型资产准备](model-assets.md)。下面在当前仓库根目录、
+已激活的训练环境中执行；各路径显式指向已准备的环境/资产目录。
+历史 `/root/tau3-staging` 位置仅描述早期验证，不作为新部署默认值。
 
 ```bash
-source /root/autodl-fs/tau3_grpo_fix/activate.sh
-cd /root/autodl-fs/tau3_grpo_fix/code
-bash env_info/setup_qwen38_simulator.sh
+export TAU3_MODEL_ROOT="$PWD/models"
+# 按 setup-a800.md 准备独立模拟器环境后，下载模型：
 python -m tau3_grpo.models.download_simulator \
-  --output /root/autodl-fs/tau3_grpo_fix/model_store/Qwen3.8-27B-AWQ-INT4
-bash scripts/serve/simulator_qwen38.sh
+  --source huggingface --output "$TAU3_MODEL_ROOT/Qwen3.8-27B-AWQ-INT4"
+export TAU3_USER_MODEL="$TAU3_MODEL_ROOT/Qwen3.8-27B-AWQ-INT4"
+# 服务启动属于后续 GPU 实验：
+# bash scripts/serve/simulator_qwen38.sh
 ```
 
 下载默认从 ModelScope 镜像读取，必须匹配固定 HF revision 的 SHA-256；

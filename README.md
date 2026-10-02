@@ -16,7 +16,8 @@
 |文档|内容|
 |---|---|
 |[双 A800 安装](docs/setup-a800.md)|唯一支持的部署路径与环境组件|
-|[数据](docs/data.md)|冻结输入、外部资产、train/dev隔离|
+|[数据](docs/data.md)|train500/dev150完整包下载、哈希校验与train/dev隔离|
+|[模型资产](docs/model-assets.md)|4B与9B策略基座、tokenizer、共享量化模拟器的固定版本下载|
 |[三阶段 SFT](docs/sft.md)|课程及阶段衔接|
 |[GRPO / ARPO / MT-GTPO](docs/rl.md)|双卡配置、算法边界、启动前检查|
 |[评测](docs/evaluation.md)|开发集、历史selection、官方final|
@@ -39,7 +40,18 @@ verl/       固定版本的训练框架及项目补丁
 tau2-bench/ 固定版本的基准环境
 ```
 
-模型、tokenizer、生成数据、凭据和运行产物不上传Git。上游目录不代表本项目支持其中的所有硬件/示例。GiGPO等共享兼容代码继续保留，但不作为当前部署主线。
+冻结 train500/dev150 完整包已提供 [GitHub Release 下载](https://github.com/quizshin/tau2-grpo/releases/tag/sft-train500-dev150-20261001)，解压约24.1MB；模型与tokenizer按[资产说明](docs/model-assets.md)从固定来源下载。凭据和运行产物不上传Git。上游目录不代表本项目支持其中的所有硬件/示例。GiGPO等共享兼容代码继续保留，但不作为当前部署主线。
+
+## 获取实验资产
+
+克隆仓库后，在仓库根目录下载并逐文件验证冻结 SFT 包（只需 Python 标准库）：
+
+```bash
+python scripts/maintenance/fetch_sft_package.py
+```
+
+默认安装到 `data/sft/curriculum_500_dev150_portable_codex_20261001/`，既有文件仅校验、不覆盖。
+模型准备见[4B / 9B 与共享模拟器](docs/model-assets.md)；三阶段课程训练和9B的GPU验收状态仍以上述范围及对应实验说明为准。
 
 ## 开发检查
 
