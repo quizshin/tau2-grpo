@@ -13,7 +13,7 @@ import json
 from collections import Counter
 from pathlib import Path
 
-from tau3_grpo.analysis.capability_distribution import task_feature
+from tau3_grpo.data.capability_features import task_feature
 from tau3_grpo.data.grounded_gap_pilot import Builder, build_case, feasible, raw_database, read_rows
 from tau3_grpo.data.manifest import read_manifest
 from tau3_grpo.data.schema import ArealTaskRecord

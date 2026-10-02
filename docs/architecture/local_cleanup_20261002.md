@@ -32,7 +32,16 @@ catalog增加`current_sft`，唯一当前课程候选为portable train500/dev150
 
 ## 3. 数据层公共逻辑
 
-待完成。
+`data/messages.py`管理审核可见事件；`data/sft_evidence.py`管理前缀证据及历史digest编码；
+`data/capability_features.py`管理能力代理特征和分布汇总；`data/outcome_recipes.py`管理既有
+证据审核的参考动作变体/修复。奖励/策略判定仍从evaluation公开接口读取。
+5个数据构建模块不再导入analysis；4个原analysis模块的公开函数转发到同一函数对象。
+迁移函数AST逐项与原实现相同，不改变消息allowlist、审核判断或历史hash编码。
+
+验证：相关111项通过，含原生参考动作执行、冻结数据/ledger、私有信息隔离、
+新解释器阻断analysis导入、旧/新函数对象一致性。首轮暴露selection_repair误从
+新recipe模块读取evaluation函数的问题，修正为直接读取evaluation后全部通过。
+没有重新生成数据或重写已接受结论。
 
 ## 4. 正式路径与数据清单
 

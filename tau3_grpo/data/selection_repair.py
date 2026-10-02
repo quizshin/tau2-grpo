@@ -14,14 +14,16 @@ from collections import Counter
 from datetime import datetime
 from pathlib import Path
 
-from tau3_grpo.analysis.prepare_outcome_contract import (
-    action_policy_flags,
-    repair_known_reference_actions,
-)
 from tau3_grpo.data.manifest import read_manifest
+from tau3_grpo.data.outcome_recipes import repair_known_reference_actions
 from tau3_grpo.data.schema import ArealTaskRecord
 from tau3_grpo.envs.adapter import adapt_record
-from tau3_grpo.evaluation.outcome_contract import execute_actions, outcome_hash, runtime_identity
+from tau3_grpo.evaluation.outcome_contract import (
+    action_policy_flags,
+    execute_actions,
+    outcome_hash,
+    runtime_identity,
+)
 from tau3_grpo.paths import AREAL_DB_ROOT
 from tau3_grpo.utils.hashing import sha256_file, sha256_json
 

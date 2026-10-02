@@ -10,8 +10,8 @@ import tempfile
 from collections import Counter
 from pathlib import Path
 
-from tau3_grpo.analysis.rubric_pilot import visible_events
 from tau3_grpo.data.build_clean14 import _category
+from tau3_grpo.data.messages import visible_events
 from tau3_grpo.data.sft_expansion import coverage, tool_names
 from tau3_grpo.data.sft_policy_checks import audit_baggage_allowances
 from tau3_grpo.data.staged_sft import near_duplicate, read_rows, write_rows
@@ -218,7 +218,7 @@ def finalize_repair(args):
     import yaml
     from transformers import AutoTokenizer
 
-    from tau3_grpo.analysis.capability_distribution import sft_feature, summarize
+    from tau3_grpo.data.capability_features import sft_feature, summarize
     from tau3_grpo.data.sft_expansion import audit_tool_calls
     from tau3_grpo.data.staged_sft import ordered_tool_receipts
     from tau3_grpo.training.sft.dataset import TrajectorySFTDataset
